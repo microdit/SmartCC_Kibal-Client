@@ -1,0 +1,26 @@
+# SmartCC_Kibal — Asterisk IP-PBX Knowledge OS 의존성
+# Python 3.9+
+
+# Web framework
+flask>=2.3,<4
+
+# Vector DB (Knowledge OS Layer 3)
+chroma>=0.0.34
+chromadb>=1.5.9
+
+# Embedding model (Korean-specialized)
+bge-m3==0.1.0
+sentence-transformers>=3.1
+
+# Asterisk 통신
+ariapy>=1.0
+requests>=2.31
+
+# Markdown 위키 처리
+markdown>=3.7
+
+# 데이터베이스
+sqlite3  # stdlib, no install needed
+
+# 유틸리티
+psutil>=5.9

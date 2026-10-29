@@ -1,0 +1,84 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv*/
+.venv
+venv_*/
+venv_kibal/
+.ipynb_checkpoints
+
+# Vector DB (Knowledge OS Layer 3)
+vector_db/
+chroma_data/
+
+# Local SQLite databases
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+*.db.bak
+*.db.backup
+
+# Application logs
+*.log
+logs/
+session-ses_*.md
+
+# Asterisk logs & runtime
+asterisk_logs/
+asterisk-cdr/
+queue_log/
+cdr-csv/
+mohtones/
+
+# Cache
+cache/
+chart_cache/
+tmp_matplotlib/
+charts_output/
+
+# OS 잡파일
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+desktop.ini
+$RECYCLE.BIN/
+*.lnk
+*.stackdrop
+~*
+
+# Synology NAS
+@eaDir/
+
+# Backup files
+*_origin.*
+*.bak
+*.backup
+
+# Auto-generated sync logs (git-sync.sh work log output)
+docs/_작업이력/log/*.md
+!docs/_작업이력/log/.gitkeep
+
+# IDE
+*.code-workspace
+.vscode/
+.idea/
+
+# Docker
+.dockerignore
+
+# 임시 파일
+*.tmp
+*.temp
+*.swp
+*.swo
+
+# API 키 / 자격증명 — 실물 키 절대 커밋 금지
+*_appkey_*.txt
+*_secretkey_*.txt
+*.env
