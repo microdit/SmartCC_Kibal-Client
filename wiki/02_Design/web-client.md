@@ -4,8 +4,49 @@
 |------|---|
 | **작성일** | 2026-10-29 |
 | **버전** | v1.0 |
-| **상태** | 계획 중 |
+| **상태** | 구현·LAN 검증 완료 (2026-11-01) |
 | **관련** | [[wiki/02_Design/sip-client-design]], [[wiki/02_Design/mobile-client]], [[wiki/05/Decisions/ADR-002]] |
+
+---
+
+## 0. 구현 현황 (2026-11-01)
+
+현재 `web/`는 설계 문서의 전체 구조가 아니라 SIP 등록·1:1 영상·회의실 참가를 검증하는 최소 테스트 클라이언트로 구현되어 있다.
+
+| 항목 | 파일 | 상태 |
+|------|------|------|
+| React 엔트리 | `web/src/main.tsx` | 완료 |
+| 테스트 UI | `web/src/App.tsx` | 완료 |
+| 스타일 | `web/src/styles.css` | 완료 |
+| SIP.js 래퍼 | `web/src/sip/SipClient.ts` | 완료 |
+| 설정 | `web/src/config.ts` | 완료 |
+| Node 등록 스모크 | `web/scripts/register-smoke.mjs` | 완료 |
+| 브라우저 스모크 | `web/scripts/browser-smoke.mjs` | 완료 |
+| Tailwind/Zustand/React Router | - | 미적용 (테스트 클라이언트 범위) |
+
+검증 결과:
+
+- DEV: WebSocket `ws://127.0.0.1:8088/ws` 등록·해제 성공
+- PRD: `ws://192.168.11.2:8088/ws` 등록·해제 성공
+- PRD 1:1 (`1101` → `1102`): 양방향 오디오·영상, ICE connected, inbound/outbound RTP 확인
+- PRD 회의실 `6000` (`1101`/`1102`/`1103`): 3자 입장, 각 참가자 오디오 믹싱 수신, 원격 영상 320x180/480x270 수신 확인
+- 3자 회의에서 원격 video receiver는 2개가 live로 관측되나 UI는 1개 타일만 렌더링하는 경우가 있어 다중 타일 표시는 추가 검증이 필요하다.
+
+### 검증 명령
+
+```bash
+cd web
+npm run build
+
+# Node SIP 등록 (DEV 예시)
+SIP_DOMAIN=127.0.0.1 SIP_WS_SERVER=ws://127.0.0.1:8088/ws SIP_USERNAME=1101 SIP_PASSWORD=<DEV_1101_비밀번호> npm run smoke:register
+
+# 브라우저 1:1 (PRD 예시)
+SIP_DOMAIN=192.168.11.2 SIP_WS_SERVER=ws://192.168.11.2:8088/ws SIP_PASSWORD_1101=<PRD_1101_비밀번호> SIP_PASSWORD_1102=<PRD_1102_비밀번호> npm run smoke:call
+
+# 브라우저 3자 회의실
+SIP_ROOM=1 SIP_ROOM_THIRD=1 SIP_DOMAIN=192.168.11.2 SIP_WS_SERVER=ws://192.168.11.2:8088/ws SIP_PASSWORD_1101=<PRD_1101_비밀번호> SIP_PASSWORD_1102=<PRD_1102_비밀번호> SIP_PASSWORD_1103=<PRD_1103_비밀번호> node scripts/browser-smoke.mjs
+```
 
 ---
 
@@ -125,7 +166,7 @@ export class ConferenceManager {
 ### 3.1 로그인 / SIP 등록 (LoginPage)
 
 - SIP 계정 입력 (내선번호, 비밀번호)
-- `wss://192.168.11.2:8090/ws` WebSocket 연결
+- `ws://192.168.11.2:8088/ws` WebSocket 연결 (내부 LAN, TLS 미적용)
 - REGISTER 전송 → 200 OK 확인
 - 등록 상태 표시 (등록됨 / 등록 실패)
 

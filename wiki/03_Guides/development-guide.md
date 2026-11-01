@@ -87,22 +87,46 @@ npm run build
 
 ### 2.3 SIP 등록 테스트 (CT01)
 
-1. Asterisk 서버의 WSS 엔드포인트 확인 (`wss://192.168.11.2:8090/ws`)
+1. Asterisk 서버의 WebSocket 엔드포인트 확인 (`ws://192.168.11.2:8088/ws`)
 2. 브라우저에서 `sip.js` 등록 테스트
 3. Asterisk CLI에서 `pjsip show registrations` 확인
 
 ```bash
 # Asterisk CLI
 asterisk -rx "pjsip show registrations"
-# 기대 출력: 1001 등록됨 (Registered)
+# 기대 출력: 1101 등록됨 (Registered)
+```
+
+Node 스모크:
+
+```bash
+cd web
+SIP_DOMAIN=192.168.11.2 \
+SIP_WS_SERVER=ws://192.168.11.2:8088/ws \
+SIP_USERNAME=1101 \
+SIP_PASSWORD=<1101_비밀번호> \
+npm run smoke:register
 ```
 
 ### 2.4 1:1 영상통화 테스트 (CT02)
 
-1. 두 브라우저에서 각각 1001, 1002로 등록
-2. 다이얼러에서 1002 입력 → INVITE 전송
+1. 두 브라우저에서 각각 1101, 1102로 등록
+2. 1101에서 1102 입력 → INVITE 전송
 3. SDP offer/answer 교환 → RTP 스트림 확인
 4. 영상 확인 → BYE로 종료
+
+Playwright 스모크:
+
+```bash
+cd web
+SIP_DOMAIN=192.168.11.2 \
+SIP_WS_SERVER=ws://192.168.11.2:8088/ws \
+SIP_PASSWORD_1101=<1101_비밀번호> \
+SIP_PASSWORD_1102=<1102_비밀번호> \
+npm run smoke:call
+```
+
+macOS Docker Desktop의 bridge 네트워크에서는 미디어가 연결되지 않으므로 1:1·회의실 미디어 검증은 NAS/Linux host 네트워크의 PRD에서 수행한다. DEV는 SIP 등록과 HTTP/WebSocket 동작 확인에 사용한다.
 
 ---
 

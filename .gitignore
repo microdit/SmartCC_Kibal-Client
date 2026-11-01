@@ -69,6 +69,13 @@ docs/_작업이력/log/*.md
 .vscode/
 .idea/
 
+# Web (React + Vite)
+web/node_modules/
+web/dist/
+web/.env
+web/tsconfig.tsbuildinfo
+*.tsbuildinfo
+
 # Docker
 .dockerignore
 
