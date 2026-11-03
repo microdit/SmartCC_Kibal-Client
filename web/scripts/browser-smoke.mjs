@@ -249,7 +249,17 @@ async function peerStats(page) {
       iceGatheringState: pc.iceGatheringState,
       remoteTracks: pc.getReceivers().map((receiver) => ({
         kind: receiver.track?.kind,
-        muted: receiver.track?.muted
+        muted: receiver.track?.muted,
+        readyState: receiver.track?.readyState,
+        id: receiver.track?.id
+      })),
+      transceivers: pc.getTransceivers().map((transceiver) => ({
+        mid: transceiver.mid,
+        direction: transceiver.direction,
+        currentDirection: transceiver.currentDirection,
+        kind: transceiver.receiver.track?.kind,
+        readyState: transceiver.receiver.track?.readyState,
+        muted: transceiver.receiver.track?.muted
       })),
       succeededPairs: reports
         .filter((report) => report.type === "candidate-pair" && report.state === "succeeded")

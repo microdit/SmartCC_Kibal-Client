@@ -4,7 +4,8 @@ import {
   Registerer,
   Session,
   SessionState,
-  UserAgent
+  UserAgent,
+  Web
 } from "sip.js";
 import type { UserAgentOptions } from "sip.js";
 import type { SipConfig } from "../config";
@@ -61,6 +62,7 @@ export class KibalSipClient {
         server: config.wsServer,
         traceSip: true
       },
+      sessionDescriptionHandlerFactory: createSfuSessionDescriptionHandlerFactory(),
       sessionDescriptionHandlerFactoryOptions: {
         peerConnectionConfiguration: {
           iceServers: config.iceServers.map((urls) => ({ urls }))
@@ -192,6 +194,10 @@ export function attachMedia(
     (window as unknown as { __kibalPC?: RTCPeerConnection }).__kibalPC = peerConnection;
   }
 
+  const videoStreams = new Map<string, MediaStream>();
+  const audioOnlyStream = new MediaStream();
+  let lastStreams: MediaStream[] = [];
+
   const syncRemote = (): void => {
     const tracks = peerConnection
       .getReceivers()
@@ -199,19 +205,45 @@ export function attachMedia(
       .filter((track): track is MediaStreamTrack => Boolean(track) && track.readyState === "live");
     const audioTracks = tracks.filter((track) => track.kind === "audio");
     const videoTracks = tracks.filter((track) => track.kind === "video" && !track.muted);
+    const activeVideoIds = new Set(videoTracks.map((track) => track.id));
 
-    if (videoTracks.length === 0) {
-      const audioStream = new MediaStream(audioTracks);
-      onRemoteStreams?.(audioStream.getTracks().length > 0 ? [audioStream] : []);
+    videoStreams.forEach((_, trackId) => {
+      if (!activeVideoIds.has(trackId)) {
+        videoStreams.delete(trackId);
+      }
+    });
+
+    const streams = videoTracks.map((track) => {
+      let stream = videoStreams.get(track.id);
+      if (!stream) {
+        stream = new MediaStream([track]);
+        videoStreams.set(track.id, stream);
+      }
+      return stream;
+    });
+
+    if (streams.length === 0) {
+      syncAudioTracks(audioOnlyStream, audioTracks);
+      const nextStreams = audioOnlyStream.getTracks().length > 0 ? [audioOnlyStream] : [];
+      if (!sameStreams(nextStreams, lastStreams)) {
+        lastStreams = nextStreams;
+        onRemoteStreams?.(nextStreams);
+      }
       return;
     }
 
-    onRemoteStreams?.(
-      videoTracks.map(
-        (videoTrack, index) =>
-          new MediaStream(index === 0 ? [videoTrack, ...audioTracks] : [videoTrack])
-      )
-    );
+    streams.forEach((stream, index) => {
+      if (index === 0) {
+        syncAudioTracks(stream, audioTracks);
+      } else {
+        stream.getAudioTracks().forEach((track) => stream.removeTrack(track));
+      }
+    });
+
+    if (!sameStreams(streams, lastStreams)) {
+      lastStreams = streams;
+      onRemoteStreams?.(streams);
+    }
   };
 
   const watchedTracks = new WeakSet<MediaStreamTrack>();
@@ -259,4 +291,50 @@ export function attachMedia(
 
 function errorMessage(error: unknown): string {
   return error instanceof Error ? error.message : String(error);
+}
+
+type SfuSessionDescriptionHandler = {
+  remoteMediaStream: MediaStream;
+  setRemoteTrack: (track: MediaStreamTrack) => void;
+};
+
+function createSfuSessionDescriptionHandlerFactory(): NonNullable<UserAgentOptions["sessionDescriptionHandlerFactory"]> {
+  const factory = Web.defaultSessionDescriptionHandlerFactory();
+  return (session, options) => {
+    const handler = factory(session, options);
+    const sfuHandler = handler as unknown as SfuSessionDescriptionHandler;
+    const setRemoteTrack = sfuHandler.setRemoteTrack.bind(handler);
+    sfuHandler.setRemoteTrack = (track) => {
+      if (track.kind !== "video") {
+        setRemoteTrack(track);
+        return;
+      }
+      const remoteStream = sfuHandler.remoteMediaStream;
+      if (remoteStream.getTrackById(track.id)) {
+        return;
+      }
+      remoteStream.addTrack(track);
+      remoteStream.dispatchEvent(new MediaStreamTrackEvent("addtrack", { track }));
+    };
+    return handler;
+  };
+}
+
+function syncAudioTracks(stream: MediaStream, audioTracks: MediaStreamTrack[]): void {
+  const activeIds = new Set(audioTracks.map((track) => track.id));
+  stream.getAudioTracks().forEach((track) => {
+    if (!activeIds.has(track.id)) {
+      stream.removeTrack(track);
+    }
+  });
+  const currentIds = new Set(stream.getAudioTracks().map((track) => track.id));
+  audioTracks.forEach((track) => {
+    if (!currentIds.has(track.id)) {
+      stream.addTrack(track);
+    }
+  });
+}
+
+function sameStreams(left: MediaStream[], right: MediaStream[]): boolean {
+  return left.length === right.length && left.every((stream, index) => stream === right[index]);
 }

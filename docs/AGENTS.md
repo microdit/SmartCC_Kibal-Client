@@ -39,6 +39,15 @@
 | dev | `ssh://atom@nas2:4949/.../SmartCC_Kibal-Client.git` |
 | prd | `ssh://atom@nas2:4949/.../SmartCC_Kibal-Client_prd.git` |
 
+## 배포·동기화 절차 (2026-11-03 확정)
+1. `docs/_작업이력/{오늘날짜}.md`, `wiki/07_Logs/`, `wiki/06_Reports/`를 먼저 작성한다.
+2. 클라이언트는 `./scripts/git-sync.sh "커밋 메시지" --no-deploy`를 사용한다.
+   - 커밋 → `origin`/`dev`/`prd` 푸시까지 수행한다.
+   - 현재 PRD 배포 파이프라인(Stage C4)은 없으므로 배포는 생략한다.
+3. 웹 빌드 산출물은 커밋하지 않고, 검증은 `web`에서 `npm run build`와 스모크 스크립트로 수행한다.
+4. SFU 다중 영상 수정 시 `web/src/sip/SipClient.ts`와 `web/scripts/browser-smoke.mjs`를 함께 갱신한다.
+5. `git-sync.sh`는 `git add -A`를 사용하므로 실행 전 `git status --short`로 포함 파일을 확인한다.
+
 ## 커밋 타입
 - `feat`: 새 기능
 - `fix`: 버그 수정

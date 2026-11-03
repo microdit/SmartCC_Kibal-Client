@@ -112,21 +112,21 @@ SmartCC_Kibal-Client/
 
 | 단계 | 목표 | 완료 조건 | 상태 |
 |------|------|----------|------|
-| **Stage C1** | 프로젝트 초기화 | Git 저장소 + Wiki 구조 + venv | 미진행 |
-| **Stage C2** | Web Client MVP | 1:1 영상통화 (React + SIP.js) | 미진행 |
+| **Stage C1** | 프로젝트 초기화 | Git 저장소 + Wiki 구조 + venv | 완료 |
+| **Stage C2** | Web Client MVP | 1:1 영상통화 (React + SIP.js) | 완료 |
 | **Stage C3** | Mobile Client | Flutter iOS/Android 빌드 | 미진행 |
 | **Stage C4** | Docker 배포 | Web 클라이언트 컨테이너화 | 미진행 |
-| **Stage C5** | 통합 테스트 | Server + Client 3자 회의 검증 | 미진행 |
+| **Stage C5** | 통합 테스트 | Server + Client 3자 회의 검증 | 완료 (3자 SFU) |
 
 ## 8. PoC 테스트 체크리스트
 
 | 테스트 ID | 설명 | 완료 |
 |-----------|------|------|
-| CT01 | SIP.js 등록 (Web) | ☐ |
-| CT02 | 1:1 영상통화 (Web) | ☐ |
+| CT01 | SIP.js 등록 (Web) | ✅ |
+| CT02 | 1:1 영상통화 (Web) | ✅ |
 | CT03 | Flutter SIP 등록 (Mobile) | ☐ |
 | CT04 | 1:1 영상통화 (Mobile) | ☐ |
-| CT05 | 3자 SFU 회의 (Web) | ☐ |
+| CT05 | 3자 SFU 회의 (Web) | ✅ |
 | CT06 | NAT 통과 (STUN) | ☐ |
 
 ## 9. 관련 문서

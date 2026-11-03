@@ -208,10 +208,18 @@ networks:
 
 Server (`SmartCC_Kibal`) + Client (`SmartCC_Kibal-Client`) 3자 회의 검증:
 
-| 테스트 ID | 설명 | 검증 방법 |
-|-----------|------|-----------|
-| CT05 | 3자 SFU 회의 (Web) | 3개 브라우저 → 회의실 6000 참여 |
-| CT06 | NAT 통과 (STUN) | 공인망 클라이언트 → 서버 연결 |
+| 테스트 ID | 설명 | 검증 방법 | 상태 |
+|-----------|------|-----------|------|
+| CT05 | 3자 SFU 회의 (Web) | 3개 브라우저 → 회의실 6000 참여, 각 2개 원격 타일 확인 | ✅ 2026-11-01 |
+| CT06 | NAT 통과 (STUN) | 공인망 클라이언트 → 서버 연결 | ☐ |
+
+```bash
+cd web
+npm run build
+SIP_ROOM=1 SIP_ROOM_THIRD=1 SIP_DOMAIN=192.168.11.2 SIP_WS_SERVER=ws://192.168.11.2:8088/ws \
+  SIP_PASSWORD_1101=<PRD_1101> SIP_PASSWORD_1102=<PRD_1102> SIP_PASSWORD_1103=<PRD_1103> \
+  node scripts/browser-smoke.mjs
+```
 
 ---
 

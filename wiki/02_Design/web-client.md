@@ -3,8 +3,8 @@
 | 항목 | 값 |
 |------|---|
 | **작성일** | 2026-10-29 |
-| **버전** | v1.0 |
-| **상태** | 구현·LAN 검증 완료 (2026-11-01) |
+| **버전** | v1.1 |
+| **상태** | 구현·LAN 3자 회의 검증 완료 (2026-11-01) |
 | **관련** | [[wiki/02_Design/sip-client-design]], [[wiki/02_Design/mobile-client]], [[wiki/05/Decisions/ADR-002]] |
 
 ---
@@ -29,8 +29,8 @@
 - DEV: WebSocket `ws://127.0.0.1:8088/ws` 등록·해제 성공
 - PRD: `ws://192.168.11.2:8088/ws` 등록·해제 성공
 - PRD 1:1 (`1101` → `1102`): 양방향 오디오·영상, ICE connected, inbound/outbound RTP 확인
-- PRD 회의실 `6000` (`1101`/`1102`/`1103`): 3자 입장, 각 참가자 오디오 믹싱 수신, 원격 영상 320x180/480x270 수신 확인
-- 3자 회의에서 원격 video receiver는 2개가 live로 관측되나 UI는 1개 타일만 렌더링하는 경우가 있어 다중 타일 표시는 추가 검증이 필요하다.
+- PRD 회의실 `6000` (`1101`/`1102`/`1103`): 3자 입장, 각 참가자 오디오 믹싱 수신, 원격 영상 2개 타일(320x180/480x270) 동시 표시 확인
+- SIP.js 기본 `SessionDescriptionHandler`는 새 원격 video track 수신 시 기존 video track을 `stop()`하므로 다중 SFU 스트림이 1개만 남는다. `sessionDescriptionHandlerFactory`에서 video track을 누적하고, track ID별 `MediaStream`을 재사용하도록 보완했다.
 
 ### 검증 명령
 
@@ -129,6 +129,8 @@ export class KibalSipClient {
   async hangup(session: Session): Promise<void> { ... }
 }
 ```
+
+> **SFU 다중 영상**: SIP.js 0.21의 기본 원격 트랙 처리는 오디오/비디오 각 1개만 유지한다. ConfBridge `video_mode=sfu`의 다중 video m-line을 표시하려면 `sessionDescriptionHandlerFactory`에서 `setRemoteTrack()`의 video 분기를 누적 방식으로 바꾸고, `attachMedia()`에서 track ID별로 `MediaStream`을 안정적으로 재사용해야 한다. 매 폴링마다 새 `MediaStream`을 만들면 `<video>`가 매번 리로드되어 타일이 검게 남는다.
 
 ### 2.2 MediaManager.ts — WebRTC 관리
 
