@@ -1,0 +1,44 @@
+name: kibal_mobile
+description: SmartCC Kibal Mobile Client - Flutter SIP Client for iOS and Android
+publish_to: 'none'
+version: 0.1.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # SIP Client
+  flutter_sip: ^0.0.8
+  
+  # WebRTC for Flutter
+  flutter_webrtc: ^0.11.7
+  
+  # State Management
+  provider: ^6.1.1
+  
+  # Navigation
+  go_router: ^15.0.0
+  
+  # Permissions
+  permission_handler: ^11.3.0
+  
+  # UI Components
+  cupertino_icons: ^1.0.6
+  
+  # Localization
+  flutter_localizations:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+
+flutter:
+  uses-material-design: true
+  
+  assets:
+    - assets/images/
