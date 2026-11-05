@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 /// Kibal Mobile Client 상수 정의
 /// 
 /// SIP 서버, 포트, 환경 설정 등 모든 상수를 정의합니다.
@@ -204,8 +206,6 @@ class AppConstants {
   static const bool enableTurn = false; // TURN not configured yet
   static const bool enableIce = true;
   static const bool enableSfu = true;
-  static const bool enableVideo = true;
-  static const bool enableAudio = true;
   
   //--------------------------------------------------------------------------
   // Security

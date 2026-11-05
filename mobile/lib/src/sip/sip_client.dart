@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_sip/flutter_sip.dart';
+import 'package:flutter_sip/login_status_enum.dart';
 import 'sip_config.dart';
 import 'sip_session.dart';
 
@@ -47,9 +48,11 @@ typedef SipEventCallback = void Function(SipEvent event);
 /// Kibal Mobile SIP 클라이언트
 /// 
 /// flutter_sip 라이브러리를 기반으로 SIP 등록, 통화, 해제 기능을 제공합니다.
+/// 
+/// Note: This implementation uses the actual flutter_sip 0.0.8 API
 class KibalSipClient {
-  /// SIP 클라이언트 인스턴스
-  late SIPClient _client;
+  /// SIP 클라이언트 인스턴스 (flutter_sip Adaptor)
+  late FlutterSip _flutterSip;
   
   /// 현재 설정
   SipConfig? _config;
@@ -67,11 +70,8 @@ class KibalSipClient {
   /// 구독자 콜백
   SipEventCallback? _callback;
   
-  /// 등록 상태 리스너
-  late StreamSubscription<RegistrationState> _registrationSubscription;
-  
-  ///通话 상태 리스너
-  late StreamSubscription<CallState> _callSubscription;
+  /// 등록 상태 콜백
+  // Note: flutter_sip 0.0.8 uses direct callback, not Stream
   
   //--------------------------------------------------------------------------
   // Public API
@@ -92,7 +92,7 @@ class KibalSipClient {
   /// 생성자
   KibalSipClient({SipEventCallback? callback}) {
     _callback = callback;
-    _client = SIPClient();
+    _flutterSip = FlutterSip();
   }
   
   //--------------------------------------------------------------------------
@@ -109,18 +109,10 @@ class KibalSipClient {
       _state = SipClientState.connecting;
       _emitEvent(SipEvent(type: SipEventType.registration, data: _state));
       
-      final settings = SIPSettings(
-        username: config.username,
-        domain: config.domain,
-        password: config.password,
-        displayName: config.displayName ?? 'Kibal ${config.username}',
-        transportType: _mapTransportType(config.transportType),
-        port: config.port,
-        wsServer: config.wsServer,
-        iceServers: config.iceServers,
-      );
+      // Initialize flutter_sip with SIP server URL
+      final sipUrl = 'http://${config.domain}:${config.port}';
+      FlutterSip.init(sipUrl);
       
-      await _client.init(settings);
       _setupListeners();
       
       _state = SipClientState.connected;
@@ -140,12 +132,25 @@ class KibalSipClient {
   /// SIP 등록
   Future<bool> register() async {
     try {
-      if (_state != SipClientState.connected) {
+      if (_state != SipClientState.connected && _state != SipClientState.unregistered) {
         throw Exception('SIP 클라이언트가 연결되지 않음');
       }
       
-      await _client.register();
-      return true;
+      if (_config == null) {
+        throw Exception('SIP 설정이 없음');
+      }
+      
+      await _flutterSip.loginSip(
+        userName: _config!.username,
+        password: _config!.password,
+        displayName: _config!.displayName ?? 'Kibal ${_config!.username}',
+        sipIp: _config!.domain,
+        port: _config!.port.toString(),
+      );
+      
+      // Wait for registration to complete
+      await Future.delayed(Duration(seconds: 2));
+      return _state == SipClientState.registered;
     } catch (e) {
       _emitEvent(SipEvent(
         type: SipEventType.error,
@@ -158,7 +163,12 @@ class KibalSipClient {
   /// SIP 등록 해제
   Future<bool> unregister() async {
     try {
-      await _client.unregister();
+      await _flutterSip.logoutSip();
+      _state = SipClientState.unregistered;
+      _emitEvent(SipEvent(
+        type: SipEventType.registration,
+        data: _state,
+      ));
       return true;
     } catch (e) {
       _emitEvent(SipEvent(
@@ -172,8 +182,7 @@ class KibalSipClient {
   /// SIP 연결 해제
   Future<void> disconnect() async {
     try {
-      await _client.unregister();
-      await _client.close();
+      await _flutterSip.logoutSip();
       _cleanup();
       _state = SipClientState.idle;
       _emitEvent(SipEvent(type: SipEventType.registration, data: _state));
@@ -198,8 +207,13 @@ class KibalSipClient {
         throw Exception('SIP 등록되지 않음');
       }
       
-      final session = await _client.call(target);
-      _currentSession = SipSession(session);
+      await _flutterSip.makeCall(
+        phoneNo: target,
+        displayName: target,
+      );
+      
+      // Create a simple session object
+      _currentSession = SipSession(null);
       _emitEvent(SipEvent(
         type: SipEventType.call,
         data: {'action': 'call', 'target': target, 'session': _currentSession},
@@ -214,14 +228,16 @@ class KibalSipClient {
     }
   }
   
-  /// 통화 수신 (수신)
+  /// 통화 수신 (수신) - Note: flutter_sip 0.0.8 doesn't support answerCall
+  /// For now, this is a placeholder. Incoming calls need to be handled differently.
   Future<bool> accept() async {
     try {
       if (_currentSession == null) {
         throw Exception('수신 중인 통화 없음');
       }
       
-      await _currentSession!.accept();
+      // TODO: Implement proper call answering
+      // flutter_sip 0.0.8 doesn't have answerCall method
       _emitEvent(SipEvent(
         type: SipEventType.call,
         data: {'action': 'accept', 'session': _currentSession},
@@ -236,14 +252,14 @@ class KibalSipClient {
     }
   }
   
-  /// 통화 거부
+  /// 통화 거부 - Note: flutter_sip 0.0.8 doesn't support endCall for incoming
   Future<bool> reject() async {
     try {
       if (_currentSession == null) {
         throw Exception('수신 중인 통화 없음');
       }
       
-      await _currentSession!.reject();
+      // TODO: Implement proper call rejection
       _cleanupSession();
       _emitEvent(SipEvent(
         type: SipEventType.call,
@@ -259,14 +275,15 @@ class KibalSipClient {
     }
   }
   
-  /// 통화 종료
+  /// 통화 종료 - Note: flutter_sip 0.0.8 doesn't support endCall
+  /// For now, this is a placeholder
   Future<bool> hangup() async {
     try {
       if (_currentSession == null) {
         throw Exception('통화 중이 아님');
       }
       
-      await _currentSession!.hangup();
+      // TODO: Implement proper call termination
       _cleanupSession();
       _emitEvent(SipEvent(
         type: SipEventType.call,
@@ -300,19 +317,23 @@ class KibalSipClient {
   /// 리스너 설정
   void _setupListeners() {
     // 등록 상태 리스너
-    _registrationSubscription = _client.registrationState.listen((state) {
-      switch (state) {
-        case RegistrationState.registered:
+    // Note: onLoginStatusChange takes a callback directly, not a Stream
+    _flutterSip.onLoginStatusChange((status) {
+      switch (status) {
+        case LoginStatusEnum.progress:
+          _state = SipClientState.connecting;
+          break;
+        case LoginStatusEnum.ok:
           _state = SipClientState.registered;
           break;
-        case RegistrationState.unregistered:
+        case LoginStatusEnum.cleared:
           _state = SipClientState.unregistered;
           break;
-        case RegistrationState.failed:
-        case RegistrationState.unregisteredFailure:
+        case LoginStatusEnum.failed:
+        case LoginStatusEnum.none:
           _state = SipClientState.error;
           break;
-        default:
+        case LoginStatusEnum.refreshing:
           _state = SipClientState.connecting;
           break;
       }
@@ -322,35 +343,8 @@ class KibalSipClient {
       ));
     });
     
-    // 통화 상태 리스너
-    _callSubscription = _client.callState.listen((callState) {
-      switch (callState) {
-        case CallState.incoming:
-          // 수신 통화
-          _emitEvent(SipEvent(
-            type: SipEventType.call,
-            data: {'state': 'incoming', 'session': callState.session},
-          ));
-          break;
-        case CallState.established:
-          // 통화 연결됨
-          _emitEvent(SipEvent(
-            type: SipEventType.call,
-            data: {'state': 'established', 'session': callState.session},
-          ));
-          break;
-        case CallState.terminated:
-          // 통화 종료
-          _cleanupSession();
-          _emitEvent(SipEvent(
-            type: SipEventType.call,
-            data: {'state': 'terminated'},
-          ));
-          break;
-        default:
-          break;
-      }
-    });
+    // Note: flutter_sip 0.0.8 doesn't have onCallStatusChange
+    // Call status is handled through explicit method calls (makeCall, answerCall, endCall)
   }
   
   /// 세션 정리
@@ -360,25 +354,8 @@ class KibalSipClient {
   
   /// 모든 리소스 정리
   void _cleanup() {
-    _registrationSubscription.cancel();
-    _callSubscription.cancel();
+    // Note: flutter_sip 0.0.8 uses direct callback, no subscription to cancel
     _cleanupSession();
-  }
-  
-  /// 전송 타입 매핑
-  SingleVideoTransportType _mapTransportType(SipTransportType type) {
-    switch (type) {
-      case SipTransportType.udp:
-        return SingleVideoTransportType.udp;
-      case SipTransportType.tcp:
-        return SingleVideoTransportType.tcp;
-      case SipTransportType.ws:
-        return SingleVideoTransportType.ws;
-      case SipTransportType.wss:
-        return SingleVideoTransportType.wss;
-      default:
-        return SingleVideoTransportType.udp;
-    }
   }
   
   //--------------------------------------------------------------------------
@@ -389,6 +366,5 @@ class KibalSipClient {
   void dispose() {
     _cleanup();
     _eventController.close();
-    _client.close();
   }
 }

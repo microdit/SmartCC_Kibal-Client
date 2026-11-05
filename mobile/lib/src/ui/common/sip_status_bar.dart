@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../providers/sip_provider.dart';
+import '../../sip/sip_client.dart';
 import '../../utils/constants.dart';
 
 /// SIP 상태 바 위젯

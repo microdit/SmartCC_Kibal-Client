@@ -247,13 +247,13 @@ class Formatters {
   /// 민감한 정보 마스킹
   static String _maskSensitiveInfo(String text) {
     // 비밀번호, 토큰, 인증 정보 등 마스킹
-    const sensitivePatterns = [
-      r'password["\'\s:=]+[^\s"\'&]+',
-      r'secret["\'\s:=]+[^\s"\'&]+',
-      r'token["\'\s:=]+[^\s"\'&]+',
-      r'credential["\'\s:=]+[^\s"\'&]+',
-      r'auth["\'\s:=]+[^\s"\'&]+',
-      r'192\.168\.\d+\.\d+', // 내부 IP
+    final sensitivePatterns = [
+      'password',
+      'secret',
+      'token',
+      'credential',
+      'auth',
+      '192.168.', // 내부 IP
     ];
     
     var result = text;

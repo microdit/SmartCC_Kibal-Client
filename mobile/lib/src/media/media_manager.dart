@@ -106,7 +106,6 @@ class MediaManager {
       await track.stop();
       await track.dispose();
     }
-    await stream.dispose();
   }
   
   //--------------------------------------------------------------------------
@@ -186,7 +185,8 @@ class MediaManager {
       
       if (_localStream != null) {
         for (final track in _localStream!.getAudioTracks()) {
-          await track.setEnabled(!_isAudioMuted);
+          // Use setter instead of setEnabled()
+          track.enabled = !_isAudioMuted;
         }
       }
       
@@ -204,7 +204,8 @@ class MediaManager {
       
       if (_localStream != null) {
         for (final track in _localStream!.getVideoTracks()) {
-          await track.setEnabled(!_isVideoMuted);
+          // Use setter instead of setEnabled()
+          track.enabled = !_isVideoMuted;
         }
       }
       
@@ -311,34 +312,6 @@ class MediaManager {
   
   //--------------------------------------------------------------------------
   // Track Management
-  //--------------------------------------------------------------------------
-  
-  /// 트랙 추가 시 처리
-  /// 
-  /// [track] RTC RTP 트랙
-  /// [sessionId] 세션 ID
-  void onAddTrack(RTCRtpTransceiver transceiver, String sessionId) {
-    final track = transceiver.sender.track;
-    if (track == null) return;
-    
-    // 오스트림 추출
-    final stream = MediaStream();
-    stream.addTrack(track);
-    
-    // 원격 스트림 추가
-    addRemoteStream(stream, sessionId);
-  }
-  
-  /// 트랙 제거 시 처리
-  /// 
-  /// [track] RTC Rtp 트랙
-  /// [sessionId] 세션 ID
-  void onRemoveTrack(RTCRtpTransceiver transceiver, String sessionId) {
-    removeRemoteStream(sessionId);
-  }
-  
-  //--------------------------------------------------------------------------
-  // Utility Methods
   //--------------------------------------------------------------------------
   
   /// 스트림이 비디오를 포함하는지 확인

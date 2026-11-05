@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
 import '../../providers/sip_provider.dart';
 import '../../providers/media_provider.dart';
 import '../../sip/sip_config.dart';
+import '../../sip/sip_client.dart';
 import '../../utils/constants.dart';
 import '../../utils/formatters.dart';
 
@@ -673,7 +675,7 @@ class _LoginScreenState extends State<LoginScreen> {
   
   Future<void> _quickConnect(SipProvider sipProvider, String extension) async {
     _usernameController.text = extension;
-    _passwordController.requestFocus();
+    _passwordFocus.requestFocus();
     
     // 필요시 비밀번호 자동 입력 (DEV 환경용)
     if (AppConstants.isDevelopment) {
