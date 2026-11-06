@@ -193,3 +193,170 @@
 - ⚠️ **남은 작업: 환경 설정 및 테스트만 남음**
 
 **오늘 (2026-11-05) 내에 CT03/CT04를 통과시킬 수 있습니다!**
+
+
+다음 단계를 사용자가 직접 실행해줘야 해:
+
+1. Xcode CommandLineTools 활성화:
+sudo xcode-select --switch /Applications/Xcode.app/Contents/Developer
+sudo xcodebuild -runFirstLaunch
+
+2. CocoaPods 설치:
+sudo gem install cocoapods
+
+이 명령어들의 암호를 물으면 입력해줘. 다 되면告诉我. 그后就 진행할게.
+
+✻ Cogitated for 38s
+
+❯ sudo gem install cocoapods
+
+  Thought for 7s, ran 1 shell command
+
+❯ Successfully installed ruby-macho-4.1.0
+  ERROR:  Error installing cocoapods:
+      The last version of nap (~> 1.0) to support your Ruby & RubyGems was 1.1.1. Try installing it with `gem install nap -v 1.1.1` and then running the current command again
+      nap requires Ruby version >= 3.3. The current ruby version is 2.6.10.210.
+  microdit@MacPro ~ % v
+
+
+터미널에서 다음 명령어들을 실행해줘:
+
+# 1. rbenv로 Ruby 3.3 설치
+rbenv install 3.3.0
+rbenv global 3.3.0
+
+# 2. Ruby 버전 확인
+ruby -v
+
+# 3. CocoaPods 설치 (rbenv环境下)
+gem install cocoapods
+
+# 4. Flutter doctor로 확인
+flutter doctor
+
+rbenv 명령어가 없으면 먼저 설치해야 해:
+
+brew install rbenv ruby-build
+
+
+
+
+Ruby 3.3.0 설치는 했지만 글로벌 설정이 안 됐어. 터미널에서 다음 명령어들을 실행해줘:
+
+# 1. Ruby 3.3.0을 기본 버전으로 설정
+rbenv global 3.3.0
+
+# 2. rbenv 재설정
+rbenv rehash
+
+# 3. Ruby 버전 확인 (3.3.0이어야 함)
+ruby -v
+
+# 4. CocoaPods 설치
+gem install cocoapods
+
+다 되면告诉我.
+
+
+
+
+
+
+🎉 앱 화면이 올라왔네! 시뮬레이터에서 어떤 화면이 보여?
+
+현재 상태를 확인해줘:
+1. 로그인 화면이 나타났나?
+2. 서버 주소 입력 필드가 있나?
+3. 사용자명/비밀번호 입력 필드가 있나?
+
+그리고 다음을 알려줘:
+
+Asterisk 서버 연결 설정:
+- DEV 환경 (로컬): localhost:5060 또는 127.0.0.1:5060
+- PRD 환경 (NAS2): nas2:5060 또는 IP 주소
+
+어느 환경의 Asterisk 서버로 테스트할 거야?
+- 로컬에 Asterisk가 실행 중이야?
+- 아니면 NAS2의 원격 Asterisk로 연결할 거야?
+
+이 정보를 알려주면 SIP 등록 테스트(CT03)를 진행할 수 있어.
+
+
+
+
+
+iOS flutter_sip 플러그인 문제를 해결하기 위해 Android로 전환할게.
+
+Android 개발 환경 설정:
+
+1. Java JDK 설치 (필수)
+2. Android SDK 설치
+3. Android 에뮬레이터 생성 및 실행
+4. Flutter 앱 빌드 및 테스트
+
+현재 상황:
+- Java JDK: ❌ 미설치 (Homebrew 권한 문제로 설치 못함)
+- Android SDK: ❌ 미설치
+
+Java JDK 설치 방법:
+
+터미널에서 다음을 실행해줘:
+
+# Homebrew 권한 수정 (한번만)
+sudo chown -R microdit /usr/local/share/fish /usr/local/share/fis
+
+# Java JDK 17 설치
+brew install openjdk@17
+
+# 설치 확인
+java -version
+
+또는 Mac 기본 JDK 사용:
+/usr/libexec/java_home -v 17
+
+
+
+
+
+
+
+
+microdit@MacPro ~ % printf '%s\n' 'export PATH=/usr/local/opt/openjdk@17/bin:$PATH' >> ~/.zshrc
+microdit@MacPro ~ % source ~/.zshrc
+microdit@MacPro ~ % java -version
+openjdk version "17.0.21.0.3" 2026-10-24
+OpenJDK Runtime Environment Homebrew (build 17.0.21.0.3+0)
+OpenJDK 64-Bit Server VM Homebrew (build 17.0.21.0.3+0, mixed mode, sharing)
+microdit@MacPro ~ % 
+
+
+flutter doctor -v
+
+
+
+Android SDK는 있지만 cmdline-tools 컴포넌트가 없어. Android Studio를 설치하거나 cmdline-tools를 다운로드해야 해.
+
+가장 빠른 방법: Homebrew로 Android Studio 설치
+
+터미널에서:
+
+brew install android-studio
+
+또는 cmdline-tools만 설치:
+
+# Android SDK cmdline-tools 다운로드 및 설정
+mkdir -p /usr/local/Caskroom/android-platform-tools/cmdline-tools
+# 다운로드 후 ANDROID_HOME 설정 필요
+
+더 간단한 방법:
+
+flutter run을 직접 실행하면 Flutter가 자동으로 필요한 도구를 설정해줄 수도 있어.
+
+cd /Users/microdit/Downloads/dev/SmartCC_Kibal-Client/mobile
+flutter run
+
+이 명령어를 실행하면 Android 에뮬레이터 선택 후 앱이 자동으로 빌드/실행될 거야.
+
+먼저 이 방법을 시도해볼까? 아니면 Android Studio를 먼저 설치할까?
+
+✻ Brewed for 11s
