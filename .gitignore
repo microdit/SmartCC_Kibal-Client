@@ -30,3 +30,20 @@ Thumbs.db
 
 # Logs
 *.log
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+venv*/
+.venv/
+
+# Vector DB (Knowledge OS Layer 3)
+vector_db/
+chroma_data/
+
+# Node
+web/node_modules/.vite/
+
+# Auto-generated sync logs
+docs/_작업이력/log/*.md
