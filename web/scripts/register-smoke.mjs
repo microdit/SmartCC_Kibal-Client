@@ -8,9 +8,26 @@ const server = process.env.SIP_WS_SERVER ?? `ws://${domain}:8088/ws`;
 const timeoutMs = Number(process.env.SIP_TIMEOUT_MS ?? 15000);
 const traceSip = process.env.SIP_TRACE === "1";
 
+assertWebSocketUrl(server);
+
 if (!password) {
   console.error("SIP_PASSWORD is required");
   process.exit(2);
+}
+
+function assertWebSocketUrl(value) {
+  let parsed;
+  try {
+    parsed = new URL(value);
+  } catch {
+    console.error(`INVALID SIP_WS_SERVER: ${value}`);
+    process.exit(2);
+  }
+  if (parsed.protocol !== "ws:" && parsed.protocol !== "wss:") {
+    console.error(`SIP_WS_SERVER must use ws:// or wss://: ${value}`);
+    process.exit(2);
+  }
+  console.log(`SIP transport: websocket (${parsed.protocol.slice(0, -1)})`);
 }
 
 const uri = UserAgent.makeURI(`sip:${username}@${domain}`);

@@ -14,6 +14,8 @@ const previewPort = Number(process.env.PREVIEW_PORT ?? 4173);
 const appUrl = `http://127.0.0.1:${previewPort}/`;
 const screenshotDir = process.env.SCREENSHOT_DIR ?? "/tmp";
 
+assertWebSocketUrl(wsServer);
+
 if (!password1101) {
   console.error("SIP_PASSWORD_1101 is required");
   process.exit(2);
@@ -145,6 +147,21 @@ try {
 } finally {
   await browser?.close().catch(() => undefined);
   preview.kill("SIGTERM");
+}
+
+function assertWebSocketUrl(value) {
+  let parsed;
+  try {
+    parsed = new URL(value);
+  } catch {
+    console.error(`INVALID SIP_WS_SERVER: ${value}`);
+    process.exit(2);
+  }
+  if (parsed.protocol !== "ws:" && parsed.protocol !== "wss:") {
+    console.error(`SIP_WS_SERVER must use ws:// or wss://: ${value}`);
+    process.exit(2);
+  }
+  console.log(`SIP transport: websocket (${parsed.protocol.slice(0, -1)})`);
 }
 
 async function openClient(browser, username, password) {
