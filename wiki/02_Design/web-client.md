@@ -3,15 +3,16 @@
 | 항목 | 값 |
 |------|---|
 | **작성일** | 2026-10-29 |
-| **버전** | v1.1 |
-| **상태** | 구현·LAN 3자 회의 검증 완료 (2026-11-01) |
-| **관련** | [[wiki/02_Design/sip-client-design]], [[wiki/02_Design/mobile-client]], [[wiki/05/Decisions/ADR-002]] |
+| **최종 수정** | 2026-11-07 |
+| **버전** | v1.2 |
+| **상태** | WebSocket/WebRTC 완성 · DEV/PRD 검증 완료 |
+| **관련** | [[wiki/02_Design/sip-client-design]], [[wiki/05_Decisions/ADR-002]], [[wiki/06_Reports/20261107_웹클라이언트_완성_보고서]] |
 
 ---
 
-## 0. 구현 현황 (2026-11-01)
+## 0. 현재 구현 현황 (2026-11-07)
 
-현재 `web/`는 설계 문서의 전체 구조가 아니라 SIP 등록·1:1 영상·회의실 참가를 검증하는 최소 테스트 클라이언트로 구현되어 있다.
+`web/`는 SIP 등록·1:1 영상통화·6000 회의실 SFU를 검증하는 **실사용 가능한 Web 클라이언트**다.
 
 | 항목 | 파일 | 상태 |
 |------|------|------|
@@ -19,241 +20,199 @@
 | 테스트 UI | `web/src/App.tsx` | 완료 |
 | 스타일 | `web/src/styles.css` | 완료 |
 | SIP.js 래퍼 | `web/src/sip/SipClient.ts` | 완료 |
-| 설정 | `web/src/config.ts` | 완료 |
+| 설정 검증 | `web/src/config.ts` | 완료 |
 | Node 등록 스모크 | `web/scripts/register-smoke.mjs` | 완료 |
 | 브라우저 스모크 | `web/scripts/browser-smoke.mjs` | 완료 |
-| Tailwind/Zustand/React Router | - | 미적용 (테스트 클라이언트 범위) |
+| Tailwind/Zustand/React Router | - | 미적용 (의도적 최소 구성) |
 
-검증 결과:
+검증 결과(2026-11-07):
 
-- DEV: WebSocket `ws://127.0.0.1:8088/ws` 등록·해제 성공
-- PRD: `ws://192.168.11.2:8088/ws` 등록·해제 성공
-- PRD 1:1 (`1101` → `1102`): 양방향 오디오·영상, ICE connected, inbound/outbound RTP 확인
-- PRD 회의실 `6000` (`1101`/`1102`/`1103`): 3자 입장, 각 참가자 오디오 믹싱 수신, 원격 영상 2개 타일(320x180/480x270) 동시 표시 확인
-- SIP.js 기본 `SessionDescriptionHandler`는 새 원격 video track 수신 시 기존 video track을 `stop()`하므로 다중 SFU 스트림이 1개만 남는다. `sessionDescriptionHandlerFactory`에서 video track을 누적하고, track ID별 `MediaStream`을 재사용하도록 보완했다.
+| ID | DEV | PRD |
+|----|-----|-----|
+| CT01 SIP 등록·해제 | PASS | PASS |
+| CT02 1:1 영상 | PASS, remote video 1 | PASS, remote video 1 |
+| CT05 3자 SFU | PASS, remote video 2 | PASS, remote video 2 |
+| 마이크·카메라 toggle | PASS | PASS |
 
-### 검증 명령
+증거: Server `docs/_작업이력/evidence/20261107-web-completion/`
+
+---
+
+## 1. 구조
+
+```text
+web/
+├── src/
+│   ├── main.tsx
+│   ├── App.tsx                 ← 등록·다이얼·수신·영상 타일·로그 UI
+│   ├── config.ts               ← env 기본값·설정 검증·정규화
+│   ├── sip/
+│   │   └── SipClient.ts        ← UserAgent/Registerer/Session/미디어 제어
+│   └── styles.css
+├── scripts/
+│   ├── register-smoke.mjs
+│   └── browser-smoke.mjs
+├── .env.example
+├── package.json
+└── vite.config.ts
+```
+
+향후 화면이 늘어나면 `features/`, `hooks/`, `store/`로 분리한다. 현재 PoC 범위에서는 파일 수를 늘리지 않는다.
+
+---
+
+## 2. 설정 모델
+
+```ts
+export interface SipConfig {
+  username: string;
+  password: string;
+  domain: string;
+  wsServer: string;
+  displayName: string;
+  iceServers: string[];
+}
+```
+
+### 2.1 원칙
+
+| 항목 | 정책 |
+|------|------|
+| 기본 도메인 | `VITE_SIP_DOMAIN` (기본 `192.168.11.2`) |
+| 기본 WebSocket | `VITE_SIP_WS_SERVER` (기본 `ws://<domain>:8088/ws`) |
+| 내선/표시명 | `VITE_SIP_USERNAME`, `VITE_SIP_DISPLAY_NAME` |
+| **비밀번호** | **env에 넣지 않는다. UI 입력만 사용한다.** |
+| 저장 | `localStorage`에 password를 제외한 설정만 저장 |
+| STUN/TURN | UI에서 쉼표 구분 입력, 기본 `stun:stun.l.google.com:19302` |
+
+`VITE_*` 값은 브라우저 번들에 포함되므로 비밀번호·토큰을 넣으면 안 된다.
+
+### 2.2 검증 규칙
+
+`validateSipConfig()`가 등록 전에 확인한다.
+
+- 내선: 영문·숫자·`._-`, 32자 이내
+- 도메인: IP 또는 호스트명, scheme/path 금지
+- WebSocket: `ws://` 또는 `wss://`만 허용
+- 경로가 `/`이면 `/ws`로 정규화
+- HTTPS 페이지에서 `ws://` 사용 시 오류 (mixed content)
+- STUN/TURN scheme 오류는 경고
+
+---
+
+## 3. SIP 등록 lifecycle
+
+`KibalSipClient.connect()` 흐름:
+
+1. `UserAgent.makeURI("sip:<user>@<domain>")`
+2. `UserAgent` 생성 — `transportOptions.server = wsServer`
+3. `ua.start()` — WebSocket 연결, **15초 타임아웃**
+4. `Registerer.register()` — **15초 타임아웃**
+5. `Registered` 상태 확인
+6. 실패 시 transport 정리 후 오류 반환
+
+`disconnect()`는 최대 5초 안에 `unregister()` 후 `ua.stop()`을 수행한다. 예기치 않은 WebSocket 종료는 `onRegistration("disconnected")`로 UI에 표시하고, UI의 **재연결** 버튼으로 `disconnect → connect`를 수행한다.
+
+### 3.1 SIP 인증
+
+- SIP Digest는 인증 시점에 challenge-response로 MD5를 계산한다.
+- 서버 `SIP_PASSWORD_*`와 클라이언트 입력 비밀번호는 **동일한 plaintext**여야 한다.
+- 사전 계산된 MD5 digest를 비밀번호로 넣지 않는다.
+- `pjsip.conf.template`의 `${SIP_PASSWORD_*}` placeholder는 유지한다.
+- 2026-11-06 DEV 장애는 stale 컨테이너의 32자리 hex 런타임 값과 `.env` 불일치가 원인이었다.
+
+---
+
+## 4. 1:1 통화와 미디어
+
+- `Inviter`/`Invitation` + `SessionDescriptionHandler`
+- `audio: true`, `video: 1280x720 ideal`
+- 수신 중 다른 INVITE가 오면 busy로 거절
+- 통화 중 마이크·카메라 `MediaStreamTrack.enabled` toggle
+- `attachMedia()`가 원격 track을 track ID별 `MediaStream`으로 재사용
+- 세션 종료·PC closed/failed 시 `attachMedia()` cleanup이 interval/listener를 제거하고 track 참조를 해제
+
+### 4.1 SFU 다중 영상
+
+SIP.js 기본 원격 track 처리는 오디오/비디오 각 1개만 유지한다. ConfBridge `video_mode=sfu`의 다중 video m-line을 표시하려면:
+
+1. `sessionDescriptionHandlerFactory`에서 `setRemoteTrack()`의 video 분기를 누적 방식으로 교체
+2. `attachMedia()`에서 track ID별 `MediaStream` 재사용
+3. 매 polling마다 새 `MediaStream`을 만들지 않는다
+
+이 보완으로 3자 회의에서 원격 영상 2개가 동시에 표시된다.
+
+---
+
+## 5. 화면
+
+### 5.1 SIP 연결
+
+- 서버 도메인, WebSocket URL, 내선, 비밀번호, STUN/TURN
+- 등록/등록 해제/재연결
+- 등록 상태 pill, 오류, 설정 경고
+
+### 5.2 통화
+
+- 대상 번호 또는 `6000` 회의실
+- 수신 받기/거절
+- 통화 종료
+- 마이크 끄기/켜기, 카메라 끄기/켜기
+- 세션 상태
+
+### 5.3 영상
+
+- 원격 track grid (참가자별 타일)
+- 로컬 PiP
+- SIP 로그 접기/펼치기
+
+---
+
+## 6. 빌드·검증
 
 ```bash
 cd web
+npm install
+npm run typecheck
 npm run build
 
-# Node SIP 등록 (DEV 예시)
-SIP_DOMAIN=127.0.0.1 SIP_WS_SERVER=ws://127.0.0.1:8088/ws SIP_USERNAME=1101 SIP_PASSWORD=<DEV_1101_비밀번호> npm run smoke:register
+# DEV 등록
+SIP_DOMAIN=127.0.0.1 SIP_WS_SERVER=ws://127.0.0.1:8088/ws \
+SIP_USERNAME=1101 SIP_PASSWORD=<DEV_1101_PASSWORD> \
+npm run smoke:register
 
-# 브라우저 1:1 (PRD 예시)
-SIP_DOMAIN=192.168.11.2 SIP_WS_SERVER=ws://192.168.11.2:8088/ws SIP_PASSWORD_1101=<PRD_1101_비밀번호> SIP_PASSWORD_1102=<PRD_1102_비밀번호> npm run smoke:call
+# DEV 1:1
+SIP_DOMAIN=127.0.0.1 SIP_WS_SERVER=ws://127.0.0.1:8088/ws \
+SIP_PASSWORD_1101=<DEV_1101_PASSWORD> SIP_PASSWORD_1102=<DEV_1102_PASSWORD> \
+npm run smoke:call
 
-# 브라우저 3자 회의실
-SIP_ROOM=1 SIP_ROOM_THIRD=1 SIP_DOMAIN=192.168.11.2 SIP_WS_SERVER=ws://192.168.11.2:8088/ws SIP_PASSWORD_1101=<PRD_1101_비밀번호> SIP_PASSWORD_1102=<PRD_1102_비밀번호> SIP_PASSWORD_1103=<PRD_1103_비밀번호> node scripts/browser-smoke.mjs
+# PRD 3자 회의
+SIP_DOMAIN=192.168.11.2 SIP_WS_SERVER=ws://192.168.11.2:8088/ws \
+SIP_PASSWORD_1101=<PRD_1101_PASSWORD> SIP_PASSWORD_1102=<PRD_1102_PASSWORD> \
+SIP_PASSWORD_1103=<PRD_1103_PASSWORD> npm run smoke:room3
 ```
+
+브라우저 스모크는 fake media + headless Chrome을 사용하며, 등록·통화·미디어 toggle·원격 track 수를 검사한다.
 
 ---
 
-## 1. 프로젝트 구조
+## 7. 남은 과제
 
-```
-web/
-├── public/
-│   ├── index.html
-│   └── favicon.ico
-├── src/
-│   ├── app/
-│   │   ├── App.tsx              ← 라우팅 (React Router v6)
-│   │   ├── index.tsx            ← React 엔트리
-│   │   └── providers/           ← 컨텍스트 프로바이더
-│   │       ├── SipProvider.tsx  ← SIP.js UserAgent 컨텍스트
-│   │       └── MediaProvider.tsx ← WebRTC media 컨텍스트
-│   ├── components/
-│   │   ├── common/              ← 공통 UI (Button, Input, Badge)
-│   │   ├── layout/              ← Header, Sidebar, Footer
-│   │   └── ui/                  ← Tailwind 스타일 컴포넌트
-│   ├── features/
-│   │   ├── login/               ← SIP 등록 화면
-│   │   ├── dialer/              ← 다이얼러 화면
-│   │   ├── call/                ← 1:1 영상통화 화면
-│   │   └── conference/          ← 회의실 화면
-│   ├── sip/
-│   │   ├── SipClient.ts         ← SIP.js UserAgent 래퍼
-│   │   ├── SipSession.ts        ← 세션 관리
-│   │   ├── MediaManager.ts      ← WebRTC MediaStream 관리
-│   │   └── ConferenceManager.ts ← ConfBridge 참여 관리
-│   ├── hooks/
-│   │   ├── useSip.ts            ← SIP 상태 훅
-│   │   ├── useMedia.ts          ← 미디어 스트림 훅
-│   │   └── useConference.ts     ← 회의 상태 훅
-│   ├── store/
-│   │   └── index.ts             ← Zustand 스토어
-│   ├── pages/
-│   │   ├── LoginPage.tsx
-│   │   ├── DialerPage.tsx
-│   │   ├── CallPage.tsx
-│   │   └── ConferencePage.tsx
-│   ├── styles/
-│   │   └── index.css            ← Tailwind CSS
-│   ├── utils/
-│   │   └── constants.ts         ← 상수
-│   └── types/
-│       └── index.ts             ← TypeScript 타입
-├── package.json
-├── vite.config.ts
-├── tsconfig.json
-└── tailwind.config.js
-```
+| 우선순위 | 항목 | 상태 |
+|----------|------|------|
+| P1 | WSS/TLS 인증서·HTTPS 배포 | 미구성 |
+| P1 | TURN(coturn), 외부망 CT06 | BLOCKED |
+| P2 | Playwright UI 회귀·모바일 390px | 미완료 |
+| P2 | 다중 참가자 4명 이상 레이아웃 | 미검증 |
+| P2 | 통화 기록·장치 선택 UI | 미구현 |
 
 ---
 
-## 2. 핵심 컴포넌트
+## 8. 관련 문서
 
-### 2.1 SipClient.ts — SIP.js UserAgent 래퍼
-
-```typescript
-import { UserAgent } from 'sip.js';
-
-export class KibalSipClient {
-  private ua: UserAgent;
-
-  constructor(config: SipConfig) {
-    this.ua = new UserAgent({
-      uri: new URI(`sip:${config.username}@${config.domain}`),
-      wsServers: [config.wsServer],
-      password: config.password,
-      displayName: config.displayName,
-    });
-  }
-
-  async register(): Promise<boolean> { ... }
-  async unregister(): Promise<void> { ... }
-  async makeCall(target: string, options: CallOptions): Promise<SipSession> { ... }
-  async answerCall(session: Session): Promise<void> { ... }
-  async hangup(session: Session): Promise<void> { ... }
-}
-```
-
-> **SFU 다중 영상**: SIP.js 0.21의 기본 원격 트랙 처리는 오디오/비디오 각 1개만 유지한다. ConfBridge `video_mode=sfu`의 다중 video m-line을 표시하려면 `sessionDescriptionHandlerFactory`에서 `setRemoteTrack()`의 video 분기를 누적 방식으로 바꾸고, `attachMedia()`에서 track ID별로 `MediaStream`을 안정적으로 재사용해야 한다. 매 폴링마다 새 `MediaStream`을 만들면 `<video>`가 매번 리로드되어 타일이 검게 남는다.
-
-### 2.2 MediaManager.ts — WebRTC 관리
-
-```typescript
-export class MediaManager {
-  private localStream: MediaStream | null = null;
-  private peerConnections: Map<string, RTCPeerConnection> = new Map();
-
-  async getLocalMedia(constraints: MediaStreamConstraints): Promise<MediaStream> {
-    this.localStream = await navigator.mediaDevices.getUserMedia(constraints);
-    return this.localStream;
-  }
-
-  createPeerConnection(config: RTCConfiguration): RTCPeerConnection { ... }
-  closeAll(): void { ... }
-}
-```
-
-### 2.3 ConferenceManager.ts — ConfBridge 참여
-
-```typescript
-export class ConferenceManager {
-  private conferenceId: string = '6000';
-  private participantStreams: Map<string, MediaStream> = new Map();
-
-  async joinConference(displayName: string): Promise<void> { ... }
-  async leaveConference(): Promise<void> { ... }
-}
-```
-
----
-
-## 3. 화면 (Pages)
-
-### 3.1 로그인 / SIP 등록 (LoginPage)
-
-- SIP 계정 입력 (내선번호, 비밀번호)
-- `ws://192.168.11.2:8088/ws` WebSocket 연결 (내부 LAN, TLS 미적용)
-- REGISTER 전송 → 200 OK 확인
-- 등록 상태 표시 (등록됨 / 등록 실패)
-
-### 3.2 다이얼러 (DialerPage)
-
-- 숫자 패드 (0-9, *, #)
-- 내선번호 입력 (1001~1004)
-- 음성/영상 전환 토글
-- 최근 통화 기록 (간단히)
-
-### 3.3 통화 화면 (CallPage)
-
-```
-┌─────────────────────────────────────────┐
-│  [Local Video]          [Remote Video]  │
-│  (작은 창)               (메인 화면)      │
-├─────────────────────────────────────────┤
-│  [음소거] [카메라 전환] [통화 종료]       │
-└─────────────────────────────────────────┘
-```
-
-- 로컬/원격 영상 겹치기 (picture-in-picture)
-- 음소거 토글, 카메라 전환 (front/back)
-
-### 3.4 회의실 (ConferencePage)
-
-```
-┌──────────┬──────────┬──────────┐
-│  참가자 1 │  참가자 2 │  참가자 3 │
-├──────────┼──────────┼──────────┤
-│  참가자 4 │           │          │
-└──────────┴──────────┴──────────┘
-[입장] [퇴장] [음소거] [종료]
-```
-
-- 6000번 회의실 접속
-- 격자 레이아웃 (최대 4명)
-- 참가자 이름/상태 표시
-
----
-
-## 4. 빌드 및 배포
-
-```bash
-cd web/
-npm install
-npm run dev    # Vite dev server (localhost:5173)
-npm run build  # dist/ 디렉토리 생성
-```
-
-### Docker (kibal-web)
-
-```dockerfile
-FROM node:22-alpine AS builder
-WORKDIR /app
-COPY package*.json ./
-RUN npm ci --frozen-lockfile
-COPY . .
-RUN npm run build
-
-FROM nginx:alpine
-COPY --from=builder /app/dist /usr/share/nginx/html
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
-```
-
----
-
-## 5. 브라우저 호환성
-
-| 브라우저 | SIP.js | WebRTC | 영상통화 | 다자간 |
-|----------|--------|--------|----------|--------|
-| Chrome | ✅ | ✅ | ✅ | ✅ |
-| Edge | ✅ | ✅ | ✅ | ✅ |
-| Safari 16+ | ✅ | ✅ | ✅ | ✅ |
-| Firefox | ✅ | ✅ | ✅ | ✅ |
-| Mobile Safari | ✅ | ✅ | ✅ | ✅ (iOS 15+) |
-
-> **참고**: iOS Safari는 백그라운드 전환 시 WebRTC 세션이 제한될 수 있습니다. 상시 전화 수신을 위해서는 네이티브 앱이 필요합니다 (ADR-003 참조).
-
----
-
-## 6. 관련 문서
-
-- [[wiki/02_Design/sip-client-design]] — SIP 클라이언트 전체 설계
-- [[wiki/02_Design/mobile-client]] — Mobile Client (Flutter)
-- [[wiki/04_Prompts/work-commands]] — 개발 명령어 (Docker, Vite)
-- [[wiki/03_Guides/development-guide]] — 클라이언트 개발 가이드
+- [[wiki/02_Design/sip-client-design]]
+- [[wiki/02_Design/mobile-client]]
+- [[wiki/05_Decisions/ADR-002]]
+- [[wiki/06_Reports/20261107_웹클라이언트_완성_작업계획서]]
+- [[wiki/06_Reports/20261107_웹클라이언트_완성_보고서]]
+- [[wiki/09_Knowledge/sip-js-reference]]

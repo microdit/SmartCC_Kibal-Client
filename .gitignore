@@ -44,6 +44,8 @@ chroma_data/
 
 # Node
 web/node_modules/.vite/
+web/.env.local
+web/.env.*.local
 
 # Auto-generated sync logs
 docs/_작업이력/log/*.md

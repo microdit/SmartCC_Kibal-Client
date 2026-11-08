@@ -3,8 +3,9 @@
 | 항목 | 내용 |
 |------|------|
 | **작성일** | 2026-10-29 |
-| **버전** | v1.0 |
-| **상태** | 계획 중 |
+| **최종 수정** | 2026-11-07 |
+| **버전** | v1.1 |
+| **상태** | Web 완료 · Mobile FROZEN |
 | **관련** | [[wiki/01_Projects/client-project-plan]], [[wiki/01_Projects/tasks]] |
 
 > **별도 리포지토리**: `SmartCC_Kibal-Client`
@@ -30,19 +31,19 @@
 
 | 작업 ID | 설명 | 기술 | 완료 |
 |---------|------|------|------|
-| C2-01 | React + TypeScript + Vite 프로젝트 생성 | React 18 | ☐ |
+| C2-01 | React + TypeScript + Vite 프로젝트 생성 | React 18 | ✅ |
 | C2-02 | Tailwind CSS 설정 | Tailwind v3 | ☐ |
 | C2-03 | Zustand 상태 관리 설정 | Zustand | ☐ |
-| C2-04 | SIP.js UserAgent 구현 | SIP.js | ☐ |
-| C2-05 | REGISTER 테스트 (CT01) | WebSocket/WSS | ☐ |
-| C2-06 | getUserMedia 구현 | WebRTC | ☐ |
-| C2-07 | 1:1 INVITE/Session 구현 | SIP.js + WebRTC | ☐ |
-| C2-08 | SDP Offer/Answer 처리 | WebRTC | ☐ |
-| C2-09 | 1:1 영상통화 테스트 (CT02) | H.264/Opus | ☐ |
-| C2-10 | 로그인/Dialer/Call UI 구현 | React + Tailwind | ☐ |
+| C2-04 | SIP.js UserAgent 구현 | SIP.js | ✅ |
+| C2-05 | REGISTER 테스트 (CT01) | WebSocket | ✅ |
+| C2-06 | getUserMedia 구현 | WebRTC | ✅ |
+| C2-07 | 1:1 INVITE/Session 구현 | SIP.js + WebRTC | ✅ |
+| C2-08 | SDP Offer/Answer 처리 | WebRTC | ✅ |
+| C2-09 | 1:1 영상통화 테스트 (CT02) | H.264/Opus | ✅ |
+| C2-10 | 로그인/Dialer/Call UI 구현 | React + CSS | ✅ (최소 UI) |
 | C2-11 | 브라우저 호환성 테스트 | Chrome/Edge/Safari/Firefox | ☐ |
 
-### Stage C3: Mobile Client (MVP-2)
+### Stage C3: Mobile Client (MVP-2) — FROZEN
 
 | 작업 ID | 설명 | 기술 | 완료 |
 |---------|------|------|------|
@@ -88,12 +89,14 @@
 |-----------|------|------|
 | CT01 | SIP.js 등록 (Web) | ✅ |
 | CT02 | 1:1 영상통화 (Web) | ✅ |
-| CT03 | Flutter SIP 등록 (Mobile) | ☐ |
-| CT04 | 1:1 영상통화 (Mobile) | ☐ |
+| CT03 | Flutter SIP 등록 (Mobile) | FROZEN |
+| CT04 | 1:1 영상통화 (Mobile) | FROZEN |
 | CT05 | 3자 SFU 회의 (Web) | ✅ |
 | CT06 | NAT 통과 (STUN) | ☐ |
 
 ---
+
+> **2026-11-07 기준**: Web 클라이언트의 SIP over WebSocket + WebRTC를 완성했고 DEV/PRD CT01/CT02/CT05를 PASS했다. 네이티브 모바일은 `FROZEN`이다. 상세 결과는 [[wiki/06_Reports/20261107_웹클라이언트_완성_보고서]]를 따른다.
 
 ## 3. 관련 문서
 

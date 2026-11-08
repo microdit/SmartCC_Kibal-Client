@@ -124,6 +124,8 @@ try {
       await waitForState(user1101.page, "Established");
       await waitForState(user1102.page, "Established");
       console.log("call established: 1101 <-> 1102");
+      await verifyMediaToggles(user1101.page);
+      console.log("media toggles ok: 1101");
 
       await new Promise((resolve) => setTimeout(resolve, 3000));
       await logMedia("1101", user1101.page);
@@ -202,6 +204,43 @@ async function unregister(page) {
 
 async function waitForState(page, state) {
   await page.locator(".state").filter({ hasText: state }).waitFor({ timeout: 30000 });
+}
+
+async function verifyMediaToggles(page) {
+  await page.getByRole("button", { name: "마이크 끄기", exact: true }).click();
+  await page.getByRole("button", { name: "마이크 켜기", exact: true }).waitFor({ timeout: 5000 });
+  const audioOff = await localTrackState(page, "audio");
+  if (!audioOff.found || audioOff.enabled) {
+    throw new Error("audio track is still enabled after mute");
+  }
+  await page.getByRole("button", { name: "마이크 켜기", exact: true }).click();
+  await page.getByRole("button", { name: "마이크 끄기", exact: true }).waitFor({ timeout: 5000 });
+
+  await page.getByRole("button", { name: "카메라 끄기", exact: true }).click();
+  await page.getByRole("button", { name: "카메라 켜기", exact: true }).waitFor({ timeout: 5000 });
+  const videoOff = await localTrackState(page, "video");
+  if (!videoOff.found || videoOff.enabled) {
+    throw new Error("video track is still enabled after camera off");
+  }
+  await page.getByRole("button", { name: "카메라 켜기", exact: true }).click();
+  await page.getByRole("button", { name: "카메라 끄기", exact: true }).waitFor({ timeout: 5000 });
+}
+
+async function localTrackState(page, kind) {
+  return page.evaluate((trackKind) => {
+    const pc = window.__kibalPC;
+    if (!pc) {
+      return { enabled: false, found: false };
+    }
+    const tracks = pc
+      .getSenders()
+      .map((sender) => sender.track)
+      .filter((track) => track && track.kind === trackKind);
+    return {
+      enabled: tracks.some((track) => track.enabled),
+      found: tracks.length > 0
+    };
+  }, kind);
 }
 
 async function logMedia(username, page) {

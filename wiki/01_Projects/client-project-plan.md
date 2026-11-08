@@ -6,8 +6,9 @@
 | **별도 리포지토리** | `git@github.com:microdit/SmartCC_Kibal-Client.git` |
 | **운영 철학** | SmartCC_Kibal과 동일 (Knowledge OS v3.0, 9-Layer Wiki, Git 3-Way, ChromaDB) |
 | **작성일** | 2026-10-29 |
-| **버전** | v1.0 |
-| **상태** | 계획 중 |
+| **최종 수정** | 2026-11-07 |
+| **버전** | v1.1 |
+| **상태** | Web 완료 · Mobile FROZEN |
 | **관련** | [[wiki/01_Projects/project-brief]], [[wiki/02_Design/architecture]] |
 
 ## 1. 프로젝트 개요
@@ -113,8 +114,8 @@ SmartCC_Kibal-Client/
 | 단계 | 목표 | 완료 조건 | 상태 |
 |------|------|----------|------|
 | **Stage C1** | 프로젝트 초기화 | Git 저장소 + Wiki 구조 + venv | 완료 |
-| **Stage C2** | Web Client MVP | 1:1 영상통화 (React + SIP.js) | 완료 |
-| **Stage C3** | Mobile Client | Flutter iOS/Android 빌드 | 미진행 |
+| **Stage C2** | Web Client MVP | SIP over WebSocket + 1:1/3자 WebRTC, DEV/PRD PASS | 완료 (2026-11-07) |
+| **Stage C3** | Mobile Client | Flutter iOS/Android 빌드 | FROZEN |
 | **Stage C4** | Docker 배포 | Web 클라이언트 컨테이너화 | 미진행 |
 | **Stage C5** | 통합 테스트 | Server + Client 3자 회의 검증 | 완료 (3자 SFU) |
 
@@ -124,8 +125,8 @@ SmartCC_Kibal-Client/
 |-----------|------|------|
 | CT01 | SIP.js 등록 (Web) | ✅ |
 | CT02 | 1:1 영상통화 (Web) | ✅ |
-| CT03 | Flutter SIP 등록 (Mobile) | ☐ |
-| CT04 | 1:1 영상통화 (Mobile) | ☐ |
+| CT03 | Flutter SIP 등록 (Mobile) | FROZEN |
+| CT04 | 1:1 영상통화 (Mobile) | FROZEN |
 | CT05 | 3자 SFU 회의 (Web) | ✅ |
 | CT06 | NAT 통과 (STUN) | ☐ |
 

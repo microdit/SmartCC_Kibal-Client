@@ -115,6 +115,7 @@ input:disabled {
 
 .row {
   display: flex;
+  flex-wrap: wrap;
   gap: 8px;
   align-items: flex-end;
 }
@@ -179,6 +180,16 @@ button.danger {
   border-radius: 8px;
   background: #3f1d1d;
   color: #fca5a5;
+  font-size: 13px;
+  word-break: break-word;
+}
+
+.warn-text {
+  margin: 12px 0 0;
+  padding: 10px;
+  border-radius: 8px;
+  background: #3a2a0a;
+  color: #fcd34d;
   font-size: 13px;
   word-break: break-word;
 }

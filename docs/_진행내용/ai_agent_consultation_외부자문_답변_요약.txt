@@ -1,0 +1,162 @@
+ompleted
+
+외부 자문 답변 요약 (Korean)
+접근 받은 답변 개요
+파일 /Users/microdit/Downloads/dev/SmartCC_Kibal-Client/docs/_진행내용/ai_agent_consultation_외부자문_답변.txt에 포함된 외부 컨설턴트의 조언을 요약합니다.
+
+핵심 결론
+Docker 유지보수 지속 + PJSIP 인증 정상화가 가장 권장되는 approach입니다. Asterisk를 교체하거나 직접 설치할 필요는 없다고 판단됩니다.
+
+1. Q1: Docker env vars permanent 고정
+방법: Docker Compose 기반 설정 영구화
+
+docker-compose.yml 또는 .env 파일에 plain text password 명시
+env_file 마운트를 통한 지속적 적용
+docker compose up -d --force-recreate로 재생성 시 유지 확인
+확인 명령어:
+
+
+docker exec kibal-dev-asterisk printenv | grep '^SIP_PASSWORD_'
+# 재시작 후에도 1101pass 등이 유지되어야 함
+2. Q2: PJSIP 템플릿 영구 수정
+권장 방법: 호스트 파일 관리 + Docker 마운트
+
+핵심 원인: 컨테이너 내부 수정이 유지되지 않는 이유
+
+
+Docker Image → Entrypoint → Template (/opt/kibal/config/pjsip.conf.template) → Generated Config (/run/asterisk/pjsip.conf) → Asterisk Runtime
+컨테이너 재시작 시 template으로부터 다시 생성되므로, 원본 템플릿과 환경변수를 수정해야 함.
+
+권장 방법:
+
+
+# Mac에서 원본 파일 백업 및 수정
+mkdir -p docker/asterisk/config
+docker cp kibal-dev-asterisk:/opt/kibal/config/pjsip.conf.template docker/asterisk/config/pjsip.conf.template
+
+# 수정 후 docker-compose에 마운트 추가
+volumes:
+  - ./config/pjsip.conf.template:/opt/kibal/config/pjsip.conf.template:ro
+확인 명령어:
+
+
+docker exec kibal-dev-asterisk sh -c 'ls -l /opt/kibal/config/'
+# 호스트 마운트 여부 확인
+3. Q3: 1102 IP 불일치 문제
+핵심 발견: 192.168.11.2로 접속하는 클라이언트가 있음
+
+확인 방법:
+
+
+# Asterisk 서버
+ping -c 3 192.168.11.39
+nc -vz 192.168.11.39 8088
+
+# NAS2 서버  
+ping -c 3 192.168.11.2
+nc -vz 192.168.11.2 8088
+
+# Web Client 설정 확인
+grep -RniE '192.168.11.(2|39)|VITE_SIP_WS_SERVER|SIP_WS_SERVER' web/src web/.env web/.env.local --exclude-dir=node_modules
+주요 원인:
+
+1102 클라이언트가 다른 PC/브라우저에서 실행됨
+Vite 환경변수가 브라우저 빌드에 반영되어 있음
+브라우저 LocalStorage에 이전 IP 저장됨
+다른 Web Client 인스턴스 실행 중
+해결 방법:
+
+브라우저 LocalStorage/cache 완전 삭제
+Vite dev server 재시작 (rm -rf node_modules/.cache, rm -rf .vite)
+.env 파일에서 VITE_SIP_WS_PORT=8088 등 재확인
+새 브라우저 창에서 http://192.168.11.39:5173 접속
+4. Q4: 테스트 환경 재현 방법
+권장 단계 순서:
+
+Docker 구성 백업 (Dockerfile, Compose, entrypoint, template)
+인증 방식 단일화: 우선 1101을 plain-text password=1101pass로 변경
+Docker 설정 영구화: Compose env_file과 호스트 템플릿 마운트 적용
+1101 단독 등록: 401 Challenge → Authorization → 200 OK 확인
+1102~1104 확장: 동일한 인증 구조로 테스트
+IP 통일: 모든 Web Client가 192.168.11.39:8088에 연결하도록 수정
+재시작 및 재현 테스트: Docker 컨테이너 재생성 이후에도 등록 성공 확인
+최종 합격 기준:
+
+ Docker 재시작 후 환경변수 유지
+ PJSIP 설정 정상 생성
+ WebSocket 연결 성공
+ 최초 401 Challenge 정상
+ 인증 응답 후 200 OK
+ 1101~1104 모두 등록 성공
+ 컨테이너 재생성 후에도 동일하게 동작
+ 192.168.11.2로 접속하는 클라이언트 없음
+4. Q5: 대체 접근 방식 및 최종 추천
+선택지	장점	단점	평가
+1. Docker 유지	재현성, 배포 편의성, 영구 설정 관리	초기 구성 정비 필요	추천
+2. 직접 Asterisk 설치	설정 직접 관리 가능	macOS 환경 종속성, 운영 관리 복잡	비추천
+3. 다른 SIP/미디어 서버	구조 변경 기회	재개발 및 검증 비용	현재 불필요
+4. UI만 테스트	빠른 화면 검증	실제 SIP 기능 검증 불가	임시 대안
+최종 추천: 1번 Docker 유지
+
+"현재 구성은 이미 다음과 같은 장점을 갖고 있습니다.
+
+Asterisk Docker 이미지 생성 완료
+WebSocket 연결 성공
+SIP 계정 1001~1104 구성
+RTP 포트 구성
+Web Client SIP 모듈 구현
+Smoke Test 스크립트 존재 현재 문제는 Asterisk 자체를 교체해야 하는 수준이라고 판단되지 않습니다. 오히려 Docker 설정의 영구화와 SIP Digest 인증을 바로잡는 것이 비용과 시간을 절약하는 방법입니다."
+7. 추가로 반드시 확인해야 할 사항
+7.1 Vite의 SIP 비밀번호 보안
+
+Vite의 VITE_ 접두사가 붙은 환경변수는 브라우저에 전달되는 빌드 결과물에 포함됩니다.
+따라서 SIP 비밀번호를 서버의 비밀정보처럼 보호할 수 없습니다.
+
+개발 단계에서는 사용할 수 있지만 운영 환경에서는 다음을 권장합니다:
+- 계정별 고유 비밀번호 사용
+- SIP 서버 접근 네트워크 제한
+- WebSocket을 운영 환경에서는 WSS로 전환
+- 불필요한 SIP 계정 비활성화
+- 운영용 계정과 개발용 계정 분리
+7.2 1101의 500 오류는 별도 분석 필요
+
+401: 인증 Challenge 또는 인증 검증 문제
+500: 서버 내부 오류 응답
+
+500이 발생하는 시점의 Asterisk 로그와 PJSIP 설정 로딩 오류를 확인해야 합니다.
+단순히 비밀번호를 수정한다고 500까지 해결된다고 보장할 수 없습니다.
+5. 실제 작업을 위한 최종 실행 순서
+현재 Docker 구성 백업
+인증 방식 단일화: 1101을 plain-text password=1101pass로 변경
+Docker 설정 영구화: Compose env_file과 호스트 템플릿 마운트 적용
+1101 단독 등록: 401 Challenge → Authorization → 200 OK 확인
+1102~1104 확장: 동일한 인증 구조로 테스트
+IP 통일: 모든 Web Client가 192.168.11.39:8088에 연결하도록 수정
+재시작 및 재현 테스트: Docker 컨테이너 재생성 이후에도 등록 성공 확인
+요약: 지금 해야 할 일
+Docker Compose 설정 영구화 (env_file + template 마운트)
+1101 단독 인증 테스트 (401 → 200 OK 전환)
+1102~1104 순차적 확장
+192.168.11.2 → 192.168.11.39 연결 클라이언트 차단
+컨테이너 재생성 후 영구성 검증
+가장 중요한 첫 단계: 1101에서 401 → 200 OK 흐름을 확실하게 성공시키는 것이 나머지 1102~1104 확장 열쇠가 됩니다.
+
+연락처 및 자료 제출
+실제 수정을 확정하기 전 다음 5개 자료를 기준으로 확정하는 것이 좋습니다:
+
+docker-compose.yml - 환경변수 영구화
+Dockerfile - 이미지 생성 구조
+kibal-entrypoint - 설정 초기화 원인
+pjsip.conf.template - 인증 객체 및 Endpoint 연결
+register-smoke.mjs - 클라이언트 인증 파라미터
+Mac에서 수집할 파일들:
+
+
+mkdir -p /tmp/kibal-sip-diagnostic
+docker inspect kibal-dev-asterisk > /tmp/kibal-sip-diagnostic/container-inspect.json
+docker cp kibal-dev-asterisk:/usr/local/bin/kibal-entrypoint > /tmp/kibal-sip-diagnostic/entrypoint.sh
+docker cp kibal-dev-asterisk:/opt/kibal/config/pjsip.conf.template > /tmp/kibal-sip-diagnostic/pjsip.conf.template
+docker exec kibal-dev-asterisk asterisk -rx "pjsip show endpoints" > /tmp/kibal-sip-diagnostic/endpoints.txt
+docker exec kibal-dev-asterisk asterisk -rx "pjsip show transports" > /tmp/kibal-sip-diagnostic/transports.txt
+docker logs --tail 300 kibal-dev-asterisk > /tmp/kibal-sip-diagnostic/asterisk.log 2>&1
+비밀번호, 인증 헤더, 토큰은 공유 전에 마스킹하세요.

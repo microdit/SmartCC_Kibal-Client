@@ -1,9 +1,15 @@
 import { useEffect, useRef, useState } from "react";
 import type { Invitation } from "sip.js";
 import { SessionState, type Session } from "sip.js";
-import { defaultConfig, loadStoredConfig, saveStoredConfig } from "./config";
+import {
+  defaultConfig,
+  loadStoredConfig,
+  saveStoredConfig,
+  validateSipConfig
+} from "./config";
 import type { SipConfig } from "./config";
 import { attachMedia, KibalSipClient } from "./sip/SipClient";
+import type { LocalMediaState } from "./sip/SipClient";
 
 type CallState = "idle" | "incoming" | SessionState;
 
@@ -17,46 +23,82 @@ const REGISTRATION_LABEL: Record<string, string> = {
   disconnected: "연결 끊김"
 };
 
+const DEFAULT_MEDIA_STATE: LocalMediaState = { audio: true, video: true };
+
 export default function App() {
   const [config, setConfig] = useState<SipConfig>(() => loadStoredConfig());
   const [registration, setRegistration] = useState("idle");
+  const [registrationDetail, setRegistrationDetail] = useState("");
   const [callState, setCallState] = useState<CallState>("idle");
   const [incoming, setIncoming] = useState<Invitation | null>(null);
   const [target, setTarget] = useState("1102");
   const [logs, setLogs] = useState<string[]>([]);
   const [error, setError] = useState("");
+  const [warnings, setWarnings] = useState<string[]>([]);
   const [remoteStreams, setRemoteStreams] = useState<MediaStream[]>([]);
+  const [mediaState, setMediaState] = useState<LocalMediaState>(DEFAULT_MEDIA_STATE);
 
   const clientRef = useRef<KibalSipClient | null>(null);
   const localVideoRef = useRef<HTMLVideoElement | null>(null);
+  const mediaCleanupRef = useRef<() => void>(() => undefined);
+
+  useEffect(() => {
+    return () => {
+      mediaCleanupRef.current();
+      void clientRef.current?.disconnect();
+    };
+  }, []);
 
   const appendLog = (message: string): void => {
     const line = `${new Date().toLocaleTimeString()} ${message}`;
     setLogs((current) => [...current.slice(-299), line]);
   };
 
+  const clearMedia = (): void => {
+    mediaCleanupRef.current();
+    mediaCleanupRef.current = () => undefined;
+    if (localVideoRef.current) {
+      localVideoRef.current.srcObject = null;
+    }
+    setRemoteStreams([]);
+    setMediaState(DEFAULT_MEDIA_STATE);
+  };
+
   const handleSessionState = (state: SessionState, session: Session): void => {
     setCallState(state);
     if (state === SessionState.Established) {
+      mediaCleanupRef.current();
       window.setTimeout(() => {
-        attachMedia(session, localVideoRef.current, setRemoteStreams);
+        mediaCleanupRef.current = attachMedia(
+          session,
+          localVideoRef.current,
+          setRemoteStreams
+        );
+        setMediaState(clientRef.current?.getMediaState() ?? DEFAULT_MEDIA_STATE);
       }, 100);
       return;
     }
     if (state === SessionState.Terminated) {
-      if (localVideoRef.current) {
-        localVideoRef.current.srcObject = null;
-      }
-      setRemoteStreams([]);
+      clearMedia();
       setIncoming(null);
     }
   };
 
   const handleConnect = async (): Promise<void> => {
     setError("");
+    const validation = validateSipConfig(config);
+    setWarnings(validation.warnings);
+    if (validation.errors.length > 0) {
+      setError(validation.errors.join(" "));
+      return;
+    }
+
     const client = new KibalSipClient({
       onLog: appendLog,
-      onRegistration: setRegistration,
+      onRegistration: (state, detail) => {
+        setRegistration(state);
+        setRegistrationDetail(detail ?? "");
+      },
       onIncoming: (invitation) => {
         setIncoming(invitation);
         setCallState("incoming");
@@ -64,9 +106,10 @@ export default function App() {
       onSessionState: handleSessionState
     });
     try {
-      await client.connect({ ...config, displayName: `Kibal ${config.username}` });
+      await client.connect({ ...validation.config, displayName: `Kibal ${validation.config.username}` });
       clientRef.current = client;
-      saveStoredConfig(config);
+      setConfig(validation.config);
+      saveStoredConfig(validation.config);
     } catch (connectError) {
       setError(toMessage(connectError));
       await client.disconnect().catch(() => undefined);
@@ -77,8 +120,16 @@ export default function App() {
     setError("");
     await clientRef.current?.disconnect();
     clientRef.current = null;
+    clearMedia();
     setCallState("idle");
     setIncoming(null);
+    setRegistration("idle");
+    setRegistrationDetail("");
+  };
+
+  const handleReconnect = async (): Promise<void> => {
+    await handleDisconnect();
+    await handleConnect();
   };
 
   const handleCall = async (destination: string): Promise<void> => {
@@ -121,8 +172,25 @@ export default function App() {
     }
   };
 
+  const handleToggleAudio = (): void => {
+    if (!clientRef.current) {
+      return;
+    }
+    setMediaState(clientRef.current.setAudioEnabled(!mediaState.audio));
+  };
+
+  const handleToggleVideo = (): void => {
+    if (!clientRef.current) {
+      return;
+    }
+    setMediaState(clientRef.current.setVideoEnabled(!mediaState.video));
+  };
+
   const registered = registration === "registered";
+  const connecting = registration === "connecting";
+  const canReconnect = registration === "disconnected" || registration === "terminated";
   const inCall = callState !== "idle" && callState !== SessionState.Terminated;
+  const established = callState === SessionState.Established;
 
   return (
     <div className="app">
@@ -131,7 +199,7 @@ export default function App() {
           <h1>Kibal Web Client</h1>
           <p>SIP.js + WebRTC 테스트 클라이언트</p>
         </div>
-        <span className={`pill ${registered ? "ok" : registration === "connecting" ? "warn" : "off"}`}>
+        <span className={`pill ${registered ? "ok" : connecting ? "warn" : "off"}`}>
           {REGISTRATION_LABEL[registration] ?? registration}
         </span>
       </header>
@@ -143,7 +211,7 @@ export default function App() {
             서버 도메인
             <input
               value={config.domain}
-              disabled={registered}
+              disabled={registered || connecting}
               onChange={(event) => setConfig({ ...config, domain: event.target.value })}
             />
           </label>
@@ -151,7 +219,7 @@ export default function App() {
             WebSocket URL
             <input
               value={config.wsServer}
-              disabled={registered}
+              disabled={registered || connecting}
               onChange={(event) => setConfig({ ...config, wsServer: event.target.value })}
             />
           </label>
@@ -160,7 +228,7 @@ export default function App() {
               내선
               <input
                 value={config.username}
-                disabled={registered}
+                disabled={registered || connecting}
                 onChange={(event) => setConfig({ ...config, username: event.target.value })}
               />
             </label>
@@ -169,7 +237,8 @@ export default function App() {
               <input
                 type="password"
                 value={config.password}
-                disabled={registered}
+                disabled={registered || connecting}
+                autoComplete="current-password"
                 onChange={(event) => setConfig({ ...config, password: event.target.value })}
               />
             </label>
@@ -178,7 +247,7 @@ export default function App() {
             STUN/TURN (쉼표 구분)
             <input
               value={config.iceServers.join(", ")}
-              disabled={registered}
+              disabled={registered || connecting}
               onChange={(event) =>
                 setConfig({
                   ...config,
@@ -191,22 +260,32 @@ export default function App() {
             />
           </label>
           <div className="row">
-            {!registered ? (
-              <button className="primary" onClick={handleConnect} disabled={!config.password}>
-                등록
+            {!registered && !connecting ? (
+              <button
+                className="primary"
+                onClick={canReconnect ? handleReconnect : handleConnect}
+                disabled={!config.password}
+              >
+                {canReconnect ? "재연결" : "등록"}
               </button>
             ) : (
-              <button onClick={handleDisconnect}>등록 해제</button>
+              <button onClick={handleDisconnect} disabled={connecting}>
+                등록 해제
+              </button>
             )}
             <button
               onClick={() => {
                 setConfig({ ...defaultConfig, password: config.password });
               }}
-              disabled={registered}
+              disabled={registered || connecting}
             >
               기본값
             </button>
           </div>
+          {registrationDetail && <p className="state">{registrationDetail}</p>}
+          {warnings.length > 0 && (
+            <p className="warn-text">{warnings.join(" ")}</p>
+          )}
         </section>
 
         <section className="card">
@@ -227,6 +306,14 @@ export default function App() {
             </button>
             <button className="danger" onClick={handleHangup} disabled={!inCall}>
               통화 종료
+            </button>
+          </div>
+          <div className="row">
+            <button onClick={handleToggleAudio} disabled={!established}>
+              {mediaState.audio ? "마이크 끄기" : "마이크 켜기"}
+            </button>
+            <button onClick={handleToggleVideo} disabled={!established}>
+              {mediaState.video ? "카메라 끄기" : "카메라 켜기"}
             </button>
           </div>
           <p className="state">세션 상태: {callState}</p>

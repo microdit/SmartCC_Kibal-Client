@@ -2,6 +2,7 @@ import {
   Invitation,
   Inviter,
   Registerer,
+  RegistererState,
   Session,
   SessionState,
   UserAgent,
@@ -17,16 +18,25 @@ export interface SipClientCallbacks {
   onSessionState?: (state: SessionState, session: Session) => void;
 }
 
+export interface LocalMediaState {
+  audio: boolean;
+  video: boolean;
+}
+
 const mediaConstraints: MediaStreamConstraints = {
   audio: true,
   video: { width: { ideal: 1280 }, height: { ideal: 720 } }
 };
+
+const CONNECT_TIMEOUT_MS = 15000;
+const DISCONNECT_TIMEOUT_MS = 5000;
 
 export class KibalSipClient {
   private ua?: UserAgent;
   private registerer?: Registerer;
   private config?: SipConfig;
   private currentSession?: Session;
+  private shuttingDown = false;
   private readonly callbacks: SipClientCallbacks;
 
   constructor(callbacks: SipClientCallbacks = {}) {
@@ -35,6 +45,10 @@ export class KibalSipClient {
 
   get session(): Session | undefined {
     return this.currentSession;
+  }
+
+  get connected(): boolean {
+    return Boolean(this.ua);
   }
 
   async connect(config: SipConfig): Promise<void> {
@@ -48,6 +62,7 @@ export class KibalSipClient {
     }
 
     this.config = config;
+    this.shuttingDown = false;
     this.log(`connecting ${config.wsServer} as ${config.username}`);
     this.callbacks.onRegistration?.("connecting");
 
@@ -75,9 +90,21 @@ export class KibalSipClient {
         },
         onDisconnect: (error) => {
           this.log(`WebSocket disconnected${error ? `: ${error.message}` : ""}`);
-          this.callbacks.onRegistration?.("disconnected");
+          if (!this.shuttingDown) {
+            this.callbacks.onRegistration?.(
+              "disconnected",
+              error?.message ?? "WebSocket 연결이 종료되었습니다."
+            );
+          }
         },
         onInvite: (invitation) => {
+          if (this.currentSession) {
+            this.log("busy: rejecting additional incoming call");
+            void invitation.reject().catch((error) => {
+              this.log(`busy reject failed: ${errorMessage(error)}`);
+            });
+            return;
+          }
           this.log(`incoming call from ${invitation.remoteIdentity.uri.toString()}`);
           this.bindSession(invitation);
           this.callbacks.onIncoming?.(invitation);
@@ -91,39 +118,63 @@ export class KibalSipClient {
     };
 
     this.ua = new UserAgent(options);
-    await this.ua.start();
+    try {
+      await withTimeout(
+        this.ua.start(),
+        CONNECT_TIMEOUT_MS,
+        "WebSocket 연결 시간 초과"
+      );
 
-    this.registerer = new Registerer(this.ua);
-    this.registerer.stateChange.addListener((state) => {
-      this.log(`registration ${state}`);
-      this.callbacks.onRegistration?.(state.toLowerCase());
-    });
-    await this.registerer.register();
+      this.registerer = new Registerer(this.ua);
+      this.registerer.stateChange.addListener((state) => {
+        this.log(`registration ${state}`);
+        this.callbacks.onRegistration?.(state.toLowerCase());
+      });
+      await withTimeout(
+        this.registerer.register(),
+        CONNECT_TIMEOUT_MS,
+        "SIP REGISTER 응답 시간 초과"
+      );
+      await waitForRegistered(this.registerer, CONNECT_TIMEOUT_MS);
+    } catch (error) {
+      await this.stopTransport();
+      throw new Error(`SIP 연결 실패: ${errorMessage(error)}`);
+    }
   }
 
   async disconnect(): Promise<void> {
+    this.shuttingDown = true;
     try {
-      await this.registerer?.unregister();
+      if (this.registerer?.state === RegistererState.Registered) {
+        await withTimeout(
+          this.registerer.unregister(),
+          DISCONNECT_TIMEOUT_MS,
+          "SIP 등록 해제 시간 초과"
+        );
+      }
     } catch (error) {
       this.log(`unregister failed: ${errorMessage(error)}`);
     }
-    await this.ua?.stop();
-    this.registerer = undefined;
-    this.ua = undefined;
-    this.currentSession = undefined;
-    this.callbacks.onRegistration?.("idle");
+    await this.stopTransport();
   }
 
   async call(target: string): Promise<void> {
     if (!this.ua || !this.config) {
       throw new Error("먼저 SIP 등록을 완료하세요.");
     }
-    const destination = UserAgent.makeURI(`sip:${target}@${this.config.domain}`);
+    if (this.currentSession) {
+      throw new Error("이미 진행 중인 통화가 있습니다.");
+    }
+    const normalizedTarget = target.trim();
+    if (!normalizedTarget) {
+      throw new Error("대상 번호를 입력하세요.");
+    }
+    const destination = UserAgent.makeURI(`sip:${normalizedTarget}@${this.config.domain}`);
     if (!destination) {
-      throw new Error(`잘못된 대상 번호: ${target}`);
+      throw new Error(`잘못된 대상 번호: ${normalizedTarget}`);
     }
 
-    this.log(`calling ${target}`);
+    this.log(`calling ${normalizedTarget}`);
     const inviter = new Inviter(this.ua, destination, {
       sessionDescriptionHandlerOptions: { constraints: mediaConstraints }
     });
@@ -161,6 +212,53 @@ export class KibalSipClient {
     await session.bye();
   }
 
+  setAudioEnabled(enabled: boolean): LocalMediaState {
+    return this.setMediaEnabled("audio", enabled);
+  }
+
+  setVideoEnabled(enabled: boolean): LocalMediaState {
+    return this.setMediaEnabled("video", enabled);
+  }
+
+  getMediaState(): LocalMediaState {
+    const tracks = this.getLocalTracks();
+    return {
+      audio: Boolean(tracks.find((track) => track.kind === "audio" && track.enabled)),
+      video: Boolean(tracks.find((track) => track.kind === "video" && track.enabled))
+    };
+  }
+
+  private setMediaEnabled(
+    kind: "audio" | "video",
+    enabled: boolean
+  ): LocalMediaState {
+    this.getLocalTracks()
+      .filter((track) => track.kind === kind)
+      .forEach((track) => {
+        track.enabled = enabled;
+      });
+    return this.getMediaState();
+  }
+
+  private getLocalTracks(): MediaStreamTrack[] {
+    const peerConnection = this.peerConnection();
+    if (!peerConnection) {
+      return [];
+    }
+    return peerConnection
+      .getSenders()
+      .map((sender) => sender.track)
+      .filter((track): track is MediaStreamTrack => Boolean(track));
+  }
+
+  private peerConnection(): RTCPeerConnection | undefined {
+    return (
+      this.currentSession?.sessionDescriptionHandler as
+        | { peerConnection?: RTCPeerConnection }
+        | undefined
+    )?.peerConnection;
+  }
+
   private bindSession(session: Session): void {
     this.currentSession = session;
     this.callbacks.onSessionState?.(session.state, session);
@@ -172,6 +270,22 @@ export class KibalSipClient {
     });
   }
 
+  private async stopTransport(): Promise<void> {
+    try {
+      await withTimeout(
+        this.ua?.stop() ?? Promise.resolve(),
+        DISCONNECT_TIMEOUT_MS,
+        "SIP 종료 시간 초과"
+      );
+    } catch (error) {
+      this.log(`transport stop failed: ${errorMessage(error)}`);
+    }
+    this.registerer = undefined;
+    this.ua = undefined;
+    this.currentSession = undefined;
+    this.callbacks.onRegistration?.("idle");
+  }
+
   private log(message: string): void {
     this.callbacks.onLog?.(message);
   }
@@ -181,13 +295,13 @@ export function attachMedia(
   session: Session,
   localVideo: HTMLVideoElement | null,
   onRemoteStreams?: (streams: MediaStream[]) => void
-): void {
+): () => void {
   const handler = session.sessionDescriptionHandler as
     | { peerConnection?: RTCPeerConnection }
     | undefined;
   const peerConnection = handler?.peerConnection;
   if (!peerConnection) {
-    return;
+    return () => undefined;
   }
 
   if (new URLSearchParams(window.location.search).has("debug")) {
@@ -197,8 +311,14 @@ export function attachMedia(
   const videoStreams = new Map<string, MediaStream>();
   const audioOnlyStream = new MediaStream();
   let lastStreams: MediaStream[] = [];
+  let stopped = false;
+  let syncInterval: number | undefined;
+  const syncTimers: number[] = [];
 
   const syncRemote = (): void => {
+    if (stopped) {
+      return;
+    }
     const tracks = peerConnection
       .getReceivers()
       .map((receiver) => receiver.track)
@@ -257,25 +377,45 @@ export function attachMedia(
     track.addEventListener("ended", syncRemote);
   };
 
+  const onTrack = (event: RTCTrackEvent): void => {
+    watchTrack(event.track);
+    syncRemote();
+  };
+
+  const cleanup = (): void => {
+    if (stopped) {
+      return;
+    }
+    stopped = true;
+    if (syncInterval !== undefined) {
+      window.clearInterval(syncInterval);
+    }
+    syncTimers.forEach((timer) => window.clearTimeout(timer));
+    peerConnection.removeEventListener("track", onTrack);
+    peerConnection.removeEventListener("connectionstatechange", onConnectionStateChange);
+  };
+
+  const onConnectionStateChange = (): void => {
+    if (
+      peerConnection.connectionState === "closed" ||
+      peerConnection.connectionState === "failed"
+    ) {
+      cleanup();
+    }
+  };
+
   peerConnection.getReceivers().forEach((receiver) => {
     if (receiver.track) {
       watchTrack(receiver.track);
     }
   });
-  peerConnection.addEventListener("track", (event) => {
-    watchTrack(event.track);
-    syncRemote();
-  });
+  peerConnection.addEventListener("track", onTrack);
+  peerConnection.addEventListener("connectionstatechange", onConnectionStateChange);
 
   syncRemote();
-  window.setTimeout(syncRemote, 500);
-  window.setTimeout(syncRemote, 1500);
-  const syncInterval = window.setInterval(syncRemote, 1000);
-  peerConnection.addEventListener("connectionstatechange", () => {
-    if (peerConnection.connectionState === "closed" || peerConnection.connectionState === "failed") {
-      window.clearInterval(syncInterval);
-    }
-  });
+  syncTimers.push(window.setTimeout(syncRemote, 500));
+  syncTimers.push(window.setTimeout(syncRemote, 1500));
+  syncInterval = window.setInterval(syncRemote, 1000);
 
   if (localVideo) {
     const localStream = new MediaStream(
@@ -287,6 +427,44 @@ export function attachMedia(
     localVideo.srcObject = localStream;
     void localVideo.play().catch(() => undefined);
   }
+
+  return cleanup;
+}
+
+function waitForRegistered(registerer: Registerer, timeoutMs: number): Promise<void> {
+  if (registerer.state === RegistererState.Registered) {
+    return Promise.resolve();
+  }
+  return withTimeout(
+    new Promise<void>((resolve, reject) => {
+      const listener = (state: RegistererState): void => {
+        if (state === RegistererState.Registered) {
+          registerer.stateChange.removeListener(listener);
+          resolve();
+          return;
+        }
+        if (state === RegistererState.Unregistered || state === RegistererState.Terminated) {
+          registerer.stateChange.removeListener(listener);
+          reject(new Error("SIP 등록이 거부되었습니다. 내선·비밀번호·서버 주소를 확인하세요."));
+        }
+      };
+      registerer.stateChange.addListener(listener);
+    }),
+    timeoutMs,
+    "SIP 등록 상태 확인 시간 초과"
+  );
+}
+
+function withTimeout<T>(promise: Promise<T>, timeoutMs: number, message: string): Promise<T> {
+  let timer: number | undefined;
+  const timeout = new Promise<never>((_, reject) => {
+    timer = window.setTimeout(() => reject(new Error(message)), timeoutMs);
+  });
+  return Promise.race([promise, timeout]).finally(() => {
+    if (timer !== undefined) {
+      window.clearTimeout(timer);
+    }
+  });
 }
 
 function errorMessage(error: unknown): string {
