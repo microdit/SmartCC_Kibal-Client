@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- CDATA 영역 내에 존재하는 markup은 고정 문자열이므로 번들됩니다. -->
+<!-- 사용자의 눈에 보이는 메뉴 항목은 여기서 변경할 수 있습니다. -->
+<!-- 파일 형식: com.apple.Xcode.XCBundleEditing-1.0 -->
+<!-- 메뉴 항목 편집 형식: com.apple.Xcode.MenuEditing-1.0 -->
+<!-- 작성자: danishqa -->
+<!-- swift-version: 4 -->
+<!-- XCodeVersion: 12.0 -->
+<!-- CFBundleDevelopmentRegion: en -->
+<!-- CFBundleDisplayName: SmartCC_Kibal -->
+<!-- CFBundleExecutable: SmartCC_Kibal -->
+<!-- CFBundleIdentifier: com.example.SmartCC_Kibal -->
+<!-- CFBundleInfoDictionaryVersion: 6.0 -->
+<!-- CFBundleName: SmartCC_Kibal -->
+<!-- CFBundlePackageType: APPL -->
+<!-- CFBundleShortVersionString: 1.0 -->
+<!-- CFBundleVersion: 1 -->
+<!-- LSApplicationCategoryType: public.app-category.utilities -->
+<!-- LSMinimumSystemVersion: 10.12 -->
+<!-- NSPersistentStoreType: sqlite -->
+<!-- TARGET_DEVICE_FAMILY: 1,2 -->
+<!-- UIUserInterfaceStyle: Any -->
+<!-- UIRequiredDeviceCapabilities: arc, vibrancy -->
+<!-- UIRequiresFullScreen: NO -->
+<!-- UITargetedMessage: nil -->
+<!-- UILaunchStoryboardName: LaunchScreen -->
+<!-- UIApplicationSceneManifest: yes -->
+<!-- UIApplicationSupportsMultipleScenes: NO -->
+<!-- UIApplicationProvidesAppMusicPlayer: NO -->
+<!-- UIApplicationProvidesHomeIndicatorAutoHidden: NO -->
+<!-- UIApplicationSupportsIndirectInputEvents: YES -->
+<!-- UIRemoteNotificationType: badge, alert, sound -->
+<!-- UISupportedInterfaceOrientations: UIInterfaceOrientationPortrait -->
+<!-- UISupportedInterfaceOrientations~ipad: UIInterfaceOrientationPortrait, UIInterfaceOrientationPortraitUpsideDown, UIInterfaceOrientationLandscapeLeft, UIInterfaceOrientationLandscapeRight -->
+<!-- UIRespondsToTouch: YES -->
+<!-- UIVisualEffectsStyle: SystemChrome -->
+<!-- UIViewTransitioning: none -->
+<!-- UIViewControllerContextTransitioning: none -->
+<!-- UICollectionViewCell: default -->
+<!-- UITableViewCell: default -->
+<!-- UITableViewHeaderFooterView: default -->
+<!-- UITableViewController: default -->
+<!-- UITabBarController: default -->
+<!-- UINavigationController: default -->
+<!-- UISplitViewController: default -->
+<!-- UISearchBar: default -->
+<!-- UISearchDisplayController: default -->
+<!-- UIScrollView: default -->
+<!-- UIStackView: default -->
+<!-- UISlider: default -->
+<!-- UISwitch: default -->
+<!-- UILabel: default -->
+<!-- UITextField: default -->
+<!-- UITextView: default -->
+<!-- UIWebView: default -->
+<!-- UIActivityIndicatorView: default -->
+<!-- UIBlurEffect: default -->
+<!-- UIVisualEffectView: default -->
+<!-- UIInputView: default -->
+<!-- UIInputViewController: default -->
+<!-- UIViewController: default -->
+<!-- UIViewControllerTransitionCoordinator: default -->
+<!-- UITabBar: default -->
+<!-- UITabBarItem: default -->
+<!-- UITabBarSystemItem: default -->
+<!-- UINavigationItem: default -->
+<!-- UIBarButtonItem: default -->
+<!-- UIScreen: default -->
+<!-- UIWindow: default -->
+
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>CFBundleDevelopmentRegion</key>
+    <string>$(DEVELOPMENT_LANGUAGE)</string>
+    <key>CFBundleExecutable</key>
+    <string>$(EXECUTABLE_NAME)</string>
+    <key>CFBundleIdentifier</key>
+    <string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+    <key>CFBundleInfoDictionaryVersion</key>
+    <string>6.0</string>
+    <key>CFBundleName</key>
+    <string>$(PRODUCT_NAME)</string>
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+    <key>CFBundleShortVersionString</key>
+    <string>1.0</string>
+    <key>CFBundleVersion</key>
+    <string>1</string>
+    <key>LSMinimumSystemVersion</key>
+    <string>$(MACOSX_DEPLOYMENT_TARGET)</string>
+    <key>NSCameraUsageDescription</key>
+    <string>영상통화를 위해 카메라 접근이 필요합니다.</string>
+    <key>NSMicrophoneUsageDescription</key>
+    <string>영상통화를 위해 마이크 접근이 필요합니다.</string>
+    <key>NSScreenCaptureUsesPremiumAudio</key>
+    <true/>
+</dict>
+</plist>

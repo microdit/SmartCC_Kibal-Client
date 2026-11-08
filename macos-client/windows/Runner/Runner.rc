@@ -1,0 +1,11 @@
+#include <windows.h>
+
+IDI_APPICON FOLLOWAPP ICON "appicon.rc"
+
+#ifdef APSTUDIO_INVOKED
+1 TABLE
+BEGIN
+    LANGUAGE 9, 129
+    FILEID 1, 0
+END
+#endif
