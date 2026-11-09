@@ -6,9 +6,9 @@
 | **별도 리포지토리** | `git@github.com:microdit/SmartCC_Kibal-Client.git` |
 | **운영 철학** | SmartCC_Kibal과 동일 (Knowledge OS v3.0, 9-Layer Wiki, Git 3-Way, ChromaDB) |
 | **작성일** | 2026-10-29 |
-| **최종 수정** | 2026-11-07 |
+| **최종 수정** | 2026-11-09 |
 | **버전** | v1.1 |
-| **상태** | Web 완료 · Mobile FROZEN |
+| **상태** | Web 완료 · **macOS M1~M6 완료(2026-11-09, DEV 실검증)** · iOS/Windows/Android 이식 예정 |
 | **관련** | [[wiki/01_Projects/project-brief]], [[wiki/02_Design/architecture]] |
 
 ## 1. 프로젝트 개요
@@ -47,7 +47,7 @@ Asterisk 22 LTS 서버(`SmartCC_Kibal`)와 연동하는 **멀티플랫폼 SIP �
 | 계층 | 기술 | 버전 |
 |------|------|------|
 | Web Client | React + TypeScript + SIP.js + WebRTC | 18 / latest |
-| Mobile Client | Flutter + flutter_webrtc + flutter_sip | 3.x |
+| Mobile/macOS Client | Flutter + flutter_webrtc + **sip_ua**(dart-sip-ua) | 3.x |
 | 빌드 도구 | Vite (Web), Flutter CLI (Mobile) | - |
 | 상태 관리 | Zustand (Web), Provider (Mobile) | - |
 | 스타일링 | Tailwind CSS | v3 |

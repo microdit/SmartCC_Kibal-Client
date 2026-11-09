@@ -52,12 +52,13 @@
 
 ---
 
-## 상태 (2026-10-29)
+## 상태 (2026-11-09)
 
-- **Knowledge OS v3.0 초기 구축 완료**: 9-Layer Wiki 구조, Git 자동화 스크립트, ChromaDB Vector Store
-- **Git 초기 커밋 예정**: `feat: SmartCC_Kibal-Client Knowledge OS`
-- **GitHub private repo 푸시 예정**: `git@github.com:microdit/SmartCC_Kibal-Client.git`
-- **Wiki 구조**: client-project-plan, tasks, architecture, sip-client-design, ADR-001 등
-- **스크립트**: git-sync.sh, generate-commit-msg.py, log.py, index_wiki.py
-- **ChromaDB Vector Store 검증 예정**: chromadb 1.5.9 (Python 3.11 venv)
-- **Client 리포지토리 분리 결정**: Server(`SmartCC_Kibal`)와 별도 리포지토리로 개발 — server의 기획 문서 `docs/기획/멀티플랫품-SIP-clients.md` 리뷰 완료
+- **macOS Client M1~M6 완료** (`feature/macOS-version`, `macos-client/`)
+  - macOS desktop 스캐폴/권한/GoRouter UI, 린트 0건, Debug·Release 빌드 성공
+  - SIP 엔진 교체: `flutter_sip`(Android 전용) → `sip_ua` + `flutter_webrtc 1.6.3` (ADR-004)
+  - DEV Asterisk 실검증: REGISTER_OK / 1:1 CALL_OK / ConfBridge 3자 CONFERENCE_OK
+  - 검증 도구: `macos-client/tool/{register,call,conference}_probe.dart`
+- **문서**: `docs/보고서/20261109_macOS테스트결과보고서_v1.0.md`, `wiki/06_Reports/20261109_macOS_M1-M6_개발완료보고서.md`
+- **후속**: MacBook 영상 실기 검증 → `wiki/04_Prompts/20261109_macbook_agent_후속작업프롬프트.md`
+- **Web Client 완료**, **iOS/Windows/Android는 macOS 검증 구조 이식 예정**

@@ -6,10 +6,26 @@
 | **프로젝트** | SmartCC_Kibal-Client (멀티플랫폼 SIP 클라이언트) |
 | **작성일** | 2026-11-08 |
 | **버전** | v1.0 |
-| **상태** | **진행 중** — macOS 네이티브 클라이언트 개발 착수 |
+| **상태** | **M1~M6 완료(2026-11-09)** — DEV 실검증 통과, 영상 실기 검증·타 플랫폼 이식 남음 |
 | **관련** | [[wiki/02_Design/macOS-client-design]], [[wiki/02_Design/macOS-client-ui]], [[wiki/02_Design/macOS-client-roadmap]], [[wiki/01_Projects/client-project-plan]] |
 
 ---
+
+## 0. 완료 현황 (2026-11-09)
+
+| 작업 ID | 상태 | 비고 |
+|---------|------|------|
+| MACOS-01~03 | ✅ | 계획서/브랜치/프로젝트 스캐폴 완료 |
+| MACOS-05 | ✅ | Mobile 코드 재사용 + macOS용 정비 |
+| MACOS-06 | ✅ | Info.plist + entitlements 권한 구성 |
+| MACOS-07 | ✅ | `MacMainView` + GoRouter 화면 동작 |
+| MACOS-08 | ✅ | `tool/register_probe.dart` REGISTER_OK |
+| MACOS-09 | ⚠️ 부분 | 1:1 통화·오디오 검증(CALL_OK). 영상 송출은 카메라 있는 MacBook에서 검증 예정 |
+| MACOS-04 / MACOS-11 | ⬜ | Windows는 macOS 검증 후 이식 |
+| MACOS-10 | ⬜ | CI/CD 미설정 |
+| MACOS-12 | ✅ | `docs/보고서/20261109_macOS테스트결과보고서_v1.0.md` |
+
+추가 완료: SIP 엔진 `sip_ua` 교체(ADR-004), ConfBridge 3자 회의 검증, 린트 0건, Release 빌드.
 
 ## 1. 목표
 
