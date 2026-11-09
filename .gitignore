@@ -49,3 +49,6 @@ web/.env.*.local
 
 # Auto-generated sync logs
 docs/_작업이력/log/*.md
+
+# OpenCode session artifacts
+session-ses_*.md
