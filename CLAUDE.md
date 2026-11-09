@@ -50,6 +50,8 @@
 | `dev` | 개발 환경 (Local) | `ssh://atom@nas2:4949/var/services/homes/atom/gitRepo/SmartCC_Kibal-Client.git` |
 | `prd` | 운영 환경 (NAS) | `ssh://atom@nas2:4949/var/services/homes/atom/gitRepo/SmartCC_Kibal-Client_prd.git` |
 
+> **2026-11-09 동기화 참고**: SSH(`nas2` → `192.168.11.2:4949`) 자체는 키 인증으로 접속되나, `dev`/`prd` URL의 `/var/services/homes/atom/gitRepo/...` 경로가 존재하지 않거나 권한 문제로 Push 불가. NAS의 실제 Git 저장소 경로를 확인 후 remote URL을 갱신해야 한다. GitHub(`origin`)는 정상 동기화됨.
+
 ---
 
 ## 상태 (2026-11-09)

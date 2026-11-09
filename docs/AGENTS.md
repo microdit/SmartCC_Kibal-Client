@@ -2,25 +2,26 @@
 
 ## 프로젝트 정의
 - **프로젝트명**: SmartCC_Kibal-Client (멀티플랫폼 SIP 영상통화 클라이언트)
-- **목적**: Asterisk 22 LTS 서버(`SmartCC_Kibal`)와 연동하는 Web (React + SIP.js) + Mobile (Flutter) 클라이언트 개발
+- **목적**: Asterisk 22 LTS 서버(`SmartCC_Kibal`)와 연동하는 Web (React + SIP.js) + macOS/모바일 (Flutter) 클라이언트 개발
 - **버전**: Knowledge OS v3.0 (2026-10-29)
 - **별도 리포지토리**: `git@github.com:microdit/SmartCC_Kibal-Client.git`
 
 ## 환경
 | 구분 | 경로/IP | 비고 |
 |------|---------|------|
-| DEV | `/Users/microdit/Downloads/dev/SmartCC_Kibal-Client` | macOS |
-| GitHub | `git@github.com:microdit/SmartCC_Kibal-Client.git` | 추후 생성 |
+| DEV (SIP 서버) | `192.168.11.39` | Docker: `kibal-dev-asterisk`(dev), `kibal-dev-ops`(ops) |
+| Client workspace | `/Users/microdit/Downloads/dev/SmartCC_Kibal-Client` | macOS |
+| GitHub | `git@github.com:microdit/SmartCC_Kibal-Client.git` | origin |
 | Python venv | `./venv_client/` | Python 3.11 + chromadb 1.5.9 |
 | Web | `./web/` | React + TypeScript + Vite |
-| Mobile | `./mobile/` | Flutter 3.x |
+| Mobile/macOS | `./mobile/`, `./macos-client/` | Flutter 3.x (macOS/모바일) |
 
 ## 핵심 컴포넌트
 | 컴포넌트 | 파일/경로 | 설명 |
 |----------|-----------|------|
 | Vector Store | `agent_wiki_vector.py` | ChromaDB 기반 Wiki 의미 검색 (collection: `kibal_client_wiki`) |
 | 인덱싱 CLI | `scripts/index_wiki.py` | `--reindex`, `--search`, `--stats` |
-| Git 동기화 | `scripts/git-sync.sh` | github/dev/prd 3-way push |
+| Git 동기화 | `scripts/git-sync.sh` | github/dev/prd 3-way push. **2026-11-09: `dev`/`prd`(NAS) 경로 재확인 필요** |
 | 작업지도 | `docs/작업지도.md` | Knowledge OS Kernel |
 | 기획 리뷰 | `docs/기획/` | 서버 기획 문서 리뷰 의견 |
 
@@ -36,8 +37,8 @@
 | 리모트 | URL |
 |--------|-----|
 | github | `git@github.com:microdit/SmartCC_Kibal-Client.git` |
-| dev | `ssh://atom@nas2:4949/.../SmartCC_Kibal-Client.git` |
-| prd | `ssh://atom@nas2:4949/.../SmartCC_Kibal-Client_prd.git` |
+| dev | `ssh://atom@nas2:4949/var/services/homes/atom/gitRepo/SmartCC_Kibal-Client.git` | **NAS 실제 경로 재확인 필요(2026-11-09)** |
+| prd | `ssh://atom@nas2:4949/var/services/homes/atom/gitRepo/SmartCC_Kibal-Client_prd.git` | **NAS 실제 경로 재확인 필요(2026-11-09)** |
 
 ## 배포·동기화 절차 (2026-11-03 확정)
 1. `docs/_작업이력/{오늘날짜}.md`, `wiki/07_Logs/`, `wiki/06_Reports/`를 먼저 작성한다.
@@ -61,4 +62,5 @@
 - [[wiki/02_Design/architecture]] — 시스템 아키텍처
 - [[wiki/01_Projects/tasks]] — 작업 계획 및 마일스톤
 - [[wiki/02_Design/sip-client-design]] — SIP Client 설계
+- [[wiki/05_Decisions/ADR-004]] — SIP 엔진 sip_ua 교체 결정 기록
 - [[wiki/05_Decisions/ADR-001-webrtc-over-flutter]] — WebRTC 우선 결정 기록
