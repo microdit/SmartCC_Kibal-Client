@@ -116,7 +116,7 @@ class KibalSipClient implements SipUaHelperListener {
         ..password = config.password
         ..displayName = config.displayName ?? 'Kibal ${config.username}'
         ..transportType = TransportType.WS
-        ..register = false
+        ..register = true
         ..register_expires = 300
         ..userAgent = 'Kibal Client/1.0'
         ..iceServers = config.iceServers
@@ -157,6 +157,10 @@ class KibalSipClient implements SipUaHelperListener {
       if (_state != SipClientState.connected &&
           _state != SipClientState.unregistered) {
         throw Exception('SIP 전송이 연결되지 않음 (상태: ${_state.name})');
+      }
+
+      if (_state == SipClientState.registered) {
+        return true;
       }
 
       final registerCompleter = Completer<bool>();
