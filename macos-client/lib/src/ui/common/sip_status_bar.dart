@@ -75,7 +75,7 @@ class SipStatusBar extends StatelessWidget {
                 vertical: AppConstants.spacingXs,
               ),
               decoration: BoxDecoration(
-                color: Colors.green.withOpacity(0.2),
+                color: Colors.green.withValues(alpha: 0.2),
                 borderRadius: BorderRadius.circular(AppConstants.borderRadiusSm),
               ),
               child: Row(
@@ -198,7 +198,7 @@ class SipStatusChip extends StatelessWidget {
       width: size,
       height: size,
       decoration: BoxDecoration(
-        color: _getStatusColor(sipProvider).withOpacity(0.2),
+        color: _getStatusColor(sipProvider).withValues(alpha: 0.2),
         shape: BoxShape.circle,
         border: Border.all(
           color: _getStatusColor(sipProvider),

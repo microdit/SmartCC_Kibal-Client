@@ -2,6 +2,8 @@
 /// 
 /// Asterisk 서버와 연결하기 위한 모든 설정을 포함합니다.
 /// UDP/PJSIP 또는 WebRTC/WebSocket을 지원합니다.
+library;
+
 
 class SipConfig {
   /// SIP 사용자 이름 (내선 번호)

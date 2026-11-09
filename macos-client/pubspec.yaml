@@ -10,11 +10,11 @@ dependencies:
   flutter:
     sdk: flutter
 
-  # SIP Client
-  flutter_sip: 0.0.8
+  # SIP Client (dart-sip-ua: macOS/iOS/Android/Windows/Web 지원)
+  sip_ua: ^1.1.0
 
   # WebRTC for Flutter
-  flutter_webrtc: ^0.11.7
+  flutter_webrtc: ^1.6.3
 
   # State Management
   provider: ^6.1.1
@@ -31,6 +31,8 @@ dependencies:
   # Localization
   flutter_localizations:
     sdk: flutter
+
+  intl: ^0.20.3
 
 dev_dependencies:
   flutter_test:

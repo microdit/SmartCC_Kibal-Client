@@ -82,7 +82,7 @@ class Formatters {
       // sip:username@domain 형식
       if (sipUri.startsWith('sip:')) {
         final parts = sipUri.substring(4).split('@');
-        if (parts.length >= 1) {
+        if (parts.isNotEmpty) {
           return Uri.decodeComponent(parts[0]);
         }
       }

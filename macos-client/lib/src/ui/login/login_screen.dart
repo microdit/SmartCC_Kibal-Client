@@ -44,7 +44,6 @@ class _LoginScreenState extends State<LoginScreen> {
   final _wsServerController = TextEditingController();
   
   // 오토 컴플리트 확장 번호
-  final List<String> _extensionSuggestions = AppConstants.udpExtensions;
   
   // 초기 로드 완료 여부
   bool _isInitialLoad = true;
@@ -149,23 +148,23 @@ class _LoginScreenState extends State<LoginScreen> {
   //--------------------------------------------------------------------------
   
   Widget _buildHeader() {
-    return Column(
+    return const Column(
       children: [
-        const Icon(
+        Icon(
           Icons.phone_enabled,
           size: 64,
           color: Color(AppConstants.primaryColor),
         ),
-        const SizedBox(height: AppConstants.spacingMd),
+        SizedBox(height: AppConstants.spacingMd),
         Text(
           AppConstants.appName,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.bold,
             color: Colors.black87,
           ),
         ),
-        const Text(
+        Text(
           'SIP 영상통화 클라이언트',
           style: TextStyle(
             fontSize: 16,
@@ -378,11 +377,11 @@ class _LoginScreenState extends State<LoginScreen> {
         const SizedBox(height: AppConstants.spacingMd),
         TextFormField(
           controller: _wsServerController,
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
             labelText: 'WebSocket 서버',
             hintText: 'ws://192.168.11.2:8088/ws',
-            prefixIcon: const Icon(Icons.web_asset_outlined),
-            border: const OutlineInputBorder(),
+            prefixIcon: Icon(Icons.web_asset_outlined),
+            border: OutlineInputBorder(),
           ),
           keyboardType: TextInputType.url,
           textInputAction: TextInputAction.done,
@@ -405,7 +404,7 @@ class _LoginScreenState extends State<LoginScreen> {
         vertical: AppConstants.spacingSm,
       ),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(AppConstants.borderRadiusMd),
         border: Border.all(color: color, width: 1),
       ),
@@ -643,7 +642,9 @@ class _LoginScreenState extends State<LoginScreen> {
     // 연결 시도
     final sipProvider = Provider.of<SipProvider>(context, listen: false);
     final success = await sipProvider.connect();
-    
+
+    if (!mounted) return;
+
     if (success && sipProvider.isRegistered) {
       // 미디어 초기화
       final mediaProvider = Provider.of<MediaProvider>(context, listen: false);

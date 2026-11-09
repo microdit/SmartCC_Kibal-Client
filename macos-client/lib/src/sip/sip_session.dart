@@ -46,8 +46,8 @@ class SipSession {
   
   /// 생성자
   /// Note: id can be a call ID or session identifier
-  SipSession(String? id) : 
-    this.id = id ?? DateTime.now().millisecondsSinceEpoch.toString(),
+  SipSession(String? sessionId) :
+    id = sessionId ?? DateTime.now().millisecondsSinceEpoch.toString(),
     type = SipSessionType.outgoing,
     state = SipSessionState.idle;
   

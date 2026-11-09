@@ -31,8 +31,11 @@ class _CallScreenState extends State<CallScreen> {
   // 통화 duration
   Duration _callDuration = Duration.zero;
   
-  // 화면 회전lock
-  bool _isPortraitLocked = true;
+  // 통화가 한 번이라도 연결되었는지 여부
+  bool _wasInCall = false;
+
+  // 사용자가 직접 종료 중인지 여부
+  bool _isClosing = false;
 
   @override
   void initState() {
@@ -67,11 +70,9 @@ class _CallScreenState extends State<CallScreen> {
     final sipProvider = Provider.of<SipProvider>(context);
     final mediaProvider = Provider.of<MediaProvider>(context);
     
-    return WillPopScope(
-      onWillPop: () async {
-        // 뒤로 가기 방지 (통화 중에는 종료 버튼만 사용)
-        return false;
-      },
+    return PopScope(
+      // 뒤로 가기 방지 (통화 중에는 종료 버튼만 사용)
+      canPop: false,
       child: Scaffold(
         backgroundColor: Colors.black,
         body: SafeArea(
@@ -253,7 +254,7 @@ class _CallScreenState extends State<CallScreen> {
       child: Container(
         padding: const EdgeInsets.all(AppConstants.spacingMd),
         decoration: BoxDecoration(
-          color: Colors.black.withOpacity(0.7),
+          color: Colors.black.withValues(alpha: 0.7),
           borderRadius: BorderRadius.circular(AppConstants.borderRadiusLg),
         ),
         child: Row(
@@ -326,7 +327,7 @@ class _CallScreenState extends State<CallScreen> {
           onPressed: onPressed,
           icon: Icon(icon, size: size / 2),
           style: IconButton.styleFrom(
-            backgroundColor: Colors.white.withOpacity(0.2),
+            backgroundColor: Colors.white.withValues(alpha: 0.2),
             foregroundColor: color,
             padding: EdgeInsets.all(size / 3),
             shape: RoundedRectangleBorder(
@@ -365,8 +366,8 @@ class _CallScreenState extends State<CallScreen> {
             ),
             decoration: BoxDecoration(
               color: sipProvider.isRegistered 
-                  ? Colors.green.withOpacity(0.2) 
-                  : Colors.red.withOpacity(0.2),
+                  ? Colors.green.withValues(alpha: 0.2) 
+                  : Colors.red.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(AppConstants.borderRadiusSm),
             ),
             child: Row(
@@ -400,8 +401,8 @@ class _CallScreenState extends State<CallScreen> {
             ),
             decoration: BoxDecoration(
               color: mediaProvider.hasLocalStream 
-                  ? Colors.blue.withOpacity(0.2) 
-                  : Colors.grey.withOpacity(0.2),
+                  ? Colors.blue.withValues(alpha: 0.2) 
+                  : Colors.grey.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(AppConstants.borderRadiusSm),
             ),
             child: Row(
@@ -476,9 +477,31 @@ class _CallScreenState extends State<CallScreen> {
   
   void _handleSipStateChange() {
     final sipProvider = Provider.of<SipProvider>(context, listen: false);
-    
-    // 통화 종료 시 화면 닫기
-    if (!sipProvider.isInCall && !sipProvider.isRegistered) {
+    final mediaProvider = Provider.of<MediaProvider>(context, listen: false);
+
+    // SIP 엔진에서 전달된 원격 스트림을 렌더러에 연결
+    for (final event in sipProvider.drainMediaEvents()) {
+      if (event['action'] != 'stream') continue;
+
+      final stream = event['stream'];
+      final originator = event['originator'] as String? ?? '';
+      if (stream is MediaStream && originator.contains('remote')) {
+        mediaProvider.addRemoteStream(
+          stream,
+          event['sessionId'] as String? ?? 'remote',
+        );
+      }
+    }
+
+    if (sipProvider.isInCall) {
+      _wasInCall = true;
+      return;
+    }
+
+    // 상대방 종료 등으로 통화가 끊어진 경우
+    if (_wasInCall && !_isClosing) {
+      _wasInCall = false;
+      mediaProvider.removeAllRemoteStreams();
       if (mounted) {
         _showCallEndedDialog(sipProvider);
       }
@@ -563,6 +586,8 @@ class _CallScreenState extends State<CallScreen> {
   //--------------------------------------------------------------------------
   
   Future<void> _handleHangup(SipProvider sipProvider, MediaProvider mediaProvider) async {
+    _isClosing = true;
+
     // 통화 종료
     await sipProvider.hangup();
     

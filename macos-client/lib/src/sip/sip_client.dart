@@ -1,7 +1,6 @@
 import 'dart:async';
-import 'package:flutter/foundation.dart';
-import 'package:flutter_sip/flutter_sip.dart';
-import 'package:flutter_sip/login_status_enum.dart';
+import 'package:flutter_webrtc/flutter_webrtc.dart';
+import 'package:sip_ua/sip_ua.dart';
 import 'sip_config.dart';
 import 'sip_session.dart';
 
@@ -29,13 +28,13 @@ class SipEvent {
   final SipEventType type;
   final dynamic data;
   final String? error;
-  
+
   const SipEvent({
     required this.type,
     this.data,
     this.error,
   });
-  
+
   @override
   String toString() {
     return 'SipEvent(type: $type, data: $data, error: $error)';
@@ -45,325 +44,521 @@ class SipEvent {
 /// SIP 클라이언트 콜백
 typedef SipEventCallback = void Function(SipEvent event);
 
-/// Kibal Mobile SIP 클라이언트
-/// 
-/// flutter_sip 라이브러리를 기반으로 SIP 등록, 통화, 해제 기능을 제공합니다.
-/// 
-/// Note: This implementation uses the actual flutter_sip 0.0.8 API
-class KibalSipClient {
-  /// SIP 클라이언트 인스턴스 (flutter_sip Adaptor)
-  late FlutterSip _flutterSip;
-  
+/// Kibal SIP 클라이언트
+///
+/// dart-sip-ua(sip_ua) 기반으로 SIP 등록, 통화, 해제 기능을 제공합니다.
+/// macOS/iOS/Android/Windows/Web에서 동일하게 동작합니다.
+class KibalSipClient implements SipUaHelperListener {
+  /// SIP UA 헬퍼 (dart-sip-ua)
+  final SIPUAHelper _helper = SIPUAHelper();
+
   /// 현재 설정
   SipConfig? _config;
-  
+
   /// 현재 상태
   SipClientState _state = SipClientState.idle;
-  
+
   /// 현재 세션
   SipSession? _currentSession;
-  
+
+  /// 현재 통화
+  Call? _currentCall;
+
   /// 이벤트 스트림 컨트롤러
-  final StreamController<SipEvent> _eventController = 
+  final StreamController<SipEvent> _eventController =
       StreamController<SipEvent>.broadcast();
-  
+
   /// 구독자 콜백
   SipEventCallback? _callback;
-  
-  /// 등록 상태 콜백
-  // Note: flutter_sip 0.0.8 uses direct callback, not Stream
-  
+
+  /// 전송 연결 대기
+  Completer<bool>? _transportCompleter;
+
+  /// 등록 대기
+  Completer<bool>? _registerCompleter;
+
   //--------------------------------------------------------------------------
   // Public API
   //--------------------------------------------------------------------------
-  
+
   /// SIP 클라이언트 상태
   SipClientState get state => _state;
-  
+
   /// 현재 설정
   SipConfig? get config => _config;
-  
+
   /// 현재 세션
   SipSession? get currentSession => _currentSession;
-  
+
   /// 이벤트 스트림
   Stream<SipEvent> get events => _eventController.stream;
-  
+
   /// 생성자
   KibalSipClient({SipEventCallback? callback}) {
     _callback = callback;
-    _flutterSip = FlutterSip();
+    _helper.addSipUaHelperListener(this);
   }
-  
+
   //--------------------------------------------------------------------------
   // Connection Management
   //--------------------------------------------------------------------------
-  
-  /// SIP 클라이언트 초기화
-  /// 
-  /// [config] SIP 설정
-  /// [returns] 초기화 성공 여부
+
+  /// SIP 클라이언트 초기화 및 전송 연결
   Future<bool> init(SipConfig config) async {
     try {
       _config = config;
-      _state = SipClientState.connecting;
-      _emitEvent(SipEvent(type: SipEventType.registration, data: _state));
-      
-      // Initialize flutter_sip with SIP server URL
-      final sipUrl = 'http://${config.domain}:${config.port}';
-      FlutterSip.init(sipUrl);
-      
-      _setupListeners();
-      
-      _state = SipClientState.connected;
-      _emitEvent(SipEvent(type: SipEventType.registration, data: _state));
-      
-      return true;
+      _setState(SipClientState.connecting);
+
+      final settings = UaSettings()
+        ..webSocketUrl = _webSocketUrl(config)
+        ..uri = 'sip:${config.username}@${config.domain}'
+        ..authorizationUser = config.username
+        ..password = config.password
+        ..displayName = config.displayName ?? 'Kibal ${config.username}'
+        ..transportType = TransportType.WS
+        ..register = false
+        ..register_expires = 300
+        ..userAgent = 'Kibal Client/1.0'
+        ..iceServers = config.iceServers
+            .map((url) => <String, String>{'urls': url})
+            .toList();
+
+      final transportCompleter = Completer<bool>();
+      _transportCompleter = transportCompleter;
+      await _helper.start(settings);
+
+      final connected = await transportCompleter.future.timeout(
+        const Duration(seconds: 15),
+        onTimeout: () => _helper.connected,
+      );
+
+      if (connected) {
+        _setState(SipClientState.connected);
+      } else {
+        _setState(SipClientState.error);
+        _emitError('SIP 전송 연결 시간 초과');
+      }
+
+      return connected;
     } catch (e) {
-      _state = SipClientState.error;
-      _emitEvent(SipEvent(
-        type: SipEventType.error,
-        error: 'SIP 클라이언트 초기화 실패: $e',
-      ));
+      _setState(SipClientState.error);
+      _emitError('SIP 클라이언트 초기화 실패: $e');
       return false;
     }
   }
-  
+
   /// SIP 등록
   Future<bool> register() async {
     try {
-      if (_state != SipClientState.connected && _state != SipClientState.unregistered) {
-        throw Exception('SIP 클라이언트가 연결되지 않음');
-      }
-      
       if (_config == null) {
         throw Exception('SIP 설정이 없음');
       }
-      
-      await _flutterSip.loginSip(
-        userName: _config!.username,
-        password: _config!.password,
-        displayName: _config!.displayName ?? 'Kibal ${_config!.username}',
-        sipIp: _config!.domain,
-        port: _config!.port.toString(),
+
+      if (_state != SipClientState.connected &&
+          _state != SipClientState.unregistered) {
+        throw Exception('SIP 전송이 연결되지 않음 (상태: ${_state.name})');
+      }
+
+      final registerCompleter = Completer<bool>();
+      _registerCompleter = registerCompleter;
+      _helper.register();
+
+      final ok = await registerCompleter.future.timeout(
+        const Duration(seconds: 15),
+        onTimeout: () => false,
       );
-      
-      // Wait for registration to complete
-      await Future.delayed(Duration(seconds: 2));
-      return _state == SipClientState.registered;
+
+      if (!ok) {
+        _emitError('SIP 등록 시간 초과 또는 실패');
+      }
+
+      return ok;
     } catch (e) {
-      _emitEvent(SipEvent(
-        type: SipEventType.error,
-        error: 'SIP 등록 실패: $e',
-      ));
+      _setState(SipClientState.error);
+      _emitError('SIP 등록 실패: $e');
       return false;
     }
   }
-  
+
   /// SIP 등록 해제
   Future<bool> unregister() async {
     try {
-      await _flutterSip.logoutSip();
-      _state = SipClientState.unregistered;
-      _emitEvent(SipEvent(
-        type: SipEventType.registration,
-        data: _state,
-      ));
-      return true;
+      final ok = await _helper.unregister();
+      _setState(SipClientState.unregistered);
+      return ok;
     } catch (e) {
-      _emitEvent(SipEvent(
-        type: SipEventType.error,
-        error: 'SIP 등록 해제 실패: $e',
-      ));
+      _emitError('SIP 등록 해제 실패: $e');
       return false;
     }
   }
-  
+
   /// SIP 연결 해제
   Future<void> disconnect() async {
     try {
-      await _flutterSip.logoutSip();
+      _helper.stop();
       _cleanup();
-      _state = SipClientState.idle;
-      _emitEvent(SipEvent(type: SipEventType.registration, data: _state));
+      _setState(SipClientState.idle);
     } catch (e) {
-      _emitEvent(SipEvent(
-        type: SipEventType.error,
-        error: 'SIP 연결 해제 실패: $e',
-      ));
+      _emitError('SIP 연결 해제 실패: $e');
     }
   }
-  
+
   //--------------------------------------------------------------------------
   // Call Management
   //--------------------------------------------------------------------------
-  
+
   /// 통화 시작 (발신)
-  /// 
-  /// [target] 대상 내선 번호
-  Future<bool> call(String target) async {
+  ///
+  /// [mediaStream]을 지정하면 해당 로컬 스트림을 통화에 사용하고,
+  /// 생략하면 SIP 엔진이 직접 카메라/마이크를 획득합니다.
+  Future<bool> call(String target, {MediaStream? mediaStream}) async {
     try {
       if (_state != SipClientState.registered) {
         throw Exception('SIP 등록되지 않음');
       }
-      
-      await _flutterSip.makeCall(
-        phoneNo: target,
-        displayName: target,
+
+      if (_currentCall != null) {
+        throw Exception('이미 통화 중임');
+      }
+
+      // 카메라가 없는 환경에서는 음성 통화로 자동 대체
+      final voiceOnly = !await _canUseVideo(mediaStream);
+      final ok = await _helper.call(
+        target,
+        voiceOnly: voiceOnly,
+        mediaStream: mediaStream,
       );
-      
-      // Create a simple session object
-      _currentSession = SipSession(null);
+      if (!ok) {
+        throw Exception('통화 요청이 거부됨');
+      }
+
+      _currentSession = SipSession(target)
+        ..setType(SipSessionType.outgoing)
+        ..setRemoteParty(target);
+
       _emitEvent(SipEvent(
         type: SipEventType.call,
-        data: {'action': 'call', 'target': target, 'session': _currentSession},
+        data: {
+          'action': 'call',
+          'target': target,
+          'session': _currentSession,
+        },
       ));
+
       return true;
     } catch (e) {
-      _emitEvent(SipEvent(
-        type: SipEventType.error,
-        error: '통화 시작 실패: $e',
-      ));
+      _emitError('통화 시작 실패: $e');
       return false;
     }
   }
-  
-  /// 통화 수신 (수신) - Note: flutter_sip 0.0.8 doesn't support answerCall
-  /// For now, this is a placeholder. Incoming calls need to be handled differently.
-  Future<bool> accept() async {
+
+  /// 통화 수신
+  Future<bool> accept({MediaStream? mediaStream}) async {
     try {
-      if (_currentSession == null) {
+      final call = _currentCall;
+      if (call == null) {
         throw Exception('수신 중인 통화 없음');
       }
-      
-      // TODO: Implement proper call answering
-      // flutter_sip 0.0.8 doesn't have answerCall method
+
+      final voiceOnly = call.voiceOnly || !await _canUseVideo(mediaStream);
+      call.answer(
+        _helper.buildCallOptions(voiceOnly),
+        mediaStream: mediaStream,
+      );
+      _currentSession?.updateState(SipSessionState.established);
+
       _emitEvent(SipEvent(
         type: SipEventType.call,
-        data: {'action': 'accept', 'session': _currentSession},
+        data: {
+          'action': 'accept',
+          'target': _targetOf(call),
+          'session': _currentSession,
+        },
       ));
       return true;
     } catch (e) {
-      _emitEvent(SipEvent(
-        type: SipEventType.error,
-        error: '통화 수신 실패: $e',
-      ));
+      _emitError('통화 수신 실패: $e');
       return false;
     }
   }
-  
-  /// 통화 거부 - Note: flutter_sip 0.0.8 doesn't support endCall for incoming
+
+  /// 통화 거부
   Future<bool> reject() async {
     try {
-      if (_currentSession == null) {
+      final call = _currentCall;
+      if (call == null) {
         throw Exception('수신 중인 통화 없음');
       }
-      
-      // TODO: Implement proper call rejection
+
+      call.hangup();
       _cleanupSession();
-      _emitEvent(SipEvent(
+
+      _emitEvent(const SipEvent(
         type: SipEventType.call,
         data: {'action': 'reject'},
       ));
       return true;
     } catch (e) {
-      _emitEvent(SipEvent(
-        type: SipEventType.error,
-        error: '통화 거부 실패: $e',
-      ));
+      _emitError('통화 거부 실패: $e');
       return false;
     }
   }
-  
-  /// 통화 종료 - Note: flutter_sip 0.0.8 doesn't support endCall
-  /// For now, this is a placeholder
+
+  /// 통화 종료
   Future<bool> hangup() async {
     try {
-      if (_currentSession == null) {
+      final call = _currentCall;
+      if (call == null) {
         throw Exception('통화 중이 아님');
       }
-      
-      // TODO: Implement proper call termination
+
+      call.hangup();
       _cleanupSession();
-      _emitEvent(SipEvent(
+
+      _emitEvent(const SipEvent(
         type: SipEventType.call,
         data: {'action': 'hangup'},
       ));
       return true;
     } catch (e) {
-      _emitEvent(SipEvent(
-        type: SipEventType.error,
-        error: '통화 종료 실패: $e',
-      ));
+      _emitError('통화 종료 실패: $e');
       return false;
     }
   }
-  
+
+  //--------------------------------------------------------------------------
+  // SipUaHelperListener
+  //--------------------------------------------------------------------------
+
+  @override
+  void registrationStateChanged(RegistrationState state) {
+    switch (state.state) {
+      case RegistrationStateEnum.REGISTERED:
+        _setState(SipClientState.registered);
+        _completeRegister(true);
+        break;
+      case RegistrationStateEnum.REGISTRATION_FAILED:
+        _setState(SipClientState.error);
+        _emitError('SIP 등록 실패: ${state.cause ?? '알 수 없는 원인'}');
+        _completeRegister(false);
+        break;
+      case RegistrationStateEnum.UNREGISTERED:
+        _setState(SipClientState.unregistered);
+        _completeRegister(false);
+        break;
+      case RegistrationStateEnum.NONE:
+      case null:
+        break;
+    }
+  }
+
+  @override
+  void transportStateChanged(TransportState state) {
+    switch (state.state) {
+      case TransportStateEnum.CONNECTING:
+        _setState(SipClientState.connecting);
+        break;
+      case TransportStateEnum.CONNECTED:
+        _setState(SipClientState.connected);
+        _completeTransport(true);
+        break;
+      case TransportStateEnum.DISCONNECTED:
+        _setState(SipClientState.disconnected);
+        _completeTransport(false);
+        break;
+      case TransportStateEnum.NONE:
+        break;
+    }
+  }
+
+  @override
+  void callStateChanged(Call call, CallState state) {
+    switch (state.state) {
+      case CallStateEnum.CALL_INITIATION:
+        _currentCall = call;
+        if (call.direction == Direction.incoming) {
+          _currentSession = SipSession(call.id)
+            ..setType(SipSessionType.incoming)
+            ..setRemoteParty(_targetOf(call));
+
+          _emitEvent(SipEvent(
+            type: SipEventType.call,
+            data: {
+              'action': 'incoming',
+              'target': _targetOf(call),
+              'session': _currentSession,
+            },
+          ));
+        }
+        break;
+
+      case CallStateEnum.CONNECTING:
+      case CallStateEnum.PROGRESS:
+        _currentSession?.updateState(SipSessionState.connecting);
+        _emitEvent(SipEvent(
+          type: SipEventType.call,
+          data: {'action': 'progress', 'target': _targetOf(call)},
+        ));
+        break;
+
+      case CallStateEnum.ACCEPTED:
+      case CallStateEnum.CONFIRMED:
+        _currentSession?.updateState(SipSessionState.established);
+        _emitEvent(SipEvent(
+          type: SipEventType.call,
+          data: {
+            'action': 'established',
+            'target': _targetOf(call),
+            'session': _currentSession,
+          },
+        ));
+        break;
+
+      case CallStateEnum.ENDED:
+      case CallStateEnum.FAILED:
+        _currentSession?.updateState(
+          state.state == CallStateEnum.FAILED
+              ? SipSessionState.failed
+              : SipSessionState.terminated,
+        );
+        _emitEvent(SipEvent(
+          type: SipEventType.call,
+          data: {'action': 'terminated', 'target': _targetOf(call)},
+        ));
+        _cleanupSession();
+        break;
+
+      case CallStateEnum.STREAM:
+        // 원격/로컬 미디어 스트림 수신 (originator: local/remote)
+        _emitEvent(SipEvent(
+          type: SipEventType.call,
+          data: {
+            'action': 'stream',
+            'target': _targetOf(call),
+            'sessionId': call.id,
+            'originator': state.originator?.toString(),
+            'stream': state.stream,
+          },
+        ));
+        break;
+
+      case CallStateEnum.UNMUTED:
+      case CallStateEnum.MUTED:
+      case CallStateEnum.HOLD:
+      case CallStateEnum.UNHOLD:
+      case CallStateEnum.REFER:
+      case CallStateEnum.NONE:
+        break;
+    }
+  }
+
+  @override
+  void onNewMessage(SIPMessageRequest msg) {}
+
+  @override
+  void onNewNotify(Notify ntf) {}
+
+  @override
+  void onNewReinvite(ReInvite event) {}
+
   //--------------------------------------------------------------------------
   // Event Handling
   //--------------------------------------------------------------------------
-  
-  /// 이벤트 emit
-  void _emitEvent(SipEvent event) {
-    _eventController.add(event);
-    _callback?.call(event);
-    
-    // 상태 업데이트
-    if (event.type == SipEventType.registration) {
-      _state = event.data as SipClientState;
+
+  /// 비디오 사용 가능 여부 (카메라 유무 확인)
+  Future<bool> _canUseVideo(MediaStream? stream) async {
+    if (stream != null) {
+      return stream.getVideoTracks().isNotEmpty;
+    }
+
+    try {
+      final devices = await navigator.mediaDevices.enumerateDevices();
+      return devices.any((device) => device.kind == 'videoinput');
+    } catch (_) {
+      return true;
     }
   }
-  
-  /// 리스너 설정
-  void _setupListeners() {
-    // 등록 상태 리스너
-    // Note: onLoginStatusChange takes a callback directly, not a Stream
-    _flutterSip.onLoginStatusChange((status) {
-      switch (status) {
-        case LoginStatusEnum.progress:
-          _state = SipClientState.connecting;
-          break;
-        case LoginStatusEnum.ok:
-          _state = SipClientState.registered;
-          break;
-        case LoginStatusEnum.cleared:
-          _state = SipClientState.unregistered;
-          break;
-        case LoginStatusEnum.failed:
-        case LoginStatusEnum.none:
-          _state = SipClientState.error;
-          break;
-        case LoginStatusEnum.refreshing:
-          _state = SipClientState.connecting;
-          break;
-      }
-      _emitEvent(SipEvent(
-        type: SipEventType.registration,
-        data: _state,
-      ));
-    });
-    
-    // Note: flutter_sip 0.0.8 doesn't have onCallStatusChange
-    // Call status is handled through explicit method calls (makeCall, answerCall, endCall)
+
+  /// WebSocket URL 결정
+  String _webSocketUrl(SipConfig config) {
+    final server = config.wsServer;
+    if (server != null && server.isNotEmpty) {
+      return server;
+    }
+    return 'ws://${config.domain}:${config.port}/ws';
   }
-  
+
+  /// 원격 식별자에서 사용자 부분 추출
+  String? _targetOf(Call call) {
+    final identity = call.remote_identity;
+    if (identity == null) return null;
+
+    var value = identity;
+    if (value.startsWith('sip:') || value.startsWith('sips:')) {
+      value = value.substring(value.indexOf(':') + 1);
+    }
+    final at = value.indexOf('@');
+    return at > 0 ? value.substring(0, at) : value;
+  }
+
+  /// 등록 대기 완료 (중복 완료 방지)
+  void _completeRegister(bool value) {
+    final completer = _registerCompleter;
+    if (completer != null && !completer.isCompleted) {
+      completer.complete(value);
+    }
+    _registerCompleter = null;
+  }
+
+  /// 전송 연결 대기 완료 (중복 완료 방지)
+  void _completeTransport(bool value) {
+    final completer = _transportCompleter;
+    if (completer != null && !completer.isCompleted) {
+      completer.complete(value);
+    }
+    _transportCompleter = null;
+  }
+
+  /// 상태 변경 및 등록 이벤트 emit
+  void _setState(SipClientState state) {
+    _state = state;
+    _emitEvent(SipEvent(type: SipEventType.registration, data: state));
+  }
+
+  /// 오류 이벤트 emit
+  void _emitError(String message) {
+    _emitEvent(SipEvent(type: SipEventType.error, error: message));
+  }
+
+  /// 이벤트 emit
+  void _emitEvent(SipEvent event) {
+    if (!_eventController.isClosed) {
+      _eventController.add(event);
+    }
+    _callback?.call(event);
+  }
+
   /// 세션 정리
   void _cleanupSession() {
     _currentSession = null;
+    _currentCall = null;
   }
-  
+
   /// 모든 리소스 정리
   void _cleanup() {
-    // Note: flutter_sip 0.0.8 uses direct callback, no subscription to cancel
     _cleanupSession();
+    _transportCompleter = null;
+    _registerCompleter = null;
   }
-  
+
   //--------------------------------------------------------------------------
   // Dispose
   //--------------------------------------------------------------------------
-  
+
   /// 리소스 해제
   void dispose() {
+    _helper.removeSipUaHelperListener(this);
+    _helper.stop();
     _cleanup();
     _eventController.close();
   }

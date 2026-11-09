@@ -26,7 +26,6 @@ class _DialerScreenState extends State<DialerScreen> {
   final _targetFocus = FocusNode();
   
   // Dahilah_generator
-  String _displayNumber = '';
 
   @override
   void initState() {
@@ -253,10 +252,8 @@ class _DialerScreenState extends State<DialerScreen> {
               fontWeight: FontWeight.bold,
               letterSpacing: 2.0,
             ),
-            onChanged: (value) {
-              setState(() {
-                _displayNumber = value;
-              });
+            onChanged: (_) {
+              setState(() {});
             },
             textInputAction: TextInputAction.done,
             onFieldSubmitted: (_) => _handleCall(sipProvider),
@@ -478,14 +475,22 @@ class _DialerScreenState extends State<DialerScreen> {
       return;
     }
     
-    // 통화 시작
-    final success = await sipProvider.call(target);
+    // 로컬 미디어 확보 후 통화 시작
+    final mediaProvider = Provider.of<MediaProvider>(context, listen: false);
+    if (!mediaProvider.hasLocalStream) {
+      await mediaProvider.getLocalMedia();
+    }
+
+    final success = await sipProvider.call(
+      target,
+      mediaStream: mediaProvider.localStream,
+    );
     
+    if (!mounted) return;
+
     if (success) {
       // 통화 화면으로 이동
-      if (mounted) {
-        context.push('/call', extra: target);
-      }
+      context.push('/call', extra: target);
     } else {
       _showErrorDialog(context, '통화 시작에 실패했습니다: ${sipProvider.error}');
     }
@@ -540,7 +545,7 @@ class _DialerScreenState extends State<DialerScreen> {
   Future<void> _handleCameraToggle(BuildContext context) async {
     final mediaProvider = Provider.of<MediaProvider>(context, listen: false);
     await mediaProvider.toggleCamera();
-    Navigator.of(context).pop();
+    if (context.mounted) Navigator.of(context).pop();
   }
 
   //--------------------------------------------------------------------------
@@ -550,7 +555,7 @@ class _DialerScreenState extends State<DialerScreen> {
   Future<void> _handleAudioToggle(BuildContext context) async {
     final mediaProvider = Provider.of<MediaProvider>(context, listen: false);
     await mediaProvider.toggleAudio();
-    Navigator.of(context).pop();
+    if (context.mounted) Navigator.of(context).pop();
   }
 
   //--------------------------------------------------------------------------
@@ -560,7 +565,7 @@ class _DialerScreenState extends State<DialerScreen> {
   Future<void> _handleVideoToggle(BuildContext context) async {
     final mediaProvider = Provider.of<MediaProvider>(context, listen: false);
     await mediaProvider.toggleVideo();
-    Navigator.of(context).pop();
+    if (context.mounted) Navigator.of(context).pop();
   }
 
   //--------------------------------------------------------------------------
@@ -577,12 +582,14 @@ class _DialerScreenState extends State<DialerScreen> {
         await sipProvider.disconnect();
         sipProvider.clearConfig();
         
-        if (mounted) {
+        if (context.mounted) {
           context.go('/');
         }
         break;
       case 'toggle_camera':
-        await _handleCameraToggle(context);
+        if (context.mounted) {
+          await _handleCameraToggle(context);
+        }
         break;
     }
   }

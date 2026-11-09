@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:core';
 import 'package:flutter/material.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
@@ -104,7 +103,6 @@ class MediaManager {
     
     for (final track in stream.getTracks()) {
       await track.stop();
-      await track.dispose();
     }
   }
   
@@ -151,6 +149,17 @@ class MediaManager {
       return stream;
     } catch (e) {
       debugPrint('Failed to get local media: $e');
+
+      // 카메라가 없거나 사용할 수 없으면 오디오만으로 대체
+      if (useVideo) {
+        debugPrint('Retrying local media without video');
+        return getLocalMedia(
+          useFrontCamera: useFrontCamera,
+          useAudio: useAudio,
+          useVideo: false,
+        );
+      }
+
       return null;
     }
   }

@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_webrtc/flutter_webrtc.dart';
 import '../sip/sip_client.dart';
 import '../sip/sip_config.dart';
 
@@ -19,6 +20,9 @@ class SipProvider with ChangeNotifier {
   
   /// 통화 중 여부
   bool _isInCall = false;
+
+  /// 수신 대기 중인 통화가 있는지 여부
+  bool _hasIncomingCall = false;
   
   /// 통화 상대방
   String? _currentCallTarget;
@@ -28,6 +32,9 @@ class SipProvider with ChangeNotifier {
   
   /// 로딩 상태
   bool _isLoading = false;
+
+  /// UI로 전달할 미디어 이벤트 큐 (stream 등)
+  final List<Map<String, dynamic>> _pendingMediaEvents = [];
   
   //--------------------------------------------------------------------------
   // Public Getters
@@ -44,6 +51,9 @@ class SipProvider with ChangeNotifier {
   
   /// 통화 중 여부
   bool get isInCall => _isInCall;
+
+  /// 수신 대기 중인 통화가 있는지 여부
+  bool get hasIncomingCall => _hasIncomingCall;
   
   /// 통화 상대방
   String? get currentCallTarget => _currentCallTarget;
@@ -88,11 +98,12 @@ class SipProvider with ChangeNotifier {
     _config = null;
     _isRegistered = false;
     _isInCall = false;
+    _hasIncomingCall = false;
     _currentCallTarget = null;
     _error = null;
     notifyListeners();
   }
-  
+
   //--------------------------------------------------------------------------
   // Connection Management
   //--------------------------------------------------------------------------
@@ -201,6 +212,7 @@ class SipProvider with ChangeNotifier {
       await _client!.disconnect();
       _isRegistered = false;
       _isInCall = false;
+      _hasIncomingCall = false;
       _currentCallTarget = null;
       _error = null;
       notifyListeners();
@@ -215,7 +227,7 @@ class SipProvider with ChangeNotifier {
   //--------------------------------------------------------------------------
   
   /// 통화 시작
-  Future<bool> call(String target) async {
+  Future<bool> call(String target, {MediaStream? mediaStream}) async {
     if (_client == null) {
       _error = 'SIP 클라이언트가 초기화되지 않음';
       notifyListeners();
@@ -233,7 +245,7 @@ class SipProvider with ChangeNotifier {
       _error = null;
       notifyListeners();
       
-      final result = await _client!.call(target);
+      final result = await _client!.call(target, mediaStream: mediaStream);
       
       if (result) {
         _isInCall = true;
@@ -252,7 +264,7 @@ class SipProvider with ChangeNotifier {
   }
   
   /// 통화 수신
-  Future<bool> accept() async {
+  Future<bool> accept({MediaStream? mediaStream}) async {
     if (_client == null) {
       _error = 'SIP 클라이언트가 초기화되지 않음';
       notifyListeners();
@@ -264,7 +276,7 @@ class SipProvider with ChangeNotifier {
       _error = null;
       notifyListeners();
       
-      final result = await _client!.accept();
+      final result = await _client!.accept(mediaStream: mediaStream);
       
       if (result) {
         _isInCall = true;
@@ -298,6 +310,7 @@ class SipProvider with ChangeNotifier {
       
       if (result) {
         _isInCall = false;
+        _hasIncomingCall = false;
         _currentCallTarget = null;
       }
       
@@ -329,6 +342,7 @@ class SipProvider with ChangeNotifier {
       
       if (result) {
         _isInCall = false;
+        _hasIncomingCall = false;
         _currentCallTarget = null;
       }
       
@@ -369,26 +383,28 @@ class SipProvider with ChangeNotifier {
           
           switch (action) {
             case 'incoming':
-              _isInCall = false; // 아직 수신 전
+              _hasIncomingCall = true;
+              _currentCallTarget = data['target'] as String?;
               break;
             case 'call':
               _isInCall = false; // 발신 중
+              _hasIncomingCall = false;
               _currentCallTarget = data['target'] as String?;
               break;
             case 'accept':
+            case 'established':
               _isInCall = true;
+              _hasIncomingCall = false;
               break;
             case 'hangup':
             case 'reject':
-              _isInCall = false;
-              _currentCallTarget = null;
-              break;
-            case 'established':
-              _isInCall = true;
-              break;
             case 'terminated':
               _isInCall = false;
+              _hasIncomingCall = false;
               _currentCallTarget = null;
+              break;
+            case 'stream':
+              _pendingMediaEvents.add(Map<String, dynamic>.from(data));
               break;
           }
         }
@@ -406,6 +422,18 @@ class SipProvider with ChangeNotifier {
     notifyListeners();
   }
   
+  //--------------------------------------------------------------------------
+  // Media Events
+  //--------------------------------------------------------------------------
+
+  /// 대기 중인 미디어 이벤트를 꺼내고 큐를 비웁니다.
+  List<Map<String, dynamic>> drainMediaEvents() {
+    if (_pendingMediaEvents.isEmpty) return const [];
+    final events = List<Map<String, dynamic>>.from(_pendingMediaEvents);
+    _pendingMediaEvents.clear();
+    return events;
+  }
+
   //--------------------------------------------------------------------------
   // Utility Methods
   //--------------------------------------------------------------------------
@@ -456,7 +484,7 @@ class SipProvider with ChangeNotifier {
   
   /// 수신 통화 전용
   bool get canAccept {
-    return _isInCall && _currentCallTarget != null;
+    return _hasIncomingCall && _currentCallTarget != null;
   }
   
   //--------------------------------------------------------------------------

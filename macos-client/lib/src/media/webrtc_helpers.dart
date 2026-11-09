@@ -93,7 +93,6 @@ class WebRtcHelpers {
     
     for (final track in stream.getTracks()) {
       await track.stop();
-      await track.dispose();
     }
   }
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// Kibal Mobile Client 상수 정의
+/// Kibal macOS Client 상수 정의
 /// 
 /// SIP 서버, 포트, 환경 설정 등 모든 상수를 정의합니다.
 
@@ -9,7 +9,7 @@ class AppConstants {
   // App Info
   //--------------------------------------------------------------------------
   
-  static const String appName = 'Kibal Mobile';
+  static const String appName = 'Kibal macOS';
   static const String appVersion = '0.1.0';
   static const String buildNumber = '1';
   
@@ -17,11 +17,11 @@ class AppConstants {
   // SIP Server Configuration
   //--------------------------------------------------------------------------
   
-  // DEV 환경
-  static const String devDomain = '127.0.0.1';
+  // DEV 환경 (로컬 Docker Asterisk: kibal-dev-asterisk)
+  static const String devDomain = '192.168.11.39';
   static const int devSipPort = 5060;
   static const int devWsPort = 8088;
-  static const String devWsServer = 'ws://127.0.0.1:8088/ws';
+  static const String devWsServer = 'ws://192.168.11.39:8088/ws';
   
   // PRD 환경
   static const String prdDomain = '192.168.11.2';
@@ -29,10 +29,10 @@ class AppConstants {
   static const int prdWsPort = 8088;
   static const String prdWsServer = 'ws://192.168.11.2:8088/ws';
   
-  // Default environment
-  static const String defaultDomain = prdDomain;
-  static const int defaultSipPort = prdSipPort;
-  static const String defaultWsServer = prdWsServer;
+  // Default environment (macOS 개발 단계는 DEV 기본)
+  static const String defaultDomain = devDomain;
+  static const int defaultSipPort = devSipPort;
+  static const String defaultWsServer = devWsServer;
   
   //--------------------------------------------------------------------------
   // SIP Accounts (Placeholders - real passwords in secure storage)
