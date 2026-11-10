@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:sip_ua/sip_ua.dart';
+import '../utils/app_logger.dart';
 import 'sip_config.dart';
 import 'sip_session.dart';
 
@@ -127,10 +128,29 @@ class KibalSipClient implements SipUaHelperListener {
       _transportCompleter = transportCompleter;
       await _helper.start(settings);
 
-      final connected = await transportCompleter.future.timeout(
-        const Duration(seconds: 15),
-        onTimeout: () => _helper.connected,
-      );
+      var connected = false;
+      // register:true 자동등록이 급하게 연결(could fail then self-reconnect)까지 대기:
+      // connected/registered 어느 것이라도 오면 성공으로 접수 (최대 15초)
+      final deadline = DateTime.now().add(const Duration(seconds: 15));
+      while (DateTime.now().isBefore(deadline)) {
+        if (_state == SipClientState.connected ||
+            _state == SipClientState.registered) {
+          connected = true;
+          break;
+        }
+        try {
+          connected =
+              await transportCompleter.future.timeout(const Duration(
+            milliseconds: 300,
+          ));
+          if (connected) break;
+        } on TimeoutException {
+          // 재 폴링 계속
+        }
+      }
+      connected = connected ||
+          _state == SipClientState.connected ||
+          _state == SipClientState.registered;
 
       if (connected) {
         _setState(SipClientState.connected);
@@ -227,6 +247,8 @@ class KibalSipClient implements SipUaHelperListener {
 
       // 카메라가 없는 환경에서는 음성 통화로 자동 대체
       final voiceOnly = !await _canUseVideo(mediaStream);
+      AppLogger.instance.i(
+          'SIP call -> $target voiceOnly=$voiceOnly hasLocalStream=${mediaStream != null}');
       final ok = await _helper.call(
         target,
         voiceOnly: voiceOnly,
@@ -265,6 +287,8 @@ class KibalSipClient implements SipUaHelperListener {
       }
 
       final voiceOnly = call.voiceOnly || !await _canUseVideo(mediaStream);
+      AppLogger.instance
+          .i('SIP accept <- ${_targetOf(call)} voiceOnly=$voiceOnly');
       call.answer(
         _helper.buildCallOptions(voiceOnly),
         mediaStream: mediaStream,
@@ -295,6 +319,7 @@ class KibalSipClient implements SipUaHelperListener {
       }
 
       call.hangup();
+      AppLogger.instance.i('SIP reject');
       _cleanupSession();
 
       _emitEvent(const SipEvent(
@@ -317,6 +342,7 @@ class KibalSipClient implements SipUaHelperListener {
       }
 
       call.hangup();
+      AppLogger.instance.i('SIP hangup (local)');
       _cleanupSession();
 
       _emitEvent(const SipEvent(
@@ -367,6 +393,8 @@ class KibalSipClient implements SipUaHelperListener {
         _completeTransport(true);
         break;
       case TransportStateEnum.DISCONNECTED:
+        AppLogger.instance
+            .i('SIP transport disconnected (cause: ${state.cause ?? '없음'})');
         _setState(SipClientState.disconnected);
         _completeTransport(false);
         break;
@@ -526,11 +554,13 @@ class KibalSipClient implements SipUaHelperListener {
   /// 상태 변경 및 등록 이벤트 emit
   void _setState(SipClientState state) {
     _state = state;
+    AppLogger.instance.i('SIP state -> ${state.name}');
     _emitEvent(SipEvent(type: SipEventType.registration, data: state));
   }
 
   /// 오류 이벤트 emit
   void _emitError(String message) {
+    AppLogger.instance.e('SIP $message');
     _emitEvent(SipEvent(type: SipEventType.error, error: message));
   }
 

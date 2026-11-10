@@ -320,6 +320,13 @@
                                     <action selector="arrangeInFront:" target="-1" id="DRN-fu-gQh"/>
                                 </connections>
                             </menuItem>
+                            <menuItem isSeparatorItem="YES" id="eu3-7i-yIM-2"/>
+                            <menuItem title="실행 로그 보기" keyEquivalent="l" id="KibalLogsItem">
+                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                <connections>
+                                    <action selector="showLogWindow:" target="Voe-Tx-rLC" id="KibalLogsAction"/>
+                                </connections>
+                            </menuItem>
                         </items>
                     </menu>
                 </menuItem>

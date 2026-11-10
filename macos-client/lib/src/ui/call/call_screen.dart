@@ -37,31 +37,35 @@ class _CallScreenState extends State<CallScreen> {
   // 사용자가 직접 종료 중인지 여부
   bool _isClosing = false;
 
+  // dispose 시 안전하게 제거하기 위해 참조 저장
+  late final SipProvider _sipProviderRef;
+
   @override
   void initState() {
     super.initState();
-    
+
     // 통화 시작 시간 설정
     _callStartTime = DateTime.now();
-    
+
     // 타이머 시작
     _startCallTimer();
-    
+
     // 미디어 초기화
     _initMedia();
-    
-    // 상태 리스너
-    Provider.of<SipProvider>(context, listen: false).addListener(_handleSipStateChange);
+
+    // 상태 리스너 (참조 저장 후 등록 — dispose에서 안전 처리)
+    _sipProviderRef = Provider.of<SipProvider>(context, listen: false);
+    _sipProviderRef.addListener(_handleSipStateChange);
   }
 
   @override
   void dispose() {
     // 타이머 정지
     _stopCallTimer();
-    
-    // 리스너 제거
-    Provider.of<SipProvider>(context, listen: false).removeListener(_handleSipStateChange);
-    
+
+    // 리스너 제거 (deactivated 후 context 접근 방지)
+    _sipProviderRef.removeListener(_handleSipStateChange);
+
     super.dispose();
   }
 
@@ -104,18 +108,18 @@ class _CallScreenState extends State<CallScreen> {
   //--------------------------------------------------------------------------
   
   Widget _buildVideoArea(SipProvider sipProvider, MediaProvider mediaProvider) {
+    // 로컬 PIP는 외부 Stack의 직계 Positioned로 두어야 합니다.
+    // (Column 내부에 Positioned를 두면 ParentDataWidget 오류로 렌더링이 깨집니다.)
     return Positioned.fill(
-      child: Column(
+      child: Stack(
         children: [
           // 원격 영상 (메인 화면)
-          Expanded(
-            flex: 3,
+          Positioned.fill(
             child: Container(
               color: Colors.black,
               child: _buildRemoteVideo(mediaProvider),
             ),
           ),
-          
           // 로컬 영상 (PIP - Picture in Picture)
           if (mediaProvider.hasLocalVideo)
             Positioned(
