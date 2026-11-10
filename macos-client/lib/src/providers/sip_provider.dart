@@ -1,8 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import '../sip/sip_client.dart';
 import '../sip/sip_config.dart';
+import '../utils/app_logger.dart';
 
 /// SIP Provider
 /// 
@@ -21,6 +24,9 @@ class SipProvider with ChangeNotifier {
   /// 통화 중 여부
   bool _isInCall = false;
 
+  /// 현재 통화가 실제 수립(응답완료) 상태인지 (D-UI: 연결중 vs 연결됨 구분)
+  bool _isCallEstablished = false;
+
   /// 수신 대기 중인 통화가 있는지 여부
   bool _hasIncomingCall = false;
   
@@ -29,6 +35,9 @@ class SipProvider with ChangeNotifier {
   
   /// 오류 메시지
   String? _error;
+
+  /// 수신 무응답 자동취소 타이머 (60초)
+  Timer? incomingTimeout;
   
   /// 로딩 상태
   bool _isLoading = false;
@@ -51,6 +60,9 @@ class SipProvider with ChangeNotifier {
   
   /// 통화 중 여부
   bool get isInCall => _isInCall;
+
+  /// 실제 응답 수립된 통화 여부 (Ring/Progress 상태는 false)
+  bool get isCallEstablished => _isCallEstablished;
 
   /// 수신 대기 중인 통화가 있는지 여부
   bool get hasIncomingCall => _hasIncomingCall;
@@ -227,19 +239,41 @@ class SipProvider with ChangeNotifier {
   //--------------------------------------------------------------------------
   
   /// 통화 시작
-  Future<bool> call(String target, {MediaStream? mediaStream}) async {
-    if (_client == null) {
+  /// 수신 무응답 60초 후 자동 거절 (수신 대기 세션 고정 방지)
+  void _startIncomingTimeout() {
+    incomingTimeout?.cancel();
+    const dur = Duration(seconds: 60);
+    incomingTimeout = Timer(dur, () async {
+      if (_hasIncomingCall) {
+        AppLogger.instance.w('수신 무응답 60초 → 자동 거절');
+        try {
+          await reject();
+        } catch (_) {}
+      }
+    });
+  }
+
+  Future<bool> call(String target, {MediaStream? mediaStream}) async {    if (_client == null) {
       _error = 'SIP 클라이언트가 초기화되지 않음';
       notifyListeners();
       return false;
     }
-    
+
     if (!_isRegistered) {
       _error = 'SIP가 등록되지 않음';
       notifyListeners();
       return false;
     }
-    
+
+    // 발신 전 진행 중 수신이 있으면 자동 거절 (수신 대기 세션이 발신을 막는 문제 해결)
+    if (_hasIncomingCall) {
+      AppLogger.instance
+          .w('수신 대기 중 발신 시도 → 수신 자동 거절 후 발신 ($target)');
+      try {
+        await reject();
+      } catch (_) {}
+    }
+
     try {
       _isLoading = true;
       _error = null;
@@ -384,23 +418,31 @@ class SipProvider with ChangeNotifier {
           switch (action) {
             case 'incoming':
               _hasIncomingCall = true;
+              _isCallEstablished = false;
               _currentCallTarget = data['target'] as String?;
+              _startIncomingTimeout();
               break;
             case 'call':
               _isInCall = false; // 발신 중
+              _isCallEstablished = false;
               _hasIncomingCall = false;
+              incomingTimeout?.cancel();
               _currentCallTarget = data['target'] as String?;
               break;
             case 'accept':
             case 'established':
               _isInCall = true;
+              _isCallEstablished = true;
+              incomingTimeout?.cancel();
               _hasIncomingCall = false;
               break;
             case 'hangup':
             case 'reject':
             case 'terminated':
               _isInCall = false;
+              _isCallEstablished = false;
               _hasIncomingCall = false;
+              incomingTimeout?.cancel();
               _currentCallTarget = null;
               break;
             case 'stream':

@@ -239,7 +239,10 @@ class _CallScreenState extends State<CallScreen> {
           ),
           const SizedBox(height: AppConstants.spacingXs),
           Text(
-            Formatters.formatCallDuration(_callDuration),
+            // 연결 상태 명확화: Ring/Progress에서는 "연결 중", ACBEPTED 이후 "연결됨"
+            (sipProvider.isCallEstablished
+                ? '연결됨 · ${Formatters.formatCallDuration(_callDuration)}'
+                : '연결 중…'),
             style: const TextStyle(
               color: Colors.white70,
               fontSize: 16,
