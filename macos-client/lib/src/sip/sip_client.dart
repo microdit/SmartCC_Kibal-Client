@@ -561,7 +561,12 @@ class KibalSipClient implements SipUaHelperListener {
     if (server != null && server.isNotEmpty) {
       return server;
     }
-    return 'ws://${config.domain}:${config.port}/ws';
+    // D1: SIP 포트(5060)로 ws URL을 만들면 Connection refused 폭주.
+    // wsServer 미지정 시 Asterisk 기본 WS 포트 8088 사용.
+    final wsPort = config.port == 8088 ? config.port : 8088;
+    AppLogger.instance.w(
+        'WS 서버 미지정 → 기본 ws://${config.domain}:$wsPort/ws 사용 (port=${config.port})');
+    return 'ws://${config.domain}:$wsPort/ws';
   }
 
   /// 원격 식별자에서 사용자 부분 추출

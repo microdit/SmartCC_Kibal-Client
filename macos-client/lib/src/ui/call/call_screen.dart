@@ -38,6 +38,9 @@ class _CallScreenState extends State<CallScreen> {
   // 사용자가 직접 종료 중인지 여부
   bool _isClosing = false;
 
+  // 종료 다이얼로그 중복/자동닫힘 방지 가드 (D5)
+  bool _endedDialogShown = false;
+
   // dispose 시 안전하게 제거하기 위해 참조 저장
   late final SipProvider _sipProviderRef;
 
@@ -480,7 +483,7 @@ class _CallScreenState extends State<CallScreen> {
   // SIP State Change Handler
   //--------------------------------------------------------------------------
   
-  void _handleSipStateChange() {
+  Future<void> _handleSipStateChange() async {
     final sipProvider = Provider.of<SipProvider>(context, listen: false);
     final mediaProvider = Provider.of<MediaProvider>(context, listen: false);
 
@@ -503,10 +506,16 @@ class _CallScreenState extends State<CallScreen> {
       return;
     }
 
-    // 상대방 종료 등으로 통화가 끊어진 경우
+    // D5: 상대방/서버 종료 등 — 로컬 미디어·원격 스트림 정리는 1회만,
+    // 종료 다이얼로그는 사용자가 확인할 때까지 유지 (자동 닫힘/중복 방지)
     if (_wasInCall && !_isClosing) {
       _wasInCall = false;
-      mediaProvider.removeAllRemoteStreams();
+      AppLogger.instance.ui('CALL', 'remoteEndedDetected',
+          params: {'target': sipProvider.currentCallTarget ?? '-'});
+      if (_endedDialogShown) return;
+      _endedDialogShown = true;
+      await mediaProvider.releaseLocalMedia();
+      await mediaProvider.removeAllRemoteStreams();
       if (mounted) {
         _showCallEndedDialog(sipProvider);
       }

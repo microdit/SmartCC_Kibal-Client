@@ -38,8 +38,8 @@ class _LoginScreenState extends State<LoginScreen> {
   final _domainFocus = FocusNode();
   final _portFocus = FocusNode();
   
-  // 전송 타입 선택
-  SipTransportType _transportType = SipTransportType.udp;
+  // 전송 타입 선택 — sip_ua 특성상 WS만 유효 (D1: UDP/TCP 선택 시 5060 ws 폭주 방지)
+  SipTransportType _transportType = SipTransportType.ws;
   
   // WebSocket 서버 URL
   final _wsServerController = TextEditingController();
@@ -341,27 +341,22 @@ class _LoginScreenState extends State<LoginScreen> {
         SegmentedButton<SipTransportType>(
           segments: const [
             ButtonSegment(
-              value: SipTransportType.udp,
-              label: Text('UDP'),
-              icon: Icon(Icons.network_cell_outlined, size: 16),
-            ),
-            ButtonSegment(
-              value: SipTransportType.tcp,
-              label: Text('TCP'),
-              icon: Icon(Icons.network_locked_outlined, size: 16),
-            ),
-            ButtonSegment(
               value: SipTransportType.ws,
               label: Text('WebSocket'),
               icon: Icon(Icons.web_outlined, size: 16),
             ),
           ],
-          selected: <SipTransportType>{_transportType},
+          selected: const <SipTransportType>{SipTransportType.ws},
           onSelectionChanged: (Set<SipTransportType> newSelection) {
             setState(() {
-              _transportType = newSelection.first;
+              // sip_ua는 WS(TCP-fallback)만 지원 — UDP/TCP 전용 등록은 불가
+              _transportType = SipTransportType.ws;
             });
           },
+        ),
+        const Text(
+          'macOS/Web 클라이언트는 WebSocket(ws)만 지원합니다 (UDP/TCP 미지원)',
+          style: TextStyle(fontSize: 11, color: Colors.grey),
         ),
       ],
     );

@@ -1,6 +1,7 @@
 import 'dart:core';
 import 'package:flutter/material.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
+import '../utils/app_logger.dart';
 
 /// 미디어 스트림 타입
 enum MediaStreamType {
@@ -15,8 +16,11 @@ class MediaManager {
   /// 로컬 미디어 스트림
   MediaStream? _localStream;
   
-  /// 원격 미디어 스트림 매핑 (세션 ID → 스트림)
-  final Map<String, MediaStream> _remoteStreams = {};
+  /// 원격 미디어 스트림 매핑 (세션 ID → 스트림 목록)
+  ///
+  /// D2: ConfBridge 등 재협상 환경에서는 영상/음성이 별도 스트림으로 도착한다.
+  /// sessionId별로 "영상 스트림"과 "음성(기타) 스트림"을 모두 보관해 음성 유실을 방지한다.
+  final Map<String, List<MediaStream>> _remoteSessions = {};
   
   /// 로컬 비디오 렌더러 컨트롤러
   final Map<String, RTCVideoRenderer> _localRenderers = {};
@@ -41,7 +45,15 @@ class MediaManager {
   MediaStream? get localStream => _localStream;
   
   /// 원격 스트림 목록
-  List<MediaStream> get remoteStreams => _remoteStreams.values.toList();
+  /// 세션당 렌더 대표 스트림 목록 (영상 우선, 없으면 첫 스트림)
+  List<MediaStream> get remoteStreams {
+    final result = <MediaStream>[];
+    for (final sessionId in _remoteSessions.keys) {
+      final vid = _videoStreamOfSession(sessionId);
+      if (vid != null) result.add(vid);
+    }
+    return result;
+  }
   
   /// 카메라 전면 여부
   bool get isFrontCamera => _isFrontCamera;
@@ -53,7 +65,7 @@ class MediaManager {
   bool get isVideoMuted => _isVideoMuted;
   
   /// 스트림 개수
-  int get streamCount => (_localStream != null ? 1 : 0) + _remoteStreams.length;
+  int get streamCount => (_localStream != null ? 1 : 0) + _remoteSessions.length;
   
   //--------------------------------------------------------------------------
   // Initialization & Cleanup
@@ -84,10 +96,12 @@ class MediaManager {
     _localStream = null;
     
     // 원격 스트림 정리
-    for (final stream in _remoteStreams.values) {
-      await _disposeStream(stream);
+    for (final streams in _remoteSessions.values) {
+      for (final stream in streams) {
+        await _disposeStream(stream);
+      }
     }
-    _remoteStreams.clear();
+    _remoteSessions.clear();
     
     // 렌더러 정리
     for (final renderer in [..._localRenderers.values, ..._remoteRenderers.values]) {
@@ -284,82 +298,89 @@ class MediaManager {
   /// [stream] 원격 미디어 스트림 (flutter_webrtc는 트랙마다 별도 스트림 이벤트를 준다)
   /// [sessionId] 세션 ID
   ///
-  /// 재협상(re-INVITE)으로 같은 sessionId의 스트림이 다시 오는 경우 기존 트랙에
-  /// addTrack 하지 않는다 (nil 스트림 PlatformException 방지). 영상을 가진
-  /// 스트림을 렌더러에 연결하고, 오디오 트랙은 ADM(native webrtc)에서 자동 재생.
+  /// D2: 영상/음성이 별도 스트림으로 도착해도 둘 다 보관한다.
+  /// (이전 로직은 영상 스트림 보유 시 음성 전용 스트림을 폐기해 회의 음성이 사라졌다)
+  /// addTrack은 재협상 후 nil 스트림 크래시(PlatformException) 유발로 사용하지 않는다.
   void addRemoteStream(MediaStream stream, String sessionId) {
-    final prev = _remoteStreams[sessionId];
-    MediaStream chosen;
-    if (prev == null) {
-      chosen = stream;
-    } else {
-      final prevVideo = prev.getVideoTracks().length;
-      final newVideo = stream.getVideoTracks().length;
-      if (prevVideo == 0 && newVideo > 0) {
-        chosen = stream; // 새 스트림에 영상이 있으면 교체
-      } else {
-        chosen = prev; // 기존(영상 보유) 유지 — 중복/음성 전용 이벤트 무시
-      }
-    }
-    _remoteStreams[sessionId] = chosen;
-    _bindRendererForCount(_remoteStreams.length - 1);
+    final list = _remoteSessions.putIfAbsent(sessionId, () => <MediaStream>[]);
+    final firstTrackId = stream.getTracks().isEmpty ? null : stream.getTracks().first.id;
+    final existsById = list.any((s) =>
+        s.getTracks().map((t) => t.id).contains(firstTrackId));
+    if (!existsById) list.add(stream);
+    AppLogger.instance.d(
+        'remote session $sessionId handled: streams=${list.length} video=${stream.getVideoTracks().length} audio=${stream.getAudioTracks().length}');
+    _rebindAllRemoteRenderers();
   }
 
-  /// index에 대응하는 원격 렌더러에 현재 스트림을 연결
-  void _bindRendererForCount(int index) {
-    if (index < 0) return;
-    var renderer = _remoteRenderers['remote_$index'];
-    if (renderer == null) {
-      // dispose 등으로 풀이 소실된 경우 1개 보강 (getFullYear 초기화는 비동기지만
-      // srcObject 지정은 이후 이벤트에서 다시 수행될 수 있음)
-      final r = RTCVideoRenderer();
-      r.initialize().then((_) {
-        if (!_remoteRenderers.containsKey('remote_$index')) {
-          _remoteRenderers['remote_$index'] = r;
-        }
-        final key = _remoteStreams.keys.elementAt(index);
-        r.srcObject = _remoteStreams[key];
-      });
-      return;
+  /// 세션 목록(순서 유지)에서 영상을 가진 스트림 반환
+  MediaStream? _videoStreamOfSession(String sessionId) {
+    final list = _remoteSessions[sessionId];
+    if (list == null) return null;
+    for (final s in list) {
+      if (s.getVideoTracks().isNotEmpty) return s;
     }
-    final key = _remoteStreams.keys.elementAt(index);
-    final stream = _remoteStreams[key];
-    if (renderer.srcObject != stream) {
-      renderer.srcObject = stream;
+    return list.isNotEmpty ? list.first : null;
+  }
+
+  /// 모든 원격 렌더러에 세션의 영상 스트림을 재바인딩 (D4: 즉시 렌더 반영)
+  void _rebindAllRemoteRenderers() {
+    final sessionIds = _remoteSessions.keys.toList();
+    for (var i = 0; i < sessionIds.length && i < 4; i++) {
+      final vid = _videoStreamOfSession(sessionIds[i]);
+      var renderer = _remoteRenderers['remote_$i'];
+      if (renderer == null) {
+        final r = RTCVideoRenderer();
+        final capturedVid = vid;
+        r.initialize().then((_) {
+          final existing = _remoteRenderers['remote_$i'];
+          final bindTo = existing ?? r;
+          if (existing == null) {
+            _remoteRenderers['remote_$i'] = r;
+          }
+          if (bindTo.srcObject != capturedVid) {
+            bindTo.srcObject = capturedVid;
+          }
+        });
+      } else if (renderer.srcObject != vid) {
+        renderer.srcObject = vid;
+      }
+    }
+    // 세션 축소 시 잔여 렌더러 정리
+    for (var i = sessionIds.length; i < 4; i++) {
+      _remoteRenderers['remote_$i']?.srcObject = null;
     }
   }
-  
+
   /// 원격 스트림 제거
-  /// 
+  ///
   /// [sessionId] 세션 ID
   void removeRemoteStream(String sessionId) {
     _removeRemoteStream(sessionId);
   }
-  
+
   /// 원격 스트림 내부 제거
   void _removeRemoteStream(String sessionId) async {
-    if (_remoteStreams.containsKey(sessionId)) {
-      final stream = _remoteStreams[sessionId]!;
-      await _disposeStream(stream);
-      _remoteStreams.remove(sessionId);
-      
-      // 렌더러 정리
-      if (_remoteRenderers.containsKey('remote_${_remoteStreams.length}')) {
-        _remoteRenderers['remote_${_remoteStreams.length}']!.srcObject = null;
+    final list = _remoteSessions[sessionId];
+    if (list != null) {
+      for (final stream in list) {
+        await _disposeStream(stream);
       }
+      _remoteSessions.remove(sessionId);
+      _rebindAllRemoteRenderers();
     }
   }
-  
+
   /// 모든 원격 스트림 제거
   Future<void> removeAllRemoteStreams() async {
-    for (final sessionId in _remoteStreams.keys.toList()) {
+    for (final sessionId in List<String>.from(_remoteSessions.keys)) {
       _removeRemoteStream(sessionId);
     }
+    _rebindAllRemoteRenderers();
   }
-  
+
   /// 원격 스트림 가져오기
   MediaStream? getRemoteStream(String sessionId) {
-    return _remoteStreams[sessionId];
+    return _videoStreamOfSession(sessionId);
   }
   
   //--------------------------------------------------------------------------
