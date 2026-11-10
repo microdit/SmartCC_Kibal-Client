@@ -5,6 +5,18 @@ import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:macos_client/src/sip/sip_client.dart';
 import 'package:macos_client/src/sip/sip_config.dart';
 
+class RemoteStreamSample {
+  RemoteStreamSample(this.stream, this.originator, this.at)
+      : videoTracks = stream.getVideoTracks().length,
+        audioTracks = stream.getAudioTracks().length;
+
+  final MediaStream stream;
+  final String originator;
+  final DateTime at;
+  final int videoTracks;
+  final int audioTracks;
+}
+
 /// SIP 프로브용 참가자 (자동 수신 포함)
 class ProbeParty {
   ProbeParty({
@@ -23,8 +35,16 @@ class ProbeParty {
 
   late final KibalSipClient client = KibalSipClient(callback: _onEvent);
   final List<MediaStream> remoteStreams = [];
+  final List<RemoteStreamSample> remoteSamples = [];
   bool established = false;
   bool incoming = false;
+
+  int get remoteVideoTracks =>
+      remoteSamples.fold(0, (sum, s) => sum + s.videoTracks);
+  int get remoteAudioTracks =>
+      remoteSamples.fold(0, (sum, s) => sum + s.audioTracks);
+  bool get hasAnyRemoteAudio => remoteAudioTracks > 0;
+  bool get hasAnyRemoteVideo => remoteVideoTracks > 0;
 
   Future<bool> start() async {
     final config = SipConfig.webrtc(
@@ -75,9 +95,14 @@ class ProbeParty {
         final stream = data['stream'];
         if (stream is MediaStream && originator.contains('remote')) {
           remoteStreams.add(stream);
+          final sample = RemoteStreamSample(stream, originator, DateTime.now());
+          remoteSamples.add(sample);
           stdout.writeln(
-            '[$label] REMOTE STREAM video=${stream.getVideoTracks().length} '
-            'audio=${stream.getAudioTracks().length}',
+            '[$label] REMOTE STREAM '
+            'video=${sample.videoTracks} audio=${sample.audioTracks} '
+            'originator=$originator id=${stream.id} '
+            'total(remoteStreams=${remoteStreams.length} '
+            'video=$remoteVideoTracks audio=$remoteAudioTracks)',
           );
         }
         break;
@@ -86,7 +111,18 @@ class ProbeParty {
 
   void report() {
     stdout.writeln(
-      '[$label] established=$established remoteStreams=${remoteStreams.length}',
+      '[$label] established=$established '
+      'remoteStreams=${remoteStreams.length} '
+      'remoteVideoTracks=$remoteVideoTracks '
+      'remoteAudioTracks=$remoteAudioTracks '
+      'hasAudio=$hasAnyRemoteAudio hasVideo=$hasAnyRemoteVideo',
     );
+    for (var i = 0; i < remoteSamples.length; i++) {
+      final s = remoteSamples[i];
+      stdout.writeln(
+        '[$label]   stream[$i] video=${s.videoTracks} audio=${s.audioTracks} '
+        'originator=${s.originator} id=${s.stream.id}',
+      );
+    }
   }
 }

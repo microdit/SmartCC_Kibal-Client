@@ -307,9 +307,27 @@ class MediaManager {
     final existsById = list.any((s) =>
         s.getTracks().map((t) => t.id).contains(firstTrackId));
     if (!existsById) list.add(stream);
+    final totals = _sessionTrackCounts(sessionId);
     AppLogger.instance.d(
-        'remote session $sessionId handled: streams=${list.length} video=${stream.getVideoTracks().length} audio=${stream.getAudioTracks().length}');
+        'remote session $sessionId handled: streams=${list.length} '
+        'event(video=${stream.getVideoTracks().length} audio=${stream.getAudioTracks().length}) '
+        'session(video=${totals['video']} audio=${totals['audio']})');
     _rebindAllRemoteRenderers();
+  }
+
+  /// 세션별 누적 트랙/스트림 수 (H1 진단: 스트림 단위 이벤트와 세션 합계 구분)
+  Map<String, int> sessionMediaCounts(String sessionId) =>
+      _sessionTrackCounts(sessionId);
+
+  Map<String, int> _sessionTrackCounts(String sessionId) {
+    final list = _remoteSessions[sessionId] ?? const <MediaStream>[];
+    var video = 0;
+    var audio = 0;
+    for (final s in list) {
+      video += s.getVideoTracks().length;
+      audio += s.getAudioTracks().length;
+    }
+    return {'streams': list.length, 'video': video, 'audio': audio};
   }
 
   /// 세션 목록(순서 유지)에서 영상을 가진 스트림 반환

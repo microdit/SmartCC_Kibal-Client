@@ -239,9 +239,15 @@ class MediaProvider with ChangeNotifier {
   /// 원격 스트림 추가
   void addRemoteStream(MediaStream stream, String sessionId) {
     _mediaManager.addRemoteStream(stream, sessionId);
+    final session = _mediaManager.sessionMediaCounts(sessionId);
     AppLogger.instance.evt('MEDIA', 'remoteStreamAdded',
         state: 'video=${stream.getVideoTracks().length} audio=${stream.getAudioTracks().length}',
-        details: {'sessionId': sessionId});
+        details: {
+          'sessionId': sessionId,
+          'sessionStreams': session['streams'],
+          'sessionVideo': session['video'],
+          'sessionAudio': session['audio'],
+        });
     _updateStreamStates();
     notifyListeners();
   }
