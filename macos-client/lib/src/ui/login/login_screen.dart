@@ -6,6 +6,7 @@ import '../../providers/sip_provider.dart';
 import '../../providers/media_provider.dart';
 import '../../sip/sip_config.dart';
 import '../../sip/sip_client.dart';
+import '../../utils/app_logger.dart';
 import '../../utils/constants.dart';
 import '../../utils/formatters.dart';
 
@@ -536,7 +537,7 @@ class _LoginScreenState extends State<LoginScreen> {
           spacing: AppConstants.spacingSm,
           runSpacing: AppConstants.spacingSm,
           children: [
-            for (final ext in AppConstants.udpExtensions)
+            for (final ext in AppConstants.devQuickAccounts.keys)
               _buildQuickConnectButton(sipProvider, ext),
           ],
         ),
@@ -603,7 +604,7 @@ class _LoginScreenState extends State<LoginScreen> {
     if (!_formKey.currentState!.validate()) {
       return;
     }
-    
+
     final username = _usernameController.text.trim();
     final password = _passwordController.text.trim();
     final domain = _domainController.text.trim();
@@ -611,6 +612,15 @@ class _LoginScreenState extends State<LoginScreen> {
     final displayName = _displayNameController.text.trim().isNotEmpty
         ? _displayNameController.text.trim()
         : null;
+
+    AppLogger.instance.ui('LOGIN', 'loginPressed',
+        params: {
+          'username': username,
+          'domain': domain,
+          'port': port,
+          'transport': _transportType.name,
+          'wsServer': _wsServerController.text.trim(),
+        });
     
     // SIP 설정 생성
     SipConfig config;
@@ -642,6 +652,9 @@ class _LoginScreenState extends State<LoginScreen> {
     // 연결 시도
     final sipProvider = Provider.of<SipProvider>(context, listen: false);
     final success = await sipProvider.connect();
+    AppLogger.instance.evt('LOGIN', 'loginResult',
+        state: success ? 'registered' : 'failed',
+        details: {'username': username, 'error': sipProvider.error});
 
     if (!mounted) return;
 
@@ -657,11 +670,12 @@ class _LoginScreenState extends State<LoginScreen> {
   //--------------------------------------------------------------------------
   
   Future<void> _handleLogout() async {
+    AppLogger.instance.ui('LOGIN', 'logoutPressed');
     final sipProvider = Provider.of<SipProvider>(context, listen: false);
     final mediaProvider = Provider.of<MediaProvider>(context, listen: false);
     
-    // 미디어 해제
-    await mediaProvider.releaseLocalMedia();
+    // 미디어 해제 (로그아웃 — 풀 포함 완전 정리)
+    await mediaProvider.disposeAllMedia();
     
     // SIP 연결 해제
     await sipProvider.disconnect();
@@ -676,12 +690,10 @@ class _LoginScreenState extends State<LoginScreen> {
   
   Future<void> _quickConnect(SipProvider sipProvider, String extension) async {
     _usernameController.text = extension;
-    _passwordFocus.requestFocus();
-    
-    // 필요시 비밀번호 자동 입력 (DEV 환경용)
-    if (AppConstants.isDevelopment) {
-      _passwordController.text = 'test1234';
-    }
+    // 빠른 연결: DEV 계정 암호까지 자동 입력 (<내선>pass)
+    _passwordController.text = AppConstants.devQuickAccounts[extension] ?? '';
+    AppLogger.instance.ui('LOGIN', 'quickConnectFilled',
+        params: {'extension': extension});
   }
 
   //--------------------------------------------------------------------------

@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import '../media/media_manager.dart';
+import '../utils/app_logger.dart';
 
 /// 미디어 Provider
 /// 
@@ -25,6 +26,8 @@ class MediaProvider with ChangeNotifier {
   
   /// 비디오 뮤트 여부
   bool _isVideoMuted = false;
+  String? _defaultVideoDeviceId;
+  String? _defaultMicDeviceId;
   
   /// 오류 메시지
   String? _error;
@@ -91,43 +94,73 @@ class MediaProvider with ChangeNotifier {
   //--------------------------------------------------------------------------
   
   /// 로컬 미디어 스트림 가져오기
-  Future<bool> getLocalMedia() async {
+  ///
+  /// [videoDeviceId]/[micDeviceId]: 디바이스 명시 선택 (미디어 테스트 화면에서 지정)
+  Future<bool> getLocalMedia({
+    String? videoDeviceId,
+    String? micDeviceId,
+  }) async {
     try {
       _isLoading = true;
       _error = null;
       notifyListeners();
-      
+
       final stream = await _mediaManager.getLocalMedia(
         useFrontCamera: _isFrontCamera,
         useAudio: !_isAudioMuted,
         useVideo: !_isVideoMuted,
+        videoDeviceId: videoDeviceId ?? _defaultVideoDeviceId,
+        audioDeviceId: micDeviceId ?? _defaultMicDeviceId,
       );
       
       if (stream != null) {
         _hasLocalStream = true;
         _updateStreamStates();
+        AppLogger.instance.evt('MEDIA', 'localStreamReady',
+            state: 'video=${stream.getVideoTracks().length} audio=${stream.getAudioTracks().length}',
+            details: {'frontCamera': _isFrontCamera, 'audioMuted': _isAudioMuted});
+      } else {
+        AppLogger.instance.w('MEDIA localStream null (사용 불가: 권한/장치 확인)');
       }
-      
+
       _isLoading = false;
       notifyListeners();
       return stream != null;
     } catch (e) {
       _isLoading = false;
       _error = '로컬 미디어 스트림 가져오기 실패: $e';
+      AppLogger.instance.e('MEDIA getLocalMedia 실패: $e');
       notifyListeners();
       return false;
     }
   }
   
-  /// 로컬 미디어 스트림 해제
+  /// 로컬 미디어 스트림 해제 (원격 렌더러 풀 보존)
   Future<void> releaseLocalMedia() async {
     try {
-      await _mediaManager.dispose();
+      await _mediaManager.releaseLocalMedia();
+      AppLogger.instance.evt('MEDIA', 'localStreamReleased');
       _hasLocalStream = false;
       _updateStreamStates();
       notifyListeners();
     } catch (e) {
       _error = '로컬 미디어 스트림 해제 실패: $e';
+      AppLogger.instance.e('MEDIA releaseLocalMedia 실패: $e');
+      notifyListeners();
+    }
+  }
+
+  /// 완전 해제 (로그아웃용 — 렌더러 풀 포함 dispose)
+  Future<void> disposeAllMedia() async {
+    try {
+      await _mediaManager.dispose();
+      _hasLocalStream = false;
+      _updateStreamStates();
+      AppLogger.instance.evt('MEDIA', 'disposeAllMedia');
+      notifyListeners();
+    } catch (e) {
+      _error = '미디어 완전 해제 실패: $e';
+      AppLogger.instance.e('MEDIA disposeAllMedia 실패: $e');
       notifyListeners();
     }
   }
@@ -206,12 +239,17 @@ class MediaProvider with ChangeNotifier {
   /// 원격 스트림 추가
   void addRemoteStream(MediaStream stream, String sessionId) {
     _mediaManager.addRemoteStream(stream, sessionId);
+    AppLogger.instance.evt('MEDIA', 'remoteStreamAdded',
+        state: 'video=${stream.getVideoTracks().length} audio=${stream.getAudioTracks().length}',
+        details: {'sessionId': sessionId});
     _updateStreamStates();
     notifyListeners();
   }
-  
+
   /// 원격 스트림 제거
   void removeRemoteStream(String sessionId) {
+    AppLogger.instance.evt('MEDIA', 'remoteStreamRemoved',
+        details: {'sessionId': sessionId});
     _mediaManager.removeRemoteStream(sessionId);
     _updateStreamStates();
     notifyListeners();

@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
 import '../../providers/sip_provider.dart';
 import '../../providers/media_provider.dart';
+import '../../utils/app_logger.dart';
 import '../../utils/constants.dart';
 import '../../utils/formatters.dart';
 
@@ -96,6 +97,14 @@ class _DialerScreenState extends State<DialerScreen> {
           icon: const Icon(Icons.more_vert_outlined),
           onSelected: (value) => _handleMenuSelected(value, context),
           itemBuilder: (context) => [
+            const PopupMenuItem(
+              value: 'media_test',
+              child: ListTile(
+                leading: Icon(Icons.mic_none),
+                title: Text('마이크/카메라 테스트'),
+                contentPadding: EdgeInsets.zero,
+              ),
+            ),
             const PopupMenuItem(
               value: 'logout',
               child: ListTile(
@@ -464,7 +473,9 @@ class _DialerScreenState extends State<DialerScreen> {
   
   Future<void> _handleCall(SipProvider sipProvider) async {
     final target = _targetController.text.trim();
-    
+    AppLogger.instance.ui('DIALER', 'callPressed',
+        params: {'target': target});
+
     if (target.isEmpty) {
       _showErrorDialog(context, '대상 번호를 입력하세요');
       return;
@@ -487,6 +498,10 @@ class _DialerScreenState extends State<DialerScreen> {
     );
     
     if (!mounted) return;
+
+    AppLogger.instance.evt('DIALER', 'callResult',
+        state: success ? 'pushed' : 'failed',
+        details: {'target': target, 'error': sipProvider.error});
 
     if (success) {
       // 통화 화면으로 이동
@@ -543,6 +558,8 @@ class _DialerScreenState extends State<DialerScreen> {
   //--------------------------------------------------------------------------
   
   Future<void> _handleCameraToggle(BuildContext context) async {
+    AppLogger.instance.ui('SETTINGS', 'cameraTogglePressed');
+    AppLogger.instance.d('UI dialer cameraToggle');
     final mediaProvider = Provider.of<MediaProvider>(context, listen: false);
     await mediaProvider.toggleCamera();
     if (context.mounted) Navigator.of(context).pop();
@@ -554,7 +571,10 @@ class _DialerScreenState extends State<DialerScreen> {
   
   Future<void> _handleAudioToggle(BuildContext context) async {
     final mediaProvider = Provider.of<MediaProvider>(context, listen: false);
+    AppLogger.instance.ui('SETTINGS', 'audioTogglePressed');
     await mediaProvider.toggleAudio();
+    AppLogger.instance.evt('MEDIA', 'audioToggled',
+        state: 'muted=${!mediaProvider.isAudioMuted}');
     if (context.mounted) Navigator.of(context).pop();
   }
 
@@ -564,7 +584,10 @@ class _DialerScreenState extends State<DialerScreen> {
   
   Future<void> _handleVideoToggle(BuildContext context) async {
     final mediaProvider = Provider.of<MediaProvider>(context, listen: false);
+    AppLogger.instance.ui('SETTINGS', 'videoTogglePressed');
     await mediaProvider.toggleVideo();
+    AppLogger.instance.evt('MEDIA', 'videoToggled',
+        state: 'hasVideo=${mediaProvider.hasLocalVideo}');
     if (context.mounted) Navigator.of(context).pop();
   }
 
@@ -589,6 +612,12 @@ class _DialerScreenState extends State<DialerScreen> {
       case 'toggle_camera':
         if (context.mounted) {
           await _handleCameraToggle(context);
+        }
+        break;
+      case 'media_test':
+        if (context.mounted) {
+          AppLogger.instance.ui('DIALER', 'mediaTestMenuSelected');
+          context.push('/mediaTest');
         }
         break;
     }

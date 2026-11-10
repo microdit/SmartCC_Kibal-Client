@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import '../../providers/sip_provider.dart';
 import '../../providers/media_provider.dart';
+import '../../utils/app_logger.dart';
 import '../../utils/constants.dart';
 
 /// ConfBridge 회의실 화면
@@ -59,7 +60,11 @@ class _ConferenceViewState extends State<ConferenceView> {
 
     if (room.isEmpty) return;
 
+    AppLogger.instance.ui('CONFERENCE', 'joinPressed',
+        params: {'room': room, 'registered': sipProvider.isRegistered});
+
     if (!mediaProvider.hasLocalStream) {
+      AppLogger.instance.d('CONFERENCE: 로컬 미디어 없음 → getLocalMedia() 선행');
       await mediaProvider.getLocalMedia();
     }
 
@@ -69,6 +74,9 @@ class _ConferenceViewState extends State<ConferenceView> {
   Future<void> _leave() async {
     final sipProvider = context.read<SipProvider>();
     final mediaProvider = context.read<MediaProvider>();
+
+    AppLogger.instance.ui('CONFERENCE', 'leavePressed',
+        params: {'room': sipProvider.currentCallTarget ?? '-'});
 
     await sipProvider.hangup();
     await mediaProvider.removeAllRemoteStreams();

@@ -34,6 +34,42 @@ class AppLogger {
   static String get logFilePath => '$logDirectory/app.log';
   static String get prevLogFilePath => '$logDirectory/app-prev.log';
 
+  /// 세션 식별 정보 — 누가(user@domain), 어느 장치(host/ip)인지 모든 로그에 prefix
+  static String _identity = 'usr=- host=- ip=-';
+  static final Set<String> _issuedTags = <String>{};
+
+  /// 로그인/등록 성공 시 호출: 이후 모든 로그에 [usr=... host=... ip=...] prefix 사용
+  static void setIdentity({String? user, String? domain}) {
+    final tag = '${user ?? '-'}@${domain ?? '-'}';
+    if (!_issuedTags.contains(tag)) {
+      _issuedTags.clear();
+      _issuedTags.add(tag);
+    }
+    _identity = 'usr=$tag host=${Platform.localHostname} ip=$_localIp';
+  }
+
+  static String _localIp = '-';
+  static Future<void> discoverLocalIp() async {
+    // 소켓 접속 방식은 8.8.8.8(리모트)이 찍히는 문제 → 로컬 NIC 열거로 교정
+    try {
+      final interfaces = await NetworkInterface.list(
+        includeLoopback: false,
+        type: InternetAddressType.IPv4,
+      );
+      for (final nic in interfaces) {
+        for (final addr in nic.addresses) {
+          if (!addr.isLoopback) {
+            _localIp = addr.address;
+            return;
+          }
+        }
+      }
+      _localIp = 'unresolved';
+    } catch (_) {
+      _localIp = 'unresolved';
+    }
+  }
+
   Future<void> init() async {
     try {
       final dir = Directory(logDirectory);
@@ -46,7 +82,8 @@ class AppLogger {
       }
       _file = file;
       _sink = file.openWrite(mode: FileMode.append);
-      i('AppLogger 초기화 완료 ($logFilePath)');
+      await discoverLocalIp();
+      i('AppLogger 초기화 완료 file=$logFilePath identity=$_identity mode=${kDebugMode ? 'debug' : 'release'}');
     } catch (e) {
       // 로깅 실패가 앱 동작을 막지 않도록 조용히 건너뜀
       logToConsole('로그 파일 초기화 실패: $e');
@@ -64,9 +101,39 @@ class AppLogger {
     print(message);
   }
 
-  void i(String message) => _write('INFO', message);
-  void w(String message) => _write('WARN', message);
-  void e(String message) => _write('ERROR', message);
+  void i(String message) => _write('INFO', '[$_identity] $message');
+  void w(String message) => _write('WARN', '[$_identity] $message');
+  void e(String message) => _write('ERROR', '[$_identity] $message');
+
+  /// UI 사용자 행위 추적 (screen, action, 파라미터)
+  void ui(String screen, String action,
+      {Map<String, Object?> params = const {}}) {
+    final p = params.isEmpty ? '' : ' params=${_flat(params)}';
+    _write('EVENT', 'UI $screen action=$action$p');
+  }
+
+  /// 상태 머신/이벤트 추적
+  void evt(String domain, String event,
+      {String? state, Map<String, Object?> details = const {}}) {
+    final d = details.isEmpty ? '' : ' ${_flat(details)}';
+    _write('EVENT', '$domain event=$event state=${state ?? '-'}$d');
+  }
+
+  /// 통화 관련 구조화 로그 (함수/결과/인자)
+  void call(String op,
+      {String? target, String? state, Map<String, Object?> params = const {}}) {
+    final p = params.isEmpty ? '' : ' params=${_flat(params)}';
+    _write('EVENT', 'SIP op=$op target=${target ?? '-'} state=${state ?? '-'}$p');
+  }
+
+  /// 상세 디버그 (네이티브 뷰어에서 필터로 조회)
+  void d(String message) => _write('DEBUG', '[$_identity] $message');
+
+  String _flat(Map<String, Object?> params) {
+    return params.entries
+        .map((e) => '${e.key}=${e.value ?? '-'}')
+        .join(' ');
+  }
 
   void _write(String level, String message) {
     final now = DateTime.now();

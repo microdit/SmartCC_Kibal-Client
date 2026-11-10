@@ -68,6 +68,8 @@ final class LogWindowController: NSWindowController {
   private var textView: NSTextView?
   private var timer: Timer?
   private var lastContent: String?
+  private var filterPopup: NSPopUpButton?
+  private var lastRawContent: String = "" // 필터 재적용용 원본
 
   /// 최대 유지 렌더 문자 크기 (avoid unbounded memory)
   private static let maxRenderBytes: UInt64 = 512 * 1024
@@ -114,7 +116,15 @@ final class LogWindowController: NSWindowController {
     statusLabel.textColor = .secondaryLabelColor
     statusLabel.font = NSFont.systemFont(ofSize: 11)
 
-    let tb: [NSView] = [openButton, copyButton, statusLabel]
+    let filterMenu = NSPopUpButton(frame: NSRect(x: 0, y: 0, width: 120, height: 24))
+    for title in ["전체", "DEBUG", "INFO", "EVENT", "WARN", "ERROR"] {
+      filterMenu.addItem(withTitle: title)
+    }
+    filterMenu.target = self
+    filterMenu.action = #selector(applyFilterFromMenu)
+    filterPopup = filterMenu
+
+    let tb: [NSView] = [openButton, copyButton, filterMenu, statusLabel]
     var x: CGFloat = 8
     for (i, v) in tb.enumerated() {
       if let btn = v as? NSButton {
@@ -134,9 +144,7 @@ final class LogWindowController: NSWindowController {
     statusLabel.sizeToFit()
     statusLabel.frame.origin = NSPoint(x: 860 - statusLabel.frame.width - 12,
                                        y: (32 - statusLabel.frame.height) / 2)
-    statusLabel.autoresizingMask = [.minXMargin]
-
-    // 로그 텍스트 뷰
+    statusLabel.autoresizingMask = [.minXMargin]    // 로그 텍스트 뷰
     let scroll = NSScrollView(frame: NSRect(x: 0, y: 0, width: 860, height: 524))
     scroll.hasVerticalScroller = true
     scroll.autohidesScrollers = true
@@ -164,7 +172,7 @@ final class LogWindowController: NSWindowController {
   override func showWindow(_ sender: Any?) {
     super.showWindow(sender)
     startPolling()
-    refreshLog()
+    refreshLog(force: false)
   }
 
   private func startPolling() {
@@ -176,10 +184,10 @@ final class LogWindowController: NSWindowController {
 
   @objc private func poll() {
     guard let window = window, window.isVisible else { return }
-    refreshLog()
+    refreshLog(force: false)
   }
 
-  private func refreshLog() {
+  private func refreshLog(force: Bool) {
     let path = Self.logFilePath()
     let fm = FileManager.default
     guard let attrs = try? fm.attributesOfItem(atPath: path),
@@ -202,12 +210,34 @@ final class LogWindowController: NSWindowController {
       content = String(content[content.index(after: nl)...])
     }
 
-    if content == lastContent { return }
-    lastContent = content
-    textView?.string = content
+    if content == lastRawContent { return }
+    lastRawContent = content
+    let display = filtered(content)
+    lastContent = display
+    textView?.string = display
     if let length = textView?.textStorage?.length {
       textView?.scrollRangeToVisible(NSRange(location: max(0, length - 1), length: 1))
     }
+  }
+
+  /// 레벨 필터 적용 (전체/DEBUG/INFO/EVENT/WARN/ERROR)
+  private func filtered(_ raw: String) -> String {
+    guard let popup = filterPopup,
+          popup.titleOfSelectedItem != "전체" else { return raw }
+    let level = popup.titleOfSelectedItem!
+    let lines = raw.components(separatedBy: "\n")
+    let kept = lines.filter { line in
+      // 로그 라인 형식: [timestamp] LEVEL [usr=..] message
+      guard let idx = line.firstIndex(of: "]") else { return false }
+      let rest = line[line.index(after: idx)...]
+      let restTrim = rest.drop { $0 == " " }
+      return restTrim.hasPrefix(level + " ")
+    }
+    return kept.joined(separator: "\n")
+  }
+
+  @objc private func applyFilterFromMenu() {
+    refreshLog(force: true)
   }
 
   @objc private func openLogFolder() {

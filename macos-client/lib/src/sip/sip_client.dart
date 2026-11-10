@@ -129,6 +129,15 @@ class KibalSipClient implements SipUaHelperListener {
       await _helper.start(settings);
 
       var connected = false;
+      // register:true 자동등록 성공 시 identity 기록
+      AppLogger.setIdentity(user: config.username, domain: config.domain);
+      AppLogger.instance.call('init',
+          params: {
+            'ws': _webSocketUrl(config),
+            'domain': config.domain,
+            'port': config.port,
+            'transport': config.transportType.name,
+          });
       // register:true 자동등록이 급하게 연결(could fail then self-reconnect)까지 대기:
       // connected/registered 어느 것이라도 오면 성공으로 접수 (최대 15초)
       final deadline = DateTime.now().add(const Duration(seconds: 15));
@@ -405,9 +414,18 @@ class KibalSipClient implements SipUaHelperListener {
 
   @override
   void callStateChanged(Call call, CallState state) {
+    final target = _targetOf(call);
     switch (state.state) {
       case CallStateEnum.CALL_INITIATION:
         _currentCall = call;
+        AppLogger.instance.call('callInitiation',
+            target: target,
+            state: 'initiated',
+            params: {
+              'direction':
+                  (call.direction)?.name ?? '-',
+              'id': call.id,
+            });
         if (call.direction == Direction.incoming) {
           _currentSession = SipSession(call.id)
             ..setType(SipSessionType.incoming)
@@ -427,6 +445,10 @@ class KibalSipClient implements SipUaHelperListener {
       case CallStateEnum.CONNECTING:
       case CallStateEnum.PROGRESS:
         _currentSession?.updateState(SipSessionState.connecting);
+        AppLogger.instance.call('callProgress',
+            target: target,
+            state: state.state.name,
+            params: {'id': call.id});
         _emitEvent(SipEvent(
           type: SipEventType.call,
           data: {'action': 'progress', 'target': _targetOf(call)},
@@ -436,6 +458,10 @@ class KibalSipClient implements SipUaHelperListener {
       case CallStateEnum.ACCEPTED:
       case CallStateEnum.CONFIRMED:
         _currentSession?.updateState(SipSessionState.established);
+        AppLogger.instance.call('callEstablished',
+            target: target,
+            state: state.state.name,
+            params: {'id': call.id});
         _emitEvent(SipEvent(
           type: SipEventType.call,
           data: {
@@ -453,6 +479,13 @@ class KibalSipClient implements SipUaHelperListener {
               ? SipSessionState.failed
               : SipSessionState.terminated,
         );
+        AppLogger.instance.call('callTerminated',
+            target: target,
+            state: state.state.name,
+            params: {
+              'id': call.id,
+              'cause': state.cause?.toString() ?? '-',
+            });
         _emitEvent(SipEvent(
           type: SipEventType.call,
           data: {'action': 'terminated', 'target': _targetOf(call)},
@@ -462,6 +495,17 @@ class KibalSipClient implements SipUaHelperListener {
 
       case CallStateEnum.STREAM:
         // 원격/로컬 미디어 스트림 수신 (originator: local/remote)
+        final stream = state.stream;
+        final videoTracks = stream?.getVideoTracks().length ?? 0;
+        final audioTracks = stream?.getAudioTracks().length ?? 0;
+        AppLogger.instance.call('mediaStream',
+            target: _targetOf(call),
+            state: state.originator?.name ?? '-',
+            params: {
+              'video': videoTracks,
+              'audio': audioTracks,
+              'id': call.id,
+            });
         _emitEvent(SipEvent(
           type: SipEventType.call,
           data: {

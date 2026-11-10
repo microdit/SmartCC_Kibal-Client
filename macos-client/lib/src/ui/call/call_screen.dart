@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import '../../providers/sip_provider.dart';
 import '../../providers/media_provider.dart';
+import '../../utils/app_logger.dart';
 import '../../utils/constants.dart';
 import '../../utils/formatters.dart';
 
@@ -558,7 +559,10 @@ class _CallScreenState extends State<CallScreen> {
   //--------------------------------------------------------------------------
   
   Future<void> _handleCameraToggle(MediaProvider mediaProvider) async {
+    AppLogger.instance.ui('CALL', 'cameraTogglePressed');
     await mediaProvider.toggleCamera();
+    AppLogger.instance.evt('MEDIA', 'cameraToggled',
+        state: 'front=${mediaProvider.isFrontCamera}');
   }
 
   //--------------------------------------------------------------------------
@@ -566,7 +570,10 @@ class _CallScreenState extends State<CallScreen> {
   //--------------------------------------------------------------------------
   
   Future<void> _handleAudioToggle(MediaProvider mediaProvider) async {
+    AppLogger.instance.ui('CALL', 'micTogglePressed');
     await mediaProvider.toggleAudio();
+    AppLogger.instance.evt('MEDIA', 'micToggled',
+        state: 'muted=${mediaProvider.isAudioMuted}');
   }
 
   //--------------------------------------------------------------------------
@@ -574,7 +581,10 @@ class _CallScreenState extends State<CallScreen> {
   //--------------------------------------------------------------------------
   
   Future<void> _handleVideoToggle(MediaProvider mediaProvider) async {
+    AppLogger.instance.ui('CALL', 'videoTogglePressed');
     await mediaProvider.toggleVideo();
+    AppLogger.instance.evt('MEDIA', 'videoMuteToggled',
+        state: 'muted=${mediaProvider.isVideoMuted}');
   }
 
   //--------------------------------------------------------------------------
@@ -591,6 +601,7 @@ class _CallScreenState extends State<CallScreen> {
   
   Future<void> _handleHangup(SipProvider sipProvider, MediaProvider mediaProvider) async {
     _isClosing = true;
+    AppLogger.instance.ui('CALL', 'hangupPressed', params: {'target': sipProvider.currentCallTarget});
 
     // 통화 종료
     await sipProvider.hangup();

@@ -77,7 +77,7 @@ class MediaManager {
     }
   }
   
-  /// 리소스 정리
+  /// 리소스 정리 (완전 폐기 — 로그아웃 전용)
   Future<void> dispose() async {
     // 로컬 스트림 정리
     await _disposeStream(_localStream);
@@ -100,9 +100,24 @@ class MediaManager {
   /// 스트림 정리
   Future<void> _disposeStream(MediaStream? stream) async {
     if (stream == null) return;
-    
+
     for (final track in stream.getTracks()) {
       await track.stop();
+    }
+  }
+
+  /// 통화 종료용: 로컬 미디어만 해제 (원격 렌더러 풀 보존)
+  Future<void> releaseLocalMedia() async {
+    await _disposeStream(_localStream);
+    _localStream = null;
+    final local = _localRenderers['default'];
+    if (local != null) {
+      local.srcObject = null;
+    } else {
+      // 풀이 소실된 경우 복구
+      final r = RTCVideoRenderer();
+      await r.initialize();
+      _localRenderers['default'] = r;
     }
   }
   
@@ -119,18 +134,27 @@ class MediaManager {
     bool useFrontCamera = true,
     bool useAudio = true,
     bool useVideo = true,
+    String? videoDeviceId,
+    String? audioDeviceId,
   }) async {
     try {
       // 카메라 방향 설정
       _isFrontCamera = useFrontCamera;
-      
+
+      final audioConstraint = useAudio ? (audioDeviceId ?? true) : false;
+      // macOS flutter_webrtc는 deviceId에 Map imm객체를 지원하지 않음
+      // (Map을 넘기면 doesNotRecognizeSelector로 프로세스 크래시) — 문자열만 사용
+      final videoDeviceFilter = <String, dynamic>{
+        'facingMode': useFrontCamera ? 'user' : 'environment',
+        'width': 1280,
+        'height': 720,
+      };
+      if (videoDeviceId != null) {
+        videoDeviceFilter['deviceId'] = videoDeviceId;
+      }
       final constraints = <String, dynamic>{
-        'audio': useAudio,
-        'video': useVideo ? <String, dynamic>{
-          'facingMode': useFrontCamera ? 'user' : 'environment',
-          'width': 1280,
-          'height': 720,
-        } : false,
+        'audio': audioConstraint,
+        'video': useVideo ? videoDeviceFilter : false,
       };
       
       // 기기 미디어 스트림 가져오기
@@ -138,11 +162,16 @@ class MediaManager {
       
       // 기존 스트림 정리
       await _disposeStream(_localStream);
-      
+
       _localStream = stream;
-      
-      // 로컬 렌더러에 스트림 설정
-      if (_localRenderers['default'] != null && useVideo) {
+
+      // 로컬 렌더러에 스트림 설정 (풀 소실 시 복구)
+      if (_localRenderers['default'] == null) {
+        final r = RTCVideoRenderer();
+        await r.initialize();
+        _localRenderers['default'] = r;
+      }
+      if (useVideo) {
         _localRenderers['default']!.srcObject = stream;
       }
       
@@ -251,19 +280,52 @@ class MediaManager {
   //--------------------------------------------------------------------------
   
   /// 원격 스트림 추가
-  /// 
-  /// [stream] 원격 미디어 스트림
+  ///
+  /// [stream] 원격 미디어 스트림 (flutter_webrtc는 트랙마다 별도 스트림 이벤트를 준다)
   /// [sessionId] 세션 ID
+  ///
+  /// 재협상(re-INVITE)으로 같은 sessionId의 스트림이 다시 오는 경우 기존 트랙에
+  /// addTrack 하지 않는다 (nil 스트림 PlatformException 방지). 영상을 가진
+  /// 스트림을 렌더러에 연결하고, 오디오 트랙은 ADM(native webrtc)에서 자동 재생.
   void addRemoteStream(MediaStream stream, String sessionId) {
-    // 기존 스트림 제거
-    _removeRemoteStream(sessionId);
-    
-    // 새로운 스트림 추가
-    _remoteStreams[sessionId] = stream;
-    
-    // 렌더러에 스트림 연결
-    if (_remoteRenderers.containsKey('remote_${_remoteStreams.length - 1}')) {
-      _remoteRenderers['remote_${_remoteStreams.length - 1}']!.srcObject = stream;
+    final prev = _remoteStreams[sessionId];
+    MediaStream chosen;
+    if (prev == null) {
+      chosen = stream;
+    } else {
+      final prevVideo = prev.getVideoTracks().length;
+      final newVideo = stream.getVideoTracks().length;
+      if (prevVideo == 0 && newVideo > 0) {
+        chosen = stream; // 새 스트림에 영상이 있으면 교체
+      } else {
+        chosen = prev; // 기존(영상 보유) 유지 — 중복/음성 전용 이벤트 무시
+      }
+    }
+    _remoteStreams[sessionId] = chosen;
+    _bindRendererForCount(_remoteStreams.length - 1);
+  }
+
+  /// index에 대응하는 원격 렌더러에 현재 스트림을 연결
+  void _bindRendererForCount(int index) {
+    if (index < 0) return;
+    var renderer = _remoteRenderers['remote_$index'];
+    if (renderer == null) {
+      // dispose 등으로 풀이 소실된 경우 1개 보강 (getFullYear 초기화는 비동기지만
+      // srcObject 지정은 이후 이벤트에서 다시 수행될 수 있음)
+      final r = RTCVideoRenderer();
+      r.initialize().then((_) {
+        if (!_remoteRenderers.containsKey('remote_$index')) {
+          _remoteRenderers['remote_$index'] = r;
+        }
+        final key = _remoteStreams.keys.elementAt(index);
+        r.srcObject = _remoteStreams[key];
+      });
+      return;
+    }
+    final key = _remoteStreams.keys.elementAt(index);
+    final stream = _remoteStreams[key];
+    if (renderer.srcObject != stream) {
+      renderer.srcObject = stream;
     }
   }
   
