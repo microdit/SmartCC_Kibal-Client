@@ -34,6 +34,9 @@ class MediaProvider with ChangeNotifier {
   
   /// 로딩 상태
   bool _isLoading = false;
+
+  /// dispose 여부
+  bool _disposed = false;
   
   //--------------------------------------------------------------------------
   // Public Getters
@@ -75,7 +78,15 @@ class MediaProvider with ChangeNotifier {
   
   /// MediaProvider 초기화
   MediaProvider() {
+    _mediaManager.onRemoteVideoStreamsChanged = _onRemoteVideoStreamsChanged;
     _initMediaManager();
+  }
+
+  /// 영상 타일 목록 갱신 시 UI 재빌드
+  void _onRemoteVideoStreamsChanged() {
+    if (_disposed) return;
+    _updateStreamStates();
+    notifyListeners();
   }
   
   /// 미디어 매니저 초기화
@@ -370,6 +381,8 @@ class MediaProvider with ChangeNotifier {
   /// 리소스 해제
   @override
   Future<void> dispose() async {
+    _disposed = true;
+    _mediaManager.onRemoteVideoStreamsChanged = null;
     await _mediaManager.dispose();
     super.dispose();
   }

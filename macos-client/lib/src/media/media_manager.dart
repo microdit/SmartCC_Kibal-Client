@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:core';
 import 'package:flutter/material.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
@@ -27,6 +28,19 @@ class MediaManager {
   
   /// 원격 비디오 렌더러 컨트롤러
   final Map<String, RTCVideoRenderer> _remoteRenderers = {};
+
+  /// 원격 영상 트랙별 렌더 스트림 (track.id → 비디오 트랙 1개만 가진 스트림)
+  ///
+  /// ConfBridge SFU에서 한 세션에 여러 원격 영상 트랙이 도착할 수 있다.
+  /// `RTCVideoRenderer`는 스트림의 첫 video track만 렌더하므로, 트랙별로
+  /// 별도 스트림을 만들어 타일마다 올바른 영상을 표시한다.
+  final Map<String, MediaStream> _remoteVideoStreams = {};
+  final List<String> _remoteVideoTrackOrder = [];
+  bool _videoSyncRunning = false;
+  bool _videoSyncDirty = false;
+
+  /// 영상 타일 목록이 갱신될 때 UI에 알린다(MediaProvider가 설정).
+  VoidCallback? onRemoteVideoStreamsChanged;
   
   /// 카메라 전면/후면 상태
   bool _isFrontCamera = true;
@@ -45,14 +59,24 @@ class MediaManager {
   MediaStream? get localStream => _localStream;
   
   /// 원격 스트림 목록
-  /// 세션당 렌더 대표 스트림 목록 (영상 우선, 없으면 첫 스트림)
+  /// 영상 트랙별 렌더 스트림 목록(타일 1개 = 영상 트랙 1개).
+  /// 아직 트랙별 스트림이 준비되지 않았으면 세션 대표 스트림으로 폴백한다.
   List<MediaStream> get remoteStreams {
-    final result = <MediaStream>[];
+    if (_remoteVideoTrackOrder.isNotEmpty) {
+      final result = <MediaStream>[];
+      for (final trackId in _remoteVideoTrackOrder) {
+        final stream = _remoteVideoStreams[trackId];
+        if (stream != null) result.add(stream);
+      }
+      if (result.isNotEmpty) return result;
+    }
+
+    final fallback = <MediaStream>[];
     for (final sessionId in _remoteSessions.keys) {
       final vid = _videoStreamOfSession(sessionId);
-      if (vid != null) result.add(vid);
+      if (vid != null) fallback.add(vid);
     }
-    return result;
+    return fallback;
   }
   
   /// 카메라 전면 여부
@@ -101,6 +125,13 @@ class MediaManager {
         await _disposeStream(stream);
       }
     }
+
+    // 트랙별 렌더 스트림 정리 (공유 중인 원본 스트림은 건너뛴다)
+    for (final stream in _remoteVideoStreams.values) {
+      await _disposeRenderStream(stream);
+    }
+    _remoteVideoStreams.clear();
+    _remoteVideoTrackOrder.clear();
     _remoteSessions.clear();
     
     // 렌더러 정리
@@ -303,9 +334,14 @@ class MediaManager {
   /// addTrack은 재협상 후 nil 스트림 크래시(PlatformException) 유발로 사용하지 않는다.
   void addRemoteStream(MediaStream stream, String sessionId) {
     final list = _remoteSessions.putIfAbsent(sessionId, () => <MediaStream>[]);
-    final firstTrackId = stream.getTracks().isEmpty ? null : stream.getTracks().first.id;
-    final existsById = list.any((s) =>
-        s.getTracks().map((t) => t.id).contains(firstTrackId));
+    final trackIds = stream.getTracks().map((t) => t.id).toSet();
+    // 첫 트랙 ID만 비교하면, 기존 오디오 트랙 + 새 영상 트랙을 함께 가진
+    // 재협상 스트림이 통째로 버려져 새 영상이 유실된다(H5 이후 3자 증상).
+    // 전체 트랙 집합이 동일할 때만 중복으로 본다.
+    final existsById = list.any((s) {
+      final ids = s.getTracks().map((t) => t.id).toSet();
+      return ids.length == trackIds.length && ids.containsAll(trackIds);
+    });
     if (!existsById) list.add(stream);
     final totals = _sessionTrackCounts(sessionId);
     AppLogger.instance.d(
@@ -313,6 +349,7 @@ class MediaManager {
         'event(video=${stream.getVideoTracks().length} audio=${stream.getAudioTracks().length}) '
         'session(video=${totals['video']} audio=${totals['audio']})');
     _rebindAllRemoteRenderers();
+    unawaited(_syncRemoteVideoStreams());
   }
 
   /// 세션별 누적 트랙/스트림 수 (H1 진단: 스트림 단위 이벤트와 세션 합계 구분)
@@ -340,11 +377,102 @@ class MediaManager {
     return list.isNotEmpty ? list.first : null;
   }
 
-  /// 모든 원격 렌더러에 세션의 영상 스트림을 재바인딩 (D4: 즉시 렌더 반영)
+  /// 원격 영상 트랙별 렌더 스트림을 동기화한다.
+  ///
+  /// 한 세션에 영상 트랙이 여러 개 도착해도 트랙마다 스트림을 만들어
+  /// `RTCVideoRenderer`가 첫 트랙만 그리는 문제를 우회한다.
+  Future<void> _syncRemoteVideoStreams() async {
+    if (_videoSyncRunning) {
+      _videoSyncDirty = true;
+      return;
+    }
+    _videoSyncRunning = true;
+    try {
+      do {
+        _videoSyncDirty = false;
+
+        final tracks = <String, MediaStreamTrack>{};
+        final sourceStreams = <String, MediaStream>{};
+        for (final streams in _remoteSessions.values) {
+          for (final stream in streams) {
+            for (final track in stream.getVideoTracks()) {
+              final trackId = track.id;
+              if (trackId == null || trackId.isEmpty) continue;
+              tracks[trackId] = track;
+              sourceStreams[trackId] = stream;
+            }
+          }
+        }
+
+        // 사라진 트랙 정리
+        for (final trackId in List<String>.from(_remoteVideoTrackOrder)) {
+          if (tracks.containsKey(trackId)) continue;
+          _remoteVideoTrackOrder.remove(trackId);
+          final stale = _remoteVideoStreams.remove(trackId);
+          await _disposeRenderStream(stale);
+        }
+
+        // 새 트랙 추가
+        // 첫 영상은 원본 스트림을 그대로 사용해 1:1 기존 동작을 유지하고,
+        // 추가 영상(3자 이상)만 비디오 트랙 1개짜리 네이티브 스트림을 만든다.
+        for (final entry in tracks.entries) {
+          if (_remoteVideoStreams.containsKey(entry.key)) continue;
+          final source = sourceStreams[entry.key];
+          if (_remoteVideoTrackOrder.isEmpty && source != null) {
+            _remoteVideoStreams[entry.key] = source;
+            _remoteVideoTrackOrder.add(entry.key);
+            AppLogger.instance.d(
+                'remote video tile 등록(원본) track=${entry.key}');
+            continue;
+          }
+          try {
+            final renderStream =
+                await createLocalMediaStream('kibal-video-${entry.key}');
+            await renderStream.addTrack(entry.value, addToNative: true);
+            _remoteVideoStreams[entry.key] = renderStream;
+            _remoteVideoTrackOrder.add(entry.key);
+            AppLogger.instance
+                .d('remote video tile 등록(전용) track=${entry.key}');
+          } catch (e) {
+            AppLogger.instance
+                .w('remote video tile 생성 실패 track=${entry.key}: $e');
+          }
+        }
+
+        _rebindAllRemoteRenderers();
+        onRemoteVideoStreamsChanged?.call();
+      } while (_videoSyncDirty);
+    } finally {
+      _videoSyncRunning = false;
+    }
+  }
+
+  /// 렌더 전용 스트림 정리 (공유 트랙은 stop하지 않는다)
+  Future<void> _disposeRenderStream(MediaStream? stream) async {
+    if (stream == null) return;
+    // 세션 원본 스트림은 `_disposeStream`에서 이미 정리된다.
+    if (_isSessionStream(stream)) return;
+    try {
+      await stream.dispose();
+    } catch (e) {
+      AppLogger.instance.w('remote video tile dispose 실패: $e');
+    }
+  }
+
+  bool _isSessionStream(MediaStream stream) {
+    for (final streams in _remoteSessions.values) {
+      for (final candidate in streams) {
+        if (identical(candidate, stream)) return true;
+      }
+    }
+    return false;
+  }
+
+  /// 모든 원격 렌더러에 영상 타일 스트림을 재바인딩 (D4: 즉시 렌더 반영)
   void _rebindAllRemoteRenderers() {
-    final sessionIds = _remoteSessions.keys.toList();
-    for (var i = 0; i < sessionIds.length && i < 4; i++) {
-      final vid = _videoStreamOfSession(sessionIds[i]);
+    final vids = remoteStreams;
+    for (var i = 0; i < vids.length && i < 4; i++) {
+      final vid = vids[i];
       var renderer = _remoteRenderers['remote_$i'];
       if (renderer == null) {
         final r = RTCVideoRenderer();
@@ -363,8 +491,8 @@ class MediaManager {
         renderer.srcObject = vid;
       }
     }
-    // 세션 축소 시 잔여 렌더러 정리
-    for (var i = sessionIds.length; i < 4; i++) {
+    // 타일 축소 시 잔여 렌더러 정리
+    for (var i = vids.length; i < 4; i++) {
       _remoteRenderers['remote_$i']?.srcObject = null;
     }
   }
@@ -373,11 +501,11 @@ class MediaManager {
   ///
   /// [sessionId] 세션 ID
   void removeRemoteStream(String sessionId) {
-    _removeRemoteStream(sessionId);
+    unawaited(_removeRemoteStream(sessionId));
   }
 
   /// 원격 스트림 내부 제거
-  void _removeRemoteStream(String sessionId) async {
+  Future<void> _removeRemoteStream(String sessionId) async {
     final list = _remoteSessions[sessionId];
     if (list != null) {
       for (final stream in list) {
@@ -385,14 +513,16 @@ class MediaManager {
       }
       _remoteSessions.remove(sessionId);
       _rebindAllRemoteRenderers();
+      unawaited(_syncRemoteVideoStreams());
     }
   }
 
   /// 모든 원격 스트림 제거
   Future<void> removeAllRemoteStreams() async {
     for (final sessionId in List<String>.from(_remoteSessions.keys)) {
-      _removeRemoteStream(sessionId);
+      await _removeRemoteStream(sessionId);
     }
+    await _syncRemoteVideoStreams();
     _rebindAllRemoteRenderers();
   }
 

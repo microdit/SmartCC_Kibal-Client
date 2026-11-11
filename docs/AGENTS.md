@@ -57,9 +57,10 @@
 - `design`: 설계서 작성
 
 ## 현재 진행 (2026-11-11)
-- 원격 오디오 H1/미디어 H4/H5(re-INVITE 미응답) 해결 → v0.0.8+8
-- 오디오 단독 118초 유지(v0.0.7). v0.0.8에서 re-INVITE 자동 수락 추가
-- 잔여: 영상/3자 5분 이상 실기 재검증, 서버 영상 RTP 송신(`Sent RTP type 100`) 확인
+- 원격 오디오 H1/미디어 H4/H5(re-INVITE 미응답) 해결 → v0.0.8
+- MediaManager 다중 영상(dedup + 트랙별 렌더 스트림) 수정 → v0.0.9+9
+- 오디오 단독 118초 유지(v0.0.7)
+- 잔여: v0.0.8(H5) / v0.0.9(3자 타일) 실기 재검증, `Sent RTP type 100` 확인
 - 포크: `macos-client/packages/sip_ua` (ADR-005) — `dependency_overrides` 사용
 - 상세: [[wiki/06_Reports/20261111_원격오디오_ICE문제_개발보고서_v1.0]]
 - 다음 작업: [[wiki/04_Prompts/20261111_원격오디오_ICE_후속작업프롬프트_v1.0]]
