@@ -76,6 +76,20 @@ class RemoteLogForwarder {
     return '$ts-${r.nextInt(1 << 32).toRadixString(36)}';
   }
 
+  /// G7: 완성된 줄 텍스트를 줄과 파일 내 끝 offset(바이트)으로 분해. 테스트용 공개.
+  @visibleForTesting
+  static List<(String, int)> splitWithEnds(String text, int start) {
+    final out = <(String, int)>[];
+    var pos = start;
+    final parts = text.split('\n');
+    // 마지막 요소는 마지막 개행 뒤 빈 문자열
+    for (var i = 0; i < parts.length - 1; i++) {
+      pos += utf8.encode(parts[i]).length + 1;
+      out.add((parts[i], pos));
+    }
+    return out;
+  }
+
   String get session => _session;
   String get extension => _extension;
 
@@ -161,6 +175,7 @@ class RemoteLogForwarder {
             offset: batch.startOffset,
             nextOffset: batch.nextOffset,
             rotated: batch.rotated,
+            lineEnds: batch.lineEnds,
           );
           if (!ok) {
             _scheduleRetry();
@@ -232,20 +247,22 @@ class RemoteLogForwarder {
     final text = utf8.decode(bytes.sublist(0, usable), allowMalformed: true);
     final filter = settings.filter;
     final selected = <String>[];
-    var consumed = 0;
-    var more = (start + usable) < length;
-    for (final raw in const LineSplitter().convert(text)) {
-      consumed++;
+    final lineEnds = <int>[]; // G7: 각 전송 줄의 파일 내 끝 offset(서버 중복 제거용)
+    final more = (start + usable) < length;
+    // lastNl<0(강제 진행)인 경우 마지막 미완성 조각도 한 줄로 취급
+    final body = text.endsWith('\n') ? text : '$text\n';
+    for (final (raw, pos) in splitWithEnds(body, start)) {
       if (raw.isEmpty) continue;
-      if (filter.shouldSend(raw)) selected.add(raw);
+      if (filter.shouldSend(raw)) {
+        selected.add(raw);
+        lineEnds.add(pos);
+      }
       if (selected.length >= maxLinesPerBatch) {
-        // 남은 줄은 다음 배치로: 이번 배치에 실제 포함된 바이트까지만 커밋
-        final head = const LineSplitter().convert(text).take(consumed).join('\n');
-        final headBytes = utf8.encode('$head\n').length;
-        return _Batch(selected, start, start + headBytes, true, rotated);
+        // 남은 줄은 다음 배치로: 실제 포함한 바이트까지만 커밋
+        return _Batch(selected, start, pos, true, rotated, lineEnds);
       }
     }
-    return _Batch(selected, start, start + usable, more, rotated);
+    return _Batch(selected, start, start + usable, more, rotated, lineEnds);
   }
 
   Future<bool> _post({
@@ -255,6 +272,7 @@ class RemoteLogForwarder {
     required int nextOffset,
     bool rotated = false,
     String? extension,
+    List<int> lineEnds = const <int>[],
   }) async {
     // F6: keep-alive 연결이 서버에서 닫힌 경우(HttpException 등) 새 연결로 1회 즉시 재시도
     for (var attempt = 0; attempt < 2; attempt++) {
@@ -265,6 +283,7 @@ class RemoteLogForwarder {
         nextOffset: nextOffset,
         rotated: rotated,
         extension: extension,
+        lineEnds: lineEnds,
         quiet: attempt == 0,
       );
       if (result != null) return result;
@@ -282,6 +301,7 @@ class RemoteLogForwarder {
     required int nextOffset,
     required bool rotated,
     required String? extension,
+    required List<int> lineEnds,
     required bool quiet,
   }) async {
     final url = settings.url;
@@ -306,6 +326,7 @@ class RemoteLogForwarder {
         'next_offset': nextOffset,
         'rotated': rotated,
         'lines': lines,
+        if (lineEnds.length == lines.length) 'line_offsets': lineEnds,
       })));
       final response =
           await request.close().timeout(const Duration(seconds: 6));
@@ -408,6 +429,7 @@ class RemoteLogForwarder {
             nextOffset: batch.nextOffset,
             rotated: batch.rotated,
             extension: prevExt,
+            lineEnds: batch.lineEnds,
           );
           if (!ok) return; // 서버 불통: 이전 세션 잔여분은 포기(로컬 app-prev.log 보존)
         }
@@ -429,8 +451,10 @@ class RemoteLogForwarder {
 }
 
 class _Batch {
-  _Batch(this.lines, this.startOffset, this.nextOffset, this.more, this.rotated);
+  _Batch(this.lines, this.startOffset, this.nextOffset, this.more, this.rotated,
+      [this.lineEnds = const <int>[]]);
   final List<String> lines;
+  final List<int> lineEnds;
   final int startOffset;
   final int nextOffset;
   final bool more;

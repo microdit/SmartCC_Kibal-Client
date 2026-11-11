@@ -6,6 +6,7 @@
 #   ./scripts/ops_client_logs.sh tail <내선> [줄수]       # 최근 로그
 #   ./scripts/ops_client_logs.sh grep <내선> <검색어> [줄수]
 #   ./scripts/ops_client_logs.sh follow <내선> [주기초]   # 증분 실시간 추적(API after 기반)
+#   ./scripts/ops_client_logs.sh server [내선] [초]       # Asterisk 서버 이벤트(도달성·브리지·경고), 기본 1800초
 # 환경변수: OPS_URL(기본 http://localhost:8091), OPS_CLIENT_KEY(기본 dev 공유키)
 set -uo pipefail
 
@@ -70,8 +71,12 @@ case "$CMD" in
       sleep "$INTERVAL"
     done
     ;;
+  server)
+    curl -s --max-time 20 -H "X-Client-Key: $KEY" "$URL/api/server-events?extension=${EXT}&since=${3:-1800}" \
+      | python3 -c "$PY_LINES"
+    ;;
   *)
-    echo "usage: $0 {list|tail <ext> [n]|grep <ext> <q> [n]|follow <ext> [sec]}"
+    echo "usage: $0 {list|tail <ext> [n]|grep <ext> <q> [n]|follow <ext> [sec]|server [ext] [sec]}"
     exit 1
     ;;
 esac

@@ -320,9 +320,17 @@ class KibalSipClient implements SipUaHelperListener {
         throw Exception('수신 중인 통화 없음');
       }
 
-      final voiceOnly = call.voiceOnly || !await _canUseVideo(mediaStream);
-      AppLogger.instance
-          .i('SIP accept <- ${_targetOf(call)} voiceOnly=$voiceOnly');
+      // G1: 수신 offer SDP의 video m-line 기준으로 판정(call.voiceOnly는 수신 시 항상 true였음)
+      bool peerOffersVideo;
+      try {
+        peerOffersVideo = call.remote_has_video;
+      } catch (_) {
+        peerOffersVideo = !call.voiceOnly;
+      }
+      final canVideo = await _canUseVideo(mediaStream);
+      final voiceOnly = !peerOffersVideo || !canVideo;
+      AppLogger.instance.i('SIP accept <- ${_targetOf(call)} voiceOnly=$voiceOnly '
+          'peerOffersVideo=$peerOffersVideo localVideo=$canVideo');
       call.answer(
         _helper.buildCallOptions(voiceOnly),
         mediaStream: mediaStream,
@@ -491,6 +499,10 @@ class KibalSipClient implements SipUaHelperListener {
       case CallStateEnum.CONFIRMED:
         _currentSession?.updateState(SipSessionState.established);
         _startStatsProbe(call);
+        call.session.onInDialogTimeoutTolerated = (count) {
+          AppLogger.instance.w(
+              'SIP in-dialog 요청 타임아웃 #$count — 미디어 정상, 통화 유지(G3)');
+        };
         _scheduleReceiverSweep(call);
         AppLogger.instance.call('callEstablished',
             target: target,
@@ -708,6 +720,7 @@ class KibalSipClient implements SipUaHelperListener {
   int _summaryAudioBase = 0;
   int _summaryVideoBase = 0;
   int _probeTicks = 0;
+  int _summaryFramesBase = 0;
 
   static const Duration _trackStaleAfter = Duration(seconds: 15);
   static const int _summaryEveryTicks = 6; // 5초 x 6 = 30초
@@ -724,6 +737,7 @@ class KibalSipClient implements SipUaHelperListener {
     _videoTrackFirstSeen.clear();
     _summaryAudioBase = 0;
     _summaryVideoBase = 0;
+    _summaryFramesBase = 0;
     _probeTicks = 0;
     _statsTimer = Timer.periodic(const Duration(seconds: 5), (_) async {
       final pc = call.peerConnection;
@@ -737,7 +751,27 @@ class KibalSipClient implements SipUaHelperListener {
         var audioLost = 0;
         var identified = 0;
         final seen = <String>{};
+        final vIn = <String, int>{};
+        String vInRes = '-';
+        double? vInFps;
+        String vOutRes = '-';
+        double? vOutFps;
+        String vOutLimit = '-';
+        int vOutKbps = 0;
         for (final report in reports) {
+          if (report.type == 'outbound-rtp') {
+            final v = report.values;
+            if ((v['kind'] ?? v['mediaType']) == 'video') {
+              final fw = (v['frameWidth'] as num?)?.toInt();
+              final fh = (v['frameHeight'] as num?)?.toInt();
+              if (fw != null && fh != null) vOutRes = '${fw}x$fh';
+              vOutFps = (v['framesPerSecond'] as num?)?.toDouble() ?? vOutFps;
+              vOutLimit = (v['qualityLimitationReason'] as String?) ?? vOutLimit;
+              final tb = (v['targetBitrate'] as num?)?.toDouble();
+              if (tb != null) vOutKbps = (tb / 1000).round();
+            }
+            continue;
+          }
           if (report.type != 'inbound-rtp') continue;
           final values = report.values;
           final kind = values['kind'] ?? values['mediaType'];
@@ -749,6 +783,17 @@ class KibalSipClient implements SipUaHelperListener {
             audioLost += (values['packetsLost'] as num?)?.toInt() ?? 0;
           } else if (kind == 'video') {
             videoBytes += bytes;
+            vIn['frames'] = (vIn['frames'] ?? 0) + ((values['framesDecoded'] as num?)?.toInt() ?? 0);
+            vIn['keyframes'] = (vIn['keyframes'] ?? 0) + ((values['keyFramesDecoded'] as num?)?.toInt() ?? 0);
+            vIn['freeze'] = (vIn['freeze'] ?? 0) + ((values['freezeCount'] as num?)?.toInt() ?? 0);
+            vIn['pli'] = (vIn['pli'] ?? 0) + ((values['pliCount'] as num?)?.toInt() ?? 0);
+            vIn['nack'] = (vIn['nack'] ?? 0) + ((values['nackCount'] as num?)?.toInt() ?? 0);
+            vIn['lost'] = (vIn['lost'] ?? 0) + ((values['packetsLost'] as num?)?.toInt() ?? 0);
+            final fw = (values['frameWidth'] as num?)?.toInt();
+            final fh = (values['frameHeight'] as num?)?.toInt();
+            if (fw != null && fh != null) vInRes = '${fw}x$fh';
+            final fps = (values['framesPerSecond'] as num?)?.toDouble();
+            if (fps != null) vInFps = fps;
             final trackId = values['trackIdentifier'] as String?;
             if (trackId == null || trackId.isEmpty) continue;
             identified++;
@@ -804,6 +849,17 @@ class KibalSipClient implements SipUaHelperListener {
               'videoTracks=$activeCount/${seen.length} '
               'audioLost=$audioLost ice=$ice'
               '${dA <= 0 ? ' WARN_NO_AUDIO' : ''}');
+          final frames = vIn['frames'] ?? 0;
+          final dFrames = frames - _summaryFramesBase;
+          _summaryFramesBase = frames;
+          AppLogger.instance.i('SIP video summary 30s '
+              'in=$vInRes@${vInFps?.toStringAsFixed(0) ?? '-'}fps '
+              'decodedFrames+$dFrames keyframes=${vIn['keyframes'] ?? 0} '
+              'freeze=${vIn['freeze'] ?? 0} pli=${vIn['pli'] ?? 0} '
+              'nack=${vIn['nack'] ?? 0} vLost=${vIn['lost'] ?? 0} | '
+              'out=$vOutRes@${vOutFps?.toStringAsFixed(0) ?? '-'}fps '
+              'target=${vOutKbps}kbps limit=$vOutLimit'
+              '${seen.isNotEmpty && dFrames <= 0 ? ' WARN_VIDEO_FROZEN' : ''}');
         }
       } catch (e) {
         AppLogger.instance.w('SIP stats 수집 실패: $e');

@@ -379,6 +379,29 @@ class RTCSession extends EventManager implements Owner {
     _from_tag = request.from_tag;
     _id = request.call_id! + _from_tag!;
     _request = request;
+
+    // G1: 수신 INVITE의 offer SDP에 활성 video m-line이 있으면 영상 통화로 표시.
+    // (발신 connect()에는 data['video']가 있으나 수신 경로에는 없어 항상 음성으로 오인됨)
+    try {
+      final Map<String, dynamic>? offer =
+          request.body != null ? request.parseSDP() : null;
+      bool offersVideo = false;
+      final dynamic media = offer?['media'];
+      if (media is List) {
+        for (final dynamic m in media) {
+          if (m is Map && m['type'] == 'video' && (m['port'] ?? 0) != 0) {
+            final dynamic dir = m['direction'];
+            if (dir == null || dir == 'sendrecv' || dir == 'sendonly') {
+              offersVideo = true;
+            }
+          }
+        }
+      }
+      data ??= <String, dynamic>{};
+      data!['video'] = offersVideo;
+    } catch (e) {
+      logger.w('init_incoming: offer SDP video 판별 실패 $e');
+    }
     _contact = _ua.contact.toString();
 
     // Get the Expires header value if exists.
@@ -476,7 +499,6 @@ class RTCSession extends EventManager implements Owner {
     Map<String, dynamic> rtcAnswerConstraints =
         options['rtcAnswerConstraints'] ?? <String, dynamic>{};
 
-    List<MediaStreamTrack> tracks;
     bool peerHasAudioLine = false;
     bool peerHasVideoLine = false;
     bool peerOffersFullAudio = false;
@@ -551,19 +573,23 @@ class RTCSession extends EventManager implements Owner {
       }
     }
 
-    // Remove audio from mediaStream if suggested by mediaConstraints.
-    if (mediaStream != null && mediaConstraints['audio'] == false) {
-      tracks = mediaStream.getAudioTracks().toList(); // B2: 순회 중 수정 방지(복사본)
-      for (MediaStreamTrack track in tracks) {
-        mediaStream.removeTrack(track);
-      }
-    }
-
-    // Remove video from mediaStream if suggested by mediaConstraints.
-    if (mediaStream != null && mediaConstraints['video'] == false) {
-      tracks = mediaStream.getVideoTracks().toList(); // B2: 순회 중 수정 방지(복사본)
-      for (MediaStreamTrack track in tracks) {
-        mediaStream.removeTrack(track);
+    // G2: 앱 공유 로컬 스트림에서 removeTrack 하면 셀프 프리뷰까지 사라진다.
+    // 제외할 트랙이 있으면 남길 트랙만 담은 별도 스트림을 만들어 answer에 사용한다.
+    if (mediaStream != null &&
+        (mediaConstraints['audio'] == false || mediaConstraints['video'] == false)) {
+      final List<MediaStreamTrack> keep = <MediaStreamTrack>[
+        if (mediaConstraints['audio'] != false) ...mediaStream.getAudioTracks(),
+        if (mediaConstraints['video'] != false) ...mediaStream.getVideoTracks(),
+      ];
+      try {
+        final MediaStream scoped =
+            await createLocalMediaStream('kibal-answer-$_id');
+        for (final MediaStreamTrack track in keep) {
+          await scoped.addTrack(track, addToNative: true);
+        }
+        mediaStream = scoped;
+      } catch (e) {
+        logger.w('answer: scoped stream 생성 실패, 원본 유지 $e');
       }
     }
 
@@ -1468,6 +1494,37 @@ class RTCSession extends EventManager implements Owner {
       });
     }
   }
+
+  /// G3: 통화 중(in-dialog) 갱신/재협상 요청 타임아웃 처리.
+  ///
+  /// Wi-Fi 정체로 시그널링(WebSocket)만 수 초 막혀도 미디어(ICE/RTP)는 살아 있을 수 있다.
+  /// 기존 동작(1회 타임아웃 = 즉시 408 종료)은 21분 통화 자동 종료의 원인이었다.
+  /// ICE가 연결 상태면 통화를 유지하고 연속 [_maxInDialogTimeouts]회 초과 시에만 종료한다.
+  int _inDialogTimeouts = 0;
+
+  /// 앱 진단 로그용 콜백(통화 유지 시 호출)
+  void Function(int count)? onInDialogTimeoutTolerated;
+  static const int _maxInDialogTimeouts = 3;
+
+  bool get _mediaAlive {
+    final RTCIceConnectionState? ice = _connection?.iceConnectionState;
+    return ice == RTCIceConnectionState.RTCIceConnectionStateConnected ||
+        ice == RTCIceConnectionState.RTCIceConnectionStateCompleted;
+  }
+
+  void _onInDialogRequestTimeout() {
+    if (_state == RtcSessionState.terminated) return;
+    _inDialogTimeouts++;
+    if (_mediaAlive && _inDialogTimeouts <= _maxInDialogTimeouts) {
+      logger.w('in-dialog request timeout #$_inDialogTimeouts '
+          '— media alive, keeping session');
+      onInDialogTimeoutTolerated?.call(_inDialogTimeouts);
+      return;
+    }
+    onRequestTimeout();
+  }
+
+  void _resetInDialogTimeouts() => _inDialogTimeouts = 0;
 
   void onRequestTimeout() {
     logger.e('onRequestTimeout()');
@@ -2814,7 +2871,7 @@ class RTCSession extends EventManager implements Owner {
         onTransportError(); // Do nothing because session ends.
       });
       handlers.on(EventOnRequestTimeout(), (EventOnRequestTimeout event) {
-        onRequestTimeout(); // Do nothing because session ends.
+        _onInDialogRequestTimeout(); // G3: 미디어 정상이면 유지
       });
       handlers.on(EventOnDialogError(), (EventOnDialogError event) {
         onDialogError(); // Do nothing because session ends.
@@ -2977,7 +3034,7 @@ class RTCSession extends EventManager implements Owner {
         onTransportError(); // Do nothing because session ends.
       });
       handlers.on(EventOnRequestTimeout(), (EventOnRequestTimeout event) {
-        onRequestTimeout(); // Do nothing because session ends.
+        _onInDialogRequestTimeout(); // G3: 미디어 정상이면 유지
       });
       handlers.on(EventOnDialogError(), (EventOnDialogError event) {
         onDialogError(); // Do nothing because session ends.
@@ -3096,7 +3153,7 @@ class RTCSession extends EventManager implements Owner {
           onTransportError(); // Do nothing because session ends.
         });
         handlers.on(EventOnRequestTimeout(), (EventOnRequestTimeout event) {
-          onRequestTimeout(); // Do nothing because session ends.
+          _onInDialogRequestTimeout(); // G3: 미디어 정상이면 유지
         });
         handlers.on(EventOnDialogError(), (EventOnDialogError event) {
           onDialogError(); // Do nothing because session ends.
@@ -3124,7 +3181,7 @@ class RTCSession extends EventManager implements Owner {
         onTransportError(); // Do nothing because session ends.
       });
       handlers.on(EventOnRequestTimeout(), (EventOnRequestTimeout event) {
-        onRequestTimeout(); // Do nothing because session ends.
+        _onInDialogRequestTimeout(); // G3: 미디어 정상이면 유지
       });
       handlers.on(EventOnDialogError(), (EventOnDialogError event) {
         onDialogError(); // Do nothing because session ends.
@@ -3355,6 +3412,7 @@ class RTCSession extends EventManager implements Owner {
    * @param  {IncomingResponse} response
    */
   void _handleSessionTimersInIncomingResponse(dynamic response) {
+    _resetInDialogTimeouts();
     if (!_sessionTimers.enabled) {
       return;
     }
@@ -3406,6 +3464,11 @@ class RTCSession extends EventManager implements Owner {
           return;
         }
 
+        if (_mediaAlive) {
+          logger.w('runSessionTimer() | refresh not received but media alive — extending');
+          _runSessionTimer();
+          return;
+        }
         logger.e('runSessionTimer() | timer expired, terminating the session');
 
         terminate(<String, dynamic>{
