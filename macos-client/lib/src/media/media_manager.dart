@@ -37,6 +37,9 @@ class MediaManager {
   final Map<String, MediaStream> _remoteVideoStreams = {};
   final List<String> _remoteVideoTrackOrder = [];
   bool _videoSyncRunning = false;
+
+  /// 수신이 멈춘(죽은) 영상 트랙 ID. 타일에서 제외한다(B3/F4).
+  final Set<String> _inactiveVideoTracks = {};
   bool _videoSyncDirty = false;
 
   /// 영상 타일 목록이 갱신될 때 UI에 알린다(MediaProvider가 설정).
@@ -137,6 +140,7 @@ class MediaManager {
     }
     _remoteVideoStreams.clear();
     _remoteVideoTrackOrder.clear();
+    _inactiveVideoTracks.clear();
     _remoteSessions.clear();
     
     // 렌더러 정리
@@ -403,6 +407,7 @@ class MediaManager {
             for (final track in stream.getVideoTracks()) {
               final trackId = track.id;
               if (trackId == null || trackId.isEmpty) continue;
+              if (_inactiveVideoTracks.contains(trackId)) continue;
               tracks[trackId] = track;
               sourceStreams[trackId] = stream;
             }
@@ -449,6 +454,33 @@ class MediaManager {
       } while (_videoSyncDirty);
     } finally {
       _videoSyncRunning = false;
+    }
+  }
+
+  /// 현재 수신 중인 영상 트랙만 타일로 유지한다(B3/F4).
+  ///
+  /// [active]에 없는 기존 트랙은 비활성으로 표시해 타일에서 내린다.
+  /// 다시 수신되면(active에 포함) 자동 복귀한다.
+  void retainRemoteVideoTracks(Set<String> active) {
+    var changed = false;
+    final known = <String>{};
+    for (final streams in _remoteSessions.values) {
+      for (final stream in streams) {
+        for (final track in stream.getVideoTracks()) {
+          final id = track.id;
+          if (id != null && id.isNotEmpty) known.add(id);
+        }
+      }
+    }
+    for (final id in known) {
+      final isActive = active.contains(id);
+      if (isActive && _inactiveVideoTracks.remove(id)) changed = true;
+      if (!isActive && _inactiveVideoTracks.add(id)) changed = true;
+    }
+    if (changed) {
+      AppLogger.instance.d('remote video tiles active=${active.length} '
+          'inactive=${_inactiveVideoTracks.length}');
+      unawaited(_syncRemoteVideoStreams());
     }
   }
 
@@ -529,6 +561,7 @@ class MediaManager {
     for (final sessionId in List<String>.from(_remoteSessions.keys)) {
       await _removeRemoteStream(sessionId);
     }
+    _inactiveVideoTracks.clear();
     await _syncRemoteVideoStreams();
     _rebindAllRemoteRenderers();
   }

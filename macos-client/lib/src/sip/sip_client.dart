@@ -701,16 +701,42 @@ class KibalSipClient implements SipUaHelperListener {
   }
 
   /// RTP 수신량 진단 로그 (T-C: 오디오가 실제로 흐르는지 확인).
+  /// 원격 영상 트랙별 수신 바이트 추적(유효 트랙 판정, B3/F4)
+  final Map<String, int> _videoTrackBytes = {};
+  final Map<String, DateTime> _videoTrackLastGrowth = {};
+  final Map<String, DateTime> _videoTrackFirstSeen = {};
+  int _summaryAudioBase = 0;
+  int _summaryVideoBase = 0;
+  int _probeTicks = 0;
+
+  static const Duration _trackStaleAfter = Duration(seconds: 15);
+  static const int _summaryEveryTicks = 6; // 5초 x 6 = 30초
+
+  /// RTP 수신량 진단 + 유효 영상 트랙 판정 + 30초 INFO 요약.
+  ///
+  /// - 5초 DEBUG: 기존 `SIP stats inbound` (로컬 정밀 분석용)
+  /// - 30초 INFO: `SIP media summary` (기본 업로드 모드에서도 서버 진단/하트비트)
+  /// - 유효 트랙: 최근 15초 내 bytesReceived가 증가한 영상 트랙 → UI 타일 정리
   void _startStatsProbe(Call call) {
     _statsTimer?.cancel();
+    _videoTrackBytes.clear();
+    _videoTrackLastGrowth.clear();
+    _videoTrackFirstSeen.clear();
+    _summaryAudioBase = 0;
+    _summaryVideoBase = 0;
+    _probeTicks = 0;
     _statsTimer = Timer.periodic(const Duration(seconds: 5), (_) async {
       final pc = call.peerConnection;
       if (pc == null) return;
       try {
         final reports = await pc.getStats();
+        final now = DateTime.now();
         var audioBytes = 0;
         var videoBytes = 0;
         var audioPackets = 0;
+        var audioLost = 0;
+        var identified = 0;
+        final seen = <String>{};
         for (final report in reports) {
           if (report.type != 'inbound-rtp') continue;
           final values = report.values;
@@ -720,13 +746,65 @@ class KibalSipClient implements SipUaHelperListener {
           if (kind == 'audio') {
             audioBytes += bytes;
             audioPackets += packets;
+            audioLost += (values['packetsLost'] as num?)?.toInt() ?? 0;
           } else if (kind == 'video') {
             videoBytes += bytes;
+            final trackId = values['trackIdentifier'] as String?;
+            if (trackId == null || trackId.isEmpty) continue;
+            identified++;
+            seen.add(trackId);
+            _videoTrackFirstSeen.putIfAbsent(trackId, () => now);
+            final prev = _videoTrackBytes[trackId];
+            if (prev == null || bytes > prev) {
+              _videoTrackLastGrowth[trackId] = now;
+            }
+            _videoTrackBytes[trackId] = bytes;
           }
         }
         AppLogger.instance.d('SIP stats inbound '
             'audioBytes=$audioBytes audioPackets=$audioPackets '
             'videoBytes=$videoBytes');
+
+        // 유효 영상 트랙: 최근 15초 내 수신 증가 또는 막 등장한 트랙(유예)
+        if (identified > 0) {
+          final active = <String>{};
+          for (final id in seen) {
+            final grew = _videoTrackLastGrowth[id];
+            final first = _videoTrackFirstSeen[id]!;
+            if ((grew != null && now.difference(grew) < _trackStaleAfter) ||
+                now.difference(first) < _trackStaleAfter) {
+              active.add(id);
+            }
+          }
+          _emitEvent(SipEvent(
+            type: SipEventType.call,
+            data: {
+              'action': 'activeTracks',
+              'sessionId': call.id,
+              'trackIds': active.toList(),
+            },
+          ));
+        }
+
+        // 30초 INFO 요약(하트비트 겸용)
+        _probeTicks++;
+        if (_probeTicks % _summaryEveryTicks == 0) {
+          final dA = audioBytes - _summaryAudioBase;
+          final dV = videoBytes - _summaryVideoBase;
+          _summaryAudioBase = audioBytes;
+          _summaryVideoBase = videoBytes;
+          final activeCount = seen.where((id) {
+            final g = _videoTrackLastGrowth[id];
+            return g != null && now.difference(g) < _trackStaleAfter;
+          }).length;
+          final ice = pc.iceConnectionState?.toString().split('.').last ?? '-';
+          AppLogger.instance.i('SIP media summary 30s '
+              'audioKB=${(dA / 1024).toStringAsFixed(0)} '
+              'videoKB=${(dV / 1024).toStringAsFixed(0)} '
+              'videoTracks=$activeCount/${seen.length} '
+              'audioLost=$audioLost ice=$ice'
+              '${dA <= 0 ? ' WARN_NO_AUDIO' : ''}');
+        }
       } catch (e) {
         AppLogger.instance.w('SIP stats 수집 실패: $e');
       }

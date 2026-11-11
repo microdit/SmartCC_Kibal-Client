@@ -68,6 +68,10 @@ class AppConstants {
   
   static const String conferenceRoom = '6000';
 
+  /// 회의실(ConfBridge) 번호 판정: 6000~6999 → 다자간 화면으로 진입 (B1/F1)
+  static bool isConferenceRoom(String target) =>
+      RegExp(r'^6\d{3}$').hasMatch(target.trim());
+
   //--------------------------------------------------------------------------
   // OPS 콘솔 (원격 로그 수집)
   //--------------------------------------------------------------------------

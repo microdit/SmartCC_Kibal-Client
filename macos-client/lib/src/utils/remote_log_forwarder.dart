@@ -256,6 +256,34 @@ class RemoteLogForwarder {
     bool rotated = false,
     String? extension,
   }) async {
+    // F6: keep-alive 연결이 서버에서 닫힌 경우(HttpException 등) 새 연결로 1회 즉시 재시도
+    for (var attempt = 0; attempt < 2; attempt++) {
+      final result = await _postOnce(
+        lines: lines,
+        session: session,
+        offset: offset,
+        nextOffset: nextOffset,
+        rotated: rotated,
+        extension: extension,
+        quiet: attempt == 0,
+      );
+      if (result != null) return result;
+      _client?.close(force: true);
+      _client = null;
+    }
+    return false;
+  }
+
+  /// 반환: true=성공, false=HTTP 오류(재시도 무의미), null=연결 오류(재시도 대상)
+  Future<bool?> _postOnce({
+    required List<String> lines,
+    required String session,
+    required int offset,
+    required int nextOffset,
+    required bool rotated,
+    required String? extension,
+    required bool quiet,
+  }) async {
     final url = settings.url;
     if (url.isEmpty) return false;
     try {
@@ -294,8 +322,9 @@ class RemoteLogForwarder {
       _recordFailure('http=${response.statusCode}');
       return false;
     } catch (e) {
+      if (quiet) return null; // 첫 시도 연결 오류는 조용히 새 연결로 재시도
       _recordFailure(e.runtimeType.toString());
-      return false;
+      return null;
     }
   }
 

@@ -513,8 +513,12 @@ class _DialerScreenState extends State<DialerScreen> {
         details: {'target': target, 'error': sipProvider.error});
 
     if (success) {
-      // 통화 화면으로 이동
-      context.push('/call', extra: target);
+      // 회의실 번호는 다자간(참가자 카드) 화면, 그 외는 1:1 통화 화면 (B1/F1)
+      if (AppConstants.isConferenceRoom(target)) {
+        context.push('/conference');
+      } else {
+        context.push('/call', extra: target);
+      }
     } else {
       _showErrorDialog(context, '통화 시작에 실패했습니다: ${sipProvider.error}');
     }

@@ -446,6 +446,7 @@ class SipProvider with ChangeNotifier {
               _currentCallTarget = null;
               break;
             case 'stream':
+            case 'activeTracks':
               _pendingMediaEvents.add(Map<String, dynamic>.from(data));
               break;
           }

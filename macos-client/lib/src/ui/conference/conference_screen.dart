@@ -10,7 +10,11 @@ import '../../utils/constants.dart';
 ///
 /// 회의실 번호(기본 6000)로 참가하고, 로컬/원격(브리지 믹스) 영상을 표시합니다.
 class ConferenceView extends StatefulWidget {
-  const ConferenceView({super.key});
+  const ConferenceView({super.key, this.autoClose = false});
+
+  /// 다이얼러에서 회의실 번호로 push된 화면이면 true → 통화 종료 시 자동 닫힘.
+  /// (회의 탭에 상주하는 인스턴스는 false)
+  final bool autoClose;
 
   @override
   State<ConferenceView> createState() => _ConferenceViewState();
@@ -20,8 +24,11 @@ class _ConferenceViewState extends State<ConferenceView> {
   final TextEditingController _roomController =
       TextEditingController(text: AppConstants.conferenceRoom);
 
-  /// 0 = 내 영상, 1..N = 원격 타일. 원격이 있으면 기본으로 첫 원격을 크게 본다.
-  int _selectedTile = 1;
+  /// 선택된 원격 카드 인덱스(0..N-1). -1 = 내 영상 크게 보기.
+  int _selectedRemote = 0;
+
+  /// 다이얼러에서 회의실 번호로 진입(push)한 경우: 통화 종료 시 자동으로 닫는다.
+  bool _wasInCall = false;
 
   @override
   void initState() {
@@ -38,21 +45,24 @@ class _ConferenceViewState extends State<ConferenceView> {
 
   void _handleSipChange() {
     if (!mounted) return;
+    final sp = context.read<SipProvider>();
+    if (sp.isInCall) {
+      _wasInCall = true;
+    } else if (_wasInCall) {
+      _wasInCall = false;
+      final nav = Navigator.of(context);
+      if (widget.autoClose && nav.canPop()) {
+        AppLogger.instance.ui('CONFERENCE', 'autoCloseOnCallEnd');
+        nav.pop();
+        return;
+      }
+    }
 
     final sipProvider = context.read<SipProvider>();
     final mediaProvider = context.read<MediaProvider>();
 
     for (final event in sipProvider.drainMediaEvents()) {
-      if (event['action'] != 'stream') continue;
-
-      final stream = event['stream'];
-      final originator = event['originator'] as String? ?? '';
-      if (stream is MediaStream && originator.contains('remote')) {
-        mediaProvider.addRemoteStream(
-          stream,
-          event['sessionId'] as String? ?? 'conference',
-        );
-      }
+      mediaProvider.applySipMediaEvent(event, fallbackSession: 'conference');
     }
   }
 
@@ -181,15 +191,14 @@ class _ConferenceViewState extends State<ConferenceView> {
     );
   }
 
+  /// 다자간 레이아웃: 큰 화면(선택 참가자) + 참가자 카드 목록 + 내 영상 PIP.
+  ///
+  /// - 원격 참가자는 카드(실시간 썸네일)로 나열, 클릭 시 큰 화면에 표시
+  /// - 내 영상은 우상단 PIP로 항상 표시(카드에서도 선택 가능)
+  /// - 같은 렌더러 텍스처를 큰 화면/썸네일이 공유(Texture 다중 표시)
   Widget _buildConferenceGrid(MediaProvider mediaProvider) {
     final remoteStreams = mediaProvider.remoteStreams;
-    final tiles = <_ConferenceTile>[
-      _ConferenceTile(
-        label: '내 영상',
-        renderer: mediaProvider.getLocalRenderer(),
-        stream: mediaProvider.localStream,
-        mirror: true,
-      ),
+    final remotes = <_ConferenceTile>[
       for (var i = 0; i < remoteStreams.length; i++)
         _ConferenceTile(
           label: '원격 ${i + 1}',
@@ -197,50 +206,139 @@ class _ConferenceViewState extends State<ConferenceView> {
           stream: remoteStreams[i],
         ),
     ];
-    final selected = _selectedTile.clamp(0, tiles.length - 1);
-    final current = tiles[selected];
+    final local = _ConferenceTile(
+      label: '내 영상',
+      renderer: mediaProvider.getLocalRenderer(),
+      stream: mediaProvider.hasLocalVideo ? mediaProvider.localStream : null,
+      mirror: true,
+    );
 
-    return Column(
-      children: [
-        Expanded(
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
-            child: _buildVideoTile(
-              label: current.label,
-              renderer: current.renderer,
-              stream: current.stream,
-              mirror: current.mirror,
-            ),
-          ),
-        ),
-        if (remoteStreams.isEmpty)
-          const Padding(
-            padding: EdgeInsets.only(top: 6),
-            child: Text(
-              '원격 영상 수신 준비중',
-              style: TextStyle(color: Colors.white70, fontSize: 12),
-            ),
-          ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-          child: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
+    if (_selectedRemote >= remotes.length) {
+      _selectedRemote = remotes.isEmpty ? 0 : remotes.length - 1;
+    }
+    final showLocalBig = _selectedRemote < 0 || remotes.isEmpty;
+    final big = showLocalBig ? local : remotes[_selectedRemote];
+
+    return Padding(
+      padding: const EdgeInsets.all(8),
+      child: Column(
+        children: [
+          Expanded(
+            child: Stack(
               children: [
-                for (var i = 0; i < tiles.length; i++)
-                  Padding(
-                    padding: const EdgeInsets.only(right: 8),
-                    child: ChoiceChip(
-                      label: Text(tiles[i].label),
-                      selected: selected == i,
-                      onSelected: (_) => setState(() => _selectedTile = i),
+                Positioned.fill(
+                  child: remotes.isEmpty && !showLocalBig
+                      ? _waitingView()
+                      : _buildVideoTile(
+                          label: big.label,
+                          renderer: big.renderer,
+                          stream: big.stream,
+                          mirror: big.mirror,
+                        ),
+                ),
+                if (remotes.isEmpty)
+                  const Positioned(
+                    left: 0,
+                    right: 0,
+                    top: 12,
+                    child: Center(
+                      child: Chip(
+                        label: Text('원격 영상 수신 준비중',
+                            style: TextStyle(fontSize: 12)),
+                      ),
+                    ),
+                  ),
+                if (!showLocalBig)
+                  Positioned(
+                    right: 12,
+                    top: 12,
+                    width: 180,
+                    height: 110,
+                    child: GestureDetector(
+                      onTap: () => setState(() => _selectedRemote = -1),
+                      child: _buildVideoTile(
+                        label: local.label,
+                        renderer: local.renderer,
+                        stream: local.stream,
+                        mirror: true,
+                        compact: true,
+                      ),
                     ),
                   ),
               ],
             ),
           ),
+          const SizedBox(height: 8),
+          SizedBox(
+            height: 118,
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              children: [
+                for (var i = 0; i < remotes.length; i++)
+                  _participantCard(
+                    tile: remotes[i],
+                    selected: !showLocalBig && _selectedRemote == i,
+                    onTap: () {
+                      AppLogger.instance.ui('CONFERENCE', 'participantSelected',
+                          params: {'index': i + 1});
+                      setState(() => _selectedRemote = i);
+                    },
+                  ),
+                _participantCard(
+                  tile: local,
+                  selected: showLocalBig,
+                  onTap: () => setState(() => _selectedRemote = -1),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _waitingView() {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.black,
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: const Center(
+        child: Text('원격 영상 수신 준비중',
+            style: TextStyle(color: Colors.white54)),
+      ),
+    );
+  }
+
+  Widget _participantCard({
+    required _ConferenceTile tile,
+    required bool selected,
+    required VoidCallback onTap,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.only(right: 8),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(10),
+        child: Container(
+          width: 170,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(
+              color: selected ? Colors.blueAccent : Colors.white24,
+              width: selected ? 3 : 1,
+            ),
+          ),
+          padding: const EdgeInsets.all(2),
+          child: _buildVideoTile(
+            label: tile.label,
+            renderer: tile.renderer,
+            stream: tile.stream,
+            mirror: tile.mirror,
+            compact: true,
+          ),
         ),
-      ],
+      ),
     );
   }
 
@@ -249,6 +347,7 @@ class _ConferenceViewState extends State<ConferenceView> {
     required RTCVideoRenderer? renderer,
     required MediaStream? stream,
     bool mirror = false,
+    bool compact = false,
   }) {
     return Container(
       decoration: BoxDecoration(

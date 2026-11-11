@@ -553,7 +553,7 @@ class RTCSession extends EventManager implements Owner {
 
     // Remove audio from mediaStream if suggested by mediaConstraints.
     if (mediaStream != null && mediaConstraints['audio'] == false) {
-      tracks = mediaStream.getAudioTracks();
+      tracks = mediaStream.getAudioTracks().toList(); // B2: 순회 중 수정 방지(복사본)
       for (MediaStreamTrack track in tracks) {
         mediaStream.removeTrack(track);
       }
@@ -561,7 +561,7 @@ class RTCSession extends EventManager implements Owner {
 
     // Remove video from mediaStream if suggested by mediaConstraints.
     if (mediaStream != null && mediaConstraints['video'] == false) {
-      tracks = mediaStream.getVideoTracks();
+      tracks = mediaStream.getVideoTracks().toList(); // B2: 순회 중 수정 방지(복사본)
       for (MediaStreamTrack track in tracks) {
         mediaStream.removeTrack(track);
       }

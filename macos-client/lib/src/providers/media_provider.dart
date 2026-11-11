@@ -265,6 +265,27 @@ class MediaProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  /// SIP 미디어 이벤트(stream/activeTracks) 공통 처리.
+  /// 통화/회의 화면이 같은 규칙으로 MediaManager에 반영하도록 한 곳에 모은다.
+  void applySipMediaEvent(Map<String, dynamic> event, {String fallbackSession = 'remote'}) {
+    final action = event['action'];
+    if (action == 'stream') {
+      final stream = event['stream'];
+      final originator = event['originator'] as String? ?? '';
+      if (stream is MediaStream && originator.contains('remote')) {
+        addRemoteStream(stream, event['sessionId'] as String? ?? fallbackSession);
+      }
+    } else if (action == 'activeTracks') {
+      final ids = (event['trackIds'] as List?)?.cast<String>() ?? const <String>[];
+      retainRemoteVideoTracks(ids);
+    }
+  }
+
+  /// 수신 중인 영상 트랙만 타일로 유지 (SIP 통계 기반)
+  void retainRemoteVideoTracks(Iterable<String> trackIds) {
+    _mediaManager.retainRemoteVideoTracks(trackIds.toSet());
+  }
+
   /// 원격 스트림 제거
   void removeRemoteStream(String sessionId) {
     AppLogger.instance.evt('MEDIA', 'remoteStreamRemoved',

@@ -492,16 +492,7 @@ class _CallScreenState extends State<CallScreen> {
 
     // SIP 엔진에서 전달된 원격 스트림을 렌더러에 연결
     for (final event in sipProvider.drainMediaEvents()) {
-      if (event['action'] != 'stream') continue;
-
-      final stream = event['stream'];
-      final originator = event['originator'] as String? ?? '';
-      if (stream is MediaStream && originator.contains('remote')) {
-        mediaProvider.addRemoteStream(
-          stream,
-          event['sessionId'] as String? ?? 'remote',
-        );
-      }
+      mediaProvider.applySipMediaEvent(event, fallbackSession: 'remote');
     }
 
     if (sipProvider.isInCall) {

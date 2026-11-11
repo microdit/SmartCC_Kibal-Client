@@ -30,7 +30,7 @@ final _router = GoRouter(
     ),
     GoRoute(
       path: '/conference',
-      builder: (context, state) => const ConferenceView(),
+      builder: (context, state) => const ConferenceView(autoClose: true),
     ),
     GoRoute(
       path: '/mediaTest',
@@ -77,7 +77,9 @@ class _KibalAppState extends State<KibalApp> {
     if (navigator == null) return;
     if (!sipProvider.hasIncomingCall) {
       if (_incomingDialogShowing) {
-        Navigator.of(context, rootNavigator: true).maybePop();
+        // B2: 이 State의 context는 MaterialApp.router 위에 있어 Navigator가 없다.
+        // 이미 확보한 루트 네비게이터로 닫는다.
+        navigator.maybePop();
         _incomingDialogShowing = false;
       }
       return;
