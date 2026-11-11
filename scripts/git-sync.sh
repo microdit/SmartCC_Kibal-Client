@@ -63,7 +63,18 @@ report() {
 push_remote() {
     local remote="$1" branch="$2"
     echo "    Pushing to $remote/$branch..."
-    if git push "$remote" "$branch" 2>/dev/null; then
+    # SSH 원격(NAS) 접근 불가 시 즉시 건너뜀(서버 IP 대역 변경 시 nas2 미도달 → push 무한 대기 방지)
+    local url host port
+    url=$(git remote get-url --push "$remote" 2>/dev/null)
+    if [[ "$url" == ssh://* ]]; then
+        host=$(echo "$url" | sed -E 's#ssh://([^@]*@)?([^:/]+).*#\2#')
+        port=$(echo "$url" | sed -nE 's#ssh://([^@]*@)?[^:/]+:([0-9]+)/.*#\2#p'); port=${port:-22}
+        if ! nc -z -G 3 "$host" "$port" >/dev/null 2>&1; then
+            echo "    SKIP: $remote 접근 경로 없음($host:$port) — 현재 네트워크 대역에서 NAS 미도달"
+            return 1
+        fi
+    fi
+    if GIT_SSH_COMMAND="ssh -o ConnectTimeout=5 -o BatchMode=yes" git push "$remote" "$branch" 2>/dev/null; then
         echo "    $remote: OK"
         return 0
     else

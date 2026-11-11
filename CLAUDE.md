@@ -50,6 +50,8 @@
 | `dev` | 개발 환경 (Local) | `ssh://atom@nas2:4949/var/services/homes/atom/gitRepo/SmartCC_Kibal-Client.git` |
 | `prd` | 운영 환경 (NAS) | `ssh://atom@nas2:4949/var/services/homes/atom/gitRepo/SmartCC_Kibal-Client_prd.git` |
 
+> **2026-11-11 네트워크 참고**: 서버 MacPro가 유선 `192.168.0.3`(192.168.0.0/24)으로 전환됨. PRD 시놀로지 NAS(`nas2`=192.168.11.2)는 이 대역에서 **접근 경로 없음** → `dev`/`prd` push·PRD 배포 불가, GitHub만 동기화. `git-sync.sh`는 미도달 원격을 SKIP. DEV 배포는 로컬 Docker(`deploy/dev/up.sh`).
+
 > **2026-11-09 동기화 참고**: SSH(`nas2` → `192.168.11.2:4949`) 자체는 키 인증으로 접속되나, `dev`/`prd` URL의 `/var/services/homes/atom/gitRepo/...` 경로가 존재하지 않거나 권한 문제로 Push 불가. NAS의 실제 Git 저장소 경로를 확인 후 remote URL을 갱신해야 한다. GitHub(`origin`)는 정상 동기화됨.
 
 ---
