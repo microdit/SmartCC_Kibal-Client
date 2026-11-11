@@ -82,5 +82,6 @@
 - **v0.0.14+14 다자간 버그 수정**: 6000 회의 카드형 참가자 선택 화면, 수신 수락 크래시 2건, 유효 트랙 정리, 30초 미디어 요약 — 보고서 `docs/보고서/20261111_버그분석보고서_v1.0.md` / `20261111_버그수정완료보고서_v1.0.md`
 - **v0.0.15+15 1:1 수정**: 수신측 영상 판정(단방향 영상), 갱신 타임아웃 통화 유지, 영상 30초 통계, 로그 중복 제거, OPS 서버 이벤트(`ops_client_logs.sh server`) — `docs/보고서/1vs1영상통화버그분석보고서_v1.2.md`. 서버 codec_opus 추가로 opus 우선 적용(WebRTC 엔드포인트)
 - **서버 IP 변경 대응**: OPS `/api/client/config` + 로그인 화면 "서버 설정 갱신"(`server_config.dart`), 서버 `deploy/dev/update-server-ip.sh --check`/적용(수동 운영, launchd 감시는 ~/Downloads TCC로 미사용). 가이드: 서버 리포 `wiki/03_Guides/서버IP변경_자동갱신_가이드_20261111.md`
+- **v0.0.16+16 (2026-11-12)**: 서버 유선 192.168.0.3 전환 후 **1:1·다자간 통화 성공**. 빌드/발행 `macos-client/scripts/release_macos.sh`(DMG Applications 링크 결함 수정)
 - 상세: `wiki/06_Reports/20261111_원격오디오_ICE문제_개발보고서_v1.0.md`
 - 다음 세션: `wiki/04_Prompts/20261111_원격오디오_ICE_후속작업프롬프트_v1.0.md`
