@@ -9,6 +9,7 @@ import '../../sip/sip_client.dart';
 import '../../utils/app_logger.dart';
 import '../../utils/constants.dart';
 import '../../utils/formatters.dart';
+import '../../utils/server_config.dart';
 
 /// 로그인/SIP 등록 화면
 /// 
@@ -48,6 +49,8 @@ class _LoginScreenState extends State<LoginScreen> {
   
   // 초기 로드 완료 여부
   bool _isInitialLoad = true;
+  bool _refreshingConfig = false;
+  String? _configStatus;
 
   @override
   void initState() {
@@ -56,9 +59,14 @@ class _LoginScreenState extends State<LoginScreen> {
     // 초기 값 설정
     _usernameController.text = '';
     _passwordController.text = '';
-    _domainController.text = AppConstants.defaultDomain;
-    _portController.text = AppConstants.defaultSipPort.toString();
-    _wsServerController.text = AppConstants.defaultWsServer;
+    // 저장된 서버 설정(마지막 OPS 갱신값) → 없으면 기본값
+    final saved = ServerConfigService.instance.current;
+    _domainController.text = saved.sipDomain;
+    _portController.text = saved.sipPort.toString();
+    _wsServerController.text = saved.wsServer;
+
+    // 화면 진입 시 OPS에서 최신 서버 주소 자동 갱신(서버 IP 변경 대응)
+    WidgetsBinding.instance.addPostFrameCallback((_) => _refreshServerConfig(auto: true));
     
     // 포커스 리스너
     _usernameFocus.addListener(() {
@@ -366,16 +374,77 @@ class _LoginScreenState extends State<LoginScreen> {
   // WebSocket Settings
   //--------------------------------------------------------------------------
   
+  Widget _buildServerConfigBar() {
+    final cfg = ServerConfigService.instance.current;
+    return Row(
+      children: [
+        Expanded(
+          child: Text(
+            _configStatus ??
+                '서버 설정: ${cfg.sipDomain} (${cfg.source == 'ops' ? 'OPS 갱신' : cfg.source == 'saved' ? '저장값' : '기본값'})',
+            style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+        TextButton.icon(
+          onPressed: _refreshingConfig ? null : () => _refreshServerConfig(auto: false),
+          icon: _refreshingConfig
+              ? const SizedBox(
+                  width: 14, height: 14, child: CircularProgressIndicator(strokeWidth: 2))
+              : const Icon(Icons.sync, size: 18),
+          label: const Text('서버 설정 갱신'),
+        ),
+      ],
+    );
+  }
+
+  /// OPS(/api/client/config)에서 서버 주소를 받아 도메인·WS 입력값을 갱신한다.
+  Future<void> _refreshServerConfig({required bool auto}) async {
+    if (_refreshingConfig) return;
+    setState(() {
+      _refreshingConfig = true;
+      _configStatus = 'OPS에서 서버 설정 확인 중…';
+    });
+    AppLogger.instance.ui('LOGIN', 'serverConfigRefresh', params: {'auto': auto});
+    final before = ServerConfigService.instance.current;
+    final cfg = await ServerConfigService.instance
+        .refresh(hintDomain: _domainController.text.trim());
+    if (!mounted) return;
+    setState(() {
+      _refreshingConfig = false;
+      if (cfg == null) {
+        _configStatus = '서버 설정 갱신 실패 — OPS 응답 없음(현재 입력값 사용)';
+        return;
+      }
+      final changed = !cfg.sameAddressAs(before) ||
+          _domainController.text.trim() != cfg.sipDomain ||
+          _wsServerController.text.trim() != cfg.wsServer;
+      _domainController.text = cfg.sipDomain;
+      _portController.text = cfg.sipPort.toString();
+      _wsServerController.text = cfg.wsServer;
+      _configStatus = changed
+          ? '서버 주소 갱신됨: ${cfg.sipDomain}'
+          : '서버 설정 최신: ${cfg.sipDomain}';
+    });
+    if (cfg != null && !auto && mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('서버 설정 적용: ${cfg.sipDomain} / ${cfg.wsServer}')),
+      );
+    }
+  }
+
   Widget _buildWebSocketSettings() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        const SizedBox(height: AppConstants.spacingMd),
+        const SizedBox(height: AppConstants.spacingSm),
+        _buildServerConfigBar(),
+        const SizedBox(height: AppConstants.spacingSm),
         TextFormField(
           controller: _wsServerController,
           decoration: const InputDecoration(
             labelText: 'WebSocket 서버',
-            hintText: 'ws://192.168.11.2:8088/ws',
+            hintText: 'ws://<서버IP>:8088/ws (서버 설정 갱신으로 자동 입력)',
             prefixIcon: Icon(Icons.web_asset_outlined),
             border: OutlineInputBorder(),
           ),
