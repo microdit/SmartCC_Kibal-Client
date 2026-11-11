@@ -283,10 +283,12 @@ class KibalSipClient implements SipUaHelperListener {
       final voiceOnly = !await _canUseVideo(mediaStream);
       AppLogger.instance.i(
           'SIP call -> $target voiceOnly=$voiceOnly hasLocalStream=${mediaStream != null}');
+      // ADR-006: 카메라 없음 = 송신 없음. 영상은 recvonly로 계속 수신한다.
       final ok = await _helper.call(
         target,
         voiceOnly: voiceOnly,
         mediaStream: mediaStream,
+        customOptions: voiceOnly ? _receiveVideoOptions() : null,
       );
       if (!ok) {
         throw Exception('통화 요청이 거부됨');
@@ -331,8 +333,15 @@ class KibalSipClient implements SipUaHelperListener {
       final voiceOnly = !peerOffersVideo || !canVideo;
       AppLogger.instance.i('SIP accept <- ${_targetOf(call)} voiceOnly=$voiceOnly '
           'peerOffersVideo=$peerOffersVideo localVideo=$canVideo');
+      // ADR-006: 상대가 영상을 제안했는데 로컬 카메라가 없으면 recvonly로 수락
+      final recvOnlyVideo = peerOffersVideo && !canVideo;
+      final answerOptions = _helper.buildCallOptions(voiceOnly);
+      if (recvOnlyVideo) {
+        MapHelper.merge(answerOptions, _receiveVideoOptions());
+      }
+      AppLogger.instance.i('SIP accept video=${voiceOnly ? (recvOnlyVideo ? 'recvonly' : 'none') : 'sendrecv'}');
       call.answer(
-        _helper.buildCallOptions(voiceOnly),
+        answerOptions,
         mediaStream: mediaStream,
       );
       _currentSession?.updateState(SipSessionState.established);
@@ -605,8 +614,51 @@ class KibalSipClient implements SipUaHelperListener {
     try {
       final accepted = await accept(<String, dynamic>{});
       AppLogger.instance.i('SIP re-INVITE 응답 전송 accepted=$accepted');
+      unawaited(Future<void>.delayed(
+          const Duration(milliseconds: 500), _logTransceivers));
     } catch (error) {
       AppLogger.instance.e('SIP re-INVITE 수락 실패: $error');
+    }
+  }
+
+  /// ADR-006: 영상 송신 없이 수신만(recvonly) 협상하는 옵션 오버라이드
+  Map<String, dynamic> _receiveVideoOptions() => <String, dynamic>{
+        'rtcOfferConstraints': <String, dynamic>{
+          'mandatory': <String, dynamic>{
+            'OfferToReceiveAudio': true,
+            'OfferToReceiveVideo': true,
+          },
+        },
+        'rtcAnswerConstraints': <String, dynamic>{
+          'mandatory': <String, dynamic>{
+            'OfferToReceiveAudio': true,
+            'OfferToReceiveVideo': true,
+          },
+        },
+      };
+
+  /// 진단: transceiver별 kind/direction 요약 1줄
+  Future<void> _logTransceivers() async {
+    final pc = _currentCall?.peerConnection;
+    if (pc == null) return;
+    try {
+      final list = await pc.getTransceivers();
+      final parts = <String>[];
+      for (final t in list) {
+        String dir = '?';
+        String cur = '?';
+        try {
+          dir = (await t.getDirection()).toString().split('.').last;
+        } catch (_) {}
+        try {
+          cur = (await t.getCurrentDirection())?.toString().split('.').last ?? '-';
+        } catch (_) {}
+        final kind = t.receiver.track?.kind ?? t.sender.track?.kind ?? '?';
+        parts.add('${t.mid}:$kind:$dir/$cur');
+      }
+      AppLogger.instance.i('SIP transceivers ${parts.join(' ')}');
+    } catch (e) {
+      AppLogger.instance.w('SIP transceivers 조회 실패: $e');
     }
   }
 
