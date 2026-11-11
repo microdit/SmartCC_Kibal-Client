@@ -3,11 +3,50 @@
 | 항목 | 값 |
 |------|---|
 | **작성일** | 2026-10-29 |
-| **버전** | v1.0 |
-| **상태** | 참고 자료 (향후 네이티브 앱 필요 시) |
-| **관련** | [[wiki/02_Design/sip-client-design]], [[wiki/02_Design/cross-platform-client-design]] |
+| **버전** | v3.0 (2026-11-12 현행화) |
+| **상태** | 구현·운영 중 — v0.0.17 (Flutter + sip_ua 포크 + flutter_webrtc) |
+| **관련** | [[wiki/02_Design/sip-client-design]], [[wiki/02_Design/cross-platform-client-design]], ADR-004~006 |
 
 ---
+
+## 0. 현행 아키텍처 (2026-11-12 기준, 최우선 참조)
+
+> 아래 1~8장의 Swift/PJSIP·flutter_sip 설계는 **이력 자료**다. 실제 구현은 본 장을 따른다.
+
+| 영역 | 현행 구현 | 근거 |
+|------|----------|------|
+| 앱 | Flutter macOS desktop (`macos-client/`), GoRouter, Provider | ADR-004 |
+| SIP | `sip_ua` **로컬 포크** `macos-client/packages/sip_ua` (WS 8088) | ADR-004, ADR-005 |
+| 미디어 | `flutter_webrtc 1.6.3`, unified-plan, DTLS-SRTP, opus 우선 | G6 |
+| 서버 | Asterisk 22 LTS Docker(`kibal-dev-asterisk`), ConfBridge SFU 6000 | 서버 리포 |
+| 서버 주소 | OPS `GET /api/client/config` → `server_config.dart`(로그인 화면 자동/수동 갱신) | 2026-11-11 |
+| 로그 | `RemoteLogForwarder` → OPS `POST /api/client-logs`(X-Client-Key, offset 재전송) | v0.0.12~13 |
+| 빌드/발행 | `scripts/build_macos.sh`, `scripts/release_macos.sh` | 2026-11-12 |
+
+### 0.1 핵심 컴포넌트 (파일)
+
+| 파일 | 역할 |
+|------|------|
+| `lib/src/sip/sip_client.dart` | 등록/발신/수신, re-INVITE 자동 수락(H5), 원격 트랙 복구(H1), 30초 미디어·영상 요약, ADR-006 recvonly, transceiver 진단 |
+| `packages/sip_ua/lib/src/rtc_session.dart` | 포크 수정: ICE 후보 172.16/12 보정(ADR-005), G1 수신 영상 판정, G2 answer 스트림 분리, G3 in-dialog 타임아웃 허용 |
+| `lib/src/media/media_manager.dart` | 트랙별 렌더 스트림, 최신 3타일, 유효 트랙 정리 |
+| `lib/src/ui/conference/conference_screen.dart` | 6000~6999 카드형 회의 화면, 참가자 선택 |
+| `lib/src/utils/server_config.dart` | OPS 서버 설정 탐색(저장값→입력 도메인→MacPro.local→기본) |
+| `lib/src/utils/remote_log_forwarder.dart` | 로그 업로드(모드: 끄기~전체), `server-config.json`/offset 관리 |
+
+### 0.2 통화 흐름 요약
+
+1. 로그인 화면 → OPS `/api/client/config`로 `sip_domain`/`ws_server` 갱신 → REGISTER
+2. 발신: 카메라 있으면 sendrecv, **없으면 audio + video recvonly**(ADR-006, v0.0.17)
+3. ConfBridge 입장 → 서버 re-INVITE(영상 스트림 추가) → 자동 수락 → 참가자 타일
+4. 30초마다 `SIP media summary`/`SIP video summary` → OPS
+
+### 0.3 네트워크 전제 (2026-11-12)
+
+- 서버 MacPro 유선 `192.168.0.3`(192.168.0.0/24), `MEDIA_ADDRESS=192.168.0.3`
+- Docker Desktop NAT로 서버에서 보이는 단말 주소는 `172.19.0.1`(정상), ICE 후보는 ADR-005로 보정
+- PRD NAS(`nas2`=192.168.11.2)는 현 대역에서 미도달
+
 
 ## 1. 설계 배경
 
@@ -193,6 +232,7 @@ xcrun notarytool submit KibalClient.dmg \
 |------|------|--------|-----------|
 | v1.0 | 2026-10-29 | Kibal Team | 초기 설계 (참고 자료) |
 | v2.0 | 2026-11-08 | TVS (Mistral Vibe) | **Flutter 기반 macOS/Windows 구현으로 변경** · 개발 단계별로 갱신 |
+| v3.0 | 2026-11-12 | Claude | **0장 현행 아키텍처 추가**: sip_ua 포크, OPS 서버 설정·로그 수집, ADR-006, 빌드/발행 스크립트 |
 
 
 ## 5. 핵심 컴포넌트
