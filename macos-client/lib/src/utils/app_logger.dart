@@ -12,8 +12,14 @@ class AppLogger {
   AppLogger._();
   static final AppLogger instance = AppLogger._();
 
-  IOSink? _sink;
+  /// 동기 append 핸들. IOSink 버퍼링 없이 즉시 디스크 반영 →
+  /// 원격 업로더가 offset 기준으로 바로 읽을 수 있다.
+  RandomAccessFile? _raf;
   File? _file;
+
+  /// 현재 로컬 IP(원격 업로더 식별용)
+  static String get localIp => _localIp;
+  static String get identity => _identity;
   final _buffer = <String>[];
   final _controller = StreamController<String>.broadcast();
 
@@ -81,7 +87,7 @@ class AppLogger {
         file.renameSync(prevLogFilePath);
       }
       _file = file;
-      _sink = file.openWrite(mode: FileMode.append);
+      _raf = file.openSync(mode: FileMode.append);
       await discoverLocalIp();
       i('AppLogger 초기화 완료 file=$logFilePath identity=$_identity mode=${kDebugMode ? 'debug' : 'release'}');
     } catch (e) {
@@ -162,39 +168,37 @@ class AppLogger {
     if (_buffer.length > maxBufferLines) {
       _buffer.removeRange(0, _buffer.length - maxBufferLines);
     }
-    unawaited(_sinkWrite(line, stamp, level, message));
+    // 파일에 먼저 동기 기록한 뒤 스트림 통지(업로더가 즉시 읽을 수 있게)
+    _fileWrite(line);
+    logToConsole('${stamp.substring(11)} $level $message');
     _controller.add(line);
   }
 
-  Future<void> _sinkWrite(
-      String line, String stamp, String level, String message) async {
+  void _fileWrite(String line) {
     try {
-      final sink = _sink;
-      if (sink != null) sink.writeln(line);
-      await _rotateIfNeeded();
+      final raf = _raf;
+      if (raf != null) raf.writeStringSync('$line\n');
+      _rotateIfNeeded();
     } catch (_) {}
-    logToConsole('${stamp.substring(11)} $level $message');
   }
 
-  Future<void> _rotateIfNeeded() async {
+  void _rotateIfNeeded() {
     final file = _file;
     if (file == null) return;
     try {
-      final len = file.lengthSync();
+      final len = _raf?.lengthSync() ?? file.lengthSync();
       if (len < maxFileBytes) return;
-      // 파일 크기 초과 시 마지막 400행만 남기고 다시 씀
+      // 파일 크기 초과 시 마지막 400행만 남기고 다시 씀 (업로더는 길이 축소를 감지해 offset 리셋)
       final content = file.readAsLinesSync();
       final keep =
           content.sublist(content.length > 400 ? content.length - 400 : 0);
-      final rawSink = _sink;
-      if (rawSink != null) {
-        await rawSink.close();
-      }
-      _sink = file.openWrite(mode: FileMode.write); // truncate 모드
-      _sink?.writeln('--- [rotate] 크기 초과로 앞부분 잘림 ---');
+      _raf?.closeSync();
+      final buffer = StringBuffer('--- [rotate] 크기 초과로 앞부분 잘림 ---\n');
       for (final l in keep) {
-        _sink?.writeln(l);
+        buffer.writeln(l);
       }
+      file.writeAsStringSync(buffer.toString(), mode: FileMode.write);
+      _raf = file.openSync(mode: FileMode.append);
     } catch (_) {}
   }
 

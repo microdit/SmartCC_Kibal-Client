@@ -7,6 +7,7 @@ import '../../providers/media_provider.dart';
 import '../../utils/app_logger.dart';
 import '../../utils/constants.dart';
 import '../../utils/formatters.dart';
+import '../settings/remote_log_settings_dialog.dart';
 
 /// 다이얼러 화면
 /// 
@@ -102,6 +103,14 @@ class _DialerScreenState extends State<DialerScreen> {
               child: ListTile(
                 leading: Icon(Icons.mic_none),
                 title: Text('마이크/카메라 테스트'),
+                contentPadding: EdgeInsets.zero,
+              ),
+            ),
+            const PopupMenuItem(
+              value: 'remote_log',
+              child: ListTile(
+                leading: Icon(Icons.cloud_upload_outlined),
+                title: Text('로그 전송 설정'),
                 contentPadding: EdgeInsets.zero,
               ),
             ),
@@ -597,6 +606,9 @@ class _DialerScreenState extends State<DialerScreen> {
   
   Future<void> _handleMenuSelected(String value, BuildContext context) async {
     switch (value) {
+      case 'remote_log':
+        await showRemoteLogSettingsDialog(context);
+        break;
       case 'logout':
         final sipProvider = Provider.of<SipProvider>(context, listen: false);
         final mediaProvider = Provider.of<MediaProvider>(context, listen: false);

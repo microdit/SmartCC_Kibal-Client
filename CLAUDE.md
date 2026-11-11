@@ -75,6 +75,7 @@
 - **v1.5 실기(v0.0.8)**: H5 성공(`accepted=true`, `videoBytes` 증가, ICE 실패 0, 2분+ 유지)
 - **v1.6 실기(v0.0.10, 3자)**: H5/ICE 안정. stale 트랙 누적/타일 폭주 → v0.0.11에서 최신 3타일+선택 UI
 - **v0.0.11+11**: 참가자 영상 타일 선택/라벨/준비중 표시. **참가자 식별·1101 오디오 출력·3자 재검증 잔여**
-- **v0.0.12+12 클라이언트 로그 자동 수집**: `RemoteLogForwarder`가 로그를 OPS(`POST /api/client-logs`, X-Client-Key)로 배출. 에이전트 조회 `scripts/ops_client_logs.sh`(list/tail/follow), OPS 웹 "클라이언트 로그" 탭
+- **v0.0.12+12 클라이언트 로그 자동 수집**: `RemoteLogForwarder`가 로그를 OPS(`POST /api/client-logs`, X-Client-Key)로 배출. 에이전트 조회 `scripts/ops_client_logs.sh`(list/tail/grep/follow), OPS 웹 "클라이언트 로그" 탭
+- **v0.0.13+13 업로더 v2**: 앱 메뉴 "로그 전송 설정"에서 모드 선택(끄기/오류만/INFO/이벤트/INFO+이벤트/DEBUG/전체/사용자 지정), app.log offset 재전송으로 유실 0
 - 상세: `wiki/06_Reports/20261111_원격오디오_ICE문제_개발보고서_v1.0.md`
 - 다음 세션: `wiki/04_Prompts/20261111_원격오디오_ICE_후속작업프롬프트_v1.0.md`
