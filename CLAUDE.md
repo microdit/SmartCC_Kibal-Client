@@ -84,4 +84,5 @@
 - **서버 IP 변경 대응**: OPS `/api/client/config` + 로그인 화면 "서버 설정 갱신"(`server_config.dart`), 서버 `deploy/dev/update-server-ip.sh --check`/적용(수동 운영, launchd 감시는 ~/Downloads TCC로 미사용). 가이드: 서버 리포 `wiki/03_Guides/서버IP변경_자동갱신_가이드_20261111.md`
 - **v0.0.16+16 (2026-11-12)**: 서버 유선 192.168.0.3 전환 후 **1:1·다자간 통화 성공**. 빌드/발행 `macos-client/scripts/release_macos.sh`(DMG Applications 링크 결함 수정)
 - 상세: `wiki/06_Reports/20261111_원격오디오_ICE문제_개발보고서_v1.0.md`
+- **다음 과제(v0.0.17)**: 카메라 없는 1101도 참가자 영상 수신(recvonly) — 계획서 `wiki/01_Projects/20261112_음성전용참가자_영상수신_작업계획서_v1.0.md`, ADR-006
 - 다음 세션: `wiki/04_Prompts/20261111_원격오디오_ICE_후속작업프롬프트_v1.0.md`
