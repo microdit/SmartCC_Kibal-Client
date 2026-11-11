@@ -78,6 +78,6 @@
 - **v0.0.12+12 클라이언트 로그 자동 수집**: `RemoteLogForwarder`가 로그를 OPS(`POST /api/client-logs`, X-Client-Key)로 배출. 에이전트 조회 `scripts/ops_client_logs.sh`(list/tail/grep/follow), OPS 웹 "클라이언트 로그" 탭
 - **v0.0.13+13 업로더 v2**: 앱 메뉴 "로그 전송 설정"에서 모드 선택(끄기/오류만/INFO/이벤트/INFO+이벤트/DEBUG/전체/사용자 지정), app.log offset 재전송으로 유실 0
 - **v0.0.14+14 다자간 버그 수정**: 6000 회의 카드형 참가자 선택 화면, 수신 수락 크래시 2건, 유효 트랙 정리, 30초 미디어 요약 — 보고서 `docs/보고서/20261111_버그분석보고서_v1.0.md` / `20261111_버그수정완료보고서_v1.0.md`
-- **v0.0.15+15 1:1 수정**: 수신측 영상 판정(단방향 영상), 갱신 타임아웃 통화 유지, 영상 30초 통계, 로그 중복 제거, OPS 서버 이벤트(`ops_client_logs.sh server`) — `docs/보고서/1vs1영상통화버그분석보고서_v1.2.md`. opus 우선은 codec_opus 부재로 보류
+- **v0.0.15+15 1:1 수정**: 수신측 영상 판정(단방향 영상), 갱신 타임아웃 통화 유지, 영상 30초 통계, 로그 중복 제거, OPS 서버 이벤트(`ops_client_logs.sh server`) — `docs/보고서/1vs1영상통화버그분석보고서_v1.2.md`. 서버 codec_opus 추가로 opus 우선 적용(WebRTC 엔드포인트)
 - 상세: `wiki/06_Reports/20261111_원격오디오_ICE문제_개발보고서_v1.0.md`
 - 다음 세션: `wiki/04_Prompts/20261111_원격오디오_ICE_후속작업프롬프트_v1.0.md`
