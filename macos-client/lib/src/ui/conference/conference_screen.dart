@@ -4,6 +4,7 @@ import 'package:flutter_webrtc/flutter_webrtc.dart';
 import '../../providers/sip_provider.dart';
 import '../../providers/media_provider.dart';
 import '../../utils/app_logger.dart';
+import '../../utils/conference_participants.dart';
 import '../../utils/constants.dart';
 
 /// ConfBridge 회의실 화면
@@ -34,17 +35,50 @@ class _ConferenceViewState extends State<ConferenceView> {
   void initState() {
     super.initState();
     context.read<SipProvider>().addListener(_handleSipChange);
+    _participants.addListener(_onParticipants);
+    WidgetsBinding.instance.addPostFrameCallback((_) => _syncPolling());
+  }
+
+  final ConferenceParticipantService _participants = ConferenceParticipantService.instance;
+
+  void _onParticipants() {
+    if (mounted) setState(() {});
+  }
+
+  String get _myExtension => context.read<SipProvider>().config?.username ?? '';
+
+  String get _myLabel {
+    final cfg = context.read<SipProvider>().config;
+    final ext = cfg?.username ?? '';
+    final name = (cfg?.displayName ?? '').trim();
+    final who = name.isEmpty || name == ext ? ext : '$name ($ext)';
+    return who.isEmpty ? '나' : '나 · $who';
+  }
+
+  /// 회의 중일 때만 OPS 참가자 폴링
+  void _syncPolling() {
+    if (!mounted) return;
+    final sp = context.read<SipProvider>();
+    final room = sp.currentCallTarget;
+    if (sp.isInCall && room != null && RegExp(r'^\d{3,6}$').hasMatch(room)) {
+      _participants.start(room, extension: _myExtension);
+    } else {
+      _participants.stop();
+    }
   }
 
   @override
   void dispose() {
     context.read<SipProvider>().removeListener(_handleSipChange);
+    _participants.removeListener(_onParticipants);
+    _participants.stop();
     _roomController.dispose();
     super.dispose();
   }
 
   void _handleSipChange() {
     if (!mounted) return;
+    _syncPolling();
     final sp = context.read<SipProvider>();
     if (sp.isInCall) {
       _wasInCall = true;
@@ -105,6 +139,7 @@ class _ConferenceViewState extends State<ConferenceView> {
       appBar: AppBar(
         title: Text(inConference
             ? '회의실 ${sipProvider.currentCallTarget ?? ''}'
+                '${_participants.snapshot != null ? ' · 참가자 ${_participants.snapshot!.count}명' : ''}'
             : '회의실'),
         actions: [
           if (inConference)
@@ -198,19 +233,13 @@ class _ConferenceViewState extends State<ConferenceView> {
   /// - 같은 렌더러 텍스처를 큰 화면/썸네일이 공유(Texture 다중 표시)
   Widget _buildConferenceGrid(MediaProvider mediaProvider) {
     final remoteStreams = mediaProvider.remoteStreams;
-    final remotes = <_ConferenceTile>[
-      for (var i = 0; i < remoteStreams.length; i++)
-        _ConferenceTile(
-          label: '원격 ${i + 1}',
-          renderer: mediaProvider.getRemoteRenderer(i),
-          stream: remoteStreams[i],
-        ),
-    ];
+    final remotes = _buildRemoteTiles(mediaProvider, remoteStreams);
     final local = _ConferenceTile(
-      label: '내 영상',
+      label: _myLabel,
       renderer: mediaProvider.getLocalRenderer(),
       stream: mediaProvider.hasLocalVideo ? mediaProvider.localStream : null,
       mirror: true,
+      isLocal: true,
     );
 
     if (_selectedRemote >= remotes.length) {
@@ -234,6 +263,7 @@ class _ConferenceViewState extends State<ConferenceView> {
                           renderer: big.renderer,
                           stream: big.stream,
                           mirror: big.mirror,
+                          placeholder: big.placeholder,
                         ),
                 ),
                 if (remotes.isEmpty)
@@ -262,6 +292,7 @@ class _ConferenceViewState extends State<ConferenceView> {
                         stream: local.stream,
                         mirror: true,
                         compact: true,
+                        placeholder: local.placeholder,
                       ),
                     ),
                   ),
@@ -280,7 +311,7 @@ class _ConferenceViewState extends State<ConferenceView> {
                     selected: !showLocalBig && _selectedRemote == i,
                     onTap: () {
                       AppLogger.instance.ui('CONFERENCE', 'participantSelected',
-                          params: {'index': i + 1});
+                          params: {'index': i + 1, 'label': remotes[i].label});
                       setState(() => _selectedRemote = i);
                     },
                   ),
@@ -295,6 +326,60 @@ class _ConferenceViewState extends State<ConferenceView> {
         ],
       ),
     );
+  }
+
+  /// 참가자 카드 목록.
+  /// - OPS 참가자 정보가 있으면: 서버 참가자 전원(본인 제외), 영상 있는 참가자는 원격 스트림과 매핑
+  /// - 없으면: 원격 영상 트랙 기준(이전 동작)
+  List<_ConferenceTile> _buildRemoteTiles(
+      MediaProvider mediaProvider, List<MediaStream> remoteStreams) {
+    final snap = _participants.snapshot;
+    if (snap == null || snap.participants.isEmpty) {
+      return [
+        for (var i = 0; i < remoteStreams.length; i++)
+          _ConferenceTile(
+            label: '참가자 ${i + 1}',
+            renderer: mediaProvider.getRemoteRenderer(i),
+            stream: remoteStreams[i],
+          ),
+      ];
+    }
+    final others = snap.participants.where((p) => !p.isSelf).toList();
+    final byChannel = {for (final p in others) p.channel: p};
+    // 원격 스트림 순서 = 서버 영상 슬롯 순서. 영상 없는 슬롯이 트랙으로 오지 않은 경우를 위해
+    // 스트림 개수와 맞는 순서를 고른다.
+    final full = snap.videoOrder.where(byChannel.containsKey).toList();
+    final withVideo = full.where((c) => byChannel[c]!.hasVideo).toList();
+    final order = remoteStreams.length == full.length ? full : withVideo;
+    final streamIndex = <String, int>{
+      for (var i = 0; i < order.length && i < remoteStreams.length; i++) order[i]: i,
+    };
+    // 영상 있는 참가자 먼저(영상 순서), 그다음 영상 없는 참가자
+    others.sort((a, b) {
+      final ai = streamIndex[a.channel] ?? 1 << 20;
+      final bi = streamIndex[b.channel] ?? 1 << 20;
+      return ai.compareTo(bi);
+    });
+    final extCount = <String, int>{};
+    for (final p in others) {
+      extCount[p.extension] = (extCount[p.extension] ?? 0) + 1;
+    }
+    final seen = <String, int>{};
+    return [
+      for (final p in others)
+        () {
+          final n = (seen[p.extension] = (seen[p.extension] ?? 0) + 1);
+          final label = (extCount[p.extension] ?? 0) > 1 ? '${p.label} #$n' : p.label;
+          final idx = streamIndex[p.channel];
+          final usable = p.hasVideo && idx != null;
+          return _ConferenceTile(
+            label: label,
+            renderer: usable ? mediaProvider.getRemoteRenderer(idx) : null,
+            stream: usable ? remoteStreams[idx] : null,
+            hasVideo: p.hasVideo,
+          );
+        }(),
+    ];
   }
 
   Widget _waitingView() {
@@ -336,6 +421,7 @@ class _ConferenceViewState extends State<ConferenceView> {
             stream: tile.stream,
             mirror: tile.mirror,
             compact: true,
+            placeholder: tile.placeholder,
           ),
         ),
       ),
@@ -348,10 +434,18 @@ class _ConferenceViewState extends State<ConferenceView> {
     required MediaStream? stream,
     bool mirror = false,
     bool compact = false,
+    _Placeholder placeholder = _Placeholder.waiting,
   }) {
+    final (IconData icon, String text) = switch (placeholder) {
+      _Placeholder.noVideo => (Icons.mic, '영상 없음 · 음성 참여'),
+      _Placeholder.noCamera => (Icons.videocam_off_outlined, '카메라 없음'),
+      _Placeholder.waiting => (Icons.videocam_off_outlined, '영상 수신 준비중'),
+    };
     return Container(
       decoration: BoxDecoration(
-        color: Colors.black,
+        color: placeholder == _Placeholder.noVideo && stream == null
+            ? const Color(0xFF263238)
+            : Colors.black,
         borderRadius: BorderRadius.circular(8),
       ),
       child: ClipRRect(
@@ -375,29 +469,43 @@ class _ConferenceViewState extends State<ConferenceView> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Icon(Icons.videocam_off_outlined,
-                        color: Colors.white54),
-                    const SizedBox(height: 8),
-                    Text(
-                      label == '내 영상' ? '카메라 없음' : '원격 영상 수신 준비중',
-                      style:
-                          const TextStyle(color: Colors.white54, fontSize: 12),
-                    ),
+                    Icon(icon, color: Colors.white70, size: compact ? 26 : 64),
+                    SizedBox(height: compact ? 4 : 12),
+                    Text(text,
+                        style: TextStyle(
+                            color: Colors.white70, fontSize: compact ? 11 : 16)),
                   ],
                 ),
               ),
+            // 참가자 이름/내선 — 큰 화면·작은 카드 모두 항상 표시
             Positioned(
-              left: 8,
-              bottom: 8,
+              left: compact ? 6 : 12,
+              top: compact ? 6 : 12,
+              right: compact ? 6 : null,
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                padding: EdgeInsets.symmetric(
+                    horizontal: compact ? 6 : 12, vertical: compact ? 3 : 6),
                 decoration: BoxDecoration(
-                  color: Colors.black54,
-                  borderRadius: BorderRadius.circular(4),
+                  color: Colors.black.withValues(alpha: 0.65),
+                  borderRadius: BorderRadius.circular(6),
                 ),
-                child: Text(
-                  label,
-                  style: const TextStyle(color: Colors.white, fontSize: 12),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.person, color: Colors.white, size: compact ? 13 : 20),
+                    const SizedBox(width: 4),
+                    Flexible(
+                      child: Text(
+                        label,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: compact ? 12 : 20,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -408,16 +516,26 @@ class _ConferenceViewState extends State<ConferenceView> {
   }
 }
 
+enum _Placeholder { waiting, noVideo, noCamera }
+
 class _ConferenceTile {
   const _ConferenceTile({
     required this.label,
     required this.renderer,
     required this.stream,
     this.mirror = false,
+    this.hasVideo = true,
+    this.isLocal = false,
   });
 
   final String label;
   final RTCVideoRenderer? renderer;
   final MediaStream? stream;
   final bool mirror;
+  final bool hasVideo;
+  final bool isLocal;
+
+  _Placeholder get placeholder => isLocal
+      ? _Placeholder.noCamera
+      : (hasVideo ? _Placeholder.waiting : _Placeholder.noVideo);
 }

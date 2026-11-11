@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:sip_ua/sip_ua.dart';
 import '../utils/app_logger.dart';
+import '../utils/conference_participants.dart';
 import '../utils/remote_log_forwarder.dart';
 import 'sip_config.dart';
 import 'sip_session.dart';
@@ -156,6 +157,9 @@ class KibalSipClient implements SipUaHelperListener {
         extension: config.username,
         domain: config.domain,
       );
+      // 회의 참가자 카드용 표시 이름 보고(없으면 서버가 내선 번호로 표시)
+      unawaited(ConferenceParticipantService.instance.reportProfile(
+          extension: config.username, displayName: config.displayName));
       AppLogger.instance.call('init',
           params: {
             'ws': _webSocketUrl(config),
