@@ -18,10 +18,10 @@ class AppConstants {
   //--------------------------------------------------------------------------
   
   // DEV 환경 (로컬 Docker Asterisk: kibal-dev-asterisk)
-  static const String devDomain = '192.168.11.39';
+  static const String devDomain = '192.168.0.3';
   static const int devSipPort = 5060;
   static const int devWsPort = 8088;
-  static const String devWsServer = 'ws://192.168.11.39:8088/ws';
+  static const String devWsServer = 'ws://192.168.0.3:8088/ws';
   
   // PRD 환경
   static const String prdDomain = '192.168.11.2';

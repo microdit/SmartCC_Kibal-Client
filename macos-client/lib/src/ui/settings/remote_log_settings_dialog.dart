@@ -196,7 +196,7 @@ class _RemoteLogSettingsDialogState extends State<_RemoteLogSettingsDialog> {
                 controller: _url,
                 decoration: const InputDecoration(
                   labelText: '서버 주소',
-                  hintText: 'http://192.168.11.39:8091/api/client-logs',
+                  hintText: 'http://192.168.0.3:8091/api/client-logs',
                   border: OutlineInputBorder(),
                 ),
               ),
