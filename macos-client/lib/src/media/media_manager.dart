@@ -239,18 +239,18 @@ class MediaManager {
   }
   
   /// 카메라 전환
+  ///
+  /// v0.0.8 실측: `getLocalMedia()`가 기존 `_localStream`을 dispose하면서
+  /// 송신 중인 video track까지 stop되어, 통화 중 원격 영상이 끊겼다.
+  /// 다중 카메라 전환은 `RTCRtpSender.replaceTrack()` + 재협상이 필요하므로
+  /// 구현 전까지는 스트림을 건드리지 않고 보류한다.
   Future<bool> toggleCamera() async {
     try {
-      _isFrontCamera = !_isFrontCamera;
-      
-      // 새로운 스트림 가져오기
-      final newStream = await getLocalMedia(
-        useFrontCamera: _isFrontCamera,
-        useAudio: !_isAudioMuted,
-        useVideo: !_isVideoMuted,
-      );
-      
-      return newStream != null;
+      final devices = await navigator.mediaDevices.enumerateDevices();
+      final cameras = devices.where((d) => d.kind == 'videoinput').toList();
+      AppLogger.instance.i(
+          '카메라 전환 보류: 카메라 ${cameras.length}개, replaceTrack 미구현');
+      return false;
     } catch (e) {
       debugPrint('Failed to toggle camera: $e');
       return false;
@@ -412,19 +412,11 @@ class MediaManager {
           await _disposeRenderStream(stale);
         }
 
-        // 새 트랙 추가
-        // 첫 영상은 원본 스트림을 그대로 사용해 1:1 기존 동작을 유지하고,
-        // 추가 영상(3자 이상)만 비디오 트랙 1개짜리 네이티브 스트림을 만든다.
+        // 새 트랙 추가: 모든 영상 트랙을 1개짜리 전용 스트림으로 렌더한다.
+        // 원본 스트림은 재협상 후 이전/새 트랙이 섞여 첫 트랙이 죽은 트랙일
+        // 수 있으므로, 렌더 타일은 항상 트랙 단위로 분리한다.
         for (final entry in tracks.entries) {
           if (_remoteVideoStreams.containsKey(entry.key)) continue;
-          final source = sourceStreams[entry.key];
-          if (_remoteVideoTrackOrder.isEmpty && source != null) {
-            _remoteVideoStreams[entry.key] = source;
-            _remoteVideoTrackOrder.add(entry.key);
-            AppLogger.instance.d(
-                'remote video tile 등록(원본) track=${entry.key}');
-            continue;
-          }
           try {
             final renderStream =
                 await createLocalMediaStream('kibal-video-${entry.key}');
@@ -434,8 +426,16 @@ class MediaManager {
             AppLogger.instance
                 .d('remote video tile 등록(전용) track=${entry.key}');
           } catch (e) {
-            AppLogger.instance
-                .w('remote video tile 생성 실패 track=${entry.key}: $e');
+            final fallback = sourceStreams[entry.key];
+            if (fallback != null) {
+              _remoteVideoStreams[entry.key] = fallback;
+              _remoteVideoTrackOrder.add(entry.key);
+              AppLogger.instance.w(
+                  'remote video tile 폴백(원본) track=${entry.key}: $e');
+            } else {
+              AppLogger.instance
+                  .w('remote video tile 생성 실패 track=${entry.key}: $e');
+            }
           }
         }
 
@@ -486,6 +486,8 @@ class MediaManager {
           if (bindTo.srcObject != capturedVid) {
             bindTo.srcObject = capturedVid;
           }
+          // 렌더러 초기화/바인딩 완료 후 UI 재빌드
+          onRemoteVideoStreamsChanged?.call();
         });
       } else if (renderer.srcObject != vid) {
         renderer.srcObject = vid;

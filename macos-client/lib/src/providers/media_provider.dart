@@ -94,6 +94,8 @@ class MediaProvider with ChangeNotifier {
     try {
       await _mediaManager.init();
       _updateStreamStates();
+      // 렌더러 풀이 준비된 뒤 재빌드해야 원격 타일이 placeholder로 남지 않는다.
+      if (!_disposed) notifyListeners();
     } catch (e) {
       _error = '미디어 매니저 초기화 실패: $e';
       notifyListeners();

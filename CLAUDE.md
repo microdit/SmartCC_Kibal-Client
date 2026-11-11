@@ -71,7 +71,8 @@
 - **미디어 경로 H4**: Release 엔타이틀먼트(`network.server`), `dtls_verify=fingerprint`, `media_address=192.168.11.39` 적용
 - **Docker ICE 후보 보정**: `macos-client/packages/sip_ua` 로컬 포크(ADR-005), 172.16/12 후보 → `c=` 보정
 - **H5 re-INVITE 미응답 수정**: `sip_client.dart` `onNewReinvite` 자동 수락. 영상/다자간 15~17초 ICE 실패의 직접 원인
-- **MediaManager 다중 영상 수정(v0.0.9)**: 전체 트랙 dedup + 영상 트랙별 렌더 스트림(3자 타일 다중 표시)
-- **v0.0.9+9**: 오디오 단독 118초 유지(v0.0.7), H5(v0.0.8) + 다중 영상(v0.0.9). **영상/3자 실기 재검증 대기**
+- **MediaManager 다중 영상 수정(v0.0.9~10)**: 전체 트랙 dedup + 트랙별 렌더 스트림, 렌더러 init 후 notify, 빌드 시 `srcObject` 보장
+- **v1.5 실기(v0.0.8)**: H5 성공(`accepted=true`, `videoBytes` 증가, ICE 실패 0, 2분+ 유지). 원격 타일 미표시/카메라 전환 시 영상 정지 → v0.0.10에서 수정
+- **v0.0.10+10**: 오디오 단독 118초 유지(v0.0.7), H5(v0.0.8), 다중 영상/렌더/카메라 전환 보완. **2자/3자 재검증 대기**
 - 상세: `wiki/06_Reports/20261111_원격오디오_ICE문제_개발보고서_v1.0.md`
 - 다음 세션: `wiki/04_Prompts/20261111_원격오디오_ICE_후속작업프롬프트_v1.0.md`

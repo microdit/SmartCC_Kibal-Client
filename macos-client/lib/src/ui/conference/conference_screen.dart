@@ -221,11 +221,16 @@ class _ConferenceViewState extends State<ConferenceView> {
           fit: StackFit.expand,
           children: [
             if (renderer != null && stream != null)
-              RTCVideoView(
-                renderer,
-                mirror: mirror,
-                objectFit: RTCVideoViewObjectFit.RTCVideoViewObjectFitContain,
-              )
+              Builder(builder: (context) {
+                if (renderer.srcObject != stream) {
+                  renderer.srcObject = stream;
+                }
+                return RTCVideoView(
+                  renderer,
+                  mirror: mirror,
+                  objectFit: RTCVideoViewObjectFit.RTCVideoViewObjectFitContain,
+                );
+              })
             else
               const Center(
                 child: Icon(Icons.videocam_off_outlined, color: Colors.white54),
