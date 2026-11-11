@@ -61,22 +61,27 @@ class MediaManager {
   /// 원격 스트림 목록
   /// 영상 트랙별 렌더 스트림 목록(타일 1개 = 영상 트랙 1개).
   /// 아직 트랙별 스트림이 준비되지 않았으면 세션 대표 스트림으로 폴백한다.
+  ///
+  /// ConfBridge re-INVITE마다 새 트랙이 추가되며 과거 트랙이 남는다.
+  /// 화면에는 **최신 트랙 3개**만 노출해 정지된 과거 타일/그리드 폭주를 막는다.
+  static const int maxRemoteVideoTiles = 3;
+
   List<MediaStream> get remoteStreams {
+    final all = <MediaStream>[];
     if (_remoteVideoTrackOrder.isNotEmpty) {
-      final result = <MediaStream>[];
       for (final trackId in _remoteVideoTrackOrder) {
         final stream = _remoteVideoStreams[trackId];
-        if (stream != null) result.add(stream);
+        if (stream != null) all.add(stream);
       }
-      if (result.isNotEmpty) return result;
     }
-
-    final fallback = <MediaStream>[];
-    for (final sessionId in _remoteSessions.keys) {
-      final vid = _videoStreamOfSession(sessionId);
-      if (vid != null) fallback.add(vid);
+    if (all.isEmpty) {
+      for (final sessionId in _remoteSessions.keys) {
+        final vid = _videoStreamOfSession(sessionId);
+        if (vid != null) all.add(vid);
+      }
     }
-    return fallback;
+    if (all.length <= maxRemoteVideoTiles) return all;
+    return all.sublist(all.length - maxRemoteVideoTiles);
   }
   
   /// 카메라 전면 여부

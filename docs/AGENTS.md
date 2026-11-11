@@ -58,9 +58,9 @@
 
 ## 현재 진행 (2026-11-11)
 - 원격 오디오 H1/미디어 H4/H5(re-INVITE 미응답) 해결 → v0.0.8
-- MediaManager 다중 영상/렌더러 notify/카메라 전환 보완 → v0.0.10+10
-- v1.5 실기(v0.0.8): H5 성공, `videoBytes` 증가, ICE 실패 0
-- 잔여: v0.0.10으로 원격 타일 표시/2자·3자 5분 재검증
+- MediaManager 다중 영상/렌더/타일 선택 보완 → v0.0.11+11
+- v1.6 실기(3자): H5/ICE 안정, stale 트랙 누적 → 최신 3타일+선택 UI
+- 잔여: 참가자 식별(서버 메타데이터), 1101 오디오 출력, 3자 재검증
 - 포크: `macos-client/packages/sip_ua` (ADR-005) — `dependency_overrides` 사용
 - 상세: [[wiki/06_Reports/20261111_원격오디오_ICE문제_개발보고서_v1.0]]
 - 다음 작업: [[wiki/04_Prompts/20261111_원격오디오_ICE_후속작업프롬프트_v1.0]]

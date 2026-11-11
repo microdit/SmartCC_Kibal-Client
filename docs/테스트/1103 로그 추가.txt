@@ -1,0 +1,485 @@
+[2026-11-11T14:21:39.774412] INFO [usr=- host=- ip=-] AppLogger 초기화 완료 file=/Users/microdit/Library/Containers/com.microdit.macosClient/Data/Library/Application Support/com.microdit.macosClient/logs/app.log identity=usr=- host=- ip=- mode=release
+[2026-11-11T14:21:45.877054] EVENT UI LOGIN action=quickConnectFilled params=extension=1103
+[2026-11-11T14:21:46.879894] EVENT UI LOGIN action=loginPressed params=username=1103 domain=192.168.11.39 port=5060 transport=ws wsServer=ws://192.168.11.39:8088/ws
+[2026-11-11T14:21:46.880053] INFO [usr=- host=- ip=-] SIP state -> connecting
+[2026-11-11T14:21:46.882482] INFO (동일 로그 2회 반복 스킵 요약)
+[2026-11-11T14:21:46.882498] EVENT SIP op=init target=- state=- params=ws=ws://192.168.11.39:8088/ws domain=192.168.11.39 port=5060 transport=ws
+[2026-11-11T14:21:46.909345] INFO [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP state -> connected
+[2026-11-11T14:21:46.929894] INFO (동일 로그 2회 반복 스킵 요약)
+[2026-11-11T14:21:46.929990] INFO [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP state -> registered
+[2026-11-11T14:21:46.930134] EVENT LOGIN event=loginResult state=registered username=1103 error=-
+[2026-11-11T14:21:50.003853] EVENT MEDIA event=localStreamReady state=video=1 audio=1 frontCamera=true audioMuted=false
+[2026-11-11T14:23:21.708421] EVENT SIP op=callInitiation target=1102 state=initiated params=direction=incoming id=aca9de9e-50d7-40c7-a636-5124570811a02176d9db-1ba5-4918-87d6-a4b858e109cb
+[2026-11-11T14:23:21.708557] EVENT UI INCOMING action=dialogShown params=target=1102
+[2026-11-11T14:23:21.708683] EVENT SIP op=callProgress target=1102 state=PROGRESS params=id=aca9de9e-50d7-40c7-a636-5124570811a02176d9db-1ba5-4918-87d6-a4b858e109cb
+[2026-11-11T14:23:23.759611] INFO [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP accept <- 1102 voiceOnly=true
+[2026-11-11T14:23:23.761189] ERROR [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] FlutterError: Null check operator used on a null value
+[2026-11-11T14:23:23.761305] ERROR [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7]   at #0      Navigator.of (package:flutter/src/widgets/navigator.dart:2967)
+#1      _KibalAppState._handleIncomingCall (package:macos_client/app.dart:80)
+#2      ChangeNotifier.notifyListeners (package:flutter/src/foundation/change_notifier.dart:435)
+#3      SipProvider._handleSipEvent (package:macos_client/src/providers/sip_provider.dart:464)
+#4      KibalSipClient._emitEvent (package:macos_client/src/sip/sip_client.dart:827)
+#5      KibalSipClient.accept (package:macos_client/src/sip/sip_client.dart:326)
+#6      SipProvider.accept (package:macos_client/src/providers/sip_provider.dart:313)
+#7      _KibalAppState._handleIncomingCall.<anonymous closure>.<anonymous closure> (package:macos_client/app.dart:117)
+#8      _InkResponseState.handleTap (package:flutter/src/material/ink_well.dart:1224)
+#9      GestureRecognizer.invokeCallback (package:flutter/src/gestures/recognizer.dart:362)
+#10     TapGestureRecognizer.handleTapUp (package:flutter/src/gestures/tap.dart:758)
+#11     BaseTapGestureRecognizer._checkUp (package:flutter/src/gestures/tap.dart:383)
+#12     BaseTapGestureRecognizer.handlePrimaryPointer (package:flutter/src/gestures/tap.dart:314)
+#13     PrimaryPointerGestureRecognizer.handleEvent (package:flutter/src/gestures/recognizer.dart:738)
+#14     PointerRouter._dispatch (package:flutter/src/gestures/pointer_router.dart:97)
+#15     PointerRouter._dispatchEventToRoutes.<anonymous closure> (package:flutter/src/gestures/pointer_router.dart:140)
+#16     _LinkedHashMapMixin.forEach (dart:_compact_hash:721)
+#17     PointerRouter._dispatchEventToRoutes (package:flutter/src/gestures/pointer_router.dart:138)
+#18     PointerRouter.route (package:flutter/src/gestures/pointer_router.dart:128)
+#19     GestureBinding.handleEvent (package:flutter/src/gestures/binding.dart:538)
+#20     GestureBinding.dispatchEvent (package:flutter/src/gestures/binding.dart:508)
+#21     RendererBinding.dispatchEvent (package:flutter/src/rendering/binding.dart:473)
+#22     GestureBinding._handlePointerEventImmediately (package:flutter/src/gestures/binding.dart:447)
+#23     GestureBinding.handlePointerEvent (package:flutter/src/gestures/binding.dart:404)
+#24     GestureBinding._flushPointerEventQueue (package:flutter/src/gestures/binding.dart:351)
+#25     GestureBinding._handlePointerDataPacket (package:flutter/src/gestures/binding.dart:310)
+#26     _invoke1 (dart:ui/hooks.dart:457)
+#27     PlatformDispatcher._dispatchPointerDataPacket (dart:ui/platform_dispatcher.dart:473)
+#28     _dispatchPointerDataPacket (dart:ui/hooks.dart:374)
+
+[2026-11-11T14:23:23.762503] ERROR [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] UnhandledError: Concurrent modification during iteration: Instance(length:0) of '_GrowableList'.
+[2026-11-11T14:23:23.762577] ERROR [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7]   at #0      ListIterator.moveNext (dart:_internal/iterable.dart:366)
+#1      RTCSession.answer (package:sip_ua/src/rtc_session.dart:565)
+#2      Call.answer (package:sip_ua/src/sip_ua_helper.dart:558)
+#3      KibalSipClient.accept (package:macos_client/src/sip/sip_client.dart:320)
+#4      SipProvider.accept (package:macos_client/src/providers/sip_provider.dart:313)
+#5      _KibalAppState._handleIncomingCall.<anonymous closure>.<anonymous closure> (package:macos_client/app.dart:117)
+#6      _InkResponseState.handleTap (package:flutter/src/material/ink_well.dart:1224)
+#7      GestureRecognizer.invokeCallback (package:flutter/src/gestures/recognizer.dart:362)
+#8      TapGestureRecognizer.handleTapUp (package:flutter/src/gestures/tap.dart:758)
+#9      BaseTapGestureRecognizer._checkUp (package:flutter/src/gestures/tap.dart:383)
+#10     BaseTapGestureRecognizer.handlePrimaryPointer (package:flutter/src/gestures/tap.dart:314)
+#11     PrimaryPointerGestureRecognizer.handleEvent (package:flutter/src/gestures/recognizer.dart:738)
+#12     PointerRouter._dispatch (package:flutter/src/gestures/pointer_router.dart:97)
+#13     PointerRouter._dispatchEventToRoutes.<anonymous closure> (package:flutter/src/gestures/pointer_router.dart:140)
+#14     _LinkedHashMapMixin.forEach (dart:_compact_hash:721)
+#15     PointerRouter._dispatchEventToRoutes (package:flutter/src/gestures/pointer_router.dart:138)
+#16     PointerRouter.route (package:flutter/src/gestures/pointer_router.dart:128)
+#17     GestureBinding.handleEvent (package:flutter/src/gestures/binding.dart:538)
+#18     GestureBinding.dispatchEvent (package:flutter/src/gestures/binding.dart:508)
+#19     RendererBinding.dispatchEvent (package:flutter/src/rendering/binding.dart:473)
+#20     GestureBinding._handlePointerEventImmediately (package:flutter/src/gestures/binding.dart:447)
+#21     GestureBinding.handlePointerEvent (package:flutter/src/gestures/binding.dart:404)
+#22     GestureBinding._flushPointerEventQueue (package:flutter/src/gestures/binding.dart:351)
+#23     GestureBinding._handlePointerDataPacket (package:flutter/src/gestures/binding.dart:310)
+#24     _invoke1 (dart:ui/hooks.dart:457)
+#25     PlatformDispatcher._dispatchPointerDataPacket (dart:ui/platform_dispatcher.dart:473)
+#26     _dispatchPointerDataPacket (dart:ui/hooks.dart:374)
+
+[2026-11-11T14:23:23.762650] EVENT UI INCOMING action=accepted params=target=1102 ok=true
+[2026-11-11T14:23:42.117800] EVENT UI CALL action=cameraTogglePressed
+[2026-11-11T14:23:42.118871] INFO [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] 카메라 전환 보류: 카메라 1개, replaceTrack 미구현
+[2026-11-11T14:23:42.118918] EVENT MEDIA event=cameraToggled state=front=true
+[2026-11-11T14:23:45.887521] EVENT UI CALL action=cameraTogglePressed
+[2026-11-11T14:23:45.888679] INFO [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] 카메라 전환 보류: 카메라 1개, replaceTrack 미구현
+[2026-11-11T14:23:45.888751] EVENT MEDIA event=cameraToggled state=front=true
+[2026-11-11T14:23:53.390303] EVENT UI CALL action=cameraTogglePressed
+[2026-11-11T14:23:53.391459] INFO [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] 카메라 전환 보류: 카메라 1개, replaceTrack 미구현
+[2026-11-11T14:23:53.391504] EVENT MEDIA event=cameraToggled state=front=true
+[2026-11-11T14:23:55.270009] EVENT UI CALL action=micTogglePressed
+[2026-11-11T14:23:55.270190] EVENT MEDIA event=micToggled state=muted=true
+[2026-11-11T14:23:56.518345] EVENT UI CALL action=micTogglePressed
+[2026-11-11T14:23:56.518507] EVENT MEDIA event=micToggled state=muted=false
+[2026-11-11T14:23:57.634127] EVENT UI CALL action=cameraTogglePressed
+[2026-11-11T14:23:57.635204] INFO [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] 카메라 전환 보류: 카메라 1개, replaceTrack 미구현
+[2026-11-11T14:23:57.635250] EVENT MEDIA event=cameraToggled state=front=true
+[2026-11-11T14:23:58.634197] EVENT UI CALL action=cameraTogglePressed
+[2026-11-11T14:23:58.635323] INFO [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] 카메라 전환 보류: 카메라 1개, replaceTrack 미구현
+[2026-11-11T14:23:58.635365] EVENT MEDIA event=cameraToggled state=front=true
+[2026-11-11T14:23:59.790736] EVENT UI CALL action=videoTogglePressed
+[2026-11-11T14:23:59.790821] EVENT MEDIA event=videoMuteToggled state=muted=true
+[2026-11-11T14:24:00.770281] EVENT UI CALL action=videoTogglePressed
+[2026-11-11T14:24:00.770461] EVENT MEDIA event=videoMuteToggled state=muted=false
+[2026-11-11T14:24:21.770944] EVENT SIP op=callTerminated target=1102 state=FAILED params=id=aca9de9e-50d7-40c7-a636-5124570811a02176d9db-1ba5-4918-87d6-a4b858e109cb cause=Code: [487], Cause: Canceled, Reason: null
+[2026-11-11T14:24:25.059150] EVENT UI CALL action=hangupPressed params=target=-
+[2026-11-11T14:24:25.059224] ERROR [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP 통화 종료 실패: Exception: 통화 중이 아님
+[2026-11-11T14:24:25.059624] EVENT MEDIA event=localStreamReleased state=-
+[2026-11-11T14:24:36.466559] EVENT UI DIALER action=callPressed params=target=1102
+[2026-11-11T14:24:36.475976] EVENT MEDIA event=localStreamReady state=video=1 audio=1 frontCamera=true audioMuted=false
+[2026-11-11T14:24:36.476080] INFO [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP call -> 1102 voiceOnly=false hasLocalStream=true
+[2026-11-11T14:24:36.476426] EVENT DIALER event=callResult state=pushed target=1102 error=-
+[2026-11-11T14:24:36.480484] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP remote-track recovery armed id=hvgjx24w65mkot89iw185d4wgsv9mp
+[2026-11-11T14:24:36.480519] EVENT SIP op=callInitiation target=1102 state=initiated params=direction=outgoing id=hvgjx24w65mkot89iw185d4wgsv9mp
+[2026-11-11T14:24:36.480558] EVENT SIP op=callProgress target=1102 state=CONNECTING params=id=hvgjx24w65mkot89iw185d4wgsv9mp
+[2026-11-11T14:24:36.581377] EVENT SIP op=mediaStream target=1102 state=local params=video=1 audio=1 id=hvgjx24w65mkot89iw185d4wgsv9mp
+[2026-11-11T14:24:37.814675] EVENT SIP op=callProgress target=1102 state=PROGRESS params=id=hvgjx24w65mkot89iw185d4wgsv9mp
+[2026-11-11T14:25:37.468352] EVENT SIP op=callTerminated target=1102 state=FAILED params=id=hvgjx24w65mkot89iw185d4wgsv9mp cause=Code: [603], Cause: Rejected, Reason: Decline
+[2026-11-11T14:25:37.468554] EVENT UI CALL action=remoteEndedDetected params=target=-
+[2026-11-11T14:25:37.470763] EVENT MEDIA event=localStreamReleased state=-
+[2026-11-11T14:28:11.639471] EVENT UI DIALER action=callPressed params=target=1102
+[2026-11-11T14:28:11.648264] EVENT MEDIA event=localStreamReady state=video=1 audio=1 frontCamera=true audioMuted=false
+[2026-11-11T14:28:11.648371] INFO [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP call -> 1102 voiceOnly=false hasLocalStream=true
+[2026-11-11T14:28:11.648696] EVENT DIALER event=callResult state=pushed target=1102 error=-
+[2026-11-11T14:28:11.650990] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP remote-track recovery armed id=hvgjx15b7ev8w60n17150299723894
+[2026-11-11T14:28:11.651019] EVENT SIP op=callInitiation target=1102 state=initiated params=direction=outgoing id=hvgjx15b7ev8w60n17150299723894
+[2026-11-11T14:28:11.651053] EVENT SIP op=callProgress target=1102 state=CONNECTING params=id=hvgjx15b7ev8w60n17150299723894
+[2026-11-11T14:28:11.752303] EVENT SIP op=mediaStream target=1102 state=local params=video=1 audio=1 id=hvgjx15b7ev8w60n17150299723894
+[2026-11-11T14:28:13.824574] EVENT SIP op=callProgress target=1102 state=PROGRESS params=id=hvgjx15b7ev8w60n17150299723894
+[2026-11-11T14:29:12.204807] EVENT SIP op=callTerminated target=1102 state=FAILED params=id=hvgjx15b7ev8w60n17150299723894 cause=Code: [603], Cause: Rejected, Reason: Decline
+[2026-11-11T14:29:12.204944] EVENT UI CALL action=remoteEndedDetected params=target=-
+[2026-11-11T14:29:12.207340] EVENT MEDIA event=localStreamReleased state=-
+[2026-11-11T14:32:39.173456] EVENT UI DIALER action=callPressed params=target=6000
+[2026-11-11T14:32:39.182299] EVENT MEDIA event=localStreamReady state=video=1 audio=1 frontCamera=true audioMuted=false
+[2026-11-11T14:32:39.182404] INFO [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP call -> 6000 voiceOnly=false hasLocalStream=true
+[2026-11-11T14:32:39.182729] EVENT DIALER event=callResult state=pushed target=6000 error=-
+[2026-11-11T14:32:39.185045] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP remote-track recovery armed id=hvgjxvrfb1az5pb91bze3158375641
+[2026-11-11T14:32:39.185067] EVENT SIP op=callInitiation target=6000 state=initiated params=direction=outgoing id=hvgjxvrfb1az5pb91bze3158375641
+[2026-11-11T14:32:39.185100] EVENT SIP op=callProgress target=6000 state=CONNECTING params=id=hvgjxvrfb1az5pb91bze3158375641
+[2026-11-11T14:32:39.286385] EVENT SIP op=mediaStream target=6000 state=local params=video=1 audio=1 id=hvgjxvrfb1az5pb91bze3158375641
+[2026-11-11T14:32:39.828945] EVENT SIP op=callEstablished target=6000 state=ACCEPTED params=id=hvgjxvrfb1az5pb91bze3158375641
+[2026-11-11T14:32:39.829106] EVENT SIP op=callEstablished target=6000 state=CONFIRMED params=id=hvgjxvrfb1az5pb91bze3158375641
+[2026-11-11T14:32:39.930802] EVENT SIP op=mediaStream target=6000 state=remote params=video=1 audio=1 id=hvgjxvrfb1az5pb91bze3158375641
+[2026-11-11T14:32:39.930961] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] remote session hvgjxvrfb1az5pb91bze3158375641 handled: streams=1 event(video=1 audio=1) session(video=1 audio=1)
+[2026-11-11T14:32:39.931032] EVENT MEDIA event=remoteStreamAdded state=video=1 audio=1 sessionId=hvgjxvrfb1az5pb91bze3158375641 sessionStreams=1 sessionVideo=1 sessionAudio=1
+[2026-11-11T14:32:39.931065] EVENT SIP op=mediaStream target=6000 state=remote params=video=1 audio=1 id=hvgjxvrfb1az5pb91bze3158375641
+[2026-11-11T14:32:39.931101] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] remote session hvgjxvrfb1az5pb91bze3158375641 handled: streams=1 event(video=1 audio=1) session(video=1 audio=1)
+[2026-11-11T14:32:39.931132] EVENT MEDIA event=remoteStreamAdded state=video=1 audio=1 sessionId=hvgjxvrfb1az5pb91bze3158375641 sessionStreams=1 sessionVideo=1 sessionAudio=1
+[2026-11-11T14:32:39.932673] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] remote video tile 등록(전용) track=76a45761-dc4a-456d-85ed-c7648c7a65bc
+[2026-11-11T14:32:41.538292] EVENT SIP op=mediaStream target=6000 state=remote params=video=2 audio=1 id=hvgjxvrfb1az5pb91bze3158375641
+[2026-11-11T14:32:41.538493] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] remote session hvgjxvrfb1az5pb91bze3158375641 handled: streams=2 event(video=2 audio=1) session(video=3 audio=2)
+[2026-11-11T14:32:41.538550] EVENT MEDIA event=remoteStreamAdded state=video=2 audio=1 sessionId=hvgjxvrfb1az5pb91bze3158375641 sessionStreams=2 sessionVideo=3 sessionAudio=2
+[2026-11-11T14:32:41.539631] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] remote video tile 등록(전용) track=71de3ff0-fa21-4ce8-a8fc-93288c3f4b38
+[2026-11-11T14:32:41.940989] INFO [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP re-INVITE 수신 hasAudio=true hasVideo=true -> 자동 수락
+[2026-11-11T14:32:41.941263] INFO [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP re-INVITE 응답 전송 accepted=true
+[2026-11-11T14:32:44.833463] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=35680 audioPackets=223 videoBytes=0
+[2026-11-11T14:32:48.923530] EVENT UI CALL action=cameraTogglePressed
+[2026-11-11T14:32:48.924576] INFO [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] 카메라 전환 보류: 카메라 1개, replaceTrack 미구현
+[2026-11-11T14:32:48.924621] EVENT MEDIA event=cameraToggled state=front=true
+[2026-11-11T14:32:49.832781] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=76000 audioPackets=475 videoBytes=21262
+[2026-11-11T14:32:50.712346] EVENT UI CALL action=cameraTogglePressed
+[2026-11-11T14:32:50.713253] INFO [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] 카메라 전환 보류: 카메라 1개, replaceTrack 미구현
+[2026-11-11T14:32:50.713294] EVENT MEDIA event=cameraToggled state=front=true
+[2026-11-11T14:32:51.883422] EVENT UI CALL action=cameraTogglePressed
+[2026-11-11T14:32:51.884610] INFO [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] 카메라 전환 보류: 카메라 1개, replaceTrack 미구현
+[2026-11-11T14:32:51.884668] EVENT MEDIA event=cameraToggled state=front=true
+[2026-11-11T14:32:53.425124] EVENT UI CALL action=cameraTogglePressed
+[2026-11-11T14:32:53.426387] INFO [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] 카메라 전환 보류: 카메라 1개, replaceTrack 미구현
+[2026-11-11T14:32:53.426442] EVENT MEDIA event=cameraToggled state=front=true
+[2026-11-11T14:32:54.833268] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=116160 audioPackets=726 videoBytes=43882
+[2026-11-11T14:32:59.831611] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=155680 audioPackets=973 videoBytes=65613
+[2026-11-11T14:33:04.832441] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=195360 audioPackets=1221 videoBytes=102315
+[2026-11-11T14:33:09.831485] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=234720 audioPackets=1467 videoBytes=134920
+[2026-11-11T14:33:14.832252] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=275360 audioPackets=1721 videoBytes=169981
+[2026-11-11T14:33:19.815152] EVENT UI CALL action=cameraTogglePressed
+[2026-11-11T14:33:19.816340] INFO [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] 카메라 전환 보류: 카메라 1개, replaceTrack 미구현
+[2026-11-11T14:33:19.816389] EVENT MEDIA event=cameraToggled state=front=true
+[2026-11-11T14:33:19.833865] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=313280 audioPackets=1958 videoBytes=196585
+[2026-11-11T14:33:20.388415] EVENT UI CALL action=cameraTogglePressed
+[2026-11-11T14:33:20.389382] INFO [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] 카메라 전환 보류: 카메라 1개, replaceTrack 미구현
+[2026-11-11T14:33:20.389439] EVENT MEDIA event=cameraToggled state=front=true
+[2026-11-11T14:33:20.556934] EVENT UI CALL action=cameraTogglePressed
+[2026-11-11T14:33:20.557891] INFO [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] 카메라 전환 보류: 카메라 1개, replaceTrack 미구현
+[2026-11-11T14:33:20.557925] EVENT MEDIA event=cameraToggled state=front=true
+[2026-11-11T14:33:24.832811] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=355200 audioPackets=2220 videoBytes=234228
+[2026-11-11T14:33:29.831386] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=395200 audioPackets=2470 videoBytes=270299
+[2026-11-11T14:33:34.831726] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=434560 audioPackets=2716 videoBytes=300745
+[2026-11-11T14:33:39.831372] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=475040 audioPackets=2969 videoBytes=334397
+[2026-11-11T14:33:44.831782] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=514880 audioPackets=3218 videoBytes=369970
+[2026-11-11T14:33:49.831325] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=554080 audioPackets=3463 videoBytes=403446
+[2026-11-11T14:33:54.832371] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=594560 audioPackets=3716 videoBytes=440976
+[2026-11-11T14:33:57.871188] EVENT UI CALL action=hangupPressed params=target=6000
+[2026-11-11T14:33:57.871439] INFO [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP hangup (local)
+[2026-11-11T14:33:57.871596] EVENT SIP op=callTerminated target=6000 state=ENDED params=id=hvgjxvrfb1az5pb91bze3158375641 cause=Code: [200], Cause: Terminated, Reason: Terminated by local
+[2026-11-11T14:33:58.149744] EVENT MEDIA event=localStreamReleased state=-
+[2026-11-11T14:34:09.307053] EVENT UI DIALER action=callPressed params=target=6000
+[2026-11-11T14:34:09.319239] EVENT MEDIA event=localStreamReady state=video=1 audio=1 frontCamera=true audioMuted=false
+[2026-11-11T14:34:09.319343] INFO [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP call -> 6000 voiceOnly=false hasLocalStream=true
+[2026-11-11T14:34:09.319630] EVENT DIALER event=callResult state=pushed target=6000 error=-
+[2026-11-11T14:34:09.322007] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP remote-track recovery armed id=hvgjx7y7094494d5vi144d16j6u1y0
+[2026-11-11T14:34:09.322032] EVENT SIP op=callInitiation target=6000 state=initiated params=direction=outgoing id=hvgjx7y7094494d5vi144d16j6u1y0
+[2026-11-11T14:34:09.322060] EVENT SIP op=callProgress target=6000 state=CONNECTING params=id=hvgjx7y7094494d5vi144d16j6u1y0
+[2026-11-11T14:34:09.424255] EVENT SIP op=mediaStream target=6000 state=local params=video=1 audio=1 id=hvgjx7y7094494d5vi144d16j6u1y0
+[2026-11-11T14:34:10.174964] EVENT SIP op=callEstablished target=6000 state=ACCEPTED params=id=hvgjx7y7094494d5vi144d16j6u1y0
+[2026-11-11T14:34:10.176364] EVENT SIP op=callEstablished target=6000 state=CONFIRMED params=id=hvgjx7y7094494d5vi144d16j6u1y0
+[2026-11-11T14:34:10.275413] EVENT SIP op=mediaStream target=6000 state=remote params=video=1 audio=1 id=hvgjx7y7094494d5vi144d16j6u1y0
+[2026-11-11T14:34:10.275538] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] remote session hvgjx7y7094494d5vi144d16j6u1y0 handled: streams=1 event(video=1 audio=1) session(video=1 audio=1)
+[2026-11-11T14:34:10.275589] EVENT MEDIA event=remoteStreamAdded state=video=1 audio=1 sessionId=hvgjx7y7094494d5vi144d16j6u1y0 sessionStreams=1 sessionVideo=1 sessionAudio=1
+[2026-11-11T14:34:10.276148] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] remote video tile 등록(전용) track=c8f2712a-f352-4a03-a2d4-4699d5718e35
+[2026-11-11T14:34:21.958724] EVENT SIP op=mediaStream target=6000 state=remote params=video=1 audio=1 id=hvgjx7y7094494d5vi144d16j6u1y0
+[2026-11-11T14:34:21.958831] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] remote session hvgjx7y7094494d5vi144d16j6u1y0 handled: streams=1 event(video=1 audio=1) session(video=1 audio=1)
+[2026-11-11T14:34:21.958859] EVENT MEDIA event=remoteStreamAdded state=video=1 audio=1 sessionId=hvgjx7y7094494d5vi144d16j6u1y0 sessionStreams=1 sessionVideo=1 sessionAudio=1
+[2026-11-11T14:34:21.982439] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=90880 audioPackets=568 videoBytes=0
+[2026-11-11T14:34:22.104759] EVENT SIP op=mediaStream target=6000 state=remote params=video=2 audio=1 id=hvgjx7y7094494d5vi144d16j6u1y0
+[2026-11-11T14:34:22.104974] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] remote session hvgjx7y7094494d5vi144d16j6u1y0 handled: streams=2 event(video=2 audio=1) session(video=3 audio=2)
+[2026-11-11T14:34:22.105024] EVENT MEDIA event=remoteStreamAdded state=video=2 audio=1 sessionId=hvgjx7y7094494d5vi144d16j6u1y0 sessionStreams=2 sessionVideo=3 sessionAudio=2
+[2026-11-11T14:34:22.105874] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] remote video tile 등록(전용) track=c3720340-e93b-449e-a774-95b2932324e1
+[2026-11-11T14:34:22.510203] INFO [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP re-INVITE 수신 hasAudio=true hasVideo=true -> 자동 수락
+[2026-11-11T14:34:22.510573] INFO [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP re-INVITE 응답 전송 accepted=true
+[2026-11-11T14:34:25.180159] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=116480 audioPackets=728 videoBytes=9536
+[2026-11-11T14:34:30.181494] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=155040 audioPackets=969 videoBytes=30812
+[2026-11-11T14:34:35.181299] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=195040 audioPackets=1219 videoBytes=53508
+[2026-11-11T14:34:40.180545] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=235040 audioPackets=1469 videoBytes=80541
+[2026-11-11T14:34:45.179357] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=274720 audioPackets=1717 videoBytes=115610
+[2026-11-11T14:34:50.180533] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=314880 audioPackets=1968 videoBytes=150807
+[2026-11-11T14:34:55.179939] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=354400 audioPackets=2215 videoBytes=186884
+[2026-11-11T14:35:00.180255] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=394880 audioPackets=2468 videoBytes=224144
+[2026-11-11T14:35:05.179300] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=431680 audioPackets=2698 videoBytes=257135
+[2026-11-11T14:35:10.179206] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=472960 audioPackets=2956 videoBytes=288438
+[2026-11-11T14:35:15.179387] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=511200 audioPackets=3195 videoBytes=322196
+[2026-11-11T14:35:20.178639] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=552000 audioPackets=3450 videoBytes=359954
+[2026-11-11T14:35:22.002259] INFO [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP re-INVITE 수신 hasAudio=true hasVideo=true -> 자동 수락
+[2026-11-11T14:35:22.002422] INFO [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP re-INVITE 응답 전송 accepted=true
+[2026-11-11T14:35:25.179177] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=592320 audioPackets=3702 videoBytes=0
+[2026-11-11T14:35:29.273084] EVENT SIP op=mediaStream target=6000 state=remote params=video=3 audio=1 id=hvgjx7y7094494d5vi144d16j6u1y0
+[2026-11-11T14:35:29.273295] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] remote session hvgjx7y7094494d5vi144d16j6u1y0 handled: streams=3 event(video=3 audio=1) session(video=6 audio=3)
+[2026-11-11T14:35:29.273357] EVENT MEDIA event=remoteStreamAdded state=video=3 audio=1 sessionId=hvgjx7y7094494d5vi144d16j6u1y0 sessionStreams=3 sessionVideo=6 sessionAudio=3
+[2026-11-11T14:35:29.274654] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] remote video tile 등록(전용) track=bb27f7eb-06b0-45b7-bf77-3bb029e530e7
+[2026-11-11T14:35:29.688056] INFO [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP re-INVITE 수신 hasAudio=true hasVideo=true -> 자동 수락
+[2026-11-11T14:35:29.688220] INFO [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP re-INVITE 응답 전송 accepted=true
+[2026-11-11T14:35:30.179628] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=632320 audioPackets=3952 videoBytes=0
+[2026-11-11T14:35:35.323888] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=672320 audioPackets=4202 videoBytes=21347
+[2026-11-11T14:35:40.324489] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=710560 audioPackets=4441 videoBytes=41383
+[2026-11-11T14:35:45.323634] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=750560 audioPackets=4691 videoBytes=65341
+[2026-11-11T14:35:50.323475] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=790400 audioPackets=4940 videoBytes=99528
+[2026-11-11T14:35:55.324315] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=830240 audioPackets=5189 videoBytes=135855
+[2026-11-11T14:36:00.325318] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=868640 audioPackets=5429 videoBytes=169849
+[2026-11-11T14:36:05.325004] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=910240 audioPackets=5689 videoBytes=206739
+[2026-11-11T14:36:10.324389] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=949280 audioPackets=5933 videoBytes=241459
+[2026-11-11T14:36:15.325139] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=989920 audioPackets=6187 videoBytes=277013
+[2026-11-11T14:36:20.325594] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=1028960 audioPackets=6431 videoBytes=311947
+[2026-11-11T14:36:25.324429] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=1069920 audioPackets=6687 videoBytes=343121
+[2026-11-11T14:36:30.326502] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=1110080 audioPackets=6938 videoBytes=378687
+[2026-11-11T14:36:35.325513] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=1149600 audioPackets=7185 videoBytes=411194
+[2026-11-11T14:36:40.325768] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=1189920 audioPackets=7437 videoBytes=444983
+[2026-11-11T14:36:45.324605] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=1229440 audioPackets=7684 videoBytes=480791
+[2026-11-11T14:36:50.326353] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=1269600 audioPackets=7935 videoBytes=518706
+[2026-11-11T14:36:55.326522] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=1308800 audioPackets=8180 videoBytes=553546
+[2026-11-11T14:37:00.324182] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=1349440 audioPackets=8434 videoBytes=591291
+[2026-11-11T14:37:05.324977] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=1388960 audioPackets=8681 videoBytes=626857
+[2026-11-11T14:37:10.324657] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=1429440 audioPackets=8934 videoBytes=663883
+[2026-11-11T14:37:15.324099] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=1468640 audioPackets=9179 videoBytes=698503
+[2026-11-11T14:37:20.325374] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=1509280 audioPackets=9433 videoBytes=736489
+[2026-11-11T14:37:25.325815] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=1548320 audioPackets=9677 videoBytes=771813
+[2026-11-11T14:37:30.324875] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=1589120 audioPackets=9932 videoBytes=809074
+[2026-11-11T14:37:35.326076] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=1626720 audioPackets=10167 videoBytes=841174
+[2026-11-11T14:37:40.325327] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=1668960 audioPackets=10431 videoBytes=881024
+[2026-11-11T14:37:45.325731] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=1709120 audioPackets=10682 videoBytes=917316
+[2026-11-11T14:37:50.325041] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=1749280 audioPackets=10933 videoBytes=953851
+[2026-11-11T14:37:55.326604] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=1789120 audioPackets=11182 videoBytes=989587
+[2026-11-11T14:38:00.325305] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=1829120 audioPackets=11432 videoBytes=1026770
+[2026-11-11T14:38:05.325507] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=1868640 audioPackets=11679 videoBytes=1064669
+[2026-11-11T14:38:10.326310] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=1907840 audioPackets=11924 videoBytes=1100475
+[2026-11-11T14:38:15.326123] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=1948320 audioPackets=12177 videoBytes=1137247
+[2026-11-11T14:38:20.327115] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=1987680 audioPackets=12423 videoBytes=1172569
+[2026-11-11T14:38:25.326474] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=2028320 audioPackets=12677 videoBytes=1210229
+[2026-11-11T14:38:30.324202] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=2067360 audioPackets=12921 videoBytes=1246279
+[2026-11-11T14:38:35.325441] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=2108320 audioPackets=13177 videoBytes=1283553
+[2026-11-11T14:38:40.325068] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=2148320 audioPackets=13427 videoBytes=1318636
+[2026-11-11T14:38:45.325053] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=2188320 audioPackets=13677 videoBytes=1356138
+[2026-11-11T14:38:50.325741] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=2228320 audioPackets=13927 videoBytes=1392431
+[2026-11-11T14:38:55.325435] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=2268160 audioPackets=14176 videoBytes=1428240
+[2026-11-11T14:39:00.326039] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=2308320 audioPackets=14427 videoBytes=1464774
+[2026-11-11T14:39:05.325452] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=2348320 audioPackets=14677 videoBytes=1500824
+[2026-11-11T14:39:10.326098] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=2388320 audioPackets=14927 videoBytes=1538726
+[2026-11-11T14:39:15.326072] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=2428000 audioPackets=15175 videoBytes=1575425
+[2026-11-11T14:39:20.326781] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=2468320 audioPackets=15427 videoBytes=1611966
+[2026-11-11T14:39:25.326953] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=2507360 audioPackets=15671 videoBytes=1647291
+[2026-11-11T14:39:30.325437] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=2548160 audioPackets=15926 videoBytes=1686416
+[2026-11-11T14:39:35.327240] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=2586400 audioPackets=16165 videoBytes=1720047
+[2026-11-11T14:39:40.325841] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=2627840 audioPackets=16424 videoBytes=1759884
+[2026-11-11T14:39:45.326936] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=2668160 audioPackets=16676 videoBytes=1794981
+[2026-11-11T14:39:50.326824] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=2708160 audioPackets=16926 videoBytes=1832725
+[2026-11-11T14:39:55.326823] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=2748320 audioPackets=17177 videoBytes=1869018
+[2026-11-11T14:40:00.324904] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=2787520 audioPackets=17422 videoBytes=1905951
+[2026-11-11T14:40:05.325249] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=2827040 audioPackets=17669 videoBytes=1942493
+[2026-11-11T14:40:10.325953] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=2867040 audioPackets=17919 videoBytes=1979433
+[2026-11-11T14:40:15.326477] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=2906880 audioPackets=18168 videoBytes=2015498
+[2026-11-11T14:40:20.327337] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=2946880 audioPackets=18418 videoBytes=2054282
+[2026-11-11T14:40:25.325463] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=2987040 audioPackets=18669 videoBytes=2091315
+[2026-11-11T14:40:30.327191] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=3026560 audioPackets=18916 videoBytes=2128732
+[2026-11-11T14:40:35.326936] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=3067040 audioPackets=19169 videoBytes=2165523
+[2026-11-11T14:40:40.327935] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=3106240 audioPackets=19414 videoBytes=2201089
+[2026-11-11T14:40:45.327491] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=3146880 audioPackets=19668 videoBytes=2237140
+[2026-11-11T14:40:50.326524] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=3185760 audioPackets=19911 videoBytes=2274558
+[2026-11-11T14:40:55.326476] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=3227040 audioPackets=20169 videoBytes=2311818
+[2026-11-11T14:41:00.326953] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=3266720 audioPackets=20417 videoBytes=2346417
+[2026-11-11T14:41:05.326720] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=3306400 audioPackets=20665 videoBytes=2384802
+[2026-11-11T14:41:10.326805] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=3346880 audioPackets=20918 videoBytes=2421585
+[2026-11-11T14:41:15.327325] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=3386880 audioPackets=21168 videoBytes=2457885
+[2026-11-11T14:41:20.327440] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=3426720 audioPackets=21417 videoBytes=2490306
+[2026-11-11T14:41:25.325298] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=3465280 audioPackets=21658 videoBytes=2527489
+[2026-11-11T14:41:30.325338] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=3505440 audioPackets=21909 videoBytes=2565162
+[2026-11-11T14:41:35.327311] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=3544960 audioPackets=22156 videoBytes=2598793
+[2026-11-11T14:41:40.325832] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=3585440 audioPackets=22409 videoBytes=2638146
+[2026-11-11T14:41:45.328864] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=3624640 audioPackets=22654 videoBytes=2674112
+[2026-11-11T14:41:50.325349] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=3663520 audioPackets=22897 videoBytes=2711768
+[2026-11-11T14:41:55.327735] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=3702560 audioPackets=23141 videoBytes=2746864
+[2026-11-11T14:42:00.327709] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=3743040 audioPackets=23394 videoBytes=2783399
+[2026-11-11T14:42:05.326851] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=3783040 audioPackets=23644 videoBytes=2819859
+[2026-11-11T14:42:10.326872] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=3822080 audioPackets=23888 videoBytes=2856065
+[2026-11-11T14:42:15.327418] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=3862720 audioPackets=24142 videoBytes=2892599
+[2026-11-11T14:42:20.327492] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=3902400 audioPackets=24390 videoBytes=2927840
+[2026-11-11T14:42:25.328216] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=3942720 audioPackets=24642 videoBytes=2963648
+[2026-11-11T14:42:30.328643] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=3982560 audioPackets=24891 videoBytes=3001066
+[2026-11-11T14:42:35.326116] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=4021920 audioPackets=25137 videoBytes=3031316
+[2026-11-11T14:42:40.327255] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=4061760 audioPackets=25386 videoBytes=3072374
+[2026-11-11T14:42:45.328264] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=4100160 audioPackets=25626 videoBytes=3108343
+[2026-11-11T14:42:50.326953] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=4138400 audioPackets=25865 videoBytes=3140287
+[2026-11-11T14:42:55.328763] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=4180160 audioPackets=26126 videoBytes=3178273
+[2026-11-11T14:43:00.327872] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=4219040 audioPackets=26369 videoBytes=3213998
+[2026-11-11T14:43:05.326996] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=4260000 audioPackets=26625 videoBytes=3252625
+[2026-11-11T14:43:10.326527] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=4300000 audioPackets=26875 videoBytes=3280214
+[2026-11-11T14:43:15.327107] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=4339680 audioPackets=27123 videoBytes=3318523
+[2026-11-11T14:43:20.327399] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=4379840 audioPackets=27374 videoBytes=3355060
+[2026-11-11T14:43:22.773687] EVENT UI CALL action=cameraTogglePressed
+[2026-11-11T14:43:22.774614] INFO [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] 카메라 전환 보류: 카메라 1개, replaceTrack 미구현
+[2026-11-11T14:43:22.774659] EVENT MEDIA event=cameraToggled state=front=true
+[2026-11-11T14:43:23.201170] EVENT UI CALL action=cameraTogglePressed
+[2026-11-11T14:43:23.202130] INFO [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] 카메라 전환 보류: 카메라 1개, replaceTrack 미구현
+[2026-11-11T14:43:23.202174] EVENT MEDIA event=cameraToggled state=front=true
+[2026-11-11T14:43:23.396757] EVENT UI CALL action=cameraTogglePressed
+[2026-11-11T14:43:23.397884] INFO [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] 카메라 전환 보류: 카메라 1개, replaceTrack 미구현
+[2026-11-11T14:43:23.397932] EVENT MEDIA event=cameraToggled state=front=true
+[2026-11-11T14:43:24.888275] EVENT UI CALL action=hangupPressed params=target=6000
+[2026-11-11T14:43:24.888483] INFO [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP hangup (local)
+[2026-11-11T14:43:24.888598] EVENT SIP op=callTerminated target=6000 state=ENDED params=id=hvgjx7y7094494d5vi144d16j6u1y0 cause=Code: [200], Cause: Terminated, Reason: Terminated by local
+[2026-11-11T14:43:25.173796] EVENT MEDIA event=localStreamReleased state=-
+[2026-11-11T14:59:17.052422] EVENT UI DIALER action=callPressed params=target=6000
+[2026-11-11T14:59:17.061569] EVENT MEDIA event=localStreamReady state=video=1 audio=1 frontCamera=true audioMuted=false
+[2026-11-11T14:59:17.061725] INFO [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP call -> 6000 voiceOnly=false hasLocalStream=true
+[2026-11-11T14:59:17.062107] EVENT DIALER event=callResult state=pushed target=6000 error=-
+[2026-11-11T14:59:17.064793] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP remote-track recovery armed id=hvgjxul58zreo3c357s74v3087e70c
+[2026-11-11T14:59:17.064817] EVENT SIP op=callInitiation target=6000 state=initiated params=direction=outgoing id=hvgjxul58zreo3c357s74v3087e70c
+[2026-11-11T14:59:17.064847] EVENT SIP op=callProgress target=6000 state=CONNECTING params=id=hvgjxul58zreo3c357s74v3087e70c
+[2026-11-11T14:59:17.166488] EVENT SIP op=mediaStream target=6000 state=local params=video=1 audio=1 id=hvgjxul58zreo3c357s74v3087e70c
+[2026-11-11T14:59:17.799874] EVENT SIP op=callEstablished target=6000 state=ACCEPTED params=id=hvgjxul58zreo3c357s74v3087e70c
+[2026-11-11T14:59:17.799998] EVENT SIP op=callEstablished target=6000 state=CONFIRMED params=id=hvgjxul58zreo3c357s74v3087e70c
+[2026-11-11T14:59:17.900759] EVENT SIP op=mediaStream target=6000 state=remote params=video=1 audio=1 id=hvgjxul58zreo3c357s74v3087e70c
+[2026-11-11T14:59:17.900841] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] remote session hvgjxul58zreo3c357s74v3087e70c handled: streams=1 event(video=1 audio=1) session(video=1 audio=1)
+[2026-11-11T14:59:17.900870] EVENT MEDIA event=remoteStreamAdded state=video=1 audio=1 sessionId=hvgjxul58zreo3c357s74v3087e70c sessionStreams=1 sessionVideo=1 sessionAudio=1
+[2026-11-11T14:59:17.901399] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] remote video tile 등록(전용) track=5c35f33a-b825-4f07-8f1e-204a31abb56c
+[2026-11-11T14:59:17.904988] EVENT SIP op=mediaStream target=6000 state=remote params=video=1 audio=1 id=hvgjxul58zreo3c357s74v3087e70c
+[2026-11-11T14:59:17.905055] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] remote session hvgjxul58zreo3c357s74v3087e70c handled: streams=1 event(video=1 audio=1) session(video=1 audio=1)
+[2026-11-11T14:59:17.905079] EVENT MEDIA event=remoteStreamAdded state=video=1 audio=1 sessionId=hvgjxul58zreo3c357s74v3087e70c sessionStreams=1 sessionVideo=1 sessionAudio=1
+[2026-11-11T14:59:19.248196] INFO [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP re-INVITE 수신 hasAudio=true hasVideo=true -> 자동 수락
+[2026-11-11T14:59:19.248372] INFO [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP re-INVITE 응답 전송 accepted=true
+[2026-11-11T14:59:19.347939] EVENT SIP op=mediaStream target=6000 state=remote params=video=2 audio=1 id=hvgjxul58zreo3c357s74v3087e70c
+[2026-11-11T14:59:19.348120] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] remote session hvgjxul58zreo3c357s74v3087e70c handled: streams=2 event(video=2 audio=1) session(video=3 audio=2)
+[2026-11-11T14:59:19.348178] EVENT MEDIA event=remoteStreamAdded state=video=2 audio=1 sessionId=hvgjxul58zreo3c357s74v3087e70c sessionStreams=2 sessionVideo=3 sessionAudio=2
+[2026-11-11T14:59:19.349106] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] remote video tile 등록(전용) track=42e6e2b2-68e8-4817-aaa7-837c34579613
+[2026-11-11T14:59:22.803625] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=35200 audioPackets=220 videoBytes=0
+[2026-11-11T14:59:27.803858] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=75680 audioPackets=473 videoBytes=0
+[2026-11-11T14:59:32.802964] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=114560 audioPackets=716 videoBytes=0
+[2026-11-11T14:59:37.804341] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=155360 audioPackets=971 videoBytes=0
+[2026-11-11T14:59:42.804272] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=193920 audioPackets=1212 videoBytes=0
+[2026-11-11T14:59:47.803285] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=233920 audioPackets=1462 videoBytes=0
+[2026-11-11T14:59:52.803670] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=273920 audioPackets=1712 videoBytes=0
+[2026-11-11T14:59:57.803676] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=313120 audioPackets=1957 videoBytes=0
+[2026-11-11T15:00:02.802516] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=352960 audioPackets=2206 videoBytes=0
+[2026-11-11T15:00:07.802935] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=392800 audioPackets=2455 videoBytes=0
+[2026-11-11T15:00:12.802571] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=432160 audioPackets=2701 videoBytes=0
+[2026-11-11T15:00:17.802784] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=471840 audioPackets=2949 videoBytes=0
+[2026-11-11T15:00:22.803504] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=512160 audioPackets=3201 videoBytes=0
+[2026-11-11T15:00:27.801717] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=551680 audioPackets=3448 videoBytes=0
+[2026-11-11T15:00:32.803841] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=592000 audioPackets=3700 videoBytes=0
+[2026-11-11T15:00:37.804315] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=631040 audioPackets=3944 videoBytes=0
+[2026-11-11T15:00:42.804091] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=672000 audioPackets=4200 videoBytes=0
+[2026-11-11T15:00:47.804741] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=710720 audioPackets=4442 videoBytes=0
+[2026-11-11T15:00:52.804187] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=751840 audioPackets=4699 videoBytes=0
+[2026-11-11T15:00:57.803773] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=791680 audioPackets=4948 videoBytes=0
+[2026-11-11T15:01:00.513201] EVENT UI CALL action=hangupPressed params=target=6000
+[2026-11-11T15:01:00.513403] INFO [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP hangup (local)
+[2026-11-11T15:01:00.513530] EVENT SIP op=callTerminated target=6000 state=ENDED params=id=hvgjxul58zreo3c357s74v3087e70c cause=Code: [200], Cause: Terminated, Reason: Terminated by local
+[2026-11-11T15:01:00.825529] EVENT MEDIA event=localStreamReleased state=-
+[2026-11-11T15:01:04.996276] EVENT UI DIALER action=callPressed params=target=6000
+[2026-11-11T15:01:05.007180] EVENT MEDIA event=localStreamReady state=video=1 audio=1 frontCamera=true audioMuted=false
+[2026-11-11T15:01:05.007293] INFO [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP call -> 6000 voiceOnly=false hasLocalStream=true
+[2026-11-11T15:01:05.007600] EVENT DIALER event=callResult state=pushed target=6000 error=-
+[2026-11-11T15:01:05.009928] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP remote-track recovery armed id=hvgjxh3zxmvpzhy0z77l274zs1l938
+[2026-11-11T15:01:05.009952] EVENT SIP op=callInitiation target=6000 state=initiated params=direction=outgoing id=hvgjxh3zxmvpzhy0z77l274zs1l938
+[2026-11-11T15:01:05.009981] EVENT SIP op=callProgress target=6000 state=CONNECTING params=id=hvgjxh3zxmvpzhy0z77l274zs1l938
+[2026-11-11T15:01:05.112261] EVENT SIP op=mediaStream target=6000 state=local params=video=1 audio=1 id=hvgjxh3zxmvpzhy0z77l274zs1l938
+[2026-11-11T15:01:05.742536] EVENT SIP op=callEstablished target=6000 state=ACCEPTED params=id=hvgjxh3zxmvpzhy0z77l274zs1l938
+[2026-11-11T15:01:05.742666] EVENT SIP op=callEstablished target=6000 state=CONFIRMED params=id=hvgjxh3zxmvpzhy0z77l274zs1l938
+[2026-11-11T15:01:05.844651] EVENT SIP op=mediaStream target=6000 state=remote params=video=1 audio=1 id=hvgjxh3zxmvpzhy0z77l274zs1l938
+[2026-11-11T15:01:05.844802] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] remote session hvgjxh3zxmvpzhy0z77l274zs1l938 handled: streams=1 event(video=1 audio=1) session(video=1 audio=1)
+[2026-11-11T15:01:05.844859] EVENT MEDIA event=remoteStreamAdded state=video=1 audio=1 sessionId=hvgjxh3zxmvpzhy0z77l274zs1l938 sessionStreams=1 sessionVideo=1 sessionAudio=1
+[2026-11-11T15:01:05.844890] EVENT SIP op=mediaStream target=6000 state=remote params=video=1 audio=1 id=hvgjxh3zxmvpzhy0z77l274zs1l938
+[2026-11-11T15:01:05.844921] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] remote session hvgjxh3zxmvpzhy0z77l274zs1l938 handled: streams=1 event(video=1 audio=1) session(video=1 audio=1)
+[2026-11-11T15:01:05.844949] EVENT MEDIA event=remoteStreamAdded state=video=1 audio=1 sessionId=hvgjxh3zxmvpzhy0z77l274zs1l938 sessionStreams=1 sessionVideo=1 sessionAudio=1
+[2026-11-11T15:01:05.845884] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] remote video tile 등록(전용) track=8e04ceb5-76de-4b53-ba3c-d5b25c16a003
+[2026-11-11T15:01:05.971309] EVENT SIP op=mediaStream target=6000 state=remote params=video=2 audio=1 id=hvgjxh3zxmvpzhy0z77l274zs1l938
+[2026-11-11T15:01:05.971410] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] remote session hvgjxh3zxmvpzhy0z77l274zs1l938 handled: streams=2 event(video=2 audio=1) session(video=3 audio=2)
+[2026-11-11T15:01:05.971444] EVENT MEDIA event=remoteStreamAdded state=video=2 audio=1 sessionId=hvgjxh3zxmvpzhy0z77l274zs1l938 sessionStreams=2 sessionVideo=3 sessionAudio=2
+[2026-11-11T15:01:05.971883] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] remote video tile 등록(전용) track=a8880e8e-c131-4a4b-92d3-1e9b5d9dd430
+[2026-11-11T15:01:06.375306] INFO [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP re-INVITE 수신 hasAudio=true hasVideo=true -> 자동 수락
+[2026-11-11T15:01:06.375617] INFO [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP re-INVITE 응답 전송 accepted=true
+[2026-11-11T15:01:10.746915] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=37920 audioPackets=237 videoBytes=21627
+[2026-11-11T15:01:15.746509] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=78080 audioPackets=488 videoBytes=56987
+[2026-11-11T15:01:20.746356] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=117760 audioPackets=736 videoBytes=91859
+[2026-11-11T15:01:25.744678] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=157280 audioPackets=983 videoBytes=129397
+[2026-11-11T15:01:30.746055] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=196640 audioPackets=1229 videoBytes=164611
+[2026-11-11T15:01:35.746056] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=236640 audioPackets=1479 videoBytes=203011
+[2026-11-11T15:01:40.746589] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=275040 audioPackets=1719 videoBytes=238757
+[2026-11-11T15:01:45.744626] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=315680 audioPackets=1973 videoBytes=278040
+[2026-11-11T15:01:50.746092] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=355360 audioPackets=2221 videoBytes=314513
+[2026-11-11T15:01:55.744807] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=395040 audioPackets=2469 videoBytes=351808
+[2026-11-11T15:02:00.746225] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=435040 audioPackets=2719 videoBytes=386677
+[2026-11-11T15:02:05.744972] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=473920 audioPackets=2962 videoBytes=423140
+[2026-11-11T15:02:10.745346] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=514560 audioPackets=3216 videoBytes=460159
+[2026-11-11T15:02:15.746399] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=554400 audioPackets=3465 videoBytes=497832
+[2026-11-11T15:02:20.746694] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=594080 audioPackets=3713 videoBytes=528233
+[2026-11-11T15:02:21.727047] INFO [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP re-INVITE 수신 hasAudio=true hasVideo=true -> 자동 수락
+[2026-11-11T15:02:21.727188] INFO [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP re-INVITE 응답 전송 accepted=true
+[2026-11-11T15:02:25.745673] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=633760 audioPackets=3961 videoBytes=0
+[2026-11-11T15:02:27.069654] EVENT SIP op=mediaStream target=6000 state=remote params=video=3 audio=1 id=hvgjxh3zxmvpzhy0z77l274zs1l938
+[2026-11-11T15:02:27.069765] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] remote session hvgjxh3zxmvpzhy0z77l274zs1l938 handled: streams=3 event(video=3 audio=1) session(video=6 audio=3)
+[2026-11-11T15:02:27.069796] EVENT MEDIA event=remoteStreamAdded state=video=3 audio=1 sessionId=hvgjxh3zxmvpzhy0z77l274zs1l938 sessionStreams=3 sessionVideo=6 sessionAudio=3
+[2026-11-11T15:02:27.070188] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] remote video tile 등록(전용) track=3e8a48ab-85a8-436d-bc85-ba786792df9d
+[2026-11-11T15:02:27.472461] INFO [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP re-INVITE 수신 hasAudio=true hasVideo=true -> 자동 수락
+[2026-11-11T15:02:27.472738] INFO [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP re-INVITE 응답 전송 accepted=true
+[2026-11-11T15:02:30.747073] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=673440 audioPackets=4209 videoBytes=10751
+[2026-11-11T15:02:35.745711] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=712800 audioPackets=4455 videoBytes=31759
+[2026-11-11T15:02:40.747121] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=753440 audioPackets=4709 videoBytes=54058
+[2026-11-11T15:02:45.746161] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=792160 audioPackets=4951 videoBytes=80056
+[2026-11-11T15:02:50.746426] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=833120 audioPackets=5207 videoBytes=112928
+[2026-11-11T15:02:55.745516] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=870560 audioPackets=5441 videoBytes=141087
+[2026-11-11T15:03:00.747647] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=910400 audioPackets=5690 videoBytes=176355
+[2026-11-11T15:03:05.747829] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=950080 audioPackets=5938 videoBytes=205702
+[2026-11-11T15:03:10.744827] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=989440 audioPackets=6184 videoBytes=240856
+[2026-11-11T15:03:15.746447] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=1029440 audioPackets=6434 videoBytes=274266
+[2026-11-11T15:03:20.745981] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=1069600 audioPackets=6685 videoBytes=310835
+[2026-11-11T15:03:25.747685] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=1109280 audioPackets=6933 videoBytes=342742
+[2026-11-11T15:03:30.746213] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=1148800 audioPackets=7180 videoBytes=375633
+[2026-11-11T15:03:35.745692] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=1188640 audioPackets=7429 videoBytes=411938
+[2026-11-11T15:03:40.746176] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=1228160 audioPackets=7676 videoBytes=446885
+[2026-11-11T15:03:45.745556] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=1268480 audioPackets=7928 videoBytes=480930
+[2026-11-11T15:03:50.745974] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=1306560 audioPackets=8166 videoBytes=505103
+[2026-11-11T15:03:55.745495] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=1347680 audioPackets=8423 videoBytes=533643
+[2026-11-11T15:04:00.746632] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=1386240 audioPackets=8664 videoBytes=570192
+[2026-11-11T15:04:05.747469] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=1426720 audioPackets=8917 videoBytes=602356
+[2026-11-11T15:04:10.747079] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=1466560 audioPackets=9166 videoBytes=629366
+[2026-11-11T15:04:15.747779] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=1506240 audioPackets=9414 videoBytes=667489
+[2026-11-11T15:04:20.746622] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=1546240 audioPackets=9664 videoBytes=697711
+[2026-11-11T15:04:25.748119] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=1585440 audioPackets=9909 videoBytes=735699
+[2026-11-11T15:04:30.747437] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=1625440 audioPackets=10159 videoBytes=769580
+[2026-11-11T15:04:35.745299] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=1663840 audioPackets=10399 videoBytes=801838
+[2026-11-11T15:04:40.746440] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=1704800 audioPackets=10655 videoBytes=831490
+[2026-11-11T15:04:45.745857] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=1744160 audioPackets=10901 videoBytes=868389
+[2026-11-11T15:04:50.747317] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=1784160 audioPackets=11151 videoBytes=902341
+[2026-11-11T15:04:55.746796] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=1823040 audioPackets=11394 videoBytes=931110
+[2026-11-11T15:05:00.747470] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=1864000 audioPackets=11650 videoBytes=963410
+[2026-11-11T15:05:05.747111] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=1902880 audioPackets=11893 videoBytes=990486
+[2026-11-11T15:05:10.745936] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=1942720 audioPackets=12142 videoBytes=1010103
+[2026-11-11T15:05:15.746488] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=1982720 audioPackets=12392 videoBytes=1046448
+[2026-11-11T15:05:20.747239] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=2022240 audioPackets=12639 videoBytes=1077887
+[2026-11-11T15:05:25.746486] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=2061120 audioPackets=12882 videoBytes=1116358
+[2026-11-11T15:05:30.747626] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=2101120 audioPackets=13132 videoBytes=1147207
+[2026-11-11T15:05:35.752637] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=2140640 audioPackets=13379 videoBytes=1180355
+[2026-11-11T15:05:40.758087] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=2180000 audioPackets=13625 videoBytes=1203838
+[2026-11-11T15:05:45.759323] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=2220800 audioPackets=13880 videoBytes=1233242
+[2026-11-11T15:05:50.763411] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=2260480 audioPackets=14128 videoBytes=1259265
+[2026-11-11T15:05:55.764274] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=2300960 audioPackets=14381 videoBytes=1298427
+[2026-11-11T15:06:00.766123] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=2340160 audioPackets=14626 videoBytes=1328050
+[2026-11-11T15:06:05.768098] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=2380000 audioPackets=14875 videoBytes=1361332
+[2026-11-11T15:06:10.767936] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=2420000 audioPackets=15125 videoBytes=1393362
+[2026-11-11T15:06:15.766941] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=2460960 audioPackets=15381 videoBytes=1430489
+[2026-11-11T15:06:20.768141] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=2500960 audioPackets=15631 videoBytes=1464738
+[2026-11-11T15:06:25.769366] DEBUG [usr=1103@192.168.11.39 host=AtomOppa ip=192.168.11.7] SIP stats inbound audioBytes=2540640 audioPackets=15879 videoBytes=1500776

@@ -20,6 +20,9 @@ class _ConferenceViewState extends State<ConferenceView> {
   final TextEditingController _roomController =
       TextEditingController(text: AppConstants.conferenceRoom);
 
+  /// 0 = 내 영상, 1..N = 원격 타일. 원격이 있으면 기본으로 첫 원격을 크게 본다.
+  int _selectedTile = 1;
+
   @override
   void initState() {
     super.initState();
@@ -180,26 +183,63 @@ class _ConferenceViewState extends State<ConferenceView> {
 
   Widget _buildConferenceGrid(MediaProvider mediaProvider) {
     final remoteStreams = mediaProvider.remoteStreams;
-    final tileCount = 1 + remoteStreams.length;
-
-    return GridView.count(
-      crossAxisCount: tileCount > 1 ? 2 : 1,
-      padding: const EdgeInsets.all(8),
-      mainAxisSpacing: 8,
-      crossAxisSpacing: 8,
-      children: [
-        _buildVideoTile(
-          label: '내 영상',
-          renderer: mediaProvider.getLocalRenderer(),
-          stream: mediaProvider.localStream,
-          mirror: true,
+    final tiles = <_ConferenceTile>[
+      _ConferenceTile(
+        label: '내 영상',
+        renderer: mediaProvider.getLocalRenderer(),
+        stream: mediaProvider.localStream,
+        mirror: true,
+      ),
+      for (var i = 0; i < remoteStreams.length; i++)
+        _ConferenceTile(
+          label: '원격 ${i + 1}',
+          renderer: mediaProvider.getRemoteRenderer(i),
+          stream: remoteStreams[i],
         ),
-        for (var i = 0; i < remoteStreams.length; i++)
-          _buildVideoTile(
-            label: '회의 영상 ${i + 1}',
-            renderer: mediaProvider.getRemoteRenderer(i),
-            stream: remoteStreams[i],
+    ];
+    final selected = _selectedTile.clamp(0, tiles.length - 1);
+    final current = tiles[selected];
+
+    return Column(
+      children: [
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
+            child: _buildVideoTile(
+              label: current.label,
+              renderer: current.renderer,
+              stream: current.stream,
+              mirror: current.mirror,
+            ),
           ),
+        ),
+        if (remoteStreams.isEmpty)
+          const Padding(
+            padding: EdgeInsets.only(top: 6),
+            child: Text(
+              '원격 영상 수신 준비중',
+              style: TextStyle(color: Colors.white70, fontSize: 12),
+            ),
+          ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: [
+                for (var i = 0; i < tiles.length; i++)
+                  Padding(
+                    padding: const EdgeInsets.only(right: 8),
+                    child: ChoiceChip(
+                      label: Text(tiles[i].label),
+                      selected: selected == i,
+                      onSelected: (_) => setState(() => _selectedTile = i),
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        ),
       ],
     );
   }
@@ -232,8 +272,20 @@ class _ConferenceViewState extends State<ConferenceView> {
                 );
               })
             else
-              const Center(
-                child: Icon(Icons.videocam_off_outlined, color: Colors.white54),
+              Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(Icons.videocam_off_outlined,
+                        color: Colors.white54),
+                    const SizedBox(height: 8),
+                    Text(
+                      label == '내 영상' ? '카메라 없음' : '원격 영상 수신 준비중',
+                      style:
+                          const TextStyle(color: Colors.white54, fontSize: 12),
+                    ),
+                  ],
+                ),
               ),
             Positioned(
               left: 8,
@@ -255,4 +307,18 @@ class _ConferenceViewState extends State<ConferenceView> {
       ),
     );
   }
+}
+
+class _ConferenceTile {
+  const _ConferenceTile({
+    required this.label,
+    required this.renderer,
+    required this.stream,
+    this.mirror = false,
+  });
+
+  final String label;
+  final RTCVideoRenderer? renderer;
+  final MediaStream? stream;
+  final bool mirror;
 }
