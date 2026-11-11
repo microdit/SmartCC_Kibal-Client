@@ -61,6 +61,7 @@
 - MediaManager 다중 영상/렌더/타일 선택 보완 → v0.0.11+11
 - v1.6 실기(3자): H5/ICE 안정, stale 트랙 누적 → 최신 3타일+선택 UI
 - 잔여: 참가자 식별(서버 메타데이터), 1101 오디오 출력, 3자 재검증
+- 클라이언트 로그 자동 수집(v0.0.12): `scripts/ops_client_logs.sh list|tail|follow`로 OPS 내선별 로그 조회
 - 포크: `macos-client/packages/sip_ua` (ADR-005) — `dependency_overrides` 사용
 - 상세: [[wiki/06_Reports/20261111_원격오디오_ICE문제_개발보고서_v1.0]]
 - 다음 작업: [[wiki/04_Prompts/20261111_원격오디오_ICE_후속작업프롬프트_v1.0]]

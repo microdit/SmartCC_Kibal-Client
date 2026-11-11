@@ -2,6 +2,8 @@ import 'dart:async';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:sip_ua/sip_ua.dart';
 import '../utils/app_logger.dart';
+import '../utils/constants.dart';
+import '../utils/remote_log_forwarder.dart';
 import 'sip_config.dart';
 import 'sip_session.dart';
 
@@ -150,6 +152,12 @@ class KibalSipClient implements SipUaHelperListener {
       var connected = false;
       // register:true 자동등록 성공 시 identity 기록
       AppLogger.setIdentity(user: config.username, domain: config.domain);
+      // 원격 로그 수집: 도메인/내선 번호를 반영해 라우팅/식별
+      RemoteLogForwarder.instance.start(
+        url: AppConstants.opsLogUrl(config.domain),
+        key: AppConstants.opsClientKey,
+        extension: config.username,
+      );
       AppLogger.instance.call('init',
           params: {
             'ws': _webSocketUrl(config),

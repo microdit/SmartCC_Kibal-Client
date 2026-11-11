@@ -67,6 +67,20 @@ class AppConstants {
   //--------------------------------------------------------------------------
   
   static const String conferenceRoom = '6000';
+
+  //--------------------------------------------------------------------------
+  // OPS 콘솔 (원격 로그 수집)
+  //--------------------------------------------------------------------------
+
+  // OPS API 포트 (kibal-dev-ops / kibal-prd-ops)
+  static const int opsPort = 8091;
+
+  // 클라이언트 로그 수집용 공유 키 (server deploy/*/ops.env OPS_CLIENT_KEY와 일치)
+  // DEV 전용 기본값. PRD는 별도 키로 치환 필요.
+  static const String opsClientKey = 'dev-kibal-clients-2026';
+
+  /// OPS 로그 수집 URL (도메인 기반).
+  static String opsLogUrl(String domain) => 'http://$domain:$opsPort/api/client-logs';
   
   //--------------------------------------------------------------------------
   // Media Configuration
