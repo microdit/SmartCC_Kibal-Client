@@ -1,0 +1,16 @@
+=== t=300s at 114515 ===
+Unable to open specified master config file '/etc/asterisk/asterisk.conf', using built-in defaults
+Channel                        Flags  User Profile     Bridge Profile   Menu             CallerID
+============================== ====== ================ ================ ================ ================
+PJSIP/1101-00000002                   kibal_user       kibal_bridge     default_menu     1101
+--- channelstats ---
+Unable to open specified master config file '/etc/asterisk/asterisk.conf', using built-in defaults
+
+                                             ...........Receive......... .........Transmit..........
+ BridgeId ChannelId ........ UpTime.. Codec.   Count    Lost Pct  Jitter   Count    Lost Pct  Jitter RTT....
+ ===========================================================================================================
+
+ 05cab5ba 1101-00000002      00:00:55 ulaw     2683       0    0   0.000   2744       0    0   0.003   0.001
+
+Objects found: 1
+

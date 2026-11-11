@@ -19,14 +19,19 @@ case "${1:-release}" in
 esac
 
 VERSION=$(sed -E -n 's/^version: ([0-9]+\.[0-9]+\.[0-9]+)(\+.*)?$/\1/p' pubspec.yaml | head -1)
+BUILD=$(sed -E -n 's/^version: [0-9]+\.[0-9]+\.[0-9]+\+([0-9]+)$/\1/p' pubspec.yaml | head -1)
 TAG="v${VERSION}"
 CONFIG_DIR="$(echo "$CONFIG" | tr '[:lower:]' '[:upper:]')"
-echo ">>> build config=$CONFIG version=$TAG"
+echo ">>> build config=$CONFIG version=$TAG build=${BUILD:-1}"
 
-# pubspec version을 Info.plist에도 반영 (CFBundleShortVersionString)
+# pubspec version을 Info.plist에도 반영 (CFBundleShortVersionString/BundleVersion)
 PLIST=macos/Runner/Info.plist
 /usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString ${VERSION}" "$PLIST" 2>/dev/null \
   || /usr/libexec/PlistBuddy -c "Add :CFBundleShortVersionString string ${VERSION}" "$PLIST"
+if [ -n "$BUILD" ]; then
+  /usr/libexec/PlistBuddy -c "Set :CFBundleVersion ${BUILD}" "$PLIST" 2>/dev/null \
+    || /usr/libexec/PlistBuddy -c "Add :CFBundleVersion string ${BUILD}" "$PLIST"
+fi
 
 # Flutter 빌드 (dart-define으로 버전 전달 → 타이틀바 표시)
 flutter build macos --"$CONFIG" --dart-define=APP_VERSION="$TAG"

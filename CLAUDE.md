@@ -64,3 +64,13 @@
 - **문서**: `docs/보고서/20261109_macOS테스트결과보고서_v1.0.md`, `wiki/06_Reports/20261109_macOS_M1-M6_개발완료보고서.md`
 - **후속**: MacBook 영상 실기 검증 → `wiki/04_Prompts/20261109_macbook_agent_후속작업프롬프트.md`
 - **Web Client 완료**, **iOS/Windows/Android는 macOS 검증 구조 이식 예정**
+
+## 상태 (2026-11-11)
+
+- **원격 오디오 H1 해결**: `sip_ua` 원격 트랙 폐기 우회(`sip_client.dart`), `recovered=true kind=audio` 확인
+- **미디어 경로 H4**: Release 엔타이틀먼트(`network.server`), `dtls_verify=fingerprint`, `media_address=192.168.11.39` 적용
+- **Docker ICE 후보 보정**: `macos-client/packages/sip_ua` 로컬 포크(ADR-005), 172.16/12 후보 → `c=` 보정
+- **H5 re-INVITE 미응답 수정**: `sip_client.dart` `onNewReinvite` 자동 수락. 영상/다자간 15~17초 ICE 실패의 직접 원인
+- **v0.0.8+8**: 오디오 단독 118초 유지(v0.0.7), H5 수정. **영상/3자 실기 재검증 대기**, 서버 영상 RTP 송신 확인 필요
+- 상세: `wiki/06_Reports/20261111_원격오디오_ICE문제_개발보고서_v1.0.md`
+- 다음 세션: `wiki/04_Prompts/20261111_원격오디오_ICE_후속작업프롬프트_v1.0.md`

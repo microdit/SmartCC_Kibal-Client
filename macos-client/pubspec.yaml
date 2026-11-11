@@ -1,7 +1,7 @@
 name: macos_client
 description: SmartCC Kibal macOS SIP Client - Native macOS SIP Video Client (Flutter 기반)
 publish_to: 'none'
-version: 0.0.4+4
+version: 0.0.8+8
 
 environment:
   sdk: '>=3.0.0 <4.0.0'
@@ -33,6 +33,11 @@ dependencies:
     sdk: flutter
 
   intl: ^0.20.3
+
+dependency_overrides:
+  # Docker-bridge ICE candidate 보정 패치 (packages/sip_ua)
+  sip_ua:
+    path: packages/sip_ua
 
 dev_dependencies:
   flutter_test:

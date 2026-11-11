@@ -1,0 +1,7 @@
+=== t=330s at 110917 ===
+Unable to open specified master config file '/etc/asterisk/asterisk.conf', using built-in defaults
+No conference bridge named '6000' found!
+--- channelstats ---
+Unable to open specified master config file '/etc/asterisk/asterisk.conf', using built-in defaults
+No objects found.
+

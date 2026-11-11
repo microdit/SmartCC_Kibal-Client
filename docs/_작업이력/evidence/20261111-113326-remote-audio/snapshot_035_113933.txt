@@ -1,0 +1,5 @@
+=== t=350s at 113933 ===
+Error response from daemon: Container 69e18826662b53f601279252cb5e4db3acdad6de6e5000672f18bffa307bd21b is not running
+--- channelstats ---
+Unable to open specified master config file '/etc/asterisk/asterisk.conf', using built-in defaults
+Unable to connect to remote asterisk (does /var/run/asterisk/asterisk.ctl exist?)

@@ -27,6 +27,22 @@
 
 추가 완료: SIP 엔진 `sip_ua` 교체(ADR-004), ConfBridge 3자 회의 검증, 린트 0건, Release 빌드.
 
+## 0-1. 2026-11-11 추가 진행 (원격 오디오/ICE)
+
+| 작업 | 상태 | 비고 |
+|------|------|------|
+| 원격 오디오 H1(트랙 폐기) | ✅ | `sip_client.dart` 복구 로직, `recovered=true kind=audio` |
+| Release UDP 엔타이틀먼트 | ✅ | `com.apple.security.network.server` |
+| DTLS `certificate verify failed` | ✅ | `dtls_verify=fingerprint` |
+| Docker ICE 후보 `172.19.0.2` | ⚠️ 부분 | `packages/sip_ua` 포크로 172.16/12 → `c=` 보정 (ADR-005) |
+| 오디오 단독 통화 안정성 | ✅ | 1101 118초 유지(v0.0.7) |
+| H5 re-INVITE 미응답 | ✅ | `onNewReinvite` 자동 수락(v0.0.8), 영상/다자간 ICE 실패 직접 원인 |
+| 영상/3자 실기 재검증 | ⬜ P0 | v0.0.8로 5분 이상, `videoBytes` 증가, `Sent RTP type 100` 확인 |
+| 3자 입장 시 1명 튕김 | ⬜ | H5 수정으로 해소되는지 확인 |
+| v0.0.8 장시간 회귀(5분+) | ⬜ | 1:1 영상/3자 영상 |
+
+> 상세: [[wiki/06_Reports/20261111_원격오디오_ICE문제_개발보고서_v1.0]], 후속: [[wiki/04_Prompts/20261111_원격오디오_ICE_후속작업프롬프트_v1.0]]
+
 ## 1. 목표
 
 2026-11-08 기준 `SmartCC_Kibal-Client`의 Mobile Client(Flutter + flutter_sip + flutter_webrtc)를 기반으로 다음 작업을 수행한다.

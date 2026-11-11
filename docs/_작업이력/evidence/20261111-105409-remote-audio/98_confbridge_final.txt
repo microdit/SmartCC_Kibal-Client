@@ -1,0 +1,5 @@
+Unable to open specified master config file '/etc/asterisk/asterisk.conf', using built-in defaults
+Channel                        Flags  User Profile     Bridge Profile   Menu             CallerID
+============================== ====== ================ ================ ================ ================
+PJSIP/1102-00000005                   kibal_user       kibal_bridge     default_menu     1102
+PJSIP/1103-00000006                   kibal_user       kibal_bridge     default_menu     1103

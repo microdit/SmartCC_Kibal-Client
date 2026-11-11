@@ -1,0 +1,15 @@
+=== t=600s at 121205 ===
+Unable to open specified master config file '/etc/asterisk/asterisk.conf', using built-in defaults
+No conference bridge named '6000' found!
+--- channelstats ---
+Unable to open specified master config file '/etc/asterisk/asterisk.conf', using built-in defaults
+
+                                             ...........Receive......... .........Transmit..........
+ BridgeId ChannelId ........ UpTime.. Codec.   Count    Lost Pct  Jitter   Count    Lost Pct  Jitter RTT....
+ ===========================================================================================================
+
+ PJSIP/1102-0000000f not valid
+ PJSIP/1103-00000010 not valid
+
+Objects found: 2
+

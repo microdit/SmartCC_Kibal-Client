@@ -78,6 +78,25 @@ class KibalSipClient implements SipUaHelperListener {
   /// 등록 대기
   Completer<bool>? _registerCompleter;
 
+  /// onTrack 래핑 설치된 통화 ID (H1/A1: msid 없는 원격 트랙 복구)
+  final Set<String> _trackRecoveryInstalled = <String>{};
+
+  /// 복구된 원격 트랙을 담는 세션별 스트림
+  final Map<String, MediaStream> _recoveredRemoteStreams =
+      <String, MediaStream>{};
+
+  /// 중복 복구 방지용 트랙 키 (callId:trackId)
+  final Set<String> _recoveredTrackKeys = <String>{};
+
+  /// sip_ua가 정상 STREAM 이벤트로 노출한 트랙 키 (callId:trackId)
+  final Set<String> _surfacedTrackKeys = <String>{};
+
+  /// 수신기 스윕 예약된 통화 ID
+  final Set<String> _receiverSweepScheduled = <String>{};
+
+  /// RTP 수신량 진단 타이머 (T-C)
+  Timer? _statsTimer;
+
   //--------------------------------------------------------------------------
   // Public API
   //--------------------------------------------------------------------------
@@ -415,6 +434,13 @@ class KibalSipClient implements SipUaHelperListener {
   @override
   void callStateChanged(Call call, CallState state) {
     final target = _targetOf(call);
+    // H1/A1: sip_ua는 event.streams가 비어 있는 원격 트랙(msid 없음)을
+    // STREAM 이벤트로 emit하지 않는다. 회의 오디오 누락을 복구하기 위해
+    // peerConnection.onTrack을 래핑해 orphan 트랙을 세션 스트림으로 승격한다.
+    if (state.state != CallStateEnum.ENDED &&
+        state.state != CallStateEnum.FAILED) {
+      _installRemoteTrackRecovery(call);
+    }
     switch (state.state) {
       case CallStateEnum.CALL_INITIATION:
         _currentCall = call;
@@ -458,6 +484,8 @@ class KibalSipClient implements SipUaHelperListener {
       case CallStateEnum.ACCEPTED:
       case CallStateEnum.CONFIRMED:
         _currentSession?.updateState(SipSessionState.established);
+        _startStatsProbe(call);
+        _scheduleReceiverSweep(call);
         AppLogger.instance.call('callEstablished',
             target: target,
             state: state.state.name,
@@ -496,6 +524,13 @@ class KibalSipClient implements SipUaHelperListener {
       case CallStateEnum.STREAM:
         // 원격/로컬 미디어 스트림 수신 (originator: local/remote)
         final stream = state.stream;
+        // sip_ua가 정상 노출한 트랙은 수신기 스윕 대상에서 제외
+        if (stream != null) {
+          final streamCallId = call.id ?? 'unknown';
+          for (final track in stream.getTracks()) {
+            _surfacedTrackKeys.add('$streamCallId:${track.id}');
+          }
+        }
         final videoTracks = stream?.getVideoTracks().length ?? 0;
         final audioTracks = stream?.getAudioTracks().length ?? 0;
         AppLogger.instance.call('mediaStream',
@@ -535,7 +570,178 @@ class KibalSipClient implements SipUaHelperListener {
   void onNewNotify(Notify ntf) {}
 
   @override
-  void onNewReinvite(ReInvite event) {}
+  void onNewReinvite(ReInvite event) {
+    final hasAudio = event.hasAudio ?? false;
+    final hasVideo = event.hasVideo ?? false;
+    AppLogger.instance.i(
+        'SIP re-INVITE 수신 hasAudio=$hasAudio hasVideo=$hasVideo -> 자동 수락');
+    unawaited(_acceptReinvite(event));
+  }
+
+  Future<void> _acceptReinvite(ReInvite event) async {
+    final accept = event.accept;
+    if (accept == null) {
+      AppLogger.instance.w('SIP re-INVITE accept 콜백 없음');
+      return;
+    }
+    try {
+      final accepted = await accept(<String, dynamic>{});
+      AppLogger.instance.i('SIP re-INVITE 응답 전송 accepted=$accepted');
+    } catch (error) {
+      AppLogger.instance.e('SIP re-INVITE 수락 실패: $error');
+    }
+  }
+
+  //--------------------------------------------------------------------------
+  // Remote Track Recovery / Media Diagnostics (H1/A1, T-C)
+  //--------------------------------------------------------------------------
+
+  /// peerConnection.onTrack을 래핑해 msid 없는 원격 트랙을 복구한다.
+  ///
+  /// sip_ua 1.1.0은 `if (event.streams.isNotEmpty)`일 때만 STREAM 이벤트를
+  /// emit하므로, msid가 없는 원격 오디오 트랙은 조용히 폐기된다.
+  /// ConfBridge(SFU) 회의에서 서버는 오디오를 보내지만 클라이언트가 이를
+  /// 노출하지 못하는 H1 증상의 직접 원인이다.
+  void _installRemoteTrackRecovery(Call call) {
+    final pc = call.peerConnection;
+    final callId = call.id;
+    if (pc == null || callId == null) return;
+    if (!_trackRecoveryInstalled.add(callId)) return;
+
+    final previous = pc.onTrack;
+    pc.onTrack = (RTCTrackEvent event) {
+      if (event.streams.isEmpty) {
+        _recoverRemoteTrack(call, event.track);
+      }
+      previous?.call(event);
+    };
+    AppLogger.instance.d('SIP remote-track recovery armed id=$callId');
+  }
+
+  /// msid가 없는 원격 트랙을 세션 스트림으로 승격한다.
+  Future<void> _recoverRemoteTrack(Call call, MediaStreamTrack track) async {
+    // 종료된 통화의 늦은 콜백으로 인한 stale 이벤트 방지
+    if (_currentCall == null || _currentCall!.id != call.id) return;
+    final callId = call.id ?? 'unknown';
+    final key = '$callId:${track.id}';
+    if (!_recoveredTrackKeys.add(key)) return;
+
+    try {
+      var stream = _recoveredRemoteStreams[callId];
+      if (stream == null) {
+        stream = await createLocalMediaStream('kibal-remote-$callId');
+        _recoveredRemoteStreams[callId] = stream;
+      }
+      // addToNative=false: 재협상 후 nil 스트림 addTrack 크래시(D8) 회피.
+      // 원격 오디오 재생은 WebRTC 오디오 엔진이 자동 수행하므로
+      // 네이티브 스트림 컨테이너 등록은 불필요하다.
+      await stream.addTrack(track, addToNative: false);
+
+      final video = stream.getVideoTracks().length;
+      final audio = stream.getAudioTracks().length;
+      AppLogger.instance.call('mediaStream',
+          target: _targetOf(call),
+          state: 'remote',
+          params: {
+            'video': video,
+            'audio': audio,
+            'id': callId,
+            'recovered': true,
+            'kind': track.kind,
+          });
+      _emitEvent(SipEvent(
+        type: SipEventType.call,
+        data: {
+          'action': 'stream',
+          'target': _targetOf(call),
+          'sessionId': callId,
+          'originator': 'Originator.remote',
+          'stream': stream,
+          'recovered': true,
+        },
+      ));
+    } catch (e) {
+      _recoveredTrackKeys.remove(key);
+      AppLogger.instance.e('SIP remote-track recovery failed ($key): $e');
+    }
+  }
+
+  /// onTrack 이벤트가 누락된 경우를 대비한 수신기 스윕 폴백.
+  ///
+  /// 통화 확립 2초 후 각 RTCRtpReceiver의 오디오 트랙 중 sip_ua가 아직
+  /// 노출하지 않은 트랙을 복구한다(중복은 키 집합으로 방지).
+  void _scheduleReceiverSweep(Call call) {
+    final callId = call.id;
+    if (callId == null) return;
+    if (!_receiverSweepScheduled.add(callId)) return;
+
+    Future<void>.delayed(const Duration(seconds: 2), () async {
+      if (_currentCall?.id != callId) return;
+      final pc = call.peerConnection;
+      if (pc == null) return;
+      try {
+        final receivers = await pc.getReceivers();
+        for (final receiver in receivers) {
+          final track = receiver.track;
+          if (track == null || track.kind != 'audio') continue;
+          final key = '$callId:${track.id}';
+          if (_surfacedTrackKeys.contains(key)) continue;
+          await _recoverRemoteTrack(call, track);
+        }
+      } catch (e) {
+        AppLogger.instance.w('SIP receiver sweep 실패: $e');
+      }
+    });
+  }
+
+  /// RTP 수신량 진단 로그 (T-C: 오디오가 실제로 흐르는지 확인).
+  void _startStatsProbe(Call call) {
+    _statsTimer?.cancel();
+    _statsTimer = Timer.periodic(const Duration(seconds: 5), (_) async {
+      final pc = call.peerConnection;
+      if (pc == null) return;
+      try {
+        final reports = await pc.getStats();
+        var audioBytes = 0;
+        var videoBytes = 0;
+        var audioPackets = 0;
+        for (final report in reports) {
+          if (report.type != 'inbound-rtp') continue;
+          final values = report.values;
+          final kind = values['kind'] ?? values['mediaType'];
+          final bytes = (values['bytesReceived'] as num?)?.toInt() ?? 0;
+          final packets = (values['packetsReceived'] as num?)?.toInt() ?? 0;
+          if (kind == 'audio') {
+            audioBytes += bytes;
+            audioPackets += packets;
+          } else if (kind == 'video') {
+            videoBytes += bytes;
+          }
+        }
+        AppLogger.instance.d('SIP stats inbound '
+            'audioBytes=$audioBytes audioPackets=$audioPackets '
+            'videoBytes=$videoBytes');
+      } catch (e) {
+        AppLogger.instance.w('SIP stats 수집 실패: $e');
+      }
+    });
+  }
+
+  void _stopMediaDiagnostics() {
+    _statsTimer?.cancel();
+    _statsTimer = null;
+  }
+
+  void _disposeRecoveredRemoteStreams() {
+    for (final stream in _recoveredRemoteStreams.values) {
+      stream.dispose();
+    }
+    _recoveredRemoteStreams.clear();
+    _recoveredTrackKeys.clear();
+    _surfacedTrackKeys.clear();
+    _receiverSweepScheduled.clear();
+    _trackRecoveryInstalled.clear();
+  }
 
   //--------------------------------------------------------------------------
   // Event Handling
@@ -621,10 +827,17 @@ class KibalSipClient implements SipUaHelperListener {
     _callback?.call(event);
   }
 
-  /// 세션 정리
+  /// 세션 정리 (통화 종료/거부/행업 공통 경로)
   void _cleanupSession() {
+    _resetMediaDiagnostics();
     _currentSession = null;
     _currentCall = null;
+  }
+
+  /// 통화 종료 시 미디어 진단/복구 리소스 정리 (멱등)
+  void _resetMediaDiagnostics() {
+    _stopMediaDiagnostics();
+    _disposeRecoveredRemoteStreams();
   }
 
   /// 모든 리소스 정리

@@ -1,0 +1,4 @@
+Unable to open specified master config file '/etc/asterisk/asterisk.conf', using built-in defaults
+PJSIP Logging enabled
+Unable to open specified master config file '/etc/asterisk/asterisk.conf', using built-in defaults
+RTP Packet Debugging Enabled

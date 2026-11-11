@@ -1,0 +1,6 @@
+=== t=420s at 111052 ===
+Unable to open specified master config file '/etc/asterisk/asterisk.conf', using built-in defaults
+Unable to connect to remote asterisk (does /var/run/asterisk/asterisk.ctl exist?)
+--- channelstats ---
+Unable to open specified master config file '/etc/asterisk/asterisk.conf', using built-in defaults
+No such command 'pjsip show channelstats' (type 'core show help pjsip' for other possible commands)
