@@ -81,8 +81,9 @@ class KibalSipClient implements SipUaHelperListener {
   /// 등록 대기
   Completer<bool>? _registerCompleter;
 
-  bool _needsReRegister = false;
   bool _receiveOnlyVideo = false;
+
+  String? _pendingCallTarget;
 
   /// onTrack 래핑 설치된 통화 ID (H1/A1: msid 없는 원격 트랙 복구)
   final Set<String> _trackRecoveryInstalled = <String>{};
@@ -163,7 +164,8 @@ class KibalSipClient implements SipUaHelperListener {
       );
       // ADR-007: 회의실/상대별 영상 코덱 정책(6100대 H.264 전용, 12xx H.264 우선)
       localSdpTransformer = (session, type, sdp) {
-        final target = session.remote_identity?.uri?.user;
+        final target =
+            session.remote_identity?.uri?.user ?? _pendingCallTarget;
         final policy = videoPolicyFor(target);
         if (policy == VideoCodecPolicy.keep) return null;
         final out = applyVideoCodecPolicy(sdp, policy);
@@ -301,6 +303,7 @@ class KibalSipClient implements SipUaHelperListener {
       // 카메라가 없는 환경에서는 음성 통화로 자동 대체
       final voiceOnly = !await _canUseVideo(mediaStream);
       _receiveOnlyVideo = voiceOnly;
+      _pendingCallTarget = target;
       AppLogger.instance.i(
           'SIP call -> $target voiceOnly=$voiceOnly hasLocalStream=${mediaStream != null}');
       // ADR-006: 카메라 없음 = 송신 없음. 영상은 recvonly로 계속 수신한다.
@@ -463,16 +466,10 @@ class KibalSipClient implements SipUaHelperListener {
       case TransportStateEnum.CONNECTED:
         _setState(SipClientState.connected);
         _completeTransport(true);
-        if (_needsReRegister) {
-          _needsReRegister = false;
-          AppLogger.instance.i('SIP transport reconnected -> re-REGISTER');
-          unawaited(register());
-        }
         break;
       case TransportStateEnum.DISCONNECTED:
         AppLogger.instance
             .i('SIP transport disconnected (cause: ${state.cause ?? '없음'})');
-        _needsReRegister = true;
         _setState(SipClientState.disconnected);
         _completeTransport(false);
         break;
@@ -1054,6 +1051,7 @@ class KibalSipClient implements SipUaHelperListener {
   /// 세션 정리 (통화 종료/거부/행업 공통 경로)
   void _cleanupSession() {
     _resetMediaDiagnostics();
+    _pendingCallTarget = null;
     _currentSession = null;
     _currentCall = null;
   }

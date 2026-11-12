@@ -94,6 +94,11 @@
 - **F2**: [[wiki/05_Decisions/ADR-009-A4_재등록_롤백]] — A4 전면 롤백(1101 등록 루프)
 - **G3**: 서버 리포 `ADR-005_ConfBridge_참가자이벤트_20261113` — `enable_events=yes`, `video_source`는 옵션 부재로 G2 보류
 - 계획·테스트: [[docs/보고서/20261113_F1F2_G3_작업계획서_v1.0]], [[wiki/03_Guides/20261113_F1F2_G3_테스트절차서_v1.0]], [[wiki/02_Design/20261113_발신타깃_설계서_v1.0]]
+
+## 현재 진행 (2026-11-13 02:00) — F1/F2/G3 구현 완료
+- **F1/F2/G3 구현·검증 완료**: `_pendingCallTarget` 4개소, A4 전면 롤백, `enable_events=yes`(서버). `flutter analyze` 0 / `test` 17 / `Enable Events: yes` / `verify-sip-auth.py` PASS
+- **v0.0.24 (build 24)** `/Applications` 설치, sha256 `c8c6e4a7…`. 상세 [[wiki/06_Reports/20261113_F1F2G3_구현완료보고서_v1.0]]
+- **잔여는 실기만**: 1103→1201 A10 원격 영상 / 1101 회의 5분 / 6100 카드 갱신 / 2명 입장 시 스피너 해소. `1201`은 재생성 후 Unavail(A10 자체 재REGISTER 대기), G2는 bridge 옵션 부재로 보류
 - 문서 완료 → 커밋·동기화 후 개발 착수. 해석 규칙은 [[wiki/09_Knowledge/20261112_SIP_진단지식_v1.0]]
 - 상세: [[docs/보고서/20261112_통화품질_원인규명_작업계획서_v1.0]], [[wiki/06_Reports/20261112_통화품질_원인규명_분석보고서_v1.0]], [[wiki/03_Guides/20261112_통화품질_테스트절차서_v1.0]], [[wiki/04_Prompts/20261112_통화품질개선_후속작업프롬프트_v1.0]]
 
