@@ -162,6 +162,10 @@ class _ConferenceViewState extends State<ConferenceView> {
     }
 
     await sipProvider.call(room, mediaStream: mediaProvider.localStream);
+    if (mounted && mediaProvider.lastMissingDevices.isNotEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('저장된 장치 없음: ${mediaProvider.lastMissingDevices.join(', ')} — 기본 장치 사용')));
+    }
   }
 
   Future<void> _leave() async {

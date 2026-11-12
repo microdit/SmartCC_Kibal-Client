@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../providers/media_provider.dart';
 import '../../utils/app_logger.dart';
+import '../../utils/media_device_settings.dart';
 
 class DeviceInfo {
   DeviceInfo({required this.id, required this.name, this.kind});
@@ -29,8 +30,10 @@ class _MediaTestScreenState extends State<MediaTestScreen> {
 
   List<DeviceInfo> _mics = [];
   List<DeviceInfo> _cams = [];
+  List<DeviceInfo> _speakers = [];
   String? _camDeviceId;
   String? _micDeviceId;
+  String? _speakerDeviceId;
 
   bool _meterRunning = false;
   double _avgDb = -160;
@@ -56,6 +59,7 @@ class _MediaTestScreenState extends State<MediaTestScreen> {
           await navigator.mediaDevices.enumerateDevices();
       final cams = <DeviceInfo>[];
       final mics = <DeviceInfo>[];
+      final speakers = <DeviceInfo>[];
       for (final d in results) {
         final kind = d.kind;
         final label = d.label;
@@ -68,14 +72,32 @@ class _MediaTestScreenState extends State<MediaTestScreen> {
         } else if (kind == 'videoinput') {
           cams.add(
               DeviceInfo(id: d.deviceId, name: name, kind: kind));
+        } else if (kind == 'audiooutput') {
+          speakers.add(DeviceInfo(
+              id: d.deviceId, name: label.isNotEmpty ? label : '스피커(기본)', kind: kind));
         }
       }
       if (!mounted) return;
+      final st = MediaDeviceSettings.instance..load();
+      String? pick(SavedDevice? saved, List<DeviceInfo> list) {
+        if (saved != null) {
+          for (final d in list) {
+            if (d.id == saved.id || (saved.label.isNotEmpty && d.name == saved.label)) return d.id;
+          }
+        }
+        // 저장값 없으면 회의실 장비(A10) 우선
+        for (final d in list) {
+          if (MediaDeviceSettings.isRecommended(d.name)) return d.id;
+        }
+        return list.isNotEmpty ? list.first.id : null;
+      }
       setState(() {
         _mics = mics;
         _cams = cams;
-        if (_mics.isNotEmpty) _micDeviceId ??= _mics.first.id;
-        if (_cams.isNotEmpty) _camDeviceId ??= _cams.first.id;
+        _speakers = speakers;
+        _micDeviceId ??= pick(st.mic, mics);
+        _camDeviceId ??= pick(st.camera, cams);
+        _speakerDeviceId ??= pick(st.speaker, speakers);
       });
       AppLogger.instance
           .evt('MEDIA_TEST', 'devicesLoaded', details: {'mics': mics.length, 'cams': cams.length});
@@ -272,12 +294,51 @@ class _MediaTestScreenState extends State<MediaTestScreen> {
     );
   }
 
+  DeviceInfo? _find(List<DeviceInfo> l, String? id) {
+    for (final d in l) {
+      if (d.id == id) return d;
+    }
+    return null;
+  }
+
+  void _saveDevices() {
+    SavedDevice? sd(DeviceInfo? d) => d == null ? null : SavedDevice(d.id, d.name);
+    MediaDeviceSettings.instance.save(
+      camera: sd(_find(_cams, _camDeviceId)),
+      mic: sd(_find(_mics, _micDeviceId)),
+      speaker: sd(_find(_speakers, _speakerDeviceId)),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('장치 설정 저장 — 다음 통화부터 적용됩니다')));
+  }
+
+  void _resetDevices() {
+    MediaDeviceSettings.instance.save();
+    ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('기본 장치 사용으로 초기화')));
+  }
+
+  DropdownMenuItem<String> _item(DeviceInfo d, String prefix) => DropdownMenuItem(
+        key: Key('${prefix}_${d.id}'),
+        value: d.id,
+        child: Row(children: [
+          Flexible(child: Text(d.name, overflow: TextOverflow.ellipsis)),
+          if (MediaDeviceSettings.isRecommended(d.name))
+            const Padding(
+              padding: EdgeInsets.only(left: 6),
+              child: Chip(
+                  label: Text('추천', style: TextStyle(fontSize: 11)),
+                  visualDensity: VisualDensity.compact),
+            ),
+        ]),
+      );
+
   Widget _buildDevicePickerSection() {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          const Text('디바이스 선택',
+          const Text('장치 설정 (통화에 사용)',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
           const SizedBox(height: 12),
           const Text('마이크', style: TextStyle(fontWeight: FontWeight.w500)),
@@ -286,12 +347,7 @@ class _MediaTestScreenState extends State<MediaTestScreen> {
             value: _micDeviceId,
             hint: const Text('마이크 선택'),
             items: _mics
-                .map((d) => DropdownMenuItem(
-                      key: Key('mic_${d.id}'),
-                      value: d.id,
-                      child: Text(d.name),
-                    ))
-                .toList(),
+                .map((d) => _item(d, 'mic')).toList(),
             onChanged: _applyMicChange,
           ),
           const Text('카메라', style: TextStyle(fontWeight: FontWeight.w500)),
@@ -300,14 +356,35 @@ class _MediaTestScreenState extends State<MediaTestScreen> {
             value: _camDeviceId,
             hint: const Text('카메라 선택'),
             items: _cams
-                .map((d) => DropdownMenuItem(
-                      key: Key('cam_${d.id}'),
-                      value: d.id,
-                      child: Text(d.name),
-                    ))
-                .toList(),
+                .map((d) => _item(d, 'cam')).toList(),
             onChanged: _applyCamChange,
           ),
+          const Text('스피커', style: TextStyle(fontWeight: FontWeight.w500)),
+          DropdownButton<String>(
+            isExpanded: true,
+            value: _speakerDeviceId,
+            hint: const Text('스피커 선택'),
+            items: _speakers.map((d) => _item(d, 'spk')).toList(),
+            onChanged: (id) async {
+              setState(() => _speakerDeviceId = id);
+              AppLogger.instance.ui('MEDIA_TEST', 'speakerDeviceSelected', params: {'deviceId': id});
+              if (id != null) {
+                try {
+                  await Helper.selectAudioOutput(id);
+                } catch (_) {}
+              }
+            },
+          ),
+          const SizedBox(height: 12),
+          Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+            TextButton(onPressed: _resetDevices, child: const Text('기본값')),
+            const SizedBox(width: 8),
+            FilledButton.icon(
+              onPressed: _saveDevices,
+              icon: const Icon(Icons.save),
+              label: const Text('저장'),
+            ),
+          ]),
         ]),
       ),
     );

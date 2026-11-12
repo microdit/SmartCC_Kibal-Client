@@ -1,3 +1,4 @@
+import '../utils/media_device_settings.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
@@ -26,6 +27,9 @@ class MediaProvider with ChangeNotifier {
   
   /// 비디오 뮤트 여부
   bool _isVideoMuted = false;
+  /// 저장 장치 중 현재 연결되지 않은 항목(안내용)
+  List<String> lastMissingDevices = const [];
+
   String? _defaultVideoDeviceId;
   String? _defaultMicDeviceId;
   
@@ -118,13 +122,31 @@ class MediaProvider with ChangeNotifier {
       _error = null;
       notifyListeners();
 
+      // 저장된 장치(A10 USB 등) 적용 — 없으면 기본 장치
+      String? camId = videoDeviceId ?? _defaultVideoDeviceId;
+      String? micId = micDeviceId ?? _defaultMicDeviceId;
+      String? speakerId;
+      if (videoDeviceId == null && micDeviceId == null) {
+        final r = await MediaDeviceSettings.instance.resolveForCall();
+        camId ??= r.cameraId;
+        micId ??= r.micId;
+        speakerId = r.speakerId;
+        lastMissingDevices = r.missing;
+      }
       final stream = await _mediaManager.getLocalMedia(
         useFrontCamera: _isFrontCamera,
         useAudio: !_isAudioMuted,
         useVideo: !_isVideoMuted,
-        videoDeviceId: videoDeviceId ?? _defaultVideoDeviceId,
-        audioDeviceId: micDeviceId ?? _defaultMicDeviceId,
+        videoDeviceId: camId,
+        audioDeviceId: micId,
       );
+      if (speakerId != null) {
+        try {
+          await Helper.selectAudioOutput(speakerId);
+        } catch (e) {
+          AppLogger.instance.w('MEDIA 스피커 선택 실패: $e');
+        }
+      }
       
       if (stream != null) {
         _hasLocalStream = true;
