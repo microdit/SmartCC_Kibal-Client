@@ -510,6 +510,16 @@ class MediaManager {
       if (isActive && _inactiveVideoTracks.remove(id)) changed = true;
       if (!isActive && _inactiveVideoTracks.add(id)) changed = true;
     }
+    for (final streams in _remoteSessions.values) {
+      final before = streams.length;
+      streams.removeWhere((stream) {
+        final videos = stream.getVideoTracks();
+        if (videos.isEmpty) return false;
+        return videos.every(
+            (track) => _inactiveVideoTracks.contains(track.id ?? ''));
+      });
+      if (streams.length != before) changed = true;
+    }
     if (changed) {
       AppLogger.instance.d('remote video tiles active=${active.length} '
           'inactive=${_inactiveVideoTracks.length}');

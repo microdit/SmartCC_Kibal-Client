@@ -1,7 +1,7 @@
 # ADR-008: re-INVITE 수락에도 ADR-006 수신 전용 옵션을 유지한다
 
 **날짜**: 2026-11-12
-**상태**: 제안(Proposed) — D1 구현·TC-D1 검증 후 확정
+**상태**: 수용(Accepted) — D1 구현·analyze/test·v0.0.23 릴리스 완료(TC-D1 실기 검증 대기)
 **관련**: [[wiki/05_Decisions/ADR-006-카메라없는단말_영상수신전용]], ADR-004(sip_ua 엔진), ADR-005(sip_ua 포크)
 **상위**: [[docs/보고서/20261112_통화품질_원인규명_작업계획서_v1.0]] §4-D
 
@@ -58,8 +58,28 @@ ConfBridge는 참가자 입·퇴장마다 re-INVITE를 보낸다(로그 `01:10:3
 - D2(원격 스트림 누적 정리)와 함께 v0.0.23+로 묶어 릴리스한다.
 - 검증 완료 후 이 ADR 상태를 `Accepted`로 변경하고 ADR-006의 "제안" 상태도 함께 갱신한다.
 
+## 구현 (2026-11-13 00:10, v0.0.23)
+
+| 파일 | 변경 |
+|------|------|
+| `macos-client/lib/src/sip/sip_client.dart` | `_receiveOnlyVideo` 필드 추가. `call()`은 `voiceOnly`, `accept()`은 `recvOnlyVideo` 값을 저장 |
+| 동일 파일 `_acceptReinvite` | `accept(<String, dynamic>{})` → `MapHelper.merge(options, _receiveVideoOptions())` 후 `accept(options)`. 응답 로그에 `recvOnlyVideo=...` 추가 |
+| `macos-client/lib/src/media/media_manager.dart` (D2) | `retainRemoteVideoTracks`에서 video 트랙이 모두 inactive인 스트림만 `_remoteSessions`에서 제거. **오디오 전용 스트림은 보존**(기존 회의 음성 유실 회귀 방지) |
+
+### 검증
+
+- `flutter analyze` **No issues**, `flutter test` **17/17 통과**
+- `./scripts/release_macos.sh --skip-tests` → **v0.0.23 (build 23)** DMG, sha256 `21d0994054b8f4f00c0c7e85fb592de19fea2e301b05b93cba26e598e63b4bfe`, x86_64+arm64, adhoc 서명
+- D3 기준선: 제공된 1102 로그는 `SIP accept video=`(v0.0.17 추가)가 없어 **v0.0.16 이하** 빌드. `1102.meta.json`의 `v0.0.19`는 마지막 세션 기준이라 로그 기준선으로 부적합
+
+### 잔여
+
+- **TC-D1 실기**: 1101(카메라 없음)으로 6000 3자 회의 → 참가자 입·퇴장 re-INVITE 후 `SIP transceivers`에 video `recvonly` 유지, `videoKB>0`, `decodedFrames>0` 확인
+- 실기 통과 시 [[wiki/05_Decisions/ADR-006-카메라없는단말_영상수신전용]]도 `Accepted`로 변경
+
 ## 변경 이력
 
 | 버전 | 날짜 | 변경 | 작성자 |
 |------|------|------|--------|
 | v1.0 | 2026-11-12 | re-INVITE 수락 시 ADR-006 옵션 누락 발견·병합 결정 | opencode |
+| v1.1 | 2026-11-13 | D1/D2 구현·v0.0.23 릴리스, **Accepted**로 변경 | opencode |

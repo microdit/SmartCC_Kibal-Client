@@ -82,6 +82,7 @@ class KibalSipClient implements SipUaHelperListener {
   Completer<bool>? _registerCompleter;
 
   bool _needsReRegister = false;
+  bool _receiveOnlyVideo = false;
 
   /// onTrack 래핑 설치된 통화 ID (H1/A1: msid 없는 원격 트랙 복구)
   final Set<String> _trackRecoveryInstalled = <String>{};
@@ -299,6 +300,7 @@ class KibalSipClient implements SipUaHelperListener {
 
       // 카메라가 없는 환경에서는 음성 통화로 자동 대체
       final voiceOnly = !await _canUseVideo(mediaStream);
+      _receiveOnlyVideo = voiceOnly;
       AppLogger.instance.i(
           'SIP call -> $target voiceOnly=$voiceOnly hasLocalStream=${mediaStream != null}');
       // ADR-006: 카메라 없음 = 송신 없음. 영상은 recvonly로 계속 수신한다.
@@ -353,6 +355,7 @@ class KibalSipClient implements SipUaHelperListener {
           'peerOffersVideo=$peerOffersVideo localVideo=$canVideo');
       // ADR-006: 상대가 영상을 제안했는데 로컬 카메라가 없으면 recvonly로 수락
       final recvOnlyVideo = peerOffersVideo && !canVideo;
+      _receiveOnlyVideo = recvOnlyVideo;
       final answerOptions = _helper.buildCallOptions(voiceOnly);
       if (recvOnlyVideo) {
         MapHelper.merge(answerOptions, _receiveVideoOptions());
@@ -636,8 +639,13 @@ class KibalSipClient implements SipUaHelperListener {
       return;
     }
     try {
-      final accepted = await accept(<String, dynamic>{});
-      AppLogger.instance.i('SIP re-INVITE 응답 전송 accepted=$accepted');
+      final options = <String, dynamic>{};
+      if (_receiveOnlyVideo) {
+        MapHelper.merge(options, _receiveVideoOptions());
+      }
+      final accepted = await accept(options);
+      AppLogger.instance.i('SIP re-INVITE 응답 전송 accepted=$accepted '
+          'recvOnlyVideo=$_receiveOnlyVideo');
       unawaited(Future<void>.delayed(
           const Duration(milliseconds: 500), _logTransceivers));
     } catch (error) {
