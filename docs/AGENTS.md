@@ -70,15 +70,28 @@
 - A10 P1 v0.0.21(장치 선택), P2 v0.0.22(H.264·6100) 빌드 완료, **실기 대기**
 - A10 `192.168.0.12`: TEAMS EDITION, `byod` only, FW `278.320.0.86`
 - USB B′: USB-C 연결됨, A10 `No sharing signal`, Mac에서 Yealink 미열거(`HD20K`만 USB 오디오) → 케이블/포트/macOS 승인 확인 필요
-- SIP T0-C: A10 `talking=true`로 웹 UI `writeData` 중단 → `writeconfig` 없음, `1201` 미등록
-- 서버: `1201` endpoint·`6100` `follow_talker` 준비됨. `1101/1103` Avail
+- SIP T0-C: A10 `talking=true`로 웹 UI `writeData` 중단 → `writeconfig` 없음. **이후 `#/account-sip` 저장으로 `1201` 등록 성공 확인**(중간보고서 v1.1)
+- 서버: `1201` endpoint·`6100` `follow_talker` 준비됨. 현재 `6100`에 `PJSIP/1103-*` + `PJSIP/1201-*` 실통화 중
 - 상세: [[wiki/06_Reports/20261112_A10_T0C_USB_중간보고서_v1.0]], [[docs/보고서/20261112_A10_T0C_USB_작업계획서_v1.0]], [[wiki/07_Logs/작업인계_20261112_A10_T0C]]
+
+## 현재 진행 (2026-11-12 22:50) — 통화 품질 개선, 실행 순서 **C → A → D → B**
+- **404 원인 확정**: `1102→1103`은 `1103` AOR contact 부재(`Could not create dialog to invalid URI '1103'`). 서버 UTC 16:05 = 클라이언트 KST 01:05(+9h), `security` SessionID가 호 ID와 일치. 다이얼플랜·코덱 무관
+- 제공된 "1103 로그"는 실제 **1102 로그**(OPS `1102.log`). `01:05:30` 착신은 1102 self-call
+- **C**: A10 `video-1 sendrecv/h264` SDP 정상 → 미표시는 `follow_talker` 영상 전달 지점
+- **D**: `_acceptReinvite` ADR-006 옵션 누락(`sip_client.dart:631`), `_remoteSessions` 누적(`media_manager.dart:401-410`)
+- **B**: 손실 버스트 2회 / out-fps 붕괴(로컬 인코더) / 첫 키프레임 대기 3현상. 손실·freeze 카운터는 getStats **누적**이라 고정이 정상
+- 문서 완료 → 커밋·동기화 후 개발 착수. 해석 규칙은 [[wiki/09_Knowledge/20261112_SIP_진단지식_v1.0]]
+- 상세: [[docs/보고서/20261112_통화품질_원인규명_작업계획서_v1.0]], [[wiki/06_Reports/20261112_통화품질_원인규명_분석보고서_v1.0]], [[wiki/03_Guides/20261112_통화품질_테스트절차서_v1.0]], [[wiki/04_Prompts/20261112_통화품질개선_후속작업프롬프트_v1.0]]
 
 ## 참조 문서
 - [[docs/작업지도]] — Knowledge OS v3.0 Kernel
 - [[wiki/01_Projects/client-project-plan]] — 클라이언트 프로젝트 계획
-- [[wiki/02_Design/architecture]] — 시스템 아키텍처
-- [[wiki/01_Projects/tasks]] — 작업 계획 및 마일스톤
+- [[wiki/02_Design/macOS-client-design]] — macOS 클라이언트 설계
+- [[wiki/01_Projects/client-development-tasks]] — 작업 계획 및 마일스톤
+- [[wiki/01_Projects/20261112_통화품질개선_작업계획서_v1.0]] — C→A→D→B WBS
 - [[wiki/02_Design/sip-client-design]] — SIP Client 설계
+- [[wiki/02_Design/20261112_통화품질_진단설계서_v1.0]] — L1~L7 진단 설계
 - [[wiki/05_Decisions/ADR-004]] — SIP 엔진 sip_ua 교체 결정 기록
-- [[wiki/05_Decisions/ADR-001-webrtc-over-flutter]] — WebRTC 우선 결정 기록
+- [[wiki/05_Decisions/ADR-002]] — 초기 결정 기록
+- [[wiki/05_Decisions/ADR-006-카메라없는단말_영상수신전용]] — recvonly 결정
+- [[wiki/05_Decisions/ADR-008-re-INVITE_recvonly_유지]] — 재협상 옵션 유지
