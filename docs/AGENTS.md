@@ -75,7 +75,7 @@
 - 상세: [[wiki/06_Reports/20261112_A10_T0C_USB_중간보고서_v1.0]], [[docs/보고서/20261112_A10_T0C_USB_작업계획서_v1.0]], [[wiki/07_Logs/작업인계_20261112_A10_T0C]]
 
 ## 현재 진행 (2026-11-12 22:50) — 통화 품질 개선, 실행 순서 **C → A → D → B**
-- **404 원인 확정**: `1102→1103`은 `1103` AOR contact 부재(`Could not create dialog to invalid URI '1103'`). 서버 UTC 16:05 = 클라이언트 KST 01:05(+9h), `security` SessionID가 호 ID와 일치. 다이얼플랜·코덱 무관
+- **404 원인 확정·A 구현(회귀 대기)**: `1102→1103`은 `1103` AOR contact 부재. 실측 — `register_expires=300`이 294초 주기 재REGISTER를 만들고 `remove_existing=yes`가 갱신마다 contact를 비움. 서버는 AOR 정책 변경(서버 리포 ADR-004), 클라이언트는 **A4** `transportStateChanged` 재연결 시 재REGISTER 보장(`sip_client.dart`, analyze 0 / test 17). 다이얼플랜·코덱 무관. 런타임 반영은 실통화 종료 후 컨테이너 재생성 필요
 - 제공된 "1103 로그"는 실제 **1102 로그**(OPS `1102.log`). `01:05:30` 착신은 1102 self-call
 - **C**: 발언자 **1201 자동설정** + 1103에 발언자 영상·음성 정상 수신 확인 → `follow_talker` 정상, `confbridge list` 빈 Flags를 "발화자 미선정"으로 읽은 것은 오진(기각). **설정 변경 불필요**. 잔여는 A10(1201) 화면 캡처 + 발화자 1103 전환 테스트(최초 증상은 1103→A10 방향이라 미검증). 상세 [[wiki/08_Experiments/20261112_C_발화자영상_검증_v1.0]]
 - **D**: `_acceptReinvite` ADR-006 옵션 누락(`sip_client.dart:631`), `_remoteSessions` 누적(`media_manager.dart:401-410`)

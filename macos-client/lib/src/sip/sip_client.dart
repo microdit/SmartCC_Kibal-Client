@@ -81,6 +81,8 @@ class KibalSipClient implements SipUaHelperListener {
   /// 등록 대기
   Completer<bool>? _registerCompleter;
 
+  bool _needsReRegister = false;
+
   /// onTrack 래핑 설치된 통화 ID (H1/A1: msid 없는 원격 트랙 복구)
   final Set<String> _trackRecoveryInstalled = <String>{};
 
@@ -458,10 +460,16 @@ class KibalSipClient implements SipUaHelperListener {
       case TransportStateEnum.CONNECTED:
         _setState(SipClientState.connected);
         _completeTransport(true);
+        if (_needsReRegister) {
+          _needsReRegister = false;
+          AppLogger.instance.i('SIP transport reconnected -> re-REGISTER');
+          unawaited(register());
+        }
         break;
       case TransportStateEnum.DISCONNECTED:
         AppLogger.instance
             .i('SIP transport disconnected (cause: ${state.cause ?? '없음'})');
+        _needsReRegister = true;
         _setState(SipClientState.disconnected);
         _completeTransport(false);
         break;
