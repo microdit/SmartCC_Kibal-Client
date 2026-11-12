@@ -12,8 +12,31 @@ class MainFlutterWindow: NSWindow {
     RegisterGeneratedPlugins(registry: flutterViewController)
 
     registerMediaTestChannel(flutterViewController)
+    registerWindowChannel(flutterViewController)
 
     super.awakeFromNib()
+  }
+
+  //--------------------------------------------------------------------------
+  // 창 제어 채널 (영상 전체 화면)
+  //--------------------------------------------------------------------------
+  private func registerWindowChannel(_ controller: FlutterViewController) {
+    let channel = FlutterMethodChannel(
+      name: "kibal/window", binaryMessenger: controller.engine.binaryMessenger)
+    channel.setMethodCallHandler { [weak self] call, result in
+      guard let self = self else { result(false); return }
+      let isFull = self.styleMask.contains(.fullScreen)
+      switch call.method {
+      case "isFullScreen":
+        result(isFull)
+      case "setFullScreen":
+        let want = (call.arguments as? Bool) ?? !isFull
+        if want != isFull { self.toggleFullScreen(nil) }
+        result(want)
+      default:
+        result(FlutterMethodNotImplemented)
+      }
+    }
   }
 
   //--------------------------------------------------------------------------

@@ -8,6 +8,8 @@ import '../../providers/media_provider.dart';
 import '../../utils/app_logger.dart';
 import '../../utils/constants.dart';
 import '../../utils/formatters.dart';
+import '../../utils/window_fullscreen.dart';
+import '../common/fullscreen_stage.dart';
 
 /// 통화 화면
 /// 
@@ -41,6 +43,15 @@ class _CallScreenState extends State<CallScreen> {
   // 종료 다이얼로그 중복/자동닫힘 방지 가드 (D5)
   bool _endedDialogShown = false;
 
+  // 원격 영상 전체 화면 모드
+  bool _fullscreen = false;
+
+  void _setFullscreen(bool v) {
+    if (_fullscreen == v) return;
+    setState(() => _fullscreen = v);
+    WindowFullscreen.set(v, screen: 'call', label: widget.target);
+  }
+
   // dispose 시 안전하게 제거하기 위해 참조 저장
   late final SipProvider _sipProviderRef;
 
@@ -69,6 +80,7 @@ class _CallScreenState extends State<CallScreen> {
 
     // 리스너 제거 (deactivated 후 context 접근 방지)
     _sipProviderRef.removeListener(_handleSipStateChange);
+    if (_fullscreen) WindowFullscreen.set(false, screen: 'call');
 
     super.dispose();
   }
@@ -83,8 +95,20 @@ class _CallScreenState extends State<CallScreen> {
       canPop: false,
       child: Scaffold(
         backgroundColor: Colors.black,
-        body: SafeArea(
+        body: _fullscreen
+            ? FullscreenStage(
+                onExit: () => _setFullscreen(false),
+                audioMuted: mediaProvider.isAudioMuted,
+                onToggleAudio: () => mediaProvider.toggleAudio(),
+                onHangup: () {
+                  _setFullscreen(false);
+                  _handleHangup(sipProvider, mediaProvider);
+                },
+                child: _buildRemoteVideo(mediaProvider),
+              )
+            : SafeArea(
           child: GestureDetector(
+            onDoubleTap: () => _setFullscreen(true),
             onTap: () => _toggleOrientationLock(),
             child: Stack(
               children: [
@@ -494,6 +518,9 @@ class _CallScreenState extends State<CallScreen> {
     for (final event in sipProvider.drainMediaEvents()) {
       mediaProvider.applySipMediaEvent(event, fallbackSession: 'remote');
     }
+
+    // 통화 종료 시 전체 화면 자동 해제
+    if (_fullscreen && !sipProvider.isInCall) _setFullscreen(false);
 
     if (sipProvider.isInCall) {
       _wasInCall = true;

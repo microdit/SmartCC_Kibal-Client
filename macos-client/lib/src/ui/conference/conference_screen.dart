@@ -6,6 +6,8 @@ import '../../providers/media_provider.dart';
 import '../../utils/app_logger.dart';
 import '../../utils/conference_participants.dart';
 import '../../utils/constants.dart';
+import '../../utils/window_fullscreen.dart';
+import '../common/fullscreen_stage.dart';
 
 /// ConfBridge 회의실 화면
 ///
@@ -30,6 +32,16 @@ class _ConferenceViewState extends State<ConferenceView> {
 
   /// 다이얼러에서 회의실 번호로 진입(push)한 경우: 통화 종료 시 자동으로 닫는다.
   bool _wasInCall = false;
+
+  /// 큰 화면 영상 전체 화면 모드
+  bool _fullscreen = false;
+  String _bigLabel = '-';
+
+  void _setFullscreen(bool v) {
+    if (_fullscreen == v) return;
+    setState(() => _fullscreen = v);
+    WindowFullscreen.set(v, screen: 'conference', label: _bigLabel);
+  }
 
   @override
   void initState() {
@@ -72,6 +84,7 @@ class _ConferenceViewState extends State<ConferenceView> {
     context.read<SipProvider>().removeListener(_handleSipChange);
     _participants.removeListener(_onParticipants);
     _participants.stop();
+    if (_fullscreen) WindowFullscreen.set(false, screen: 'conference');
     _roomController.dispose();
     super.dispose();
   }
@@ -84,6 +97,7 @@ class _ConferenceViewState extends State<ConferenceView> {
       _wasInCall = true;
     } else if (_wasInCall) {
       _wasInCall = false;
+      if (_fullscreen) _setFullscreen(false);
       final nav = Navigator.of(context);
       if (widget.autoClose && nav.canPop()) {
         AppLogger.instance.ui('CONFERENCE', 'autoCloseOnCallEnd');
@@ -134,6 +148,13 @@ class _ConferenceViewState extends State<ConferenceView> {
     final sipProvider = context.watch<SipProvider>();
     final mediaProvider = context.watch<MediaProvider>();
     final inConference = sipProvider.isInCall;
+
+    if (inConference && _fullscreen) {
+      return Scaffold(
+        backgroundColor: Colors.black,
+        body: _buildConferenceGrid(mediaProvider),
+      );
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -247,6 +268,29 @@ class _ConferenceViewState extends State<ConferenceView> {
     }
     final showLocalBig = _selectedRemote < 0 || remotes.isEmpty;
     final big = showLocalBig ? local : remotes[_selectedRemote];
+    _bigLabel = big.label;
+    final bigView = remotes.isEmpty && !showLocalBig
+        ? _waitingView()
+        : _buildVideoTile(
+            label: big.label,
+            renderer: big.renderer,
+            stream: big.stream,
+            mirror: big.mirror,
+            placeholder: big.placeholder,
+          );
+
+    if (_fullscreen) {
+      return FullscreenStage(
+        onExit: () => _setFullscreen(false),
+        audioMuted: mediaProvider.isAudioMuted,
+        onToggleAudio: () => mediaProvider.toggleAudio(),
+        onHangup: () {
+          _setFullscreen(false);
+          _leave();
+        },
+        child: bigView,
+      );
+    }
 
     return Padding(
       padding: const EdgeInsets.all(8),
@@ -256,15 +300,24 @@ class _ConferenceViewState extends State<ConferenceView> {
             child: Stack(
               children: [
                 Positioned.fill(
-                  child: remotes.isEmpty && !showLocalBig
-                      ? _waitingView()
-                      : _buildVideoTile(
-                          label: big.label,
-                          renderer: big.renderer,
-                          stream: big.stream,
-                          mirror: big.mirror,
-                          placeholder: big.placeholder,
-                        ),
+                  child: Tooltip(
+                    message: '더블클릭: 전체 화면',
+                    waitDuration: const Duration(seconds: 1),
+                    child: GestureDetector(
+                      onDoubleTap: () => _setFullscreen(true),
+                      child: bigView,
+                    ),
+                  ),
+                ),
+                Positioned(
+                  right: showLocalBig ? 12 : 200,
+                  top: 12,
+                  child: IconButton(
+                    tooltip: '전체 화면 (더블클릭)',
+                    style: IconButton.styleFrom(backgroundColor: Colors.black45),
+                    icon: const Icon(Icons.fullscreen, color: Colors.white),
+                    onPressed: () => _setFullscreen(true),
+                  ),
                 ),
                 if (remotes.isEmpty)
                   const Positioned(
