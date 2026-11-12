@@ -1,0 +1,47 @@
+[2026-11-12T13:07:06.894007] INFO [usr=- host=- ip=-] AppLogger 초기화 완료 file=/Users/microdit/Library/Containers/com.microdit.macosClient/Data/Library/Application Support/com.microdit.macosClient/logs/app.log identity=usr=- host=- ip=- mode=release
+[2026-11-12T13:07:06.895035] INFO [usr=- host=- ip=-] 원격 로그 업로더 시작 session=mwd10wi6-10vag23 mode=INFO + 이벤트 url=http://192.168.0.3:8091/api/client-logs
+[2026-11-12T13:07:06.952953] EVENT UI LOGIN action=serverConfigRefresh params=auto=true
+[2026-11-12T13:07:07.505439] INFO [usr=- host=- ip=-] 서버 설정 갱신 via=http://192.168.0.3:8091 domain=192.168.0.3 ws=ws://192.168.0.3:8088/ws changed=false
+[2026-11-12T13:07:12.292609] EVENT UI LOGIN action=quickConnectFilled params=extension=1102
+[2026-11-12T13:07:28.965894] EVENT UI LOGIN action=quickConnectFilled params=extension=1102
+[2026-11-12T13:07:29.683772] EVENT UI LOGIN action=loginPressed params=username=1102 domain=192.168.0.3 port=5060 transport=ws wsServer=ws://192.168.0.3:8088/ws
+[2026-11-12T13:07:29.683913] INFO [usr=- host=- ip=-] SIP state -> connecting
+[2026-11-12T13:07:29.687525] INFO (동일 로그 2회 반복 스킵 요약)
+[2026-11-12T13:07:29.687654] EVENT SIP op=init target=- state=- params=ws=ws://192.168.0.3:8088/ws domain=192.168.0.3 port=5060 transport=ws
+[2026-11-12T13:07:29.693435] INFO [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.4] SIP state -> connected
+[2026-11-12T13:07:29.722282] INFO (동일 로그 2회 반복 스킵 요약)
+[2026-11-12T13:07:29.722387] INFO [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.4] SIP state -> registered
+[2026-11-12T13:07:29.723494] EVENT LOGIN event=loginResult state=registered username=1102 error=-
+[2026-11-12T13:07:29.915489] EVENT MEDIA event=localStreamReady state=video=1 audio=1 frontCamera=true audioMuted=false
+[2026-11-12T13:07:33.759837] EVENT UI DIALER action=callPressed params=target=6000
+[2026-11-12T13:07:33.760235] INFO [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.4] SIP call -> 6000 voiceOnly=false hasLocalStream=true
+[2026-11-12T13:07:33.760861] EVENT DIALER event=callResult state=pushed target=6000 error=-
+[2026-11-12T13:07:33.785191] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.4] SIP remote-track recovery armed id=2lx817qgmzcersbscrrz554068351y
+[2026-11-12T13:07:33.785306] EVENT SIP op=callInitiation target=6000 state=initiated params=direction=outgoing id=2lx817qgmzcersbscrrz554068351y
+[2026-11-12T13:07:33.785401] EVENT SIP op=callProgress target=6000 state=CONNECTING params=id=2lx817qgmzcersbscrrz554068351y
+[2026-11-12T13:07:33.887161] EVENT SIP op=mediaStream target=6000 state=local params=video=1 audio=1 id=2lx817qgmzcersbscrrz554068351y
+[2026-11-12T13:07:34.101753] INFO [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.4] CONFERENCE participants room=6000 n=2 [이재명 대통령 (1101):A,추미애 경기도지사 (1103):V]
+[2026-11-12T13:07:34.361517] EVENT SIP op=callEstablished target=6000 state=ACCEPTED params=id=2lx817qgmzcersbscrrz554068351y
+[2026-11-12T13:07:34.361779] EVENT SIP op=callEstablished target=6000 state=CONFIRMED params=id=2lx817qgmzcersbscrrz554068351y
+[2026-11-12T13:07:34.462570] EVENT SIP op=mediaStream target=6000 state=remote params=video=1 audio=1 id=2lx817qgmzcersbscrrz554068351y
+[2026-11-12T13:07:34.462784] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.4] remote session 2lx817qgmzcersbscrrz554068351y handled: streams=1 event(video=1 audio=1) session(video=1 audio=1)
+[2026-11-12T13:07:34.462893] EVENT MEDIA event=remoteStreamAdded state=video=1 audio=1 sessionId=2lx817qgmzcersbscrrz554068351y sessionStreams=1 sessionVideo=1 sessionAudio=1
+[2026-11-12T13:07:36.110007] EVENT SIP op=mediaStream target=6000 state=remote params=video=1 audio=1 id=2lx817qgmzcersbscrrz554068351y
+[2026-11-12T13:07:36.110148] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.4] remote session 2lx817qgmzcersbscrrz554068351y handled: streams=1 event(video=1 audio=1) session(video=1 audio=1)
+[2026-11-12T13:07:36.110256] EVENT MEDIA event=remoteStreamAdded state=video=1 audio=1 sessionId=2lx817qgmzcersbscrrz554068351y sessionStreams=1 sessionVideo=1 sessionAudio=1
+[2026-11-12T13:07:36.143498] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.4] remote video tile 등록(전용) track=950cd035-d9a2-40ac-9d31-72c4b61b61bd
+[2026-11-12T13:07:36.304649] EVENT SIP op=mediaStream target=6000 state=remote params=video=3 audio=1 id=2lx817qgmzcersbscrrz554068351y
+[2026-11-12T13:07:36.304910] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.4] remote session 2lx817qgmzcersbscrrz554068351y handled: streams=2 event(video=3 audio=1) session(video=4 audio=2)
+[2026-11-12T13:07:36.305024] EVENT MEDIA event=remoteStreamAdded state=video=3 audio=1 sessionId=2lx817qgmzcersbscrrz554068351y sessionStreams=2 sessionVideo=4 sessionAudio=2
+[2026-11-12T13:07:36.305089] EVENT SIP op=mediaStream target=6000 state=remote params=video=3 audio=1 id=2lx817qgmzcersbscrrz554068351y
+[2026-11-12T13:07:36.305148] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.4] remote session 2lx817qgmzcersbscrrz554068351y handled: streams=2 event(video=3 audio=1) session(video=4 audio=2)
+[2026-11-12T13:07:36.305209] EVENT MEDIA event=remoteStreamAdded state=video=3 audio=1 sessionId=2lx817qgmzcersbscrrz554068351y sessionStreams=2 sessionVideo=4 sessionAudio=2
+[2026-11-12T13:07:36.306339] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.4] remote video tile 등록(전용) track=887016e6-7cd7-451c-b108-2313ce432789
+[2026-11-12T13:07:36.306913] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.4] remote video tile 등록(전용) track=ac83b933-bbfe-4434-9bd6-5f959714c52d
+[2026-11-12T13:07:36.708525] INFO [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.4] SIP re-INVITE 수신 hasAudio=true hasVideo=true -> 자동 수락
+[2026-11-12T13:07:36.708881] INFO [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.4] SIP re-INVITE 응답 전송 accepted=true
+[2026-11-12T13:07:37.223805] INFO [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.4] SIP transceivers 0:audio:SendRecv/SendRecv 1:video:SendRecv/SendRecv 2:video:RecvOnly/RecvOnly 3:video:RecvOnly/RecvOnly
+[2026-11-12T13:07:39.188725] INFO [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.4] CONFERENCE participants room=6000 n=3 [이재명 대통령 (1101):A,추미애 경기도지사 (1103):V,김민석 당대표 (1102):V*]
+[2026-11-12T13:07:39.366304] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.4] SIP stats inbound audioBytes=15587 audioPackets=226 videoBytes=20738
+[2026-11-12T13:07:39.366458] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.4] remote video tiles active=1 inactive=2
+[2026-11-12T13:07:44.366482] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.4] SIP stats inbound audioBytes=43424 audioPackets=476 videoBytes=57030

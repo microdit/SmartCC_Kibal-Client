@@ -45,7 +45,9 @@ class ConferenceParticipant {
 }
 
 class ConferenceSnapshot {
-  const ConferenceSnapshot(this.participants, this.videoOrder);
+  const ConferenceSnapshot(this.participants, this.videoOrder, {this.syncSeq = 0, this.syncBy});
+  final int syncSeq;
+  final String? syncBy;
   final List<ConferenceParticipant> participants;
 
   /// 내 원격 영상 m-line 순서(채널명)
@@ -66,8 +68,24 @@ class ConferenceParticipantService extends ChangeNotifier {
   String _extension = '';
   ConferenceSnapshot? _snapshot;
   String _lastSummary = '';
+  String _lastMembers = '';
+  int? _lastSyncSeq;
+
+  /// 영상 동기화 필요 시 호출(reason: join|leave|remote)
+  void Function(String reason)? onResyncNeeded;
 
   ConferenceSnapshot? get snapshot => _snapshot;
+
+  /// 전 참가자 영상 동기화 요청(서버 sync_seq 증가 → 모든 클라이언트가 리프레시)
+  Future<bool> requestSyncAll() async {
+    final room = _room;
+    if (room == null) return false;
+    AppLogger.instance.ui('CONFERENCE', 'videoSyncAll', params: {'room': room});
+    final res = await _send('POST', '/api/conference/$room/sync', body: {'extension': _extension});
+    final seq = (res?['data'] as Map<String, dynamic>?)?['seq'];
+    if (seq is int) _lastSyncSeq = seq; // 내 리프레시는 호출측에서 즉시 수행
+    return res != null;
+  }
 
   String get _base => ServerConfigService.instance.current.opsBaseUrl;
 
@@ -95,6 +113,8 @@ class ConferenceParticipantService extends ChangeNotifier {
     _timer = null;
     _room = null;
     _lastSummary = '';
+    _lastMembers = '';
+    _lastSyncSeq = null;
     if (_snapshot != null) {
       _snapshot = null;
       notifyListeners();
@@ -114,7 +134,21 @@ class ConferenceParticipantService extends ChangeNotifier {
         if (p is Map<String, dynamic>) ConferenceParticipant.fromJson(p),
     ].whereType<ConferenceParticipant>().toList();
     final order = [for (final c in (data['video_order'] as List? ?? const [])) '$c'];
-    _snapshot = ConferenceSnapshot(list, order);
+    final syncSeq = (data['sync_seq'] as num?)?.toInt() ?? 0;
+    _snapshot = ConferenceSnapshot(list, order,
+        syncSeq: syncSeq, syncBy: data['sync_by'] as String?);
+    // 자동 동기화: 참가자 입장/퇴장
+    final members = (list.map((p) => p.channel).toList()..sort()).join(',');
+    if (_lastMembers.isNotEmpty && members != _lastMembers) {
+      final joined = list.length > _lastMembers.split(',').length;
+      onResyncNeeded?.call(joined ? 'join' : 'leave');
+    }
+    _lastMembers = members;
+    // 원격 요청(다른 참가자가 "전체 영상 동기화")
+    if (_lastSyncSeq != null && syncSeq > _lastSyncSeq!) {
+      onResyncNeeded?.call('remote:${data['sync_by'] ?? '-'}');
+    }
+    _lastSyncSeq = syncSeq;
     final summary = list.map((p) => '${p.label}:${p.hasVideo ? 'V' : 'A'}${p.isSelf ? '*' : ''}').join(',');
     if (summary != _lastSummary) {
       _lastSummary = summary;

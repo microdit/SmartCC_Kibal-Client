@@ -29,13 +29,26 @@ class FullscreenStage extends StatefulWidget {
 
 class _FullscreenStageState extends State<FullscreenStage> {
   final FocusNode _focus = FocusNode();
-  bool _showControls = true;
+  // 진입 직후·해제 중에는 컨트롤을 숨긴다(더블클릭 중 버튼이 크게 보이며 눌리는 문제)
+  bool _showControls = false;
+  bool _exiting = false;
   Timer? _hide;
+  DateTime _enteredAt = DateTime.now();
+
+  void _exit() {
+    if (_exiting) return;
+    _hide?.cancel();
+    setState(() {
+      _exiting = true;
+      _showControls = false;
+    });
+    widget.onExit();
+  }
 
   @override
   void initState() {
     super.initState();
-    _poke();
+    _enteredAt = DateTime.now();
     WidgetsBinding.instance.addPostFrameCallback((_) => _focus.requestFocus());
   }
 
@@ -47,6 +60,10 @@ class _FullscreenStageState extends State<FullscreenStage> {
   }
 
   void _poke() {
+    // 창 전환 애니메이션(약 0.8초) 동안은 표시하지 않음
+    if (_exiting || DateTime.now().difference(_enteredAt) < const Duration(milliseconds: 900)) {
+      return;
+    }
     _hide?.cancel();
     if (!_showControls) setState(() => _showControls = true);
     _hide = Timer(const Duration(seconds: 3), () {
@@ -60,7 +77,7 @@ class _FullscreenStageState extends State<FullscreenStage> {
       focusNode: _focus,
       onKeyEvent: (e) {
         if (e is KeyDownEvent && e.logicalKey == LogicalKeyboardKey.escape) {
-          widget.onExit();
+          _exit();
         }
       },
       child: MouseRegion(
@@ -68,16 +85,18 @@ class _FullscreenStageState extends State<FullscreenStage> {
         cursor: _showControls ? SystemMouseCursors.basic : SystemMouseCursors.none,
         child: GestureDetector(
           behavior: HitTestBehavior.opaque,
-          onDoubleTap: widget.onExit,
+          onDoubleTap: _exit,
           child: Container(
             color: Colors.black,
             child: Stack(
               fit: StackFit.expand,
               children: [
                 widget.child,
-                AnimatedOpacity(
+                IgnorePointer(
+                  ignoring: !_showControls,
+                  child: AnimatedOpacity(
                   opacity: _showControls ? 1 : 0,
-                  duration: const Duration(milliseconds: 200),
+                  duration: const Duration(milliseconds: 150),
                   child: Align(
                     alignment: Alignment.bottomCenter,
                     child: Padding(
@@ -100,7 +119,7 @@ class _FullscreenStageState extends State<FullscreenStage> {
                             IconButton(
                               tooltip: '전체 화면 해제 (더블클릭 / Esc)',
                               icon: const Icon(Icons.fullscreen_exit, color: Colors.white),
-                              onPressed: widget.onExit,
+                              onPressed: _exit,
                             ),
                             const SizedBox(width: 8),
                             IconButton(
@@ -114,6 +133,7 @@ class _FullscreenStageState extends State<FullscreenStage> {
                       ),
                     ),
                   ),
+                ),
                 ),
               ],
             ),

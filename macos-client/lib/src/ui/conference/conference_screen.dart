@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
@@ -46,21 +47,50 @@ class _ConferenceViewState extends State<ConferenceView> {
   @override
   void initState() {
     super.initState();
-    context.read<SipProvider>().addListener(_handleSipChange);
+    _sipRef = context.read<SipProvider>();
+    _mediaRef = context.read<MediaProvider>();
+    _sipRef.addListener(_handleSipChange);
     _participants.addListener(_onParticipants);
+    _participants.onResyncNeeded = _autoResync;
     WidgetsBinding.instance.addPostFrameCallback((_) => _syncPolling());
   }
 
   final ConferenceParticipantService _participants = ConferenceParticipantService.instance;
+  late final SipProvider _sipRef;
+  late final MediaProvider _mediaRef;
+  Timer? _resyncTimer;
+  bool _syncing = false;
+
+  /// 참가자 변화/원격 요청 → 1.5초 후 영상 동기화(연속 이벤트는 1회로 합침)
+  void _autoResync(String reason) {
+    _resyncTimer?.cancel();
+    _resyncTimer = Timer(const Duration(milliseconds: 1500), () {
+      if (mounted) _mediaRef.resyncVideo(reason: 'auto:$reason');
+    });
+  }
+
+  /// 수동: 전 참가자 영상 동기화
+  Future<void> _syncAll() async {
+    if (_syncing) return;
+    setState(() => _syncing = true);
+    final ok = await _participants.requestSyncAll();
+    await _mediaRef.resyncVideo(reason: 'manual');
+    if (!mounted) return;
+    setState(() => _syncing = false);
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      duration: const Duration(seconds: 2),
+      content: Text(ok ? '전체 참가자 영상 동기화 요청' : '내 화면만 동기화(서버 응답 없음)'),
+    ));
+  }
 
   void _onParticipants() {
     if (mounted) setState(() {});
   }
 
-  String get _myExtension => context.read<SipProvider>().config?.username ?? '';
+  String get _myExtension => _sipRef.config?.username ?? '';
 
   String get _myLabel {
-    final cfg = context.read<SipProvider>().config;
+    final cfg = _sipRef.config;
     final ext = cfg?.username ?? '';
     final name = (cfg?.displayName ?? '').trim();
     final who = name.isEmpty || name == ext ? ext : '$name ($ext)';
@@ -70,7 +100,7 @@ class _ConferenceViewState extends State<ConferenceView> {
   /// 회의 중일 때만 OPS 참가자 폴링
   void _syncPolling() {
     if (!mounted) return;
-    final sp = context.read<SipProvider>();
+    final sp = _sipRef;
     final room = sp.currentCallTarget;
     if (sp.isInCall && room != null && RegExp(r'^\d{3,6}$').hasMatch(room)) {
       _participants.start(room, extension: _myExtension);
@@ -81,7 +111,9 @@ class _ConferenceViewState extends State<ConferenceView> {
 
   @override
   void dispose() {
-    context.read<SipProvider>().removeListener(_handleSipChange);
+    _sipRef.removeListener(_handleSipChange);
+    _resyncTimer?.cancel();
+    if (_participants.onResyncNeeded == _autoResync) _participants.onResyncNeeded = null;
     _participants.removeListener(_onParticipants);
     _participants.stop();
     if (_fullscreen) WindowFullscreen.set(false, screen: 'conference');
@@ -92,7 +124,7 @@ class _ConferenceViewState extends State<ConferenceView> {
   void _handleSipChange() {
     if (!mounted) return;
     _syncPolling();
-    final sp = context.read<SipProvider>();
+    final sp = _sipRef;
     if (sp.isInCall) {
       _wasInCall = true;
     } else if (_wasInCall) {
@@ -106,8 +138,8 @@ class _ConferenceViewState extends State<ConferenceView> {
       }
     }
 
-    final sipProvider = context.read<SipProvider>();
-    final mediaProvider = context.read<MediaProvider>();
+    final sipProvider = _sipRef;
+    final mediaProvider = _mediaRef;
 
     for (final event in sipProvider.drainMediaEvents()) {
       mediaProvider.applySipMediaEvent(event, fallbackSession: 'conference');
@@ -163,6 +195,15 @@ class _ConferenceViewState extends State<ConferenceView> {
                 '${_participants.snapshot != null ? ' · 참가자 ${_participants.snapshot!.count}명' : ''}'
             : '회의실'),
         actions: [
+          if (inConference)
+            TextButton.icon(
+              onPressed: _syncing ? null : _syncAll,
+              icon: _syncing
+                  ? const SizedBox(
+                      width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2))
+                  : const Icon(Icons.sync),
+              label: const Text('영상 동기화'),
+            ),
           if (inConference)
             IconButton(
               icon: const Icon(Icons.call_end, color: Colors.red),

@@ -228,6 +228,12 @@ class MediaProvider with ChangeNotifier {
   }
   
   /// 비디오 뮤트 토글
+  /// 영상 동기화(송신 키프레임 유도 + 수신 렌더러 재바인딩)
+  Future<void> resyncVideo({String reason = '-'}) async {
+    await _mediaManager.resyncVideo(reason: reason);
+    notifyListeners();
+  }
+
   Future<bool> toggleVideo() async {
     try {
       final result = await _mediaManager.toggleVideo();

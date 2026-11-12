@@ -308,6 +308,39 @@ class MediaManager {
     }
   }
   
+  /// 영상 동기화(리프레시): 참가자 변화(re-INVITE) 후 화면이 멈추는 문제 대응.
+  ///
+  /// 1) 송신: 내 영상 트랙 off→on (사용자가 수동으로 끄고 켜면 복구되던 동작을 자동화,
+  ///    인코더가 키프레임을 다시 보내 SFU 경유 전 참가자 화면이 갱신된다)
+  /// 2) 수신: 렌더 타일 재구성 + 모든 원격 렌더러 srcObject 해제 후 재바인딩
+  Future<void> resyncVideo({String reason = '-'}) async {
+    final local = _localStream?.getVideoTracks() ?? const <MediaStreamTrack>[];
+    final kick = !_isVideoMuted && local.isNotEmpty;
+    AppLogger.instance.i('VIDEO resync reason=$reason localKick=$kick '
+        'remoteTiles=${_remoteVideoTrackOrder.length}');
+    if (kick) {
+      for (final t in local) {
+        t.enabled = false;
+      }
+      await Future<void>.delayed(const Duration(milliseconds: 300));
+      for (final t in local) {
+        t.enabled = !_isVideoMuted;
+      }
+    }
+    // 수신 타일 재구성: 렌더 전용 스트림을 새로 만들어 텍스처를 다시 연결
+    for (final id in List<String>.from(_remoteVideoTrackOrder)) {
+      final stale = _remoteVideoStreams.remove(id);
+      await _disposeRenderStream(stale);
+    }
+    _remoteVideoTrackOrder.clear();
+    for (final r in _remoteRenderers.values) {
+      r.srcObject = null;
+    }
+    onRemoteVideoStreamsChanged?.call();
+    await Future<void>.delayed(const Duration(milliseconds: 100));
+    await _syncRemoteVideoStreams();
+  }
+
   /// 오디오 장치 가져오기
   Future<List<MediaDeviceInfo>> getAudioDevices() async {
     try {
