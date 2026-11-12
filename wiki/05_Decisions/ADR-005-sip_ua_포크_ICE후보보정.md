@@ -74,3 +74,8 @@ a=candidate:Hac130002 1 UDP 2130706431 172.19.0.2 10048 typ host
 2. re-INVITE 응답 후 서버가 영상 RTP를 실제 송신하는지 확인(`Sent RTP type 100`); 0건이면 ConfBridge SFU 설정 재점검
 3. 서버가 도달 가능한 후보를 광고할 수 있게 되면(예: Linux bridged VM, 네이티브 Asterisk, TURN) 포크 제거 검토
 4. 장기적으로 `sip_ua` 업스트림에 SDP 후보 보정 훅 또는 ICE 실패 복원력 패치 제안
+
+
+## 추가 변경 (2026-11-12, ADR-007)
+- `rtc_session.dart` `localSdpTransformer` 전역 훅: `_createLocalDescription`에서 offer/answer(재협상 포함) SDP 변환
+- `sip_ua.dart` export: `MapHelper`, `RTCSession`, `localSdpTransformer`

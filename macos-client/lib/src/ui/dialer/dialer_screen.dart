@@ -289,6 +289,7 @@ class _DialerScreenState extends State<DialerScreen> {
               _buildQuickDialButton('1003'),
               _buildQuickDialButton('1004'),
               _buildQuickDialButton('6000', isConference: true),
+              _buildQuickDialButton('6100', isConference: true),
             ],
           ),
         ],

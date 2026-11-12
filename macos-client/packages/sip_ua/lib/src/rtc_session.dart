@@ -62,6 +62,10 @@ class RFC4028Timers {
   Timer? timer;
 }
 
+/// Kibal 포크: 로컬 SDP 변환 훅 (session, 'offer'|'answer', sdp) → 새 sdp 또는 null
+typedef LocalSdpTransformer = String? Function(RTCSession session, String type, String sdp);
+LocalSdpTransformer? localSdpTransformer;
+
 class RTCSession extends EventManager implements Owner {
   RTCSession(this._ua) {
     logger.d('new');
@@ -1869,6 +1873,19 @@ class RTCSession extends EventManager implements Owner {
     for (Future<RTCSessionDescription> Function(RTCSessionDescription) modifier
         in modifiers) {
       desc = await modifier(desc);
+    }
+
+    // Kibal 포크(ADR-007): 앱 레벨 SDP 변환(회의실별 영상 코덱 정책). offer/answer·재협상 모두 적용.
+    final LocalSdpTransformer? transformer = localSdpTransformer;
+    if (transformer != null && desc.sdp != null) {
+      try {
+        final String? out = transformer(this, type == SdpType.offer ? 'offer' : 'answer', desc.sdp!);
+        if (out != null && out != desc.sdp) {
+          desc = RTCSessionDescription(out, desc.type);
+        }
+      } catch (e) {
+        logger.w('localSdpTransformer 실패: $e');
+      }
     }
 
     Future<void> ready() async {

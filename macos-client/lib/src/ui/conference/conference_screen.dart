@@ -197,6 +197,7 @@ class _ConferenceViewState extends State<ConferenceView> {
         title: Text(inConference
             ? '회의실 ${sipProvider.currentCallTarget ?? ''}'
                 '${_participants.snapshot != null ? ' · 참가자 ${_participants.snapshot!.count}명' : ''}'
+                '${RegExp(r'^61\d\d$').hasMatch(sipProvider.currentCallTarget ?? '') ? ' · 발언자 화면' : ''}'
             : '회의실'),
         actions: [
           if (inConference)
@@ -299,7 +300,11 @@ class _ConferenceViewState extends State<ConferenceView> {
   /// - 같은 렌더러 텍스처를 큰 화면/썸네일이 공유(Texture 다중 표시)
   Widget _buildConferenceGrid(MediaProvider mediaProvider) {
     final remoteStreams = mediaProvider.remoteStreams;
-    final remotes = _buildRemoteTiles(mediaProvider, remoteStreams);
+    final room = _sipRef.currentCallTarget ?? '';
+    final followTalker = RegExp(r'^61\d\d$').hasMatch(room);
+    final remotes = followTalker
+        ? _buildTalkerTiles(mediaProvider, remoteStreams)
+        : _buildRemoteTiles(mediaProvider, remoteStreams);
     final local = _ConferenceTile(
       label: _myLabel,
       renderer: mediaProvider.getLocalRenderer(),
@@ -480,6 +485,31 @@ class _ConferenceViewState extends State<ConferenceView> {
     ];
   }
 
+  /// 6100대(follow_talker): 서버가 현재 발언자 영상 1개만 보낸다.
+  /// 큰 화면 = "발언자 영상", 나머지 참가자는 목록 카드(영상 없음 표시 대신 이름만).
+  List<_ConferenceTile> _buildTalkerTiles(
+      MediaProvider mediaProvider, List<MediaStream> remoteStreams) {
+    final snap = _participants.snapshot;
+    final tiles = <_ConferenceTile>[
+      _ConferenceTile(
+        label: '발언자 영상',
+        renderer: remoteStreams.isNotEmpty ? mediaProvider.getRemoteRenderer(0) : null,
+        stream: remoteStreams.isNotEmpty ? remoteStreams.first : null,
+      ),
+    ];
+    for (final p in (snap?.participants ?? const <ConferenceParticipant>[])) {
+      if (p.isSelf) continue;
+      tiles.add(_ConferenceTile(
+        label: p.label,
+        renderer: null,
+        stream: null,
+        hasVideo: false,
+        participantOnly: true,
+      ));
+    }
+    return tiles;
+  }
+
   Widget _waitingView() {
     return Container(
       decoration: BoxDecoration(
@@ -538,6 +568,7 @@ class _ConferenceViewState extends State<ConferenceView> {
       _Placeholder.noVideo => (Icons.mic, '영상 없음 · 음성 참여'),
       _Placeholder.noCamera => (Icons.videocam_off_outlined, '카메라 없음'),
       _Placeholder.waiting => (Icons.videocam_off_outlined, '영상 수신 준비중'),
+      _Placeholder.participant => (Icons.record_voice_over, '발언 시 큰 화면 표시'),
     };
     return Container(
       decoration: BoxDecoration(
@@ -614,7 +645,7 @@ class _ConferenceViewState extends State<ConferenceView> {
   }
 }
 
-enum _Placeholder { waiting, noVideo, noCamera }
+enum _Placeholder { waiting, noVideo, noCamera, participant }
 
 class _ConferenceTile {
   const _ConferenceTile({
@@ -624,7 +655,11 @@ class _ConferenceTile {
     this.mirror = false,
     this.hasVideo = true,
     this.isLocal = false,
+    this.participantOnly = false,
   });
+
+  /// 6100 참가자 목록 카드(영상은 발언자 화면에서만)
+  final bool participantOnly;
 
   final String label;
   final RTCVideoRenderer? renderer;
@@ -635,5 +670,7 @@ class _ConferenceTile {
 
   _Placeholder get placeholder => isLocal
       ? _Placeholder.noCamera
-      : (hasVideo ? _Placeholder.waiting : _Placeholder.noVideo);
+      : participantOnly
+          ? _Placeholder.participant
+          : (hasVideo ? _Placeholder.waiting : _Placeholder.noVideo);
 }

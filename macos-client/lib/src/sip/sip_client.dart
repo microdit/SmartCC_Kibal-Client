@@ -4,6 +4,7 @@ import 'package:sip_ua/sip_ua.dart';
 import '../utils/app_logger.dart';
 import '../utils/conference_participants.dart';
 import '../utils/remote_log_forwarder.dart';
+import 'sdp_codec.dart';
 import 'sip_config.dart';
 import 'sip_session.dart';
 
@@ -157,6 +158,17 @@ class KibalSipClient implements SipUaHelperListener {
         extension: config.username,
         domain: config.domain,
       );
+      // ADR-007: 회의실/상대별 영상 코덱 정책(6100대 H.264 전용, 12xx H.264 우선)
+      localSdpTransformer = (session, type, sdp) {
+        final target = session.remote_identity?.uri?.user;
+        final policy = videoPolicyFor(target);
+        if (policy == VideoCodecPolicy.keep) return null;
+        final out = applyVideoCodecPolicy(sdp, policy);
+        if (out != sdp) {
+          AppLogger.instance.i('SIP codec policy target=$target type=$type video=${policy.name}');
+        }
+        return out;
+      };
       // 회의 참가자 카드용 표시 이름 보고(없으면 서버가 내선 번호로 표시)
       unawaited(ConferenceParticipantService.instance.reportProfile(
           extension: config.username, displayName: config.displayName));
