@@ -77,7 +77,7 @@
 ## 현재 진행 (2026-11-12 22:50) — 통화 품질 개선, 실행 순서 **C → A → D → B**
 - **404 원인 확정**: `1102→1103`은 `1103` AOR contact 부재(`Could not create dialog to invalid URI '1103'`). 서버 UTC 16:05 = 클라이언트 KST 01:05(+9h), `security` SessionID가 호 ID와 일치. 다이얼플랜·코덱 무관
 - 제공된 "1103 로그"는 실제 **1102 로그**(OPS `1102.log`). `01:05:30` 착신은 1102 self-call
-- **C**: A10 `video-1 sendrecv/h264` SDP 정상 → 미표시는 `follow_talker` 영상 전달 지점
+- **C**: 발언자 **1201 자동설정** + 1103에 발언자 영상·음성 정상 수신 확인 → `follow_talker` 정상, `confbridge list` 빈 Flags를 "발화자 미선정"으로 읽은 것은 오진(기각). **설정 변경 불필요**. 잔여는 A10(1201) 화면 캡처 + 발화자 1103 전환 테스트(최초 증상은 1103→A10 방향이라 미검증). 상세 [[wiki/08_Experiments/20261112_C_발화자영상_검증_v1.0]]
 - **D**: `_acceptReinvite` ADR-006 옵션 누락(`sip_client.dart:631`), `_remoteSessions` 누적(`media_manager.dart:401-410`)
 - **B**: 손실 버스트 2회 / out-fps 붕괴(로컬 인코더) / 첫 키프레임 대기 3현상. 손실·freeze 카운터는 getStats **누적**이라 고정이 정상
 - 문서 완료 → 커밋·동기화 후 개발 착수. 해석 규칙은 [[wiki/09_Knowledge/20261112_SIP_진단지식_v1.0]]
