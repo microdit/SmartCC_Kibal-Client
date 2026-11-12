@@ -69,7 +69,7 @@ ConfBridge는 참가자 입·퇴장마다 re-INVITE를 보낸다(로그 `01:10:3
 ### 검증
 
 - `flutter analyze` **No issues**, `flutter test` **17/17 통과**
-- `./scripts/release_macos.sh --skip-tests` → **v0.0.23 (build 23)** DMG, sha256 `21d0994054b8f4f00c0c7e85fb592de19fea2e301b05b93cba26e598e63b4bfe`, x86_64+arm64, adhoc 서명
+- `./scripts/release_macos.sh --skip-tests` → **v0.0.23 (build 23)** DMG, sha256 `ace1cf4f8c34e7fee1ebe8bac6ba951f395003f79cde56a05dee4ce27d48eaeb`(`--no-bump --install` 재빌드 설치본; 최초 빌드는 `21d0994…`), x86_64+arm64, adhoc 서명
 - D3 기준선: 제공된 1102 로그는 `SIP accept video=`(v0.0.17 추가)가 없어 **v0.0.16 이하** 빌드. `1102.meta.json`의 `v0.0.19`는 마지막 세션 기준이라 로그 기준선으로 부적합
 
 ### 잔여

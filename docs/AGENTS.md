@@ -78,8 +78,9 @@
 - **404 원인 확정·A 완료(A5 회귀 합격 23:58)**: 컨테이너 재생성으로 AOR 반영, 294초 갱신 구간 contact 해시 유지, 신규 404 0건, ADR-004 Accepted. `1102→1103`은 `1103` AOR contact 부재. 실측 — `register_expires=300`이 294초 주기 재REGISTER를 만들고 `remove_existing=yes`가 갱신마다 contact를 비움. 서버는 AOR 정책 변경(서버 리포 ADR-004), 클라이언트는 **A4** `transportStateChanged` 재연결 시 재REGISTER 보장(`sip_client.dart`, analyze 0 / test 17). 다이얼플랜·코덱 무관. 런타임 반영은 실통화 종료 후 컨테이너 재생성 필요
 - 제공된 "1103 로그"는 실제 **1102 로그**(OPS `1102.log`). `01:05:30` 착신은 1102 self-call
 - **C**: 발언자 **1201 자동설정** + 1103에 발언자 영상·음성 정상 수신 확인 → `follow_talker` 정상, `confbridge list` 빈 Flags를 "발화자 미선정"으로 읽은 것은 오진(기각). **설정 변경 불필요**. 잔여는 A10(1201) 화면 캡처 + 발화자 1103 전환 테스트(최초 증상은 1103→A10 방향이라 미검증). 상세 [[wiki/08_Experiments/20261112_C_발화자영상_검증_v1.0]]
-- **D 완료(v0.0.23)**: D1 `_receiveOnlyVideo` + `_acceptReinvite` 옵션 병합(ADR-008 Accepted), D2 inactive 영상 스트림만 정리(오디오 전용 보존). analyze 0 / test 17 / DMG sha256 `21d0994…`. D3 제공 로그는 v0.0.16 이하 빌드(`1102.meta.json` v0.0.19는 마지막 세션 기준)
-- **B**: 손실 버스트 2회 / out-fps 붕괴(로컬 인코더) / 첫 키프레임 대기 3현상. 손실·freeze 카운터는 getStats **누적**이라 고정이 정상. B3 완료 — `01:15:03` `640x480` 하향은 앱 코드(`lowVideoConstraints` 미사용)가 아닌 **WebRTC 인코더 자체 적응**. 잔여는 B1/B2 60분 실기 회귀만
+- **D 완료(v0.0.23)**: D1 `_receiveOnlyVideo` + `_acceptReinvite` 옵션 병합(ADR-008 Accepted), D2 inactive 영상 스트림만 정리(오디오 전용 보존). analyze 0 / test 17 / DMG sha256 `ace1cf4…`(설치본 재빌드). D3 제공 로그는 v0.0.16 이하 빌드(`1102.meta.json` v0.0.19는 마지막 세션 기준)
+- **B**: 손실 버스트 2회 / out-fps 붕괴(로컬 인코더) / 첫 키프레임 대기 3현상. 손실·freeze 카운터는 getStats **누적**이라 고정이 정상. B3 완료 — `01:15:03` `640x480` 하향은 앱 코드(`lowVideoConstraints` 미사용)가 아닌 **WebRTC 인코더 자체 적응**
+- **배포(00:40)**: v0.0.23 `/Applications` 설치 완료(sha256 `ace1cf4…`). `1201` 재등록 해소, `1103` 자동 복구 확인. **최종 잔여는 사용자 로그인 + 6000 60분 통화 1건** → [[wiki/08_Experiments/20261112_B_실기준비_v1.0]]
 - 문서 완료 → 커밋·동기화 후 개발 착수. 해석 규칙은 [[wiki/09_Knowledge/20261112_SIP_진단지식_v1.0]]
 - 상세: [[docs/보고서/20261112_통화품질_원인규명_작업계획서_v1.0]], [[wiki/06_Reports/20261112_통화품질_원인규명_분석보고서_v1.0]], [[wiki/03_Guides/20261112_통화품질_테스트절차서_v1.0]], [[wiki/04_Prompts/20261112_통화품질개선_후속작업프롬프트_v1.0]]
 
