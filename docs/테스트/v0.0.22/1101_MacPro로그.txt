@@ -1,0 +1,178 @@
+1101은 다자간 통화중 자꾸 튕겨져 나간다. 반복 재현됨.
+
+
+[2026-11-13T00:51:22.399805] INFO [usr=- host=- ip=-] AppLogger 초기화 완료 file=/Users/microdit/Library/Containers/com.microdit.macosClient/Data/Library/Application Support/com.microdit.macosClient/logs/app.log identity=usr=- host=- ip=- mode=release
+[2026-11-13T00:51:22.400667] INFO [usr=- host=- ip=-] 원격 로그 업로더 시작 session=mwdq6l28-12d0nrn mode=INFO + 이벤트 url=http://192.168.0.3:8091/api/client-logs
+[2026-11-13T00:51:22.439851] EVENT UI LOGIN action=serverConfigRefresh params=auto=true
+[2026-11-13T00:51:22.825352] INFO [usr=- host=- ip=-] 서버 설정 갱신 via=http://192.168.0.3:8091 domain=192.168.0.3 ws=ws://192.168.0.3:8088/ws changed=false
+[2026-11-13T00:52:57.533550] EVENT UI LOGIN action=quickConnectFilled params=extension=1101
+[2026-11-13T00:52:58.283624] EVENT UI LOGIN action=loginPressed params=username=1101 domain=192.168.0.3 port=5060 transport=ws wsServer=ws://192.168.0.3:8088/ws
+[2026-11-13T00:52:58.283747] INFO [usr=- host=- ip=-] SIP state -> connecting
+[2026-11-13T00:52:58.285149] INFO (동일 로그 2회 반복 스킵 요약)
+[2026-11-13T00:52:58.285227] EVENT SIP op=init target=- state=- params=ws=ws://192.168.0.3:8088/ws domain=192.168.0.3 port=5060 transport=ws
+[2026-11-13T00:52:58.290283] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP state -> connected
+[2026-11-13T00:52:58.297136] INFO (동일 로그 2회 반복 스킵 요약)
+[2026-11-13T00:52:58.297221] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP state -> registered
+[2026-11-13T00:52:58.297297] EVENT LOGIN event=loginResult state=registered username=1101 error=-
+[2026-11-13T00:52:58.384583] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] MEDIA device resolve camera=기본 mic=기본 speaker=기본
+[2026-11-13T00:52:58.386426] EVENT MEDIA event=localStreamReady state=video=0 audio=1 frontCamera=true audioMuted=false
+[2026-11-13T00:53:19.540437] EVENT UI LOGIN action=quickConnectFilled params=extension=1101
+[2026-11-13T00:53:20.256946] EVENT UI LOGIN action=logoutPressed
+[2026-11-13T00:53:20.258321] EVENT MEDIA event=disposeAllMedia state=-
+[2026-11-13T00:53:20.258586] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP state -> idle
+[2026-11-13T00:53:20.263437] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP state -> unregistered
+[2026-11-13T00:53:20.990603] EVENT UI LOGIN action=loginPressed params=username=1101 domain=192.168.0.3 port=5060 transport=ws wsServer=ws://192.168.0.3:8088/ws
+[2026-11-13T00:53:20.990712] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP state -> connecting
+[2026-11-13T00:53:20.991513] INFO (동일 로그 2회 반복 스킵 요약)
+[2026-11-13T00:53:20.991584] EVENT SIP op=init target=- state=- params=ws=ws://192.168.0.3:8088/ws domain=192.168.0.3 port=5060 transport=ws
+[2026-11-13T00:53:20.996318] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP state -> connected
+[2026-11-13T00:53:21.003606] INFO (동일 로그 2회 반복 스킵 요약)
+[2026-11-13T00:53:21.003683] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP state -> registered
+[2026-11-13T00:53:21.003761] EVENT LOGIN event=loginResult state=registered username=1101 error=-
+[2026-11-13T00:53:21.010780] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] MEDIA device resolve camera=기본 mic=기본 speaker=기본
+[2026-11-13T00:53:21.012219] EVENT MEDIA event=localStreamReady state=video=0 audio=1 frontCamera=true audioMuted=false
+[2026-11-13T00:53:22.260253] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP transport disconnected (cause: Code: [0], Cause: disconnect, Reason: close by local)
+[2026-11-13T00:53:22.260355] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP state -> disconnected
+[2026-11-13T00:53:24.841708] EVENT UI LOGIN action=loginPressed params=username=1101 domain=192.168.0.3 port=5060 transport=ws wsServer=ws://192.168.0.3:8088/ws
+[2026-11-13T00:53:24.841820] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP state -> connecting
+[2026-11-13T00:53:24.842786] INFO (동일 로그 2회 반복 스킵 요약)
+[2026-11-13T00:53:24.842858] EVENT SIP op=init target=- state=- params=ws=ws://192.168.0.3:8088/ws domain=192.168.0.3 port=5060 transport=ws
+[2026-11-13T00:53:24.848206] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP state -> unregistered
+[2026-11-13T00:53:24.848408] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP state -> connected
+[2026-11-13T00:53:24.848457] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP transport reconnected -> re-REGISTER
+[2026-11-13T00:53:24.848605] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP state -> connected
+[2026-11-13T00:53:24.853585] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP state -> registered
+[2026-11-13T00:53:24.853696] EVENT LOGIN event=loginResult state=registered username=1101 error=-
+[2026-11-13T00:53:24.855833] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] MEDIA device resolve camera=기본 mic=기본 speaker=기본
+[2026-11-13T00:53:24.857113] EVENT MEDIA event=localStreamReady state=video=0 audio=1 frontCamera=true audioMuted=false
+[2026-11-13T00:53:26.843327] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP transport disconnected (cause: Code: [0], Cause: disconnect, Reason: close by local)
+[2026-11-13T00:53:26.843419] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP state -> disconnected
+[2026-11-13T00:53:29.793403] EVENT UI LOGIN action=quickConnectFilled params=extension=1103
+[2026-11-13T00:53:33.211004] EVENT UI LOGIN action=quickConnectFilled params=extension=1101
+[2026-11-13T00:53:33.894674] EVENT UI LOGIN action=loginPressed params=username=1101 domain=192.168.0.3 port=5060 transport=ws wsServer=ws://192.168.0.3:8088/ws
+[2026-11-13T00:53:33.894778] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP state -> connecting
+[2026-11-13T00:53:33.895692] INFO (동일 로그 2회 반복 스킵 요약)
+[2026-11-13T00:53:33.895763] EVENT SIP op=init target=- state=- params=ws=ws://192.168.0.3:8088/ws domain=192.168.0.3 port=5060 transport=ws
+[2026-11-13T00:53:33.901577] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP state -> unregistered
+[2026-11-13T00:53:33.901809] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP state -> connected
+[2026-11-13T00:53:33.901865] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP transport reconnected -> re-REGISTER
+[2026-11-13T00:53:33.901986] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP state -> connected
+[2026-11-13T00:53:33.906876] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP state -> registered
+[2026-11-13T00:53:33.907697] EVENT LOGIN event=loginResult state=registered username=1101 error=-
+[2026-11-13T00:53:33.909511] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] MEDIA device resolve camera=기본 mic=기본 speaker=기본
+[2026-11-13T00:53:33.918258] EVENT MEDIA event=localStreamReady state=video=0 audio=1 frontCamera=true audioMuted=false
+[2026-11-13T00:53:35.895901] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP transport disconnected (cause: Code: [0], Cause: disconnect, Reason: close by local)
+[2026-11-13T00:53:35.895991] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP state -> disconnected
+[2026-11-13T00:53:37.995821] EVENT UI LOGIN action=quickConnectFilled params=extension=1101
+[2026-11-13T00:53:39.849961] INFO (동일 로그 2회 반복 스킵 요약)
+[2026-11-13T00:53:39.850068] ERROR [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP SIP 등록 시간 초과 또는 실패
+[2026-11-13T00:53:42.247123] EVENT UI LOGIN action=quickConnectFilled params=extension=1101
+[2026-11-13T00:53:43.531084] EVENT UI LOGIN action=loginPressed params=username=1101 domain=192.168.0.3 port=5060 transport=ws wsServer=ws://192.168.0.3:8088/ws
+[2026-11-13T00:53:43.531190] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP state -> connecting
+[2026-11-13T00:53:43.532151] INFO (동일 로그 2회 반복 스킵 요약)
+[2026-11-13T00:53:43.532218] EVENT SIP op=init target=- state=- params=ws=ws://192.168.0.3:8088/ws domain=192.168.0.3 port=5060 transport=ws
+[2026-11-13T00:53:43.537233] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP state -> connected
+[2026-11-13T00:53:43.537338] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP transport reconnected -> re-REGISTER
+[2026-11-13T00:53:43.537466] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP state -> connected
+[2026-11-13T00:53:43.538201] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP state -> unregistered
+[2026-11-13T00:53:43.538292] ERROR [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP SIP 등록 시간 초과 또는 실패
+[2026-11-13T00:53:43.538343] EVENT LOGIN event=loginResult state=registered username=1101 error=SIP 등록 시간 초과 또는 실패
+[2026-11-13T00:53:43.543759] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP state -> registered
+[2026-11-13T00:53:45.532237] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP transport disconnected (cause: Code: [0], Cause: disconnect, Reason: close by local)
+[2026-11-13T00:53:45.532333] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP state -> disconnected
+[2026-11-13T00:53:47.282086] EVENT UI LOGIN action=quickConnectFilled params=extension=1101
+[2026-11-13T00:53:48.902412] ERROR [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP SIP 등록 시간 초과 또는 실패
+[2026-11-13T00:53:50.049615] EVENT UI LOGIN action=loginPressed params=username=1101 domain=192.168.0.3 port=5060 transport=ws wsServer=ws://192.168.0.3:8088/ws
+[2026-11-13T00:53:50.049730] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP state -> connecting
+[2026-11-13T00:53:50.050669] INFO (동일 로그 2회 반복 스킵 요약)
+[2026-11-13T00:53:50.050745] EVENT SIP op=init target=- state=- params=ws=ws://192.168.0.3:8088/ws domain=192.168.0.3 port=5060 transport=ws
+[2026-11-13T00:53:50.055737] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP state -> connected
+[2026-11-13T00:53:50.055809] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP transport reconnected -> re-REGISTER
+[2026-11-13T00:53:50.055943] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP state -> connected
+[2026-11-13T00:53:50.056824] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP state -> unregistered
+[2026-11-13T00:53:50.056928] ERROR [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP SIP 등록 시간 초과 또는 실패
+[2026-11-13T00:53:50.056983] EVENT LOGIN event=loginResult state=registered username=1101 error=SIP 등록 시간 초과 또는 실패
+[2026-11-13T00:53:50.061470] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP state -> registered
+[2026-11-13T00:53:52.051812] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP transport disconnected (cause: Code: [0], Cause: disconnect, Reason: close by local)
+[2026-11-13T00:53:52.051915] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP state -> disconnected
+[2026-11-13T00:53:57.085424] EVENT UI LOGIN action=quickConnectFilled params=extension=1101
+[2026-11-13T00:53:57.651999] EVENT UI LOGIN action=loginPressed params=username=1101 domain=192.168.0.3 port=5060 transport=ws wsServer=ws://192.168.0.3:8088/ws
+[2026-11-13T00:53:57.652110] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP state -> connecting
+[2026-11-13T00:53:57.653079] INFO (동일 로그 2회 반복 스킵 요약)
+[2026-11-13T00:53:57.653159] EVENT SIP op=init target=- state=- params=ws=ws://192.168.0.3:8088/ws domain=192.168.0.3 port=5060 transport=ws
+[2026-11-13T00:53:57.658504] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP state -> connected
+[2026-11-13T00:53:57.658582] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP transport reconnected -> re-REGISTER
+[2026-11-13T00:53:57.658707] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP state -> connected
+[2026-11-13T00:53:57.659515] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP state -> unregistered
+[2026-11-13T00:53:57.659631] ERROR [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP SIP 등록 시간 초과 또는 실패
+[2026-11-13T00:53:57.659714] EVENT LOGIN event=loginResult state=registered username=1101 error=SIP 등록 시간 초과 또는 실패
+[2026-11-13T00:53:57.665078] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP state -> registered
+[2026-11-13T00:53:58.539045] ERROR [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP SIP 등록 시간 초과 또는 실패
+[2026-11-13T00:53:59.654031] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP transport disconnected (cause: Code: [0], Cause: disconnect, Reason: close by local)
+[2026-11-13T00:53:59.654140] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP state -> disconnected
+[2026-11-13T00:54:01.336313] EVENT UI LOGIN action=loginPressed params=username=1101 domain=192.168.0.3 port=5060 transport=ws wsServer=ws://192.168.0.3:8088/ws
+[2026-11-13T00:54:01.336416] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP state -> connecting
+[2026-11-13T00:54:01.337381] INFO (동일 로그 2회 반복 스킵 요약)
+[2026-11-13T00:54:01.337452] EVENT SIP op=init target=- state=- params=ws=ws://192.168.0.3:8088/ws domain=192.168.0.3 port=5060 transport=ws
+[2026-11-13T00:54:01.343074] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP state -> unregistered
+[2026-11-13T00:54:01.343276] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP state -> connected
+[2026-11-13T00:54:01.343324] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP transport reconnected -> re-REGISTER
+[2026-11-13T00:54:01.343449] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP state -> connected
+[2026-11-13T00:54:01.348773] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP state -> registered
+[2026-11-13T00:54:01.348887] EVENT LOGIN event=loginResult state=registered username=1101 error=-
+[2026-11-13T00:54:01.357073] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] MEDIA device resolve camera=기본 mic=기본 speaker=기본
+[2026-11-13T00:54:01.358589] EVENT MEDIA event=localStreamReady state=video=0 audio=1 frontCamera=true audioMuted=false
+[2026-11-13T00:54:03.338410] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP transport disconnected (cause: Code: [0], Cause: disconnect, Reason: close by local)
+[2026-11-13T00:54:03.338516] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP state -> disconnected
+[2026-11-13T00:54:03.470725] EVENT UI LOGIN action=quickConnectFilled params=extension=1103
+[2026-11-13T00:54:04.637333] EVENT UI LOGIN action=quickConnectFilled params=extension=1101
+[2026-11-13T00:54:05.057254] ERROR [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP SIP 등록 시간 초과 또는 실패
+[2026-11-13T00:54:05.170810] EVENT UI LOGIN action=loginPressed params=username=1101 domain=192.168.0.3 port=5060 transport=ws wsServer=ws://192.168.0.3:8088/ws
+[2026-11-13T00:54:05.170908] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP state -> connecting
+[2026-11-13T00:54:05.171811] INFO (동일 로그 2회 반복 스킵 요약)
+[2026-11-13T00:54:05.171877] EVENT SIP op=init target=- state=- params=ws=ws://192.168.0.3:8088/ws domain=192.168.0.3 port=5060 transport=ws
+[2026-11-13T00:54:05.176944] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP state -> connected
+[2026-11-13T00:54:05.177015] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP transport reconnected -> re-REGISTER
+[2026-11-13T00:54:05.177133] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP state -> connected
+[2026-11-13T00:54:05.177883] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP state -> unregistered
+[2026-11-13T00:54:05.177983] ERROR [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP SIP 등록 시간 초과 또는 실패
+[2026-11-13T00:54:05.178035] EVENT LOGIN event=loginResult state=registered username=1101 error=SIP 등록 시간 초과 또는 실패
+[2026-11-13T00:54:05.183] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP state -> registered
+[2026-11-13T00:54:06.004458] EVENT UI LOGIN action=quickConnectFilled params=extension=1103
+[2026-11-13T00:54:06.921383] EVENT UI LOGIN action=quickConnectFilled params=extension=1101
+[2026-11-13T00:54:07.172193] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP transport disconnected (cause: Code: [0], Cause: disconnect, Reason: close by local)
+[2026-11-13T00:54:07.172291] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP state -> disconnected
+[2026-11-13T00:54:07.838452] EVENT UI LOGIN action=loginPressed params=username=1101 domain=192.168.0.3 port=5060 transport=ws wsServer=ws://192.168.0.3:8088/ws
+[2026-11-13T00:54:07.838560] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP state -> connecting
+[2026-11-13T00:54:07.839754] INFO (동일 로그 2회 반복 스킵 요약)
+[2026-11-13T00:54:07.839832] EVENT SIP op=init target=- state=- params=ws=ws://192.168.0.3:8088/ws domain=192.168.0.3 port=5060 transport=ws
+[2026-11-13T00:54:07.845346] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP state -> unregistered
+[2026-11-13T00:54:07.845578] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP state -> connected
+[2026-11-13T00:54:07.845627] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP transport reconnected -> re-REGISTER
+[2026-11-13T00:54:07.845738] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP state -> connected
+[2026-11-13T00:54:07.850943] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP state -> registered
+[2026-11-13T00:54:07.851737] EVENT LOGIN event=loginResult state=registered username=1101 error=-
+[2026-11-13T00:54:07.853243] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] MEDIA device resolve camera=기본 mic=기본 speaker=기본
+[2026-11-13T00:54:07.859613] EVENT MEDIA event=localStreamReady state=video=0 audio=1 frontCamera=true audioMuted=false
+[2026-11-13T00:54:09.072138] EVENT UI LOGIN action=quickConnectFilled params=extension=1101
+[2026-11-13T00:54:09.840727] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP transport disconnected (cause: Code: [0], Cause: disconnect, Reason: close by local)
+[2026-11-13T00:54:09.840827] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP state -> disconnected
+[2026-11-13T00:54:10.905798] EVENT UI LOGIN action=quickConnectFilled params=extension=1101
+[2026-11-13T00:54:11.456156] EVENT UI LOGIN action=loginPressed params=username=1101 domain=192.168.0.3 port=5060 transport=ws wsServer=ws://192.168.0.3:8088/ws
+[2026-11-13T00:54:11.456254] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP state -> connecting
+[2026-11-13T00:54:11.457138] INFO (동일 로그 2회 반복 스킵 요약)
+[2026-11-13T00:54:11.457206] EVENT SIP op=init target=- state=- params=ws=ws://192.168.0.3:8088/ws domain=192.168.0.3 port=5060 transport=ws
+[2026-11-13T00:54:11.463059] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP state -> unregistered
+[2026-11-13T00:54:11.463264] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP state -> connected
+[2026-11-13T00:54:11.463313] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP transport reconnected -> re-REGISTER
+[2026-11-13T00:54:11.463427] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP state -> connected
+[2026-11-13T00:54:11.468330] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP state -> registered
+[2026-11-13T00:54:11.468440] EVENT LOGIN event=loginResult state=registered username=1101 error=-
+[2026-11-13T00:54:11.476833] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] MEDIA device resolve camera=기본 mic=기본 speaker=기본
+[2026-11-13T00:54:11.478391] EVENT MEDIA event=localStreamReady state=video=0 audio=1 frontCamera=true audioMuted=false
+[2026-11-13T00:54:12.659790] ERROR [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP SIP 등록 시간 초과 또는 실패
+[2026-11-13T00:54:13.459421] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP transport disconnected (cause: Code: [0], Cause: disconnect, Reason: close by local)
+[2026-11-13T00:54:13.459527] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP state -> disconnected
+[2026-11-13T00:54:16.344948] ERROR [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP SIP 등록 시간 초과 또는 실패
+[2026-11-13T00:54:22.847347] INFO (동일 로그 2회 반복 스킵 요약)
+[2026-11-13T00:54:22.847466] ERROR [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP SIP 등록 시간 초과 또는 실패
