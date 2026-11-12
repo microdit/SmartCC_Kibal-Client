@@ -9,7 +9,7 @@
 ## 환경
 | 구분 | 경로/IP | 비고 |
 |------|---------|------|
-| DEV (SIP 서버) | `192.168.11.39` | Docker: `kibal-dev-asterisk`(dev), `kibal-dev-ops`(ops) |
+| DEV (SIP 서버) | `192.168.0.3` | 2026-11-12 유선 전환(구 `192.168.11.39`). Docker: `kibal-dev-asterisk`(dev), `kibal-dev-ops`(ops) |
 | Client workspace | `/Users/microdit/Downloads/dev/SmartCC_Kibal-Client` | macOS |
 | GitHub | `git@github.com:microdit/SmartCC_Kibal-Client.git` | origin |
 | Python venv | `./venv_client/` | Python 3.11 + chromadb 1.5.9 |
@@ -65,6 +65,14 @@
 - 포크: `macos-client/packages/sip_ua` (ADR-005) — `dependency_overrides` 사용
 - 상세: [[wiki/06_Reports/20261111_원격오디오_ICE문제_개발보고서_v1.0]]
 - 다음 작업: [[wiki/04_Prompts/20261111_원격오디오_ICE_후속작업프롬프트_v1.0]]
+
+## 현재 진행 (2026-11-12)
+- A10 P1 v0.0.21(장치 선택), P2 v0.0.22(H.264·6100) 빌드 완료, **실기 대기**
+- A10 `192.168.0.12`: TEAMS EDITION, `byod` only, FW `278.320.0.86`
+- USB B′: USB-C 연결됨, A10 `No sharing signal`, Mac에서 Yealink 미열거(`HD20K`만 USB 오디오) → 케이블/포트/macOS 승인 확인 필요
+- SIP T0-C: A10 `talking=true`로 웹 UI `writeData` 중단 → `writeconfig` 없음, `1201` 미등록
+- 서버: `1201` endpoint·`6100` `follow_talker` 준비됨. `1101/1103` Avail
+- 상세: [[wiki/06_Reports/20261112_A10_T0C_USB_중간보고서_v1.0]], [[docs/보고서/20261112_A10_T0C_USB_작업계획서_v1.0]], [[wiki/07_Logs/작업인계_20261112_A10_T0C]]
 
 ## 참조 문서
 - [[docs/작업지도]] — Knowledge OS v3.0 Kernel
