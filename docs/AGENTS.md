@@ -114,4 +114,7 @@
 - [[wiki/05_Decisions/ADR-004]] — SIP 엔진 sip_ua 교체 결정 기록
 - [[wiki/05_Decisions/ADR-002]] — 초기 결정 기록
 - [[wiki/05_Decisions/ADR-006-카메라없는단말_영상수신전용]] — recvonly 결정
-- [[wiki/05_Decisions/ADR-008-re-INVITE_recvonly_유지]] — 재협상 옵션 유지
+- [[wiki/05_Decisions/ADR-008-re-INVITE_recvonly_유지]] — 재협상 옵션 유지(실기 검증 완료)
+- [[wiki/05_Decisions/ADR-009-A4_재등록_롤백]] — A4 롤백(실기 검증 완료)
+- [[wiki/06_Reports/20261113_영상없는참가자_식별처리_분석_v1.0]] — 영상 없는 참가자 식별 단절·H1~H6, 1:1 즉시 종료 2원인
+- [[wiki/08_Experiments/20261113_1대1_즉시종료_교차검증_v1.0]] — 1101 v0.0.24 실기 KST↔UTC 교차검증

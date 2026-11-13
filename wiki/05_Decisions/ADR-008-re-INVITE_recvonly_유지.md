@@ -1,7 +1,7 @@
 # ADR-008: re-INVITE 수락에도 ADR-006 수신 전용 옵션을 유지한다
 
 **날짜**: 2026-11-12
-**상태**: 수용(Accepted) — D1 구현·analyze/test·v0.0.23 릴리스 완료(TC-D1 실기 검증 대기)
+**상태**: **실기 검증 완료(Verified, 2026-11-13)** — `01:45:51 SIP re-INVITE 응답 전송 accepted=true recvOnlyVideo=true` + `SIP transceivers 1:video:RecvOnly/RecvOnly` (1101 v0.0.24 / 6000). 근거 [[wiki/08_Experiments/20261113_1대1_즉시종료_교차검증_v1.0]] 4장
 **관련**: [[wiki/05_Decisions/ADR-006-카메라없는단말_영상수신전용]], ADR-004(sip_ua 엔진), ADR-005(sip_ua 포크)
 **상위**: [[docs/보고서/20261112_통화품질_원인규명_작업계획서_v1.0]] §4-D
 
