@@ -441,6 +441,11 @@ class MediaManager {
               final trackId = track.id;
               if (trackId == null || trackId.isEmpty) continue;
               if (_inactiveVideoTracks.contains(trackId)) continue;
+              // P0 완화: 종료/뮤트된 원격 영상 트랙은 렌더 타일에서 제외해
+              // 무효 프레임 전달·네이티브 렌더 크래시 가능성을 낮춘다.
+              try {
+                if (track.muted == true) continue;
+              } catch (_) {}
               tracks[trackId] = track;
               sourceStreams[trackId] = stream;
             }
@@ -515,8 +520,16 @@ class MediaManager {
       streams.removeWhere((stream) {
         final videos = stream.getVideoTracks();
         if (videos.isEmpty) return false;
-        return videos.every(
-            (track) => _inactiveVideoTracks.contains(track.id ?? ''));
+        // 비활성 트랙만 남은 스트림 정리 + 트랙 없는 빈 스트림 정리
+        return videos.every((track) {
+          final id = track.id ?? '';
+          if (_inactiveVideoTracks.contains(id)) return true;
+          try {
+            return track.muted == true;
+          } catch (_) {
+            return false;
+          }
+        });
       });
       if (streams.length != before) changed = true;
     }

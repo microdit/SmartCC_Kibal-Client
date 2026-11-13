@@ -1,0 +1,1087 @@
+1103 앱 갑자기 죽을 때 로그.
+-------------------------------------
+Translated Report (Full Report Below)
+-------------------------------------
+Process:             macos_client [8256]
+Path:                /Volumes/*/macos_client.app/Contents/MacOS/macos_client
+Identifier:          com.microdit.macosClient
+Version:             0.0.24 (24)
+Code Type:           X86-64 (Native)
+Role:                Foreground
+Parent Process:      launchd [1]
+Coalition:           com.microdit.macosClient [1504]
+User ID:             501
+
+Date/Time:           2026-11-13 10:26:53.4933 +0900
+Launch Time:         2026-11-13 10:21:34.0769 +0900
+Hardware Model:      iMac20,1
+OS Version:          macOS 26.7.3 (25G342)
+Release Type:        User
+Bridge OS Version:     11.0 (24P6005)
+
+Crash Reporter Key:  F04D1041-6514-5AB4-3B61-533A95D43BA4
+Incident Identifier: 239057FE-1350-45BD-AC19-3E735E12FBA7
+
+Time Awake Since Boot: 5400 seconds
+
+System Integrity Protection: enabled
+
+Triggered by Thread: 24, Dispatch Queue: IncomingVideoStreamQueue
+
+Exception Type:    EXC_CRASH (SIGABRT)
+Exception Codes:   0x0000000000000000, 0x0000000000000000
+
+Termination Reason:  Namespace SIGNAL, Code 6, Abort trap: 6
+Terminating Process: macos_client [8256]
+
+
+Application Specific Information:
+abort() called
+
+
+Thread 0::  Dispatch queue: com.apple.main-thread
+0   libsystem_kernel.dylib        	    0x7ff81929fb4e mach_msg2_trap + 10
+1   libsystem_kernel.dylib        	    0x7ff8192adf57 mach_msg2_internal + 83
+2   libsystem_kernel.dylib        	    0x7ff8192a6b66 mach_msg_overwrite + 586
+3   libsystem_kernel.dylib        	    0x7ff81929fe56 mach_msg + 19
+4   CoreFoundation                	    0x7ff81939f6bf __CFRunLoopServiceMachPort + 145
+5   CoreFoundation                	    0x7ff81939e158 __CFRunLoopRun + 1354
+6   CoreFoundation                	    0x7ff819466367 _CFRunLoopRunSpecificWithOptions + 496
+7   HIToolbox                     	    0x7ff8260f7b8b RunCurrentEventLoopInMode + 283
+8   HIToolbox                     	    0x7ff8260fac4d ReceiveNextEventCommon + 599
+9   HIToolbox                     	    0x7ff8262830ca _BlockUntilNextEventMatchingListInMode + 37
+10  AppKit                        	    0x7ff81d92cf94 _DPSBlockUntilNextEventMatchingListInMode + 172
+11  AppKit                        	    0x7ff81d2229c5 _DPSNextEvent + 800
+12  AppKit                        	    0x7ff81ded0e7b -[NSApplication(NSEventRouting) _nextEventMatchingEventMask:untilDate:inMode:dequeue:] + 1265
+13  AppKit                        	    0x7ff81ded0951 -[NSApplication(NSEventRouting) nextEventMatchingMask:untilDate:inMode:dequeue:] + 67
+14  AppKit                        	    0x7ff81d21385c -[NSApplication run] + 472
+15  AppKit                        	    0x7ff81d1e94cd NSApplicationMain + 800
+16  macos_client                  	       0x10c70d18c specialized static NSApplicationDelegate.main() + 24 [inlined]
+17  macos_client                  	       0x10c70d18c static AppDelegate.$main() + 24 (/<compiler-generated>:4) [inlined]
+18  macos_client                  	       0x10c70d18c main + 28
+19  dyld                          	    0x7ff818efe1d8 start + 3240
+
+Thread 1:
+
+Thread 2:: com.apple.NSEventThread
+0   libsystem_kernel.dylib        	    0x7ff81929fb4e mach_msg2_trap + 10
+1   libsystem_kernel.dylib        	    0x7ff8192adf57 mach_msg2_internal + 83
+2   libsystem_kernel.dylib        	    0x7ff8192a6b66 mach_msg_overwrite + 586
+3   libsystem_kernel.dylib        	    0x7ff81929fe56 mach_msg + 19
+4   CoreFoundation                	    0x7ff81939f6bf __CFRunLoopServiceMachPort + 145
+5   CoreFoundation                	    0x7ff81939e158 __CFRunLoopRun + 1354
+6   CoreFoundation                	    0x7ff819466367 _CFRunLoopRunSpecificWithOptions + 496
+7   AppKit                        	    0x7ff81d3746a0 _NSEventThread + 158
+8   libsystem_pthread.dylib       	    0x7ff8192e3d49 _pthread_start + 115
+9   libsystem_pthread.dylib       	    0x7ff8192df82f thread_start + 15
+
+Thread 3:: io.flutter.raster
+0   libsystem_kernel.dylib        	    0x7ff81929fb4e mach_msg2_trap + 10
+1   libsystem_kernel.dylib        	    0x7ff8192adf57 mach_msg2_internal + 83
+2   libsystem_kernel.dylib        	    0x7ff8192a6b66 mach_msg_overwrite + 586
+3   libsystem_kernel.dylib        	    0x7ff81929fe56 mach_msg + 19
+4   CoreFoundation                	    0x7ff81939f6bf __CFRunLoopServiceMachPort + 145
+5   CoreFoundation                	    0x7ff81939e158 __CFRunLoopRun + 1354
+6   CoreFoundation                	    0x7ff819466367 _CFRunLoopRunSpecificWithOptions + 496
+7   FlutterMacOS                  	       0x10feaf86d fml::MessageLoopDarwin::Run() + 109 (message_loop_darwin.mm:51)
+8   FlutterMacOS                  	       0x10fea64bc fml::MessageLoopImpl::DoRun() + 60 (message_loop_impl.cc:94)
+9   FlutterMacOS                  	       0x10feae239 fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0::operator()() const + 125 (thread.cc:154) [inlined]
+10  FlutterMacOS                  	       0x10feae239 decltype(std::declval<fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0&>()()) std::__fl::__invoke[abi:nn210000]<fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0&>(fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0&) + 125 (invoke.h:179) [inlined]
+11  FlutterMacOS                  	       0x10feae239 void std::__fl::__invoke_void_return_wrapper<void, true>::__call[abi:nn210000]<fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0&>(fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0&) + 125 (invoke.h:251) [inlined]
+12  FlutterMacOS                  	       0x10feae239 void std::__fl::__invoke_r[abi:nn210000]<void, fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0&>(fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0&) + 125 (invoke.h:273) [inlined]
+13  FlutterMacOS                  	       0x10feae239 std::__fl::__function::__alloc_func<fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0, std::__fl::allocator<fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0>, void ()>::operator()[abi:nn210000]() + 125 (function.h:167) [inlined]
+14  FlutterMacOS                  	       0x10feae239 std::__fl::__function::__func<fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0, std::__fl::allocator<fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0>, void ()>::operator()() + 153 (function.h:319)
+15  FlutterMacOS                  	       0x10feadd86 std::__fl::__function::__value_func<void ()>::operator()[abi:nn210000]() const + 29 (function.h:436) [inlined]
+16  FlutterMacOS                  	       0x10feadd86 std::__fl::function<void ()>::operator()() const + 29 (function.h:995) [inlined]
+17  FlutterMacOS                  	       0x10feadd86 fml::ThreadHandle::ThreadHandle(std::__fl::function<void ()>&&)::$_0::operator()(void*) const + 29 (thread.cc:76) [inlined]
+18  FlutterMacOS                  	       0x10feadd86 fml::ThreadHandle::ThreadHandle(std::__fl::function<void ()>&&)::$_0::__invoke(void*) + 38 (thread.cc:73)
+19  libsystem_pthread.dylib       	    0x7ff8192e3d49 _pthread_start + 115
+20  libsystem_pthread.dylib       	    0x7ff8192df82f thread_start + 15
+
+Thread 4:: io.flutter.io
+0   libsystem_kernel.dylib        	    0x7ff81929fb4e mach_msg2_trap + 10
+1   libsystem_kernel.dylib        	    0x7ff8192adf57 mach_msg2_internal + 83
+2   libsystem_kernel.dylib        	    0x7ff8192a6b66 mach_msg_overwrite + 586
+3   libsystem_kernel.dylib        	    0x7ff81929fe56 mach_msg + 19
+4   CoreFoundation                	    0x7ff81939f6bf __CFRunLoopServiceMachPort + 145
+5   CoreFoundation                	    0x7ff81939e158 __CFRunLoopRun + 1354
+6   CoreFoundation                	    0x7ff819466367 _CFRunLoopRunSpecificWithOptions + 496
+7   FlutterMacOS                  	       0x10feaf86d fml::MessageLoopDarwin::Run() + 109 (message_loop_darwin.mm:51)
+8   FlutterMacOS                  	       0x10fea64bc fml::MessageLoopImpl::DoRun() + 60 (message_loop_impl.cc:94)
+9   FlutterMacOS                  	       0x10feae239 fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0::operator()() const + 125 (thread.cc:154) [inlined]
+10  FlutterMacOS                  	       0x10feae239 decltype(std::declval<fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0&>()()) std::__fl::__invoke[abi:nn210000]<fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0&>(fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0&) + 125 (invoke.h:179) [inlined]
+11  FlutterMacOS                  	       0x10feae239 void std::__fl::__invoke_void_return_wrapper<void, true>::__call[abi:nn210000]<fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0&>(fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0&) + 125 (invoke.h:251) [inlined]
+12  FlutterMacOS                  	       0x10feae239 void std::__fl::__invoke_r[abi:nn210000]<void, fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0&>(fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0&) + 125 (invoke.h:273) [inlined]
+13  FlutterMacOS                  	       0x10feae239 std::__fl::__function::__alloc_func<fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0, std::__fl::allocator<fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0>, void ()>::operator()[abi:nn210000]() + 125 (function.h:167) [inlined]
+14  FlutterMacOS                  	       0x10feae239 std::__fl::__function::__func<fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0, std::__fl::allocator<fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0>, void ()>::operator()() + 153 (function.h:319)
+15  FlutterMacOS                  	       0x10feadd86 std::__fl::__function::__value_func<void ()>::operator()[abi:nn210000]() const + 29 (function.h:436) [inlined]
+16  FlutterMacOS                  	       0x10feadd86 std::__fl::function<void ()>::operator()() const + 29 (function.h:995) [inlined]
+17  FlutterMacOS                  	       0x10feadd86 fml::ThreadHandle::ThreadHandle(std::__fl::function<void ()>&&)::$_0::operator()(void*) const + 29 (thread.cc:76) [inlined]
+18  FlutterMacOS                  	       0x10feadd86 fml::ThreadHandle::ThreadHandle(std::__fl::function<void ()>&&)::$_0::__invoke(void*) + 38 (thread.cc:73)
+19  libsystem_pthread.dylib       	    0x7ff8192e3d49 _pthread_start + 115
+20  libsystem_pthread.dylib       	    0x7ff8192df82f thread_start + 15
+
+Thread 5:: io.worker.1
+0   libsystem_kernel.dylib        	    0x7ff8192a2712 __psynch_cvwait + 10
+1   libsystem_pthread.dylib       	    0x7ff8192e41f7 _pthread_cond_wait + 994
+2   FlutterMacOS                  	       0x10fe5a154 std::__fl::__libcpp_condvar_wait[abi:nn210000](_opaque_pthread_cond_t*, _opaque_pthread_mutex_t*) + 5 (pthread.h:122) [inlined]
+3   FlutterMacOS                  	       0x10fe5a154 std::__fl::condition_variable::wait(std::__fl::unique_lock<std::__fl::mutex>&) + 36 (condition_variable.cpp:30)
+4   FlutterMacOS                  	       0x10fea1430 void std::__fl::condition_variable::wait<fml::ConcurrentMessageLoop::WorkerMain()::$_0>(std::__fl::unique_lock<std::__fl::mutex>&, fml::ConcurrentMessageLoop::WorkerMain()::$_0) + 159 (condition_variable.h:147) [inlined]
+5   FlutterMacOS                  	       0x10fea1430 fml::ConcurrentMessageLoop::WorkerMain() + 240 (concurrent_message_loop.cc:75)
+6   FlutterMacOS                  	       0x10fea1c8c fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0::operator()() const + 161 (concurrent_message_loop.cc:20) [inlined]
+7   FlutterMacOS                  	       0x10fea1c8c decltype(std::declval<fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0>()()) std::__fl::__invoke[abi:nn210000]<fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0>(fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0&&) + 161 (invoke.h:179) [inlined]
+8   FlutterMacOS                  	       0x10fea1c8c void std::__fl::__thread_execute[abi:nn210000]<std::__fl::unique_ptr<std::__fl::__thread_struct, std::__fl::default_delete<std::__fl::__thread_struct>>, fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0>(std::__fl::tuple<std::__fl::unique_ptr<std::__fl::__thread_struct, std::__fl::default_delete<std::__fl::__thread_struct>>, fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0>&, std::__fl::__tuple_indices<...>) + 161 (thread.h:200) [inlined]
+9   FlutterMacOS                  	       0x10fea1c8c void* std::__fl::__thread_proxy[abi:nn210000]<std::__fl::tuple<std::__fl::unique_ptr<std::__fl::__thread_struct, std::__fl::default_delete<std::__fl::__thread_struct>>, fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0>>(void*) + 220 (thread.h:209)
+10  libsystem_pthread.dylib       	    0x7ff8192e3d49 _pthread_start + 115
+11  libsystem_pthread.dylib       	    0x7ff8192df82f thread_start + 15
+
+Thread 6:: io.worker.2
+0   libsystem_kernel.dylib        	    0x7ff8192a2712 __psynch_cvwait + 10
+1   libsystem_pthread.dylib       	    0x7ff8192e41f7 _pthread_cond_wait + 994
+2   FlutterMacOS                  	       0x10fe5a154 std::__fl::__libcpp_condvar_wait[abi:nn210000](_opaque_pthread_cond_t*, _opaque_pthread_mutex_t*) + 5 (pthread.h:122) [inlined]
+3   FlutterMacOS                  	       0x10fe5a154 std::__fl::condition_variable::wait(std::__fl::unique_lock<std::__fl::mutex>&) + 36 (condition_variable.cpp:30)
+4   FlutterMacOS                  	       0x10fea1430 void std::__fl::condition_variable::wait<fml::ConcurrentMessageLoop::WorkerMain()::$_0>(std::__fl::unique_lock<std::__fl::mutex>&, fml::ConcurrentMessageLoop::WorkerMain()::$_0) + 159 (condition_variable.h:147) [inlined]
+5   FlutterMacOS                  	       0x10fea1430 fml::ConcurrentMessageLoop::WorkerMain() + 240 (concurrent_message_loop.cc:75)
+6   FlutterMacOS                  	       0x10fea1c8c fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0::operator()() const + 161 (concurrent_message_loop.cc:20) [inlined]
+7   FlutterMacOS                  	       0x10fea1c8c decltype(std::declval<fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0>()()) std::__fl::__invoke[abi:nn210000]<fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0>(fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0&&) + 161 (invoke.h:179) [inlined]
+8   FlutterMacOS                  	       0x10fea1c8c void std::__fl::__thread_execute[abi:nn210000]<std::__fl::unique_ptr<std::__fl::__thread_struct, std::__fl::default_delete<std::__fl::__thread_struct>>, fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0>(std::__fl::tuple<std::__fl::unique_ptr<std::__fl::__thread_struct, std::__fl::default_delete<std::__fl::__thread_struct>>, fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0>&, std::__fl::__tuple_indices<...>) + 161 (thread.h:200) [inlined]
+9   FlutterMacOS                  	       0x10fea1c8c void* std::__fl::__thread_proxy[abi:nn210000]<std::__fl::tuple<std::__fl::unique_ptr<std::__fl::__thread_struct, std::__fl::default_delete<std::__fl::__thread_struct>>, fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0>>(void*) + 220 (thread.h:209)
+10  libsystem_pthread.dylib       	    0x7ff8192e3d49 _pthread_start + 115
+11  libsystem_pthread.dylib       	    0x7ff8192df82f thread_start + 15
+
+Thread 7:: io.worker.3
+0   libsystem_kernel.dylib        	    0x7ff8192a2712 __psynch_cvwait + 10
+1   libsystem_pthread.dylib       	    0x7ff8192e41f7 _pthread_cond_wait + 994
+2   FlutterMacOS                  	       0x10fe5a154 std::__fl::__libcpp_condvar_wait[abi:nn210000](_opaque_pthread_cond_t*, _opaque_pthread_mutex_t*) + 5 (pthread.h:122) [inlined]
+3   FlutterMacOS                  	       0x10fe5a154 std::__fl::condition_variable::wait(std::__fl::unique_lock<std::__fl::mutex>&) + 36 (condition_variable.cpp:30)
+4   FlutterMacOS                  	       0x10fea1430 void std::__fl::condition_variable::wait<fml::ConcurrentMessageLoop::WorkerMain()::$_0>(std::__fl::unique_lock<std::__fl::mutex>&, fml::ConcurrentMessageLoop::WorkerMain()::$_0) + 159 (condition_variable.h:147) [inlined]
+5   FlutterMacOS                  	       0x10fea1430 fml::ConcurrentMessageLoop::WorkerMain() + 240 (concurrent_message_loop.cc:75)
+6   FlutterMacOS                  	       0x10fea1c8c fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0::operator()() const + 161 (concurrent_message_loop.cc:20) [inlined]
+7   FlutterMacOS                  	       0x10fea1c8c decltype(std::declval<fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0>()()) std::__fl::__invoke[abi:nn210000]<fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0>(fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0&&) + 161 (invoke.h:179) [inlined]
+8   FlutterMacOS                  	       0x10fea1c8c void std::__fl::__thread_execute[abi:nn210000]<std::__fl::unique_ptr<std::__fl::__thread_struct, std::__fl::default_delete<std::__fl::__thread_struct>>, fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0>(std::__fl::tuple<std::__fl::unique_ptr<std::__fl::__thread_struct, std::__fl::default_delete<std::__fl::__thread_struct>>, fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0>&, std::__fl::__tuple_indices<...>) + 161 (thread.h:200) [inlined]
+9   FlutterMacOS                  	       0x10fea1c8c void* std::__fl::__thread_proxy[abi:nn210000]<std::__fl::tuple<std::__fl::unique_ptr<std::__fl::__thread_struct, std::__fl::default_delete<std::__fl::__thread_struct>>, fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0>>(void*) + 220 (thread.h:209)
+10  libsystem_pthread.dylib       	    0x7ff8192e3d49 _pthread_start + 115
+11  libsystem_pthread.dylib       	    0x7ff8192df82f thread_start + 15
+
+Thread 8:: io.worker.4
+0   libsystem_kernel.dylib        	    0x7ff8192a2712 __psynch_cvwait + 10
+1   libsystem_pthread.dylib       	    0x7ff8192e41f7 _pthread_cond_wait + 994
+2   FlutterMacOS                  	       0x10fe5a154 std::__fl::__libcpp_condvar_wait[abi:nn210000](_opaque_pthread_cond_t*, _opaque_pthread_mutex_t*) + 5 (pthread.h:122) [inlined]
+3   FlutterMacOS                  	       0x10fe5a154 std::__fl::condition_variable::wait(std::__fl::unique_lock<std::__fl::mutex>&) + 36 (condition_variable.cpp:30)
+4   FlutterMacOS                  	       0x10fea1430 void std::__fl::condition_variable::wait<fml::ConcurrentMessageLoop::WorkerMain()::$_0>(std::__fl::unique_lock<std::__fl::mutex>&, fml::ConcurrentMessageLoop::WorkerMain()::$_0) + 159 (condition_variable.h:147) [inlined]
+5   FlutterMacOS                  	       0x10fea1430 fml::ConcurrentMessageLoop::WorkerMain() + 240 (concurrent_message_loop.cc:75)
+6   FlutterMacOS                  	       0x10fea1c8c fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0::operator()() const + 161 (concurrent_message_loop.cc:20) [inlined]
+7   FlutterMacOS                  	       0x10fea1c8c decltype(std::declval<fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0>()()) std::__fl::__invoke[abi:nn210000]<fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0>(fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0&&) + 161 (invoke.h:179) [inlined]
+8   FlutterMacOS                  	       0x10fea1c8c void std::__fl::__thread_execute[abi:nn210000]<std::__fl::unique_ptr<std::__fl::__thread_struct, std::__fl::default_delete<std::__fl::__thread_struct>>, fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0>(std::__fl::tuple<std::__fl::unique_ptr<std::__fl::__thread_struct, std::__fl::default_delete<std::__fl::__thread_struct>>, fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0>&, std::__fl::__tuple_indices<...>) + 161 (thread.h:200) [inlined]
+9   FlutterMacOS                  	       0x10fea1c8c void* std::__fl::__thread_proxy[abi:nn210000]<std::__fl::tuple<std::__fl::unique_ptr<std::__fl::__thread_struct, std::__fl::default_delete<std::__fl::__thread_struct>>, fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0>>(void*) + 220 (thread.h:209)
+10  libsystem_pthread.dylib       	    0x7ff8192e3d49 _pthread_start + 115
+11  libsystem_pthread.dylib       	    0x7ff8192df82f thread_start + 15
+
+Thread 9:: dart:io EventHandler
+0   libsystem_kernel.dylib        	    0x7ff8192a47ce kevent + 10
+1   FlutterMacOS                  	       0x1107eba68 dart::bin::EventHandlerImplementation::EventHandlerEntry(unsigned long) + 312 (eventhandler_macos.cc:459)
+2   FlutterMacOS                  	       0x110811308 dart::bin::ThreadStart(void*) + 88 (thread_macos.cc:65)
+3   libsystem_pthread.dylib       	    0x7ff8192e3d49 _pthread_start + 115
+4   libsystem_pthread.dylib       	    0x7ff8192df82f thread_start + 15
+
+Thread 10:: HIE: M_ 94519c65529baf58 2026-11-13 10:21:34.324
+0   libsystem_kernel.dylib        	    0x7ff81929fb4e mach_msg2_trap + 10
+1   libsystem_kernel.dylib        	    0x7ff8192adf57 mach_msg2_internal + 83
+2   libsystem_kernel.dylib        	    0x7ff8192c720f thread_suspend + 83
+3   HIServices                    	    0x7ff82069b971 SOME_OTHER_THREAD_SWALLOWED_AT_LEAST_ONE_EXCEPTION + 16
+4   Foundation                    	    0x7ff81a608bc3 __NSThread__start__ + 1014
+5   libsystem_pthread.dylib       	    0x7ff8192e3d49 _pthread_start + 115
+6   libsystem_pthread.dylib       	    0x7ff8192df82f thread_start + 15
+
+Thread 11:: network_thread 0x0x7fdf0f9a4cc0
+0   libsystem_kernel.dylib        	    0x7ff8192a688a poll + 10
+1   WebRTC                        	       0x10f1a5ab4 webrtc::PhysicalSocketServer::WaitPoll(webrtc::TimeDelta, bool) + 852 (physical_socket_server.cc:1863)
+2   WebRTC                        	       0x10f1a5745 webrtc::PhysicalSocketServer::Wait(webrtc::TimeDelta, bool) + 21 (physical_socket_server.cc:1433)
+3   WebRTC                        	       0x10f1a8e2a webrtc::Thread::Get(int) + 378 (thread.cc:466)
+4   WebRTC                        	       0x10f1a804b webrtc::Thread::ProcessMessages(int) + 155 (thread.cc:872)
+5   WebRTC                        	       0x10f1a9935 webrtc::Thread::PreRun(void*) + 85 (thread.cc:725)
+6   libsystem_pthread.dylib       	    0x7ff8192e3d49 _pthread_start + 115
+7   libsystem_pthread.dylib       	    0x7ff8192df82f thread_start + 15
+
+Thread 12:: worker_thread 0x0x7fdf0f9d4940
+0   libsystem_kernel.dylib        	    0x7ff8192a2712 __psynch_cvwait + 10
+1   libsystem_pthread.dylib       	    0x7ff8192e41f7 _pthread_cond_wait + 994
+2   WebRTC                        	       0x10f046334 webrtc::Event::Wait(webrtc::TimeDelta, webrtc::TimeDelta)::$_0::operator()(std::__Cr::optional<timespec>) const + 77 (event.cc:177) [inlined]
+3   WebRTC                        	       0x10f046334 webrtc::Event::Wait(webrtc::TimeDelta, webrtc::TimeDelta) + 548 (event.cc:186)
+4   WebRTC                        	       0x10f1acb87 webrtc::NullSocketServer::Wait(webrtc::TimeDelta, bool) + 23 (null_socket_server.cc:28)
+5   WebRTC                        	       0x10f1a8e2a webrtc::Thread::Get(int) + 378 (thread.cc:466)
+6   WebRTC                        	       0x10f1a804b webrtc::Thread::ProcessMessages(int) + 155 (thread.cc:872)
+7   WebRTC                        	       0x10f1a9935 webrtc::Thread::PreRun(void*) + 85 (thread.cc:725)
+8   libsystem_pthread.dylib       	    0x7ff8192e3d49 _pthread_start + 115
+9   libsystem_pthread.dylib       	    0x7ff8192df82f thread_start + 15
+
+Thread 13:: signaling_thread 0x0x7fdf0f9d1700
+0   libsystem_kernel.dylib        	    0x7ff8192a2712 __psynch_cvwait + 10
+1   libsystem_pthread.dylib       	    0x7ff8192e41f7 _pthread_cond_wait + 994
+2   WebRTC                        	       0x10f04634b webrtc::Event::Wait(webrtc::TimeDelta, webrtc::TimeDelta)::$_0::operator()(std::__Cr::optional<timespec>) const + 100 (event.cc:170) [inlined]
+3   WebRTC                        	       0x10f04634b webrtc::Event::Wait(webrtc::TimeDelta, webrtc::TimeDelta) + 571 (event.cc:186)
+4   WebRTC                        	       0x10f1acb87 webrtc::NullSocketServer::Wait(webrtc::TimeDelta, bool) + 23 (null_socket_server.cc:28)
+5   WebRTC                        	       0x10f1a8e2a webrtc::Thread::Get(int) + 378 (thread.cc:466)
+6   WebRTC                        	       0x10f1a804b webrtc::Thread::ProcessMessages(int) + 155 (thread.cc:872)
+7   WebRTC                        	       0x10f1a9935 webrtc::Thread::PreRun(void*) + 85 (thread.cc:725)
+8   libsystem_pthread.dylib       	    0x7ff8192e3d49 _pthread_start + 115
+9   libsystem_pthread.dylib       	    0x7ff8192df82f thread_start + 15
+
+Thread 14:: caulk.messenger.shared:17
+0   libsystem_kernel.dylib        	    0x7ff81929faca semaphore_wait_trap + 10
+1   caulk                         	    0x7ff825bb6b50 caulk::semaphore::timed_wait(double) + 158
+2   caulk                         	    0x7ff825bb6a72 caulk::concurrent::details::worker_thread::run() + 30
+3   caulk                         	    0x7ff825bb67a6 void* caulk::thread_proxy<std::__1::tuple<caulk::thread::attributes, void (caulk::concurrent::details::worker_thread::*)(), std::__1::tuple<caulk::concurrent::details::worker_thread*>>>(void*) + 41
+4   libsystem_pthread.dylib       	    0x7ff8192e3d49 _pthread_start + 115
+5   libsystem_pthread.dylib       	    0x7ff8192df82f thread_start + 15
+
+Thread 15:: caulk.messenger.shared:high
+0   libsystem_kernel.dylib        	    0x7ff81929faca semaphore_wait_trap + 10
+1   caulk                         	    0x7ff825bb6b50 caulk::semaphore::timed_wait(double) + 158
+2   caulk                         	    0x7ff825bb6a72 caulk::concurrent::details::worker_thread::run() + 30
+3   caulk                         	    0x7ff825bb67a6 void* caulk::thread_proxy<std::__1::tuple<caulk::thread::attributes, void (caulk::concurrent::details::worker_thread::*)(), std::__1::tuple<caulk::concurrent::details::worker_thread*>>>(void*) + 41
+4   libsystem_pthread.dylib       	    0x7ff8192e3d49 _pthread_start + 115
+5   libsystem_pthread.dylib       	    0x7ff8192df82f thread_start + 15
+
+Thread 16:
+0   libsystem_kernel.dylib        	    0x7ff8192a2712 __psynch_cvwait + 10
+1   libsystem_pthread.dylib       	    0x7ff8192e41f7 _pthread_cond_wait + 994
+2   CoreMedia                     	    0x7ff825bf9c0d WaitOnConditionTimed + 119
+3   CoreMedia                     	    0x7ff825be40c4 FigSemaphoreWaitRelative + 139
+4   CoreMediaIO                   	    0x7ff82d94df31 CMIO::Thread::SignaledThread::ThreadLoop() + 121
+5   CoreMediaIO                   	    0x7ff82d94de88 CMIO::Thread::SignaledThread::WorkQueuedThreadCallback(void*) + 206
+6   CoreMedia                     	    0x7ff825bf9867 figThreadMain + 237
+7   libsystem_pthread.dylib       	    0x7ff8192e3d49 _pthread_start + 115
+8   libsystem_pthread.dylib       	    0x7ff8192df82f thread_start + 15
+
+Thread 17:: com.apple.audio.toolbox.AUScheduledParameterRefresher
+0   libsystem_kernel.dylib        	    0x7ff81929faca semaphore_wait_trap + 10
+1   caulk                         	    0x7ff825bb6b50 caulk::semaphore::timed_wait(double) + 158
+2   caulk                         	    0x7ff825bb6a72 caulk::concurrent::details::worker_thread::run() + 30
+3   caulk                         	    0x7ff825bb67a6 void* caulk::thread_proxy<std::__1::tuple<caulk::thread::attributes, void (caulk::concurrent::details::worker_thread::*)(), std::__1::tuple<caulk::concurrent::details::worker_thread*>>>(void*) + 41
+4   libsystem_pthread.dylib       	    0x7ff8192e3d49 _pthread_start + 115
+5   libsystem_pthread.dylib       	    0x7ff8192df82f thread_start + 15
+
+Thread 18:: caulk::deferred_logger
+0   libsystem_kernel.dylib        	    0x7ff81929faca semaphore_wait_trap + 10
+1   caulk                         	    0x7ff825bb6b50 caulk::semaphore::timed_wait(double) + 158
+2   caulk                         	    0x7ff825bb6a72 caulk::concurrent::details::worker_thread::run() + 30
+3   caulk                         	    0x7ff825bb67a6 void* caulk::thread_proxy<std::__1::tuple<caulk::thread::attributes, void (caulk::concurrent::details::worker_thread::*)(), std::__1::tuple<caulk::concurrent::details::worker_thread*>>>(void*) + 41
+4   libsystem_pthread.dylib       	    0x7ff8192e3d49 _pthread_start + 115
+5   libsystem_pthread.dylib       	    0x7ff8192df82f thread_start + 15
+
+Thread 19:: caulk.messenger.shared:21
+0   libsystem_kernel.dylib        	    0x7ff81929faca semaphore_wait_trap + 10
+1   caulk                         	    0x7ff825bb6b50 caulk::semaphore::timed_wait(double) + 158
+2   caulk                         	    0x7ff825bb6a72 caulk::concurrent::details::worker_thread::run() + 30
+3   caulk                         	    0x7ff825bb67a6 void* caulk::thread_proxy<std::__1::tuple<caulk::thread::attributes, void (caulk::concurrent::details::worker_thread::*)(), std::__1::tuple<caulk::concurrent::details::worker_thread*>>>(void*) + 41
+4   libsystem_pthread.dylib       	    0x7ff8192e3d49 _pthread_start + 115
+5   libsystem_pthread.dylib       	    0x7ff8192df82f thread_start + 15
+
+Thread 20:
+0   libsystem_kernel.dylib        	    0x7ff81929faca semaphore_wait_trap + 10
+1   caulk                         	    0x7ff825bb6b50 caulk::semaphore::timed_wait(double) + 158
+2   libAudioIssueDetector.dylib   	    0x7ffa1b5542c5 ADAM::Sequencer::run_impl() + 75
+3   libAudioIssueDetector.dylib   	    0x7ffa1b553539 ADAM::Sequencer::run() + 193
+4   libAudioIssueDetector.dylib   	    0x7ffa1b5541db void* std::__1::__thread_proxy[abi:nqe210106]<std::__1::tuple<std::__1::unique_ptr<std::__1::__thread_struct, std::__1::default_delete<std::__1::__thread_struct>>, void (ADAM::Sequencer::*)(), ADAM::Sequencer*>>(void*) + 62
+5   libsystem_pthread.dylib       	    0x7ff8192e3d49 _pthread_start + 115
+6   libsystem_pthread.dylib       	    0x7ff8192df82f thread_start + 15
+
+Thread 21:: com.apple.audio.IOThread.client
+0   libsystem_kernel.dylib        	    0x7ff81929fad6 semaphore_wait_signal_trap + 10
+1   caulk                         	    0x7ff825bd096b caulk::mach::semaphore::wait_signal_or_error(caulk::mach::semaphore&) + 23
+2   CoreAudio                     	    0x7ff81c0c91f2 HALC_ProxyIOContext::IOWorkLoop() + 5870
+3   CoreAudio                     	    0x7ff81c0c73ce invocation function for block in HALC_ProxyIOContext::HALC_ProxyIOContext(unsigned int, unsigned int) + 141
+4   CoreAudio                     	    0x7ff81c288e61 HALC_IOThread::Entry(void*) + 73
+5   libsystem_pthread.dylib       	    0x7ff8192e3d49 _pthread_start + 115
+6   libsystem_pthread.dylib       	    0x7ff8192df82f thread_start + 15
+
+Thread 22:
+
+Thread 23:: com.apple.coremedia.sharedRootQueue.47
+0   libsystem_kernel.dylib        	    0x7ff81929fae2 semaphore_timedwait_trap + 10
+1   libdispatch.dylib             	    0x7ff819159187 _dispatch_sema4_timedwait + 52
+2   libdispatch.dylib             	    0x7ff81912be7f _dispatch_semaphore_wait_slow + 58
+3   libdispatch.dylib             	    0x7ff81913976e _dispatch_worker_thread + 322
+4   libsystem_pthread.dylib       	    0x7ff8192e3d49 _pthread_start + 115
+5   libsystem_pthread.dylib       	    0x7ff8192df82f thread_start + 15
+
+Thread 24 Crashed::  Dispatch queue: IncomingVideoStreamQueue
+0   libsystem_kernel.dylib        	    0x7ff8192a67de __pthread_kill + 10
+1   libsystem_pthread.dylib       	    0x7ff8192e3a5b pthread_kill + 259
+2   libsystem_c.dylib             	    0x7ff8191f3754 abort + 126
+3   WebRTC                        	       0x10efa49d6 webrtc::webrtc_checks_impl::WriteFatalLog(std::__Cr::basic_string_view<char, std::__Cr::char_traits<char>>) + 70 (checks.cc:79)
+4   WebRTC                        	       0x10efa517c webrtc::webrtc_checks_impl::WriteFatalLog(char const*, int, std::__Cr::basic_string_view<char, std::__Cr::char_traits<char>>) + 8 (checks.cc:85) [inlined]
+5   WebRTC                        	       0x10efa517c webrtc::webrtc_checks_impl::FatalLog(char const*, int, char const*, webrtc::webrtc_checks_impl::CheckArgType const*, ...) + 492 (checks.cc:180)
+6   WebRTC                        	       0x10f04c340 void webrtc::webrtc_checks_impl::LogStreamer<>::CallCheckOp<webrtc::webrtc_checks_impl::Val<(webrtc::webrtc_checks_impl::CheckArgType)1, int>, webrtc::webrtc_checks_impl::Val<(webrtc::webrtc_checks_impl::CheckArgType)1, int>>(char const*, int, char const*, webrtc::webrtc_checks_impl::Val<(webrtc::webrtc_checks_impl::CheckArgType)1, int> const&, webrtc::webrtc_checks_impl::Val<(webrtc::webrtc_checks_impl::CheckArgType)1, int> const&) + 10 (checks.h:272) [inlined]
+7   WebRTC                        	       0x10f04c340 void webrtc::webrtc_checks_impl::LogStreamer<webrtc::webrtc_checks_impl::Val<(webrtc::webrtc_checks_impl::CheckArgType)1, int>>::CallCheckOp<webrtc::webrtc_checks_impl::Val<(webrtc::webrtc_checks_impl::CheckArgType)1, int>>(char const*, int, char const*, webrtc::webrtc_checks_impl::Val<(webrtc::webrtc_checks_impl::CheckArgType)1, int> const&) const + 10 (checks.h:321) [inlined]
+8   WebRTC                        	       0x10f04c340 void webrtc::webrtc_checks_impl::LogStreamer<webrtc::webrtc_checks_impl::Val<(webrtc::webrtc_checks_impl::CheckArgType)1, int>, webrtc::webrtc_checks_impl::Val<(webrtc::webrtc_checks_impl::CheckArgType)1, int>>::CallCheckOp<>(char const*, int, char const*) const + 10 (checks.h:321) [inlined]
+9   WebRTC                        	       0x10f04c340 void webrtc::webrtc_checks_impl::FatalLogCall<true>::operator&<webrtc::webrtc_checks_impl::Val<(webrtc::webrtc_checks_impl::CheckArgType)1, int>, webrtc::webrtc_checks_impl::Val<(webrtc::webrtc_checks_impl::CheckArgType)1, int>>(webrtc::webrtc_checks_impl::LogStreamer<webrtc::webrtc_checks_impl::Val<(webrtc::webrtc_checks_impl::CheckArgType)1, int>, webrtc::webrtc_checks_impl::Val<(webrtc::webrtc_checks_impl::CheckArgType)1, int>> const&) + 10 (checks.h:350) [inlined]
+10  WebRTC                        	       0x10f04c340 webrtc::CheckValidDimensions(int, int, int, int, int) + 208
+11  WebRTC                        	       0x10f047874 webrtc::(anonymous namespace)::I420DataSize(int, int, int, int, int) + 20 (i420_buffer.cc:41) [inlined]
+12  WebRTC                        	       0x10f047874 webrtc::I420Buffer::I420Buffer(int, int, int, int, int) + 40 (i420_buffer.cc:64) [inlined]
+13  WebRTC                        	       0x10f047874 webrtc::I420Buffer::I420Buffer(int, int) + 57 (i420_buffer.cc:51) [inlined]
+14  WebRTC                        	       0x10f047874 webrtc::RefCountedObject<webrtc::I420Buffer>::RefCountedObject<int&, int&>(int&, int&) + 64 (ref_counted_object.h:33) [inlined]
+15  WebRTC                        	       0x10f047874 webrtc::RefCountedObject<webrtc::I420Buffer>::RefCountedObject<int&, int&>(int&, int&) + 64 (ref_counted_object.h:35) [inlined]
+16  WebRTC                        	       0x10f047874 webrtc::scoped_refptr<webrtc::I420Buffer> webrtc::make_ref_counted<webrtc::I420Buffer, int&, int&, (webrtc::I420Buffer*)0>(int&, int&) + 100 (make_ref_counted.h:90)
+17  WebRTC                        	       0x10f0477fc webrtc::I420Buffer::Create(int, int) + 28 (i420_buffer.cc:74)
+18  WebRTC                        	       0x10f249019 -[RTCI420Buffer initWithWidth:height:] + 73 (RTCNativeI420Buffer.mm:28)
+19  WebRTC                        	       0x10f2499f2 -[RTCCVPixelBuffer toI420] + 130 (RTCCVPixelBuffer.mm:183)
+20  macos_client                  	       0x10c72873a -[FlutterRTCVideoRenderer copyI420ToCVPixelBuffer:withFrame:] + 85 (FlutterRTCVideoRenderer.m:133)
+21  macos_client                  	       0x10c728ad7 -[FlutterRTCVideoRenderer renderFrame:] + 91 (FlutterRTCVideoRenderer.m:204)
+22  WebRTC                        	       0x10f87342c webrtc::VideoRendererAdapter::OnFrame(webrtc::VideoFrame const&) + 348 (RTCVideoRendererAdapter.mm:39)
+23  WebRTC                        	       0x10f0766a4 webrtc::VideoBroadcaster::OnFrame(webrtc::VideoFrame const&) + 452 (video_broadcaster.cc:103)
+24  WebRTC                        	       0x10f2659d9 webrtc::WebRtcVideoReceiveChannel::WebRtcVideoReceiveStream::OnFrame(webrtc::VideoFrame const&) + 217 (webrtc_video_engine.cc:3841)
+25  WebRTC                        	       0x10f365644 webrtc::internal::VideoReceiveStream2::OnFrame(webrtc::VideoFrame const&) + 36 (video_receive_stream2.cc:705)
+26  WebRTC                        	       0x10f3ad214 webrtc::IncomingVideoStream::Dequeue() + 196 (incoming_video_stream.cc:72)
+27  WebRTC                        	       0x10f9d8683 absl::internal_any_invocable::Impl<void () &&>::operator()() && + 3 (any_invocable.h:774) [inlined]
+28  WebRTC                        	       0x10f9d8683 webrtc::(anonymous namespace)::TaskQueueGcd::RunTask(void*) + 51 (task_queue_gcd.cc:159)
+29  libdispatch.dylib             	    0x7ff8191408b2 _dispatch_client_callout + 6
+30  libdispatch.dylib             	    0x7ff81912de75 _dispatch_continuation_pop + 518
+31  libdispatch.dylib             	    0x7ff81913d65a _dispatch_source_invoke + 2203
+32  libdispatch.dylib             	    0x7ff81913102f _dispatch_lane_serial_drain + 319
+33  libdispatch.dylib             	    0x7ff819131c45 _dispatch_lane_invoke + 382
+34  libdispatch.dylib             	    0x7ff81913a9f3 _dispatch_root_queue_drain_deferred_wlh + 275
+35  libdispatch.dylib             	    0x7ff81913a3b5 _dispatch_workloop_worker_thread + 867
+36  libsystem_pthread.dylib       	    0x7ff8192e081f _pthread_wqthread + 298
+37  libsystem_pthread.dylib       	    0x7ff8192df81b start_wqthread + 15
+
+Thread 25:
+
+Thread 26:: CVDisplayLink
+0   libsystem_kernel.dylib        	    0x7ff8192a2712 __psynch_cvwait + 10
+1   libsystem_pthread.dylib       	    0x7ff8192e4229 _pthread_cond_wait + 1044
+2   CoreVideo                     	    0x7ff823d87911 CVDisplayLink::waitUntil(unsigned long long) + 375
+3   CoreVideo                     	    0x7ff823d86854 CVDisplayLink::runIOThread() + 524
+4   libsystem_pthread.dylib       	    0x7ff8192e3d49 _pthread_start + 115
+5   libsystem_pthread.dylib       	    0x7ff8192df82f thread_start + 15
+
+
+Thread 24 crashed with X86 Thread State (64-bit):
+  rax: 0x0000000000000000  rbx: 0x0000000000000006  rcx: 0x00007000071e2e78  rdx: 0x0000000000000000
+  rdi: 0x0000000000023c67  rsi: 0x0000000000000006  rbp: 0x00007000071e2ea0  rsp: 0x00007000071e2e78
+   r8: 0x00007ff859c13cf0   r9: 0x0000000000000000  r10: 0x00007ff859e57740  r11: 0x0000000000000246
+  r12: 0x000000010fbed9b0  r13: 0x0000000000000000  r14: 0x0000000000023c67  r15: 0x0000000000000016
+  rip: 0x00007ff8192a67de  rfl: 0x0000000000000246  cr2: 0x0000000000000000
+  
+Logical CPU:     0
+Error Code:      0x02000148 
+Trap Number:     133
+
+
+Binary Images:
+       0x10c706000 -        0x10c74efff com.microdit.macosClient (0.0.24) <2bb09267-5059-345d-abec-7bda2b9119be> /Volumes/*/macos_client.app/Contents/MacOS/macos_client
+       0x10ed59000 -        0x10fc67fff org.webrtc.WebRTC (1.0) <4c4c4436-5555-3144-a19d-52769b5075d3> /Volumes/*/macos_client.app/Contents/Frameworks/WebRTC.framework/Versions/A/WebRTC
+       0x10fe0b000 -        0x110bfbfff io.flutter.flutter-macos (1.0) <4c4c4405-5555-3144-a12a-a9ed48fae461> /Volumes/*/macos_client.app/Contents/Frameworks/FlutterMacOS.framework/Versions/A/FlutterMacOS
+       0x10ebd6000 -        0x10ebe2fff libobjc-trampolines.dylib (*) <9564e919-df67-3ce5-bb9b-8a9cbab201e1> /usr/lib/libobjc-trampolines.dylib
+       0x128533000 -        0x128d26fff io.flutter.flutter.app (1.0) <d3006944-dbc3-976f-9bd4-af81769a493d> /Volumes/*/macos_client.app/Contents/Frameworks/App.framework/Versions/A/App
+       0x129b76000 -        0x129bb8fff com.apple.cmio.DAL.VDC-4 (810.0) <c5ea1c11-0b43-3989-8b18-7af7cd829085> /System/Library/Frameworks/CoreMediaIO.framework/Versions/A/Resources/VDC.plugin/Contents/MacOS/VDC
+       0x12e6e9000 -        0x12e83cfff com.apple.CMIOBaseUnits (1000.0) <75877117-6dcf-3fa4-b9ee-8365533fb413> /System/Library/Frameworks/CoreMediaIO.framework/Versions/A/Resources/BaseUnits/CMIOBaseUnits.bundle/Contents/MacOS/CMIOBaseUnits
+       0x12fe9f000 -        0x12ff53fff com.apple.CMIOUnits (1000.0) <945b040d-6fb6-3eb3-8394-238bc777089a> /System/Library/Frameworks/CoreMediaIO.framework/Versions/A/Resources/CMIOUnits.bundle/Contents/MacOS/CMIOUnits
+       0x1353bf000 -        0x135e47fff com.apple.audio.codecs.Components (7.0) <d11a9fae-07d2-3b60-9698-2b0f6c03e28e> /System/Library/Components/AudioCodecs.component/Contents/MacOS/AudioCodecs
+       0x13394a000 -        0x133a94fff com.apple.audio.units.Components (1.14) <c2bd3c53-a8d6-3205-bb20-89a89b000046> /System/Library/Components/CoreAudio.component/Contents/MacOS/CoreAudio
+       0x13461e000 -        0x134e02fff com.apple.audio.AudioDSPComponents (1.0) <1dd5ea1f-8e1e-32ad-90b0-7d8ca51a722c> /System/Library/Components/AudioDSP.component/Contents/MacOS/AudioDSP
+       0x138680000 -        0x139edbfff com.apple.AppleIntelKBLGraphicsVADriver (24.5.9) <60ecf5ce-ec41-35a2-927d-6d8c2c455549> /System/Library/Extensions/AppleIntelKBLGraphicsVADriver.bundle/Contents/MacOS/AppleIntelKBLGraphicsVADriver
+       0x12fd06000 -        0x12fd08fff com.apple.AppleIntelCFLGraphicsVAME (24.5.9) <34fa965d-f8ad-3bf6-8cbd-1e72840919ce> /System/Library/Extensions/AppleIntelCFLGraphicsVAME.bundle/Contents/MacOS/AppleIntelCFLGraphicsVAME
+    0x7ff81929f000 -     0x7ff8192dd5cf libsystem_kernel.dylib (*) <a6d8c216-4f74-3793-bd68-0156d505de47> /usr/lib/system/libsystem_kernel.dylib
+    0x7ff819323000 -     0x7ff8197e0a04 com.apple.CoreFoundation (6.9) <b7f5aeea-bdbd-3bbd-a1d1-baf62215be44> /System/Library/Frameworks/CoreFoundation.framework/Versions/A/CoreFoundation
+    0x7ff826052000 -     0x7ff82632ebce com.apple.HIToolbox (2.1.1) <712d1800-c63f-3298-89c9-3e1b26d572f4> /System/Library/Frameworks/Carbon.framework/Versions/A/Frameworks/HIToolbox.framework/Versions/A/HIToolbox
+    0x7ff81d1e5000 -     0x7ff81e9e1b16 com.apple.AppKit (6.9) <e618d025-5817-3377-984d-da92213b1a78> /System/Library/Frameworks/AppKit.framework/Versions/C/AppKit
+    0x7ff818eeb000 -     0x7ff818f9784f dyld (*) <22cc4f6a-197f-37c2-bbfd-3b5e8229e756> /usr/lib/dyld
+               0x0 - 0xffffffffffffffff ??? (*) <00000000-0000-0000-0000-000000000000> ???
+    0x7ff8192de000 -     0x7ff8192e9ebf libsystem_pthread.dylib (*) <091a35d0-ecf6-3370-bf9b-860e41cd07e2> /usr/lib/system/libsystem_pthread.dylib
+    0x7ff820668000 -     0x7ff8206cd87b com.apple.HIServices (1.22) <e4410f37-09ae-393a-9f2c-dac1b9c0ef62> /System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/HIServices.framework/Versions/A/HIServices
+    0x7ff81a5b4000 -     0x7ff81b5f2f62 com.apple.Foundation (6.9) <047f640d-8c2b-3201-aabf-659efeca5c64> /System/Library/Frameworks/Foundation.framework/Versions/C/Foundation
+    0x7ff825bb5000 -     0x7ff825bd991f com.apple.audio.caulk (1.0) <b654abcf-daf4-3555-a964-06d125afef47> /System/Library/PrivateFrameworks/caulk.framework/Versions/A/caulk
+    0x7ff825bda000 -     0x7ff825d8236a com.apple.CoreMedia (1.0) <5b257039-4fc4-37f2-8e81-b310002cc57a> /System/Library/Frameworks/CoreMedia.framework/Versions/A/CoreMedia
+    0x7ff82d908000 -     0x7ff82da163c9 com.apple.CoreMediaIO (1000.0) <3eaf1bca-c660-35e6-b336-9de042d838df> /System/Library/Frameworks/CoreMediaIO.framework/Versions/A/CoreMediaIO
+    0x7ffa1b552000 -     0x7ffa1b58b806 libAudioIssueDetector.dylib (*) <f59f5c4e-9f5a-3902-88a5-a562059d2343> /usr/lib/libAudioIssueDetector.dylib
+    0x7ff81bed0000 -     0x7ff81c67a299 com.apple.audio.CoreAudio (5.0) <797d4259-297c-3bfb-bcba-611d9c187184> /System/Library/Frameworks/CoreAudio.framework/Versions/A/CoreAudio
+    0x7ff819129000 -     0x7ff819170d91 libdispatch.dylib (*) <9418808d-59a5-39ef-be7a-361b04adb17e> /usr/lib/system/libdispatch.dylib
+    0x7ff819174000 -     0x7ff8191fbe9f libsystem_c.dylib (*) <7680836e-f1bc-39b8-9996-5d290985a05f> /usr/lib/system/libsystem_c.dylib
+    0x7ff823d84000 -     0x7ff823df7567 com.apple.CoreVideo (1.8) <6939ac9c-8573-3a0d-bd9b-51d97e90f8b4> /System/Library/Frameworks/CoreVideo.framework/Versions/A/CoreVideo
+
+External Modification Summary:
+  Calls made by other processes targeting this process:
+    task_for_pid: 0
+    thread_create: 0
+    thread_set_state: 0
+  Calls made by this process:
+    task_for_pid: 0
+    thread_create: 0
+    thread_set_state: 0
+  Calls made by all processes on this machine:
+    task_for_pid: 0
+    thread_create: 0
+    thread_set_state: 0
+
+VM Region Summary:
+ReadOnly portion of Libraries: Total=1.5G resident=0K(0%) swapped_out_or_unallocated=1.5G(100%)
+Writable regions: Total=638.7M written=0K(0%) resident=0K(0%) swapped_out=0K(0%) unallocated=638.7M(100%)
+
+                                VIRTUAL   REGION 
+REGION TYPE                        SIZE    COUNT (non-coalesced) 
+===========                     =======  ======= 
+Accelerate framework               128K        1 
+Activity Tracing                   256K        1 
+AttributeGraph Data               1024K        1 
+ColorSync                           12K        3 
+CoreAnimation                     2388K       55 
+CoreGraphics                        12K        2 
+CoreMedia memory pool              112K        4 
+CoreUI image data                  348K        3 
+Dispatch continuations           160.0M        2 
+Foundation                          40K        2 
+IOKit                             7940K        1 
+Kernel Alloc Once                    8K        1 
+MALLOC                           426.6M      113 
+MALLOC guard page                   96K       24 
+STACK GUARD                       56.1M       27 
+Stack                             24.7M       29 
+VM_ALLOCATE                       22.5M       64 
+VM_ALLOCATE (reserved)              32K        1         reserved VM address space (unallocated)
+__CTF                               824        1 
+__DATA                            48.7M     1035 
+__DATA_CONST                     126.5M     1079 
+__DATA_DIRTY                      8866K      902 
+__FONT_DATA                        2352        1 
+__LINKEDIT                       157.4M       14 
+__OBJC_RO                         65.2M        1 
+__OBJC_RW                         2598K        1 
+__TEXT                             1.4G     1099 
+__TPRO_CONST                         16        2 
+mapped file                      345.3M       49 
+shared memory                      976K       19 
+===========                     =======  ======= 
+TOTAL                              2.8G     4537 
+TOTAL, minus reserved VM space     2.8G     4537 
+
+
+-----------
+Full Report
+-----------
+
+{"app_name":"macos_client","timestamp":"2026-11-13 10:26:54.00 +0900","app_version":"0.0.24","slice_uuid":"2bb09267-5059-345d-abec-7bda2b9119be","build_version":"24","platform":1,"bundleID":"com.microdit.macosClient","share_with_app_devs":0,"is_first_party":0,"bug_type":"309","os_version":"macOS 26.7.3 (25G342)","roots_installed":0,"name":"macos_client","incident_id":"239057FE-1350-45BD-AC19-3E735E12FBA7"}
+{
+  "uptime" : 5400,
+  "procRole" : "Foreground",
+  "version" : 2,
+  "userID" : 501,
+  "deployVersion" : 210,
+  "modelCode" : "iMac20,1",
+  "coalitionID" : 1504,
+  "osVersion" : {
+    "train" : "macOS 26.7.3",
+    "build" : "25G342",
+    "releaseType" : "User"
+  },
+  "captureTime" : "2026-11-13 10:26:53.4933 +0900",
+  "codeSigningMonitor" : 0,
+  "incident" : "239057FE-1350-45BD-AC19-3E735E12FBA7",
+  "pid" : 8256,
+  "cpuType" : "X86-64",
+  "procLaunch" : "2026-11-13 10:21:34.0769 +0900",
+  "procStartAbsTime" : 5133715795254,
+  "procExitAbsTime" : 5453135648072,
+  "procName" : "macos_client",
+  "procPath" : "\/Volumes\/*\/macos_client.app\/Contents\/MacOS\/macos_client",
+  "bundleInfo" : {"CFBundleShortVersionString":"0.0.24","CFBundleVersion":"24","CFBundleIdentifier":"com.microdit.macosClient"},
+  "storeInfo" : {"deviceIdentifierForVendor":"907D16D5-94B6-59CE-A3BF-5E5C56657F93","thirdParty":true},
+  "parentProc" : "launchd",
+  "parentPid" : 1,
+  "coalitionName" : "com.microdit.macosClient",
+  "crashReporterKey" : "F04D1041-6514-5AB4-3B61-533A95D43BA4",
+  "appleIntelligenceStatus" : {"state":"unavailable","reasons":["deviceNotCapable"]},
+  "developerMode" : 1,
+  "codeSigningID" : "com.microdit.macosClient",
+  "codeSigningTeamID" : "",
+  "codeSigningFlags" : 570425861,
+  "codeSigningValidationCategory" : 10,
+  "codeSigningTrustLevel" : 4294967295,
+  "codeSigningAuxiliaryInfo" : 0,
+  "bootSessionUUID" : "44496A0B-93CD-45DB-9BC4-36A3D13E169A",
+  "bridgeVersion" : {"build":"24P6005","train":"11.0"},
+  "sip" : "enabled",
+  "exception" : {"codes":"0x0000000000000000, 0x0000000000000000","rawCodes":[0,0],"type":"EXC_CRASH","signal":"SIGABRT"},
+  "termination" : {"flags":0,"code":6,"namespace":"SIGNAL","indicator":"Abort trap: 6","byProc":"macos_client","byPid":8256},
+  "asi" : {"libsystem_c.dylib":["abort() called"]},
+  "extMods" : {"caller":{"thread_create":0,"thread_set_state":0,"task_for_pid":0},"system":{"thread_create":0,"thread_set_state":0,"task_for_pid":0},"targeted":{"thread_create":0,"thread_set_state":0,"task_for_pid":0},"warnings":0},
+  "faultingThread" : 24,
+  "threads" : [{"id":111049,"threadState":{"r13":{"value":21592279046},"rax":{"value":268451845},"rflags":{"value":518},"cpu":{"value":0},"r14":{"value":2},"rsi":{"value":21592279046},"r8":{"value":0},"cr2":{"value":0},"rdx":{"value":8589934592},"r10":{"value":40694815129600},"r9":{"value":40694815129600},"r15":{"value":0},"rbx":{"value":140701845126384},"trap":{"value":133},"err":{"value":16777263},"r11":{"value":518},"rip":{"value":140703550798670},"rbp":{"value":140701845126224},"rsp":{"value":140701845126120},"r12":{"value":40694815129600},"rcx":{"value":140701845126120},"flavor":"x86_THREAD_STATE","rdi":{"value":140701845126384}},"queue":"com.apple.main-thread","frames":[{"imageOffset":2894,"symbol":"mach_msg2_trap","symbolLocation":10,"imageIndex":13},{"imageOffset":61271,"symbol":"mach_msg2_internal","symbolLocation":83,"imageIndex":13},{"imageOffset":31590,"symbol":"mach_msg_overwrite","symbolLocation":586,"imageIndex":13},{"imageOffset":3670,"symbol":"mach_msg","symbolLocation":19,"imageIndex":13},{"imageOffset":509631,"symbol":"__CFRunLoopServiceMachPort","symbolLocation":145,"imageIndex":14},{"imageOffset":504152,"symbol":"__CFRunLoopRun","symbolLocation":1354,"imageIndex":14},{"imageOffset":1323879,"symbol":"_CFRunLoopRunSpecificWithOptions","symbolLocation":496,"imageIndex":14},{"imageOffset":678795,"symbol":"RunCurrentEventLoopInMode","symbolLocation":283,"imageIndex":15},{"imageOffset":691277,"symbol":"ReceiveNextEventCommon","symbolLocation":599,"imageIndex":15},{"imageOffset":2298058,"symbol":"_BlockUntilNextEventMatchingListInMode","symbolLocation":37,"imageIndex":15},{"imageOffset":7634836,"symbol":"_DPSBlockUntilNextEventMatchingListInMode","symbolLocation":172,"imageIndex":16},{"imageOffset":252357,"symbol":"_DPSNextEvent","symbolLocation":800,"imageIndex":16},{"imageOffset":13549179,"symbol":"-[NSApplication(NSEventRouting) _nextEventMatchingEventMask:untilDate:inMode:dequeue:]","symbolLocation":1265,"imageIndex":16},{"imageOffset":13547857,"symbol":"-[NSApplication(NSEventRouting) nextEventMatchingMask:untilDate:inMode:dequeue:]","symbolLocation":67,"imageIndex":16},{"imageOffset":190556,"symbol":"-[NSApplication run]","symbolLocation":472,"imageIndex":16},{"imageOffset":17613,"symbol":"NSApplicationMain","symbolLocation":800,"imageIndex":16},{"imageOffset":29068,"sourceFile":"AppDelegate.swift","symbol":"specialized static NSApplicationDelegate.main()","imageIndex":0,"symbolLocation":24,"inline":true},{"symbol":"static AppDelegate.$main()","inline":true,"imageIndex":0,"imageOffset":29068,"symbolLocation":24,"sourceLine":4,"sourceFile":"\/<compiler-generated>"},{"imageOffset":29068,"sourceFile":"AppDelegate.swift","symbol":"main","symbolLocation":28,"imageIndex":0},{"imageOffset":78296,"symbol":"start","symbolLocation":3240,"imageIndex":17}]},{"id":111054,"frames":[],"threadState":{"r13":{"value":0},"rax":{"value":33554800},"rflags":{"value":512},"cpu":{"value":0},"r14":{"value":1},"rsi":{"value":4355},"r8":{"value":409604},"cr2":{"value":0},"rdx":{"value":123145417990144},"r10":{"value":0},"r9":{"value":18446744073709551615},"r15":{"value":123145418513272},"rbx":{"value":123145418514432},"trap":{"value":133},"err":{"value":33554800},"r11":{"value":582},"rip":{"value":140703551059980},"rbp":{"value":0},"rsp":{"value":123145418514432},"r12":{"value":5193732},"rcx":{"value":0},"flavor":"x86_THREAD_STATE","rdi":{"value":123145418514432}}},{"id":111067,"name":"com.apple.NSEventThread","threadState":{"r13":{"value":21592279046},"rax":{"value":268451845},"rflags":{"value":518},"cpu":{"value":0},"r14":{"value":2},"rsi":{"value":21592279046},"r8":{"value":0},"cr2":{"value":0},"rdx":{"value":8589934592},"r10":{"value":131954280235008},"r9":{"value":131954280235008},"r15":{"value":0},"rbx":{"value":123145420120208},"trap":{"value":133},"err":{"value":16777263},"r11":{"value":518},"rip":{"value":140703550798670},"rbp":{"value":123145420120048},"rsp":{"value":123145420119944},"r12":{"value":131954280235008},"rcx":{"value":123145420119944},"flavor":"x86_THREAD_STATE","rdi":{"value":123145420120208}},"frames":[{"imageOffset":2894,"symbol":"mach_msg2_trap","symbolLocation":10,"imageIndex":13},{"imageOffset":61271,"symbol":"mach_msg2_internal","symbolLocation":83,"imageIndex":13},{"imageOffset":31590,"symbol":"mach_msg_overwrite","symbolLocation":586,"imageIndex":13},{"imageOffset":3670,"symbol":"mach_msg","symbolLocation":19,"imageIndex":13},{"imageOffset":509631,"symbol":"__CFRunLoopServiceMachPort","symbolLocation":145,"imageIndex":14},{"imageOffset":504152,"symbol":"__CFRunLoopRun","symbolLocation":1354,"imageIndex":14},{"imageOffset":1323879,"symbol":"_CFRunLoopRunSpecificWithOptions","symbolLocation":496,"imageIndex":14},{"imageOffset":1636000,"symbol":"_NSEventThread","symbolLocation":158,"imageIndex":16},{"imageOffset":23881,"symbol":"_pthread_start","symbolLocation":115,"imageIndex":19},{"imageOffset":6191,"symbol":"thread_start","symbolLocation":15,"imageIndex":19}]},{"id":111076,"name":"io.flutter.raster","threadState":{"r13":{"value":21592279046},"rax":{"value":268451845},"rflags":{"value":518},"cpu":{"value":0},"r14":{"value":2},"rsi":{"value":21592279046},"r8":{"value":0},"cr2":{"value":0},"rdx":{"value":8589934592},"r10":{"value":264995187195904},"r9":{"value":264995187195904},"r15":{"value":0},"rbx":{"value":123145424912400},"trap":{"value":133},"err":{"value":16777263},"r11":{"value":518},"rip":{"value":140703550798670},"rbp":{"value":123145424912240},"rsp":{"value":123145424912136},"r12":{"value":264995187195904},"rcx":{"value":123145424912136},"flavor":"x86_THREAD_STATE","rdi":{"value":123145424912400}},"frames":[{"imageOffset":2894,"symbol":"mach_msg2_trap","symbolLocation":10,"imageIndex":13},{"imageOffset":61271,"symbol":"mach_msg2_internal","symbolLocation":83,"imageIndex":13},{"imageOffset":31590,"symbol":"mach_msg_overwrite","symbolLocation":586,"imageIndex":13},{"imageOffset":3670,"symbol":"mach_msg","symbolLocation":19,"imageIndex":13},{"imageOffset":509631,"symbol":"__CFRunLoopServiceMachPort","symbolLocation":145,"imageIndex":14},{"imageOffset":504152,"symbol":"__CFRunLoopRun","symbolLocation":1354,"imageIndex":14},{"imageOffset":1323879,"symbol":"_CFRunLoopRunSpecificWithOptions","symbolLocation":496,"imageIndex":14},{"imageOffset":673901,"sourceLine":51,"sourceFile":"message_loop_darwin.mm","symbol":"fml::MessageLoopDarwin::Run()","imageIndex":2,"symbolLocation":109},{"imageOffset":636092,"sourceLine":94,"sourceFile":"message_loop_impl.cc","symbol":"fml::MessageLoopImpl::DoRun()","imageIndex":2,"symbolLocation":60},{"symbol":"fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0::operator()() const","inline":true,"imageIndex":2,"imageOffset":668217,"symbolLocation":125,"sourceLine":154,"sourceFile":"thread.cc"},{"symbol":"decltype(std::declval<fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0&>()()) std::__fl::__invoke[abi:nn210000]<fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0&>(fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0&)","inline":true,"imageIndex":2,"imageOffset":668217,"symbolLocation":125,"sourceLine":179,"sourceFile":"invoke.h"},{"symbol":"void std::__fl::__invoke_void_return_wrapper<void, true>::__call[abi:nn210000]<fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0&>(fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0&)","inline":true,"imageIndex":2,"imageOffset":668217,"symbolLocation":125,"sourceLine":251,"sourceFile":"invoke.h"},{"symbol":"void std::__fl::__invoke_r[abi:nn210000]<void, fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0&>(fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0&)","inline":true,"imageIndex":2,"imageOffset":668217,"symbolLocation":125,"sourceLine":273,"sourceFile":"invoke.h"},{"symbol":"std::__fl::__function::__alloc_func<fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0, std::__fl::allocator<fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0>, void ()>::operator()[abi:nn210000]()","inline":true,"imageIndex":2,"imageOffset":668217,"symbolLocation":125,"sourceLine":167,"sourceFile":"function.h"},{"imageOffset":668217,"sourceLine":319,"sourceFile":"function.h","symbol":"std::__fl::__function::__func<fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0, std::__fl::allocator<fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0>, void ()>::operator()()","imageIndex":2,"symbolLocation":153},{"symbol":"std::__fl::__function::__value_func<void ()>::operator()[abi:nn210000]() const","inline":true,"imageIndex":2,"imageOffset":667014,"symbolLocation":29,"sourceLine":436,"sourceFile":"function.h"},{"symbol":"std::__fl::function<void ()>::operator()() const","inline":true,"imageIndex":2,"imageOffset":667014,"symbolLocation":29,"sourceLine":995,"sourceFile":"function.h"},{"symbol":"fml::ThreadHandle::ThreadHandle(std::__fl::function<void ()>&&)::$_0::operator()(void*) const","inline":true,"imageIndex":2,"imageOffset":667014,"symbolLocation":29,"sourceLine":76,"sourceFile":"thread.cc"},{"imageOffset":667014,"sourceLine":73,"sourceFile":"thread.cc","symbol":"fml::ThreadHandle::ThreadHandle(std::__fl::function<void ()>&&)::$_0::__invoke(void*)","imageIndex":2,"symbolLocation":38},{"imageOffset":23881,"symbol":"_pthread_start","symbolLocation":115,"imageIndex":19},{"imageOffset":6191,"symbol":"thread_start","symbolLocation":15,"imageIndex":19}]},{"id":111077,"name":"io.flutter.io","threadState":{"r13":{"value":21592279046},"rax":{"value":268451845},"rflags":{"value":518},"cpu":{"value":0},"r14":{"value":2},"rsi":{"value":21592279046},"r8":{"value":0},"cr2":{"value":0},"rdx":{"value":8589934592},"r10":{"value":259497629057024},"r9":{"value":259497629057024},"r15":{"value":0},"rbx":{"value":123145427021840},"trap":{"value":133},"err":{"value":16777263},"r11":{"value":518},"rip":{"value":140703550798670},"rbp":{"value":123145427021680},"rsp":{"value":123145427021576},"r12":{"value":259497629057024},"rcx":{"value":123145427021576},"flavor":"x86_THREAD_STATE","rdi":{"value":123145427021840}},"frames":[{"imageOffset":2894,"symbol":"mach_msg2_trap","symbolLocation":10,"imageIndex":13},{"imageOffset":61271,"symbol":"mach_msg2_internal","symbolLocation":83,"imageIndex":13},{"imageOffset":31590,"symbol":"mach_msg_overwrite","symbolLocation":586,"imageIndex":13},{"imageOffset":3670,"symbol":"mach_msg","symbolLocation":19,"imageIndex":13},{"imageOffset":509631,"symbol":"__CFRunLoopServiceMachPort","symbolLocation":145,"imageIndex":14},{"imageOffset":504152,"symbol":"__CFRunLoopRun","symbolLocation":1354,"imageIndex":14},{"imageOffset":1323879,"symbol":"_CFRunLoopRunSpecificWithOptions","symbolLocation":496,"imageIndex":14},{"imageOffset":673901,"sourceLine":51,"sourceFile":"message_loop_darwin.mm","symbol":"fml::MessageLoopDarwin::Run()","imageIndex":2,"symbolLocation":109},{"imageOffset":636092,"sourceLine":94,"sourceFile":"message_loop_impl.cc","symbol":"fml::MessageLoopImpl::DoRun()","imageIndex":2,"symbolLocation":60},{"symbol":"fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0::operator()() const","inline":true,"imageIndex":2,"imageOffset":668217,"symbolLocation":125,"sourceLine":154,"sourceFile":"thread.cc"},{"symbol":"decltype(std::declval<fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0&>()()) std::__fl::__invoke[abi:nn210000]<fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0&>(fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0&)","inline":true,"imageIndex":2,"imageOffset":668217,"symbolLocation":125,"sourceLine":179,"sourceFile":"invoke.h"},{"symbol":"void std::__fl::__invoke_void_return_wrapper<void, true>::__call[abi:nn210000]<fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0&>(fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0&)","inline":true,"imageIndex":2,"imageOffset":668217,"symbolLocation":125,"sourceLine":251,"sourceFile":"invoke.h"},{"symbol":"void std::__fl::__invoke_r[abi:nn210000]<void, fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0&>(fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0&)","inline":true,"imageIndex":2,"imageOffset":668217,"symbolLocation":125,"sourceLine":273,"sourceFile":"invoke.h"},{"symbol":"std::__fl::__function::__alloc_func<fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0, std::__fl::allocator<fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0>, void ()>::operator()[abi:nn210000]()","inline":true,"imageIndex":2,"imageOffset":668217,"symbolLocation":125,"sourceLine":167,"sourceFile":"function.h"},{"imageOffset":668217,"sourceLine":319,"sourceFile":"function.h","symbol":"std::__fl::__function::__func<fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0, std::__fl::allocator<fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0>, void ()>::operator()()","imageIndex":2,"symbolLocation":153},{"symbol":"std::__fl::__function::__value_func<void ()>::operator()[abi:nn210000]() const","inline":true,"imageIndex":2,"imageOffset":667014,"symbolLocation":29,"sourceLine":436,"sourceFile":"function.h"},{"symbol":"std::__fl::function<void ()>::operator()() const","inline":true,"imageIndex":2,"imageOffset":667014,"symbolLocation":29,"sourceLine":995,"sourceFile":"function.h"},{"symbol":"fml::ThreadHandle::ThreadHandle(std::__fl::function<void ()>&&)::$_0::operator()(void*) const","inline":true,"imageIndex":2,"imageOffset":667014,"symbolLocation":29,"sourceLine":76,"sourceFile":"thread.cc"},{"imageOffset":667014,"sourceLine":73,"sourceFile":"thread.cc","symbol":"fml::ThreadHandle::ThreadHandle(std::__fl::function<void ()>&&)::$_0::__invoke(void*)","imageIndex":2,"symbolLocation":38},{"imageOffset":23881,"symbol":"_pthread_start","symbolLocation":115,"imageIndex":19},{"imageOffset":6191,"symbol":"thread_start","symbolLocation":15,"imageIndex":19}]},{"id":111078,"name":"io.worker.1","threadState":{"r13":{"value":4402341479680},"rax":{"value":4},"rflags":{"value":583},"cpu":{"value":0},"r14":{"value":1024},"rsi":{"value":4402341479680},"r8":{"value":0},"cr2":{"value":0},"rdx":{"value":1024},"r10":{"value":0},"r9":{"value":160},"r15":{"value":0},"rbx":{"value":123145427562496},"trap":{"value":133},"err":{"value":33554737},"r11":{"value":582},"rip":{"value":140703550809874},"rbp":{"value":123145427562080},"rsp":{"value":123145427561928},"r12":{"value":22},"rcx":{"value":123145427561928},"flavor":"x86_THREAD_STATE","rdi":{"value":140596020916760}},"frames":[{"imageOffset":14098,"symbol":"__psynch_cvwait","symbolLocation":10,"imageIndex":13},{"imageOffset":25079,"symbol":"_pthread_cond_wait","symbolLocation":994,"imageIndex":19},{"symbol":"std::__fl::__libcpp_condvar_wait[abi:nn210000](_opaque_pthread_cond_t*, _opaque_pthread_mutex_t*)","inline":true,"imageIndex":2,"imageOffset":323924,"symbolLocation":5,"sourceLine":122,"sourceFile":"pthread.h"},{"imageOffset":323924,"sourceLine":30,"sourceFile":"condition_variable.cpp","symbol":"std::__fl::condition_variable::wait(std::__fl::unique_lock<std::__fl::mutex>&)","imageIndex":2,"symbolLocation":36},{"symbol":"void std::__fl::condition_variable::wait<fml::ConcurrentMessageLoop::WorkerMain()::$_0>(std::__fl::unique_lock<std::__fl::mutex>&, fml::ConcurrentMessageLoop::WorkerMain()::$_0)","inline":true,"imageIndex":2,"imageOffset":615472,"symbolLocation":159,"sourceLine":147,"sourceFile":"condition_variable.h"},{"imageOffset":615472,"sourceLine":75,"sourceFile":"concurrent_message_loop.cc","symbol":"fml::ConcurrentMessageLoop::WorkerMain()","imageIndex":2,"symbolLocation":240},{"symbol":"fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0::operator()() const","inline":true,"imageIndex":2,"imageOffset":617612,"symbolLocation":161,"sourceLine":20,"sourceFile":"concurrent_message_loop.cc"},{"symbol":"decltype(std::declval<fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0>()()) std::__fl::__invoke[abi:nn210000]<fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0>(fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0&&)","inline":true,"imageIndex":2,"imageOffset":617612,"symbolLocation":161,"sourceLine":179,"sourceFile":"invoke.h"},{"symbol":"void std::__fl::__thread_execute[abi:nn210000]<std::__fl::unique_ptr<std::__fl::__thread_struct, std::__fl::default_delete<std::__fl::__thread_struct>>, fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0>(std::__fl::tuple<std::__fl::unique_ptr<std::__fl::__thread_struct, std::__fl::default_delete<std::__fl::__thread_struct>>, fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0>&, std::__fl::__tuple_indices<...>)","inline":true,"imageIndex":2,"imageOffset":617612,"symbolLocation":161,"sourceLine":200,"sourceFile":"thread.h"},{"imageOffset":617612,"sourceLine":209,"sourceFile":"thread.h","symbol":"void* std::__fl::__thread_proxy[abi:nn210000]<std::__fl::tuple<std::__fl::unique_ptr<std::__fl::__thread_struct, std::__fl::default_delete<std::__fl::__thread_struct>>, fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0>>(void*)","imageIndex":2,"symbolLocation":220},{"imageOffset":23881,"symbol":"_pthread_start","symbolLocation":115,"imageIndex":19},{"imageOffset":6191,"symbol":"thread_start","symbolLocation":15,"imageIndex":19}]},{"id":111079,"name":"io.worker.2","threadState":{"r13":{"value":4398046513152},"rax":{"value":4},"rflags":{"value":583},"cpu":{"value":0},"r14":{"value":1024},"rsi":{"value":4398046513152},"r8":{"value":0},"cr2":{"value":0},"rdx":{"value":1024},"r10":{"value":0},"r9":{"value":160},"r15":{"value":0},"rbx":{"value":123145428099072},"trap":{"value":133},"err":{"value":33554737},"r11":{"value":582},"rip":{"value":140703550809874},"rbp":{"value":123145428098656},"rsp":{"value":123145428098504},"r12":{"value":22},"rcx":{"value":123145428098504},"flavor":"x86_THREAD_STATE","rdi":{"value":140596020916760}},"frames":[{"imageOffset":14098,"symbol":"__psynch_cvwait","symbolLocation":10,"imageIndex":13},{"imageOffset":25079,"symbol":"_pthread_cond_wait","symbolLocation":994,"imageIndex":19},{"symbol":"std::__fl::__libcpp_condvar_wait[abi:nn210000](_opaque_pthread_cond_t*, _opaque_pthread_mutex_t*)","inline":true,"imageIndex":2,"imageOffset":323924,"symbolLocation":5,"sourceLine":122,"sourceFile":"pthread.h"},{"imageOffset":323924,"sourceLine":30,"sourceFile":"condition_variable.cpp","symbol":"std::__fl::condition_variable::wait(std::__fl::unique_lock<std::__fl::mutex>&)","imageIndex":2,"symbolLocation":36},{"symbol":"void std::__fl::condition_variable::wait<fml::ConcurrentMessageLoop::WorkerMain()::$_0>(std::__fl::unique_lock<std::__fl::mutex>&, fml::ConcurrentMessageLoop::WorkerMain()::$_0)","inline":true,"imageIndex":2,"imageOffset":615472,"symbolLocation":159,"sourceLine":147,"sourceFile":"condition_variable.h"},{"imageOffset":615472,"sourceLine":75,"sourceFile":"concurrent_message_loop.cc","symbol":"fml::ConcurrentMessageLoop::WorkerMain()","imageIndex":2,"symbolLocation":240},{"symbol":"fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0::operator()() const","inline":true,"imageIndex":2,"imageOffset":617612,"symbolLocation":161,"sourceLine":20,"sourceFile":"concurrent_message_loop.cc"},{"symbol":"decltype(std::declval<fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0>()()) std::__fl::__invoke[abi:nn210000]<fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0>(fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0&&)","inline":true,"imageIndex":2,"imageOffset":617612,"symbolLocation":161,"sourceLine":179,"sourceFile":"invoke.h"},{"symbol":"void std::__fl::__thread_execute[abi:nn210000]<std::__fl::unique_ptr<std::__fl::__thread_struct, std::__fl::default_delete<std::__fl::__thread_struct>>, fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0>(std::__fl::tuple<std::__fl::unique_ptr<std::__fl::__thread_struct, std::__fl::default_delete<std::__fl::__thread_struct>>, fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0>&, std::__fl::__tuple_indices<...>)","inline":true,"imageIndex":2,"imageOffset":617612,"symbolLocation":161,"sourceLine":200,"sourceFile":"thread.h"},{"imageOffset":617612,"sourceLine":209,"sourceFile":"thread.h","symbol":"void* std::__fl::__thread_proxy[abi:nn210000]<std::__fl::tuple<std::__fl::unique_ptr<std::__fl::__thread_struct, std::__fl::default_delete<std::__fl::__thread_struct>>, fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0>>(void*)","imageIndex":2,"symbolLocation":220},{"imageOffset":23881,"symbol":"_pthread_start","symbolLocation":115,"imageIndex":19},{"imageOffset":6191,"symbol":"thread_start","symbolLocation":15,"imageIndex":19}]},{"id":111080,"name":"io.worker.3","threadState":{"r13":{"value":4398046512640},"rax":{"value":4},"rflags":{"value":583},"cpu":{"value":0},"r14":{"value":1024},"rsi":{"value":4398046512640},"r8":{"value":0},"cr2":{"value":0},"rdx":{"value":1024},"r10":{"value":0},"r9":{"value":160},"r15":{"value":0},"rbx":{"value":123145428635648},"trap":{"value":133},"err":{"value":33554737},"r11":{"value":582},"rip":{"value":140703550809874},"rbp":{"value":123145428635232},"rsp":{"value":123145428635080},"r12":{"value":22},"rcx":{"value":123145428635080},"flavor":"x86_THREAD_STATE","rdi":{"value":140596020916760}},"frames":[{"imageOffset":14098,"symbol":"__psynch_cvwait","symbolLocation":10,"imageIndex":13},{"imageOffset":25079,"symbol":"_pthread_cond_wait","symbolLocation":994,"imageIndex":19},{"symbol":"std::__fl::__libcpp_condvar_wait[abi:nn210000](_opaque_pthread_cond_t*, _opaque_pthread_mutex_t*)","inline":true,"imageIndex":2,"imageOffset":323924,"symbolLocation":5,"sourceLine":122,"sourceFile":"pthread.h"},{"imageOffset":323924,"sourceLine":30,"sourceFile":"condition_variable.cpp","symbol":"std::__fl::condition_variable::wait(std::__fl::unique_lock<std::__fl::mutex>&)","imageIndex":2,"symbolLocation":36},{"symbol":"void std::__fl::condition_variable::wait<fml::ConcurrentMessageLoop::WorkerMain()::$_0>(std::__fl::unique_lock<std::__fl::mutex>&, fml::ConcurrentMessageLoop::WorkerMain()::$_0)","inline":true,"imageIndex":2,"imageOffset":615472,"symbolLocation":159,"sourceLine":147,"sourceFile":"condition_variable.h"},{"imageOffset":615472,"sourceLine":75,"sourceFile":"concurrent_message_loop.cc","symbol":"fml::ConcurrentMessageLoop::WorkerMain()","imageIndex":2,"symbolLocation":240},{"symbol":"fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0::operator()() const","inline":true,"imageIndex":2,"imageOffset":617612,"symbolLocation":161,"sourceLine":20,"sourceFile":"concurrent_message_loop.cc"},{"symbol":"decltype(std::declval<fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0>()()) std::__fl::__invoke[abi:nn210000]<fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0>(fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0&&)","inline":true,"imageIndex":2,"imageOffset":617612,"symbolLocation":161,"sourceLine":179,"sourceFile":"invoke.h"},{"symbol":"void std::__fl::__thread_execute[abi:nn210000]<std::__fl::unique_ptr<std::__fl::__thread_struct, std::__fl::default_delete<std::__fl::__thread_struct>>, fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0>(std::__fl::tuple<std::__fl::unique_ptr<std::__fl::__thread_struct, std::__fl::default_delete<std::__fl::__thread_struct>>, fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0>&, std::__fl::__tuple_indices<...>)","inline":true,"imageIndex":2,"imageOffset":617612,"symbolLocation":161,"sourceLine":200,"sourceFile":"thread.h"},{"imageOffset":617612,"sourceLine":209,"sourceFile":"thread.h","symbol":"void* std::__fl::__thread_proxy[abi:nn210000]<std::__fl::tuple<std::__fl::unique_ptr<std::__fl::__thread_struct, std::__fl::default_delete<std::__fl::__thread_struct>>, fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0>>(void*)","imageIndex":2,"symbolLocation":220},{"imageOffset":23881,"symbol":"_pthread_start","symbolLocation":115,"imageIndex":19},{"imageOffset":6191,"symbol":"thread_start","symbolLocation":15,"imageIndex":19}]},{"id":111081,"name":"io.worker.4","threadState":{"r13":{"value":4398046512896},"rax":{"value":260},"rflags":{"value":583},"cpu":{"value":0},"r14":{"value":1024},"rsi":{"value":4398046512896},"r8":{"value":0},"cr2":{"value":0},"rdx":{"value":1024},"r10":{"value":0},"r9":{"value":160},"r15":{"value":0},"rbx":{"value":123145429172224},"trap":{"value":133},"err":{"value":33554737},"r11":{"value":582},"rip":{"value":140703550809874},"rbp":{"value":123145429171808},"rsp":{"value":123145429171656},"r12":{"value":22},"rcx":{"value":123145429171656},"flavor":"x86_THREAD_STATE","rdi":{"value":140596020916760}},"frames":[{"imageOffset":14098,"symbol":"__psynch_cvwait","symbolLocation":10,"imageIndex":13},{"imageOffset":25079,"symbol":"_pthread_cond_wait","symbolLocation":994,"imageIndex":19},{"symbol":"std::__fl::__libcpp_condvar_wait[abi:nn210000](_opaque_pthread_cond_t*, _opaque_pthread_mutex_t*)","inline":true,"imageIndex":2,"imageOffset":323924,"symbolLocation":5,"sourceLine":122,"sourceFile":"pthread.h"},{"imageOffset":323924,"sourceLine":30,"sourceFile":"condition_variable.cpp","symbol":"std::__fl::condition_variable::wait(std::__fl::unique_lock<std::__fl::mutex>&)","imageIndex":2,"symbolLocation":36},{"symbol":"void std::__fl::condition_variable::wait<fml::ConcurrentMessageLoop::WorkerMain()::$_0>(std::__fl::unique_lock<std::__fl::mutex>&, fml::ConcurrentMessageLoop::WorkerMain()::$_0)","inline":true,"imageIndex":2,"imageOffset":615472,"symbolLocation":159,"sourceLine":147,"sourceFile":"condition_variable.h"},{"imageOffset":615472,"sourceLine":75,"sourceFile":"concurrent_message_loop.cc","symbol":"fml::ConcurrentMessageLoop::WorkerMain()","imageIndex":2,"symbolLocation":240},{"symbol":"fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0::operator()() const","inline":true,"imageIndex":2,"imageOffset":617612,"symbolLocation":161,"sourceLine":20,"sourceFile":"concurrent_message_loop.cc"},{"symbol":"decltype(std::declval<fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0>()()) std::__fl::__invoke[abi:nn210000]<fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0>(fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0&&)","inline":true,"imageIndex":2,"imageOffset":617612,"symbolLocation":161,"sourceLine":179,"sourceFile":"invoke.h"},{"symbol":"void std::__fl::__thread_execute[abi:nn210000]<std::__fl::unique_ptr<std::__fl::__thread_struct, std::__fl::default_delete<std::__fl::__thread_struct>>, fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0>(std::__fl::tuple<std::__fl::unique_ptr<std::__fl::__thread_struct, std::__fl::default_delete<std::__fl::__thread_struct>>, fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0>&, std::__fl::__tuple_indices<...>)","inline":true,"imageIndex":2,"imageOffset":617612,"symbolLocation":161,"sourceLine":200,"sourceFile":"thread.h"},{"imageOffset":617612,"sourceLine":209,"sourceFile":"thread.h","symbol":"void* std::__fl::__thread_proxy[abi:nn210000]<std::__fl::tuple<std::__fl::unique_ptr<std::__fl::__thread_struct, std::__fl::default_delete<std::__fl::__thread_struct>>, fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0>>(void*)","imageIndex":2,"symbolLocation":220},{"imageOffset":23881,"symbol":"_pthread_start","symbolLocation":115,"imageIndex":19},{"imageOffset":6191,"symbol":"thread_start","symbolLocation":15,"imageIndex":19}]},{"id":111082,"name":"dart:io EventHandler","threadState":{"r13":{"value":123145430232384},"rax":{"value":4},"rflags":{"value":583},"cpu":{"value":0},"r14":{"value":123145430231328},"rsi":{"value":0},"r8":{"value":16},"cr2":{"value":0},"rdx":{"value":0},"r10":{"value":123145430232384},"r9":{"value":123145430231328},"r15":{"value":1},"rbx":{"value":140596020919360},"trap":{"value":133},"err":{"value":33554795},"r11":{"value":582},"rip":{"value":140703550818254},"rbp":{"value":123145430232944},"rsp":{"value":123145430231320},"r12":{"value":123145430231344},"rcx":{"value":123145430231320},"flavor":"x86_THREAD_STATE","rdi":{"value":7}},"frames":[{"imageOffset":22478,"symbol":"kevent","symbolLocation":10,"imageIndex":13},{"imageOffset":10357352,"sourceLine":459,"sourceFile":"eventhandler_macos.cc","symbol":"dart::bin::EventHandlerImplementation::EventHandlerEntry(unsigned long)","imageIndex":2,"symbolLocation":312},{"imageOffset":10511112,"sourceLine":65,"sourceFile":"thread_macos.cc","symbol":"dart::bin::ThreadStart(void*)","imageIndex":2,"symbolLocation":88},{"imageOffset":23881,"symbol":"_pthread_start","symbolLocation":115,"imageIndex":19},{"imageOffset":6191,"symbol":"thread_start","symbolLocation":15,"imageIndex":19}]},{"id":111086,"name":"HIE: M_ 94519c65529baf58 2026-11-13 10:21:34.324","threadState":{"r13":{"value":8589934595},"rax":{"value":0},"rflags":{"value":518},"cpu":{"value":0},"r14":{"value":44},"rsi":{"value":8589934595},"r8":{"value":15483357102080},"cr2":{"value":0},"rdx":{"value":103079220499},"r10":{"value":371647815155715},"r9":{"value":371647815090176},"r15":{"value":15483357102080},"rbx":{"value":123145422806284},"trap":{"value":133},"err":{"value":16777263},"r11":{"value":518},"rip":{"value":140703550798670},"rbp":{"value":123145422806240},"rsp":{"value":123145422806136},"r12":{"value":371647815090176},"rcx":{"value":123145422806136},"flavor":"x86_THREAD_STATE","rdi":{"value":123145422806284}},"frames":[{"imageOffset":2894,"symbol":"mach_msg2_trap","symbolLocation":10,"imageIndex":13},{"imageOffset":61271,"symbol":"mach_msg2_internal","symbolLocation":83,"imageIndex":13},{"imageOffset":164367,"symbol":"thread_suspend","symbolLocation":83,"imageIndex":13},{"imageOffset":211313,"symbol":"SOME_OTHER_THREAD_SWALLOWED_AT_LEAST_ONE_EXCEPTION","symbolLocation":16,"imageIndex":20},{"imageOffset":347075,"symbol":"__NSThread__start__","symbolLocation":1014,"imageIndex":21},{"imageOffset":23881,"symbol":"_pthread_start","symbolLocation":115,"imageIndex":19},{"imageOffset":6191,"symbol":"thread_start","symbolLocation":15,"imageIndex":19}]},{"id":111091,"name":"network_thread 0x0x7fdf0f9a4cc0","threadState":{"r13":{"value":140596016265232},"rax":{"value":4},"rflags":{"value":515},"cpu":{"value":0},"r14":{"value":140596016213584},"rsi":{"value":13},"r8":{"value":140596016213744},"cr2":{"value":0},"rdx":{"value":52},"r10":{"value":2},"r9":{"value":0},"r15":{"value":15},"rbx":{"value":1},"trap":{"value":133},"err":{"value":33554662},"r11":{"value":514},"rip":{"value":140703550826634},"rbp":{"value":123145432890960},"rsp":{"value":123145432890760},"r12":{"value":0},"rcx":{"value":123145432890760},"flavor":"x86_THREAD_STATE","rdi":{"value":140596014525248}},"frames":[{"imageOffset":30858,"symbol":"poll","symbolLocation":10,"imageIndex":13},{"imageOffset":4508340,"sourceLine":1863,"sourceFile":"physical_socket_server.cc","symbol":"webrtc::PhysicalSocketServer::WaitPoll(webrtc::TimeDelta, bool)","imageIndex":1,"symbolLocation":852},{"imageOffset":4507461,"sourceLine":1433,"sourceFile":"physical_socket_server.cc","symbol":"webrtc::PhysicalSocketServer::Wait(webrtc::TimeDelta, bool)","imageIndex":1,"symbolLocation":21},{"imageOffset":4521514,"sourceLine":466,"sourceFile":"thread.cc","symbol":"webrtc::Thread::Get(int)","imageIndex":1,"symbolLocation":378},{"imageOffset":4517963,"sourceLine":872,"sourceFile":"thread.cc","symbol":"webrtc::Thread::ProcessMessages(int)","imageIndex":1,"symbolLocation":155},{"imageOffset":4524341,"sourceLine":725,"sourceFile":"thread.cc","symbol":"webrtc::Thread::PreRun(void*)","imageIndex":1,"symbolLocation":85},{"imageOffset":23881,"symbol":"_pthread_start","symbolLocation":115,"imageIndex":19},{"imageOffset":6191,"symbol":"thread_start","symbolLocation":15,"imageIndex":19}]},{"id":111092,"name":"worker_thread 0x0x7fdf0f9d4940","threadState":{"r13":{"value":216358603924220416},"rax":{"value":260},"rflags":{"value":583},"cpu":{"value":0},"r14":{"value":50374912},"rsi":{"value":216358603924220416},"r8":{"value":0},"cr2":{"value":0},"rdx":{"value":50374912},"r10":{"value":0},"r9":{"value":160},"r15":{"value":13000000},"rbx":{"value":123145433427968},"trap":{"value":133},"err":{"value":33554737},"r11":{"value":582},"rip":{"value":140703550809874},"rbp":{"value":123145433427440},"rsp":{"value":123145433427288},"r12":{"value":22},"rcx":{"value":123145433427288},"flavor":"x86_THREAD_STATE","rdi":{"value":140596016258832}},"frames":[{"imageOffset":14098,"symbol":"__psynch_cvwait","symbolLocation":10,"imageIndex":13},{"imageOffset":25079,"symbol":"_pthread_cond_wait","symbolLocation":994,"imageIndex":19},{"symbol":"webrtc::Event::Wait(webrtc::TimeDelta, webrtc::TimeDelta)::$_0::operator()(std::__Cr::optional<timespec>) const","inline":true,"imageIndex":1,"imageOffset":3068724,"symbolLocation":77,"sourceLine":177,"sourceFile":"event.cc"},{"imageOffset":3068724,"sourceLine":186,"sourceFile":"event.cc","symbol":"webrtc::Event::Wait(webrtc::TimeDelta, webrtc::TimeDelta)","imageIndex":1,"symbolLocation":548},{"imageOffset":4537223,"sourceLine":28,"sourceFile":"null_socket_server.cc","symbol":"webrtc::NullSocketServer::Wait(webrtc::TimeDelta, bool)","imageIndex":1,"symbolLocation":23},{"imageOffset":4521514,"sourceLine":466,"sourceFile":"thread.cc","symbol":"webrtc::Thread::Get(int)","imageIndex":1,"symbolLocation":378},{"imageOffset":4517963,"sourceLine":872,"sourceFile":"thread.cc","symbol":"webrtc::Thread::ProcessMessages(int)","imageIndex":1,"symbolLocation":155},{"imageOffset":4524341,"sourceLine":725,"sourceFile":"thread.cc","symbol":"webrtc::Thread::PreRun(void*)","imageIndex":1,"symbolLocation":85},{"imageOffset":23881,"symbol":"_pthread_start","symbolLocation":115,"imageIndex":19},{"imageOffset":6191,"symbol":"thread_start","symbolLocation":15,"imageIndex":19}]},{"id":111093,"name":"signaling_thread 0x0x7fdf0f9d1700","threadState":{"r13":{"value":322161201980928},"rax":{"value":260},"rflags":{"value":583},"cpu":{"value":0},"r14":{"value":75008},"rsi":{"value":322161201980928},"r8":{"value":0},"cr2":{"value":0},"rdx":{"value":75008},"r10":{"value":0},"r9":{"value":160},"r15":{"value":0},"rbx":{"value":123145433964544},"trap":{"value":133},"err":{"value":33554737},"r11":{"value":582},"rip":{"value":140703550809874},"rbp":{"value":123145433964016},"rsp":{"value":123145433963864},"r12":{"value":22},"rcx":{"value":123145433963864},"flavor":"x86_THREAD_STATE","rdi":{"value":140596016401024}},"frames":[{"imageOffset":14098,"symbol":"__psynch_cvwait","symbolLocation":10,"imageIndex":13},{"imageOffset":25079,"symbol":"_pthread_cond_wait","symbolLocation":994,"imageIndex":19},{"symbol":"webrtc::Event::Wait(webrtc::TimeDelta, webrtc::TimeDelta)::$_0::operator()(std::__Cr::optional<timespec>) const","inline":true,"imageIndex":1,"imageOffset":3068747,"symbolLocation":100,"sourceLine":170,"sourceFile":"event.cc"},{"imageOffset":3068747,"sourceLine":186,"sourceFile":"event.cc","symbol":"webrtc::Event::Wait(webrtc::TimeDelta, webrtc::TimeDelta)","imageIndex":1,"symbolLocation":571},{"imageOffset":4537223,"sourceLine":28,"sourceFile":"null_socket_server.cc","symbol":"webrtc::NullSocketServer::Wait(webrtc::TimeDelta, bool)","imageIndex":1,"symbolLocation":23},{"imageOffset":4521514,"sourceLine":466,"sourceFile":"thread.cc","symbol":"webrtc::Thread::Get(int)","imageIndex":1,"symbolLocation":378},{"imageOffset":4517963,"sourceLine":872,"sourceFile":"thread.cc","symbol":"webrtc::Thread::ProcessMessages(int)","imageIndex":1,"symbolLocation":155},{"imageOffset":4524341,"sourceLine":725,"sourceFile":"thread.cc","symbol":"webrtc::Thread::PreRun(void*)","imageIndex":1,"symbolLocation":85},{"imageOffset":23881,"symbol":"_pthread_start","symbolLocation":115,"imageIndex":19},{"imageOffset":6191,"symbol":"thread_start","symbolLocation":15,"imageIndex":19}]},{"id":111105,"name":"caulk.messenger.shared:17","threadState":{"r13":{"value":0},"rax":{"value":14},"rflags":{"value":515},"cpu":{"value":0},"r14":{"value":140596018779824},"rsi":{"value":0},"r8":{"value":0},"cr2":{"value":0},"rdx":{"value":1},"r10":{"value":0},"r9":{"value":3},"r15":{"value":0},"rbx":{"value":140596018779649},"trap":{"value":133},"err":{"value":16777252},"r11":{"value":515},"rip":{"value":140703550798538},"rbp":{"value":123145435574128},"rsp":{"value":123145435574088},"r12":{"value":0},"rcx":{"value":123145435574088},"flavor":"x86_THREAD_STATE","rdi":{"value":73291}},"frames":[{"imageOffset":2762,"symbol":"semaphore_wait_trap","symbolLocation":10,"imageIndex":13},{"imageOffset":6992,"symbol":"caulk::semaphore::timed_wait(double)","symbolLocation":158,"imageIndex":22},{"imageOffset":6770,"symbol":"caulk::concurrent::details::worker_thread::run()","symbolLocation":30,"imageIndex":22},{"imageOffset":6054,"symbol":"void* caulk::thread_proxy<std::__1::tuple<caulk::thread::attributes, void (caulk::concurrent::details::worker_thread::*)(), std::__1::tuple<caulk::concurrent::details::worker_thread*>>>(void*)","symbolLocation":41,"imageIndex":22},{"imageOffset":23881,"symbol":"_pthread_start","symbolLocation":115,"imageIndex":19},{"imageOffset":6191,"symbol":"thread_start","symbolLocation":15,"imageIndex":19}]},{"id":111106,"name":"caulk.messenger.shared:high","threadState":{"r13":{"value":0},"rax":{"value":14},"rflags":{"value":515},"cpu":{"value":0},"r14":{"value":140596018791840},"rsi":{"value":78371},"r8":{"value":4294967295},"cr2":{"value":0},"rdx":{"value":78371},"r10":{"value":20},"r9":{"value":0},"r15":{"value":0},"rbx":{"value":140596018791681},"trap":{"value":133},"err":{"value":16777252},"r11":{"value":515},"rip":{"value":140703550798538},"rbp":{"value":123145436110704},"rsp":{"value":123145436110664},"r12":{"value":0},"rcx":{"value":123145436110664},"flavor":"x86_THREAD_STATE","rdi":{"value":70435}},"frames":[{"imageOffset":2762,"symbol":"semaphore_wait_trap","symbolLocation":10,"imageIndex":13},{"imageOffset":6992,"symbol":"caulk::semaphore::timed_wait(double)","symbolLocation":158,"imageIndex":22},{"imageOffset":6770,"symbol":"caulk::concurrent::details::worker_thread::run()","symbolLocation":30,"imageIndex":22},{"imageOffset":6054,"symbol":"void* caulk::thread_proxy<std::__1::tuple<caulk::thread::attributes, void (caulk::concurrent::details::worker_thread::*)(), std::__1::tuple<caulk::concurrent::details::worker_thread*>>>(void*)","symbolLocation":41,"imageIndex":22},{"imageOffset":23881,"symbol":"_pthread_start","symbolLocation":115,"imageIndex":19},{"imageOffset":6191,"symbol":"thread_start","symbolLocation":15,"imageIndex":19}]},{"id":111468,"frames":[{"imageOffset":14098,"symbol":"__psynch_cvwait","symbolLocation":10,"imageIndex":13},{"imageOffset":25079,"symbol":"_pthread_cond_wait","symbolLocation":994,"imageIndex":19},{"imageOffset":130061,"symbol":"WaitOnConditionTimed","symbolLocation":119,"imageIndex":23},{"imageOffset":41156,"symbol":"FigSemaphoreWaitRelative","symbolLocation":139,"imageIndex":23},{"imageOffset":286513,"symbol":"CMIO::Thread::SignaledThread::ThreadLoop()","symbolLocation":121,"imageIndex":24},{"imageOffset":286344,"symbol":"CMIO::Thread::SignaledThread::WorkQueuedThreadCallback(void*)","symbolLocation":206,"imageIndex":24},{"imageOffset":129127,"symbol":"figThreadMain","symbolLocation":237,"imageIndex":23},{"imageOffset":23881,"symbol":"_pthread_start","symbolLocation":115,"imageIndex":19},{"imageOffset":6191,"symbol":"thread_start","symbolLocation":15,"imageIndex":19}],"threadState":{"r13":{"value":67743114721275136},"rax":{"value":260},"rflags":{"value":583},"cpu":{"value":0},"r14":{"value":15771904},"rsi":{"value":67743114721275136},"r8":{"value":0},"cr2":{"value":0},"rdx":{"value":15771904},"r10":{"value":0},"r9":{"value":65704},"r15":{"value":5000000},"rbx":{"value":123145431830528},"trap":{"value":133},"err":{"value":33554737},"r11":{"value":582},"rip":{"value":140703550809874},"rbp":{"value":123145431829792},"rsp":{"value":123145431829640},"r12":{"value":22},"rcx":{"value":123145431829640},"flavor":"x86_THREAD_STATE","rdi":{"value":140595931222344}}},{"id":111604,"name":"com.apple.audio.toolbox.AUScheduledParameterRefresher","threadState":{"r13":{"value":0},"rax":{"value":14},"rflags":{"value":515},"cpu":{"value":0},"r14":{"value":140595932657160},"rsi":{"value":0},"r8":{"value":0},"cr2":{"value":0},"rdx":{"value":1},"r10":{"value":0},"r9":{"value":3},"r15":{"value":0},"rbx":{"value":140595932656897},"trap":{"value":133},"err":{"value":16777252},"r11":{"value":515},"rip":{"value":140703550798538},"rbp":{"value":123145430769520},"rsp":{"value":123145430769480},"r12":{"value":0},"rcx":{"value":123145430769480},"flavor":"x86_THREAD_STATE","rdi":{"value":133923}},"frames":[{"imageOffset":2762,"symbol":"semaphore_wait_trap","symbolLocation":10,"imageIndex":13},{"imageOffset":6992,"symbol":"caulk::semaphore::timed_wait(double)","symbolLocation":158,"imageIndex":22},{"imageOffset":6770,"symbol":"caulk::concurrent::details::worker_thread::run()","symbolLocation":30,"imageIndex":22},{"imageOffset":6054,"symbol":"void* caulk::thread_proxy<std::__1::tuple<caulk::thread::attributes, void (caulk::concurrent::details::worker_thread::*)(), std::__1::tuple<caulk::concurrent::details::worker_thread*>>>(void*)","symbolLocation":41,"imageIndex":22},{"imageOffset":23881,"symbol":"_pthread_start","symbolLocation":115,"imageIndex":19},{"imageOffset":6191,"symbol":"thread_start","symbolLocation":15,"imageIndex":19}]},{"id":111605,"name":"caulk::deferred_logger","threadState":{"r13":{"value":0},"rax":{"value":14},"rflags":{"value":515},"cpu":{"value":0},"r14":{"value":140595951591336},"rsi":{"value":0},"r8":{"value":0},"cr2":{"value":0},"rdx":{"value":1},"r10":{"value":0},"r9":{"value":14},"r15":{"value":0},"rbx":{"value":140595951591169},"trap":{"value":133},"err":{"value":16777252},"r11":{"value":515},"rip":{"value":140703550798538},"rbp":{"value":123145438781296},"rsp":{"value":123145438781256},"r12":{"value":0},"rcx":{"value":123145438781256},"flavor":"x86_THREAD_STATE","rdi":{"value":138243}},"frames":[{"imageOffset":2762,"symbol":"semaphore_wait_trap","symbolLocation":10,"imageIndex":13},{"imageOffset":6992,"symbol":"caulk::semaphore::timed_wait(double)","symbolLocation":158,"imageIndex":22},{"imageOffset":6770,"symbol":"caulk::concurrent::details::worker_thread::run()","symbolLocation":30,"imageIndex":22},{"imageOffset":6054,"symbol":"void* caulk::thread_proxy<std::__1::tuple<caulk::thread::attributes, void (caulk::concurrent::details::worker_thread::*)(), std::__1::tuple<caulk::concurrent::details::worker_thread*>>>(void*)","symbolLocation":41,"imageIndex":22},{"imageOffset":23881,"symbol":"_pthread_start","symbolLocation":115,"imageIndex":19},{"imageOffset":6191,"symbol":"thread_start","symbolLocation":15,"imageIndex":19}]},{"id":111611,"name":"caulk.messenger.shared:21","threadState":{"r13":{"value":0},"rax":{"value":14},"rflags":{"value":515},"cpu":{"value":0},"r14":{"value":140596017055552},"rsi":{"value":140596017041024},"r8":{"value":140704636727552,"symbolLocation":0,"symbol":"_os_log_current_test_callback"},"cr2":{"value":0},"rdx":{"value":0},"r10":{"value":123145439311105},"r9":{"value":365711517488513028},"r15":{"value":0},"rbx":{"value":140596017055489},"trap":{"value":133},"err":{"value":16777252},"r11":{"value":515},"rip":{"value":140703550798538},"rbp":{"value":123145439317872},"rsp":{"value":123145439317832},"r12":{"value":0},"rcx":{"value":123145439317832},"flavor":"x86_THREAD_STATE","rdi":{"value":138531}},"frames":[{"imageOffset":2762,"symbol":"semaphore_wait_trap","symbolLocation":10,"imageIndex":13},{"imageOffset":6992,"symbol":"caulk::semaphore::timed_wait(double)","symbolLocation":158,"imageIndex":22},{"imageOffset":6770,"symbol":"caulk::concurrent::details::worker_thread::run()","symbolLocation":30,"imageIndex":22},{"imageOffset":6054,"symbol":"void* caulk::thread_proxy<std::__1::tuple<caulk::thread::attributes, void (caulk::concurrent::details::worker_thread::*)(), std::__1::tuple<caulk::concurrent::details::worker_thread*>>>(void*)","symbolLocation":41,"imageIndex":22},{"imageOffset":23881,"symbol":"_pthread_start","symbolLocation":115,"imageIndex":19},{"imageOffset":6191,"symbol":"thread_start","symbolLocation":15,"imageIndex":19}]},{"id":111640,"frames":[{"imageOffset":2762,"symbol":"semaphore_wait_trap","symbolLocation":10,"imageIndex":13},{"imageOffset":6992,"symbol":"caulk::semaphore::timed_wait(double)","symbolLocation":158,"imageIndex":22},{"imageOffset":8901,"symbol":"ADAM::Sequencer::run_impl()","symbolLocation":75,"imageIndex":25},{"imageOffset":5433,"symbol":"ADAM::Sequencer::run()","symbolLocation":193,"imageIndex":25},{"imageOffset":8667,"symbol":"void* std::__1::__thread_proxy[abi:nqe210106]<std::__1::tuple<std::__1::unique_ptr<std::__1::__thread_struct, std::__1::default_delete<std::__1::__thread_struct>>, void (ADAM::Sequencer::*)(), ADAM::Sequencer*>>(void*)","symbolLocation":62,"imageIndex":25},{"imageOffset":23881,"symbol":"_pthread_start","symbolLocation":115,"imageIndex":19},{"imageOffset":6191,"symbol":"thread_start","symbolLocation":15,"imageIndex":19}],"threadState":{"r13":{"value":0},"rax":{"value":14},"rflags":{"value":515},"cpu":{"value":0},"r14":{"value":140713212221448,"symbolLocation":144,"symbol":"ADAM::AudioDataAnalysisManager::instance()::gAdam"},"rsi":{"value":140704084269347,"objc-selector":"release"},"r8":{"value":18446603370159259677},"cr2":{"value":0},"rdx":{"value":140704634426536,"symbolLocation":0,"symbol":"OBJC_CLASS_$_OS_os_log"},"r10":{"value":140737488355320},"r9":{"value":1},"r15":{"value":0},"rbx":{"value":140595947804417},"trap":{"value":133},"err":{"value":16777252},"r11":{"value":515},"rip":{"value":140703550798538},"rbp":{"value":123145440927360},"rsp":{"value":123145440927320},"r12":{"value":0},"rcx":{"value":123145440927320},"flavor":"x86_THREAD_STATE","rdi":{"value":164115}}},{"id":111677,"name":"com.apple.audio.IOThread.client","threadState":{"r13":{"value":0},"rax":{"value":14},"rflags":{"value":582},"cpu":{"value":0},"r14":{"value":140596058421040},"rsi":{"value":163755},"r8":{"value":0},"cr2":{"value":0},"rdx":{"value":34084860468992},"r10":{"value":140596058420808},"r9":{"value":0},"r15":{"value":1},"rbx":{"value":140596058421048},"trap":{"value":133},"err":{"value":16777253},"r11":{"value":582},"rip":{"value":140703550798550},"rbp":{"value":123145441463552},"rsp":{"value":123145441463528},"r12":{"value":2},"rcx":{"value":123145441463528},"flavor":"x86_THREAD_STATE","rdi":{"value":162623}},"frames":[{"imageOffset":2774,"symbol":"semaphore_wait_signal_trap","symbolLocation":10,"imageIndex":13},{"imageOffset":113003,"symbol":"caulk::mach::semaphore::wait_signal_or_error(caulk::mach::semaphore&)","symbolLocation":23,"imageIndex":22},{"imageOffset":2068978,"symbol":"HALC_ProxyIOContext::IOWorkLoop()","symbolLocation":5870,"imageIndex":26},{"imageOffset":2061262,"symbol":"invocation function for block in HALC_ProxyIOContext::HALC_ProxyIOContext(unsigned int, unsigned int)","symbolLocation":141,"imageIndex":26},{"imageOffset":3903073,"symbol":"HALC_IOThread::Entry(void*)","symbolLocation":73,"imageIndex":26},{"imageOffset":23881,"symbol":"_pthread_start","symbolLocation":115,"imageIndex":19},{"imageOffset":6191,"symbol":"thread_start","symbolLocation":15,"imageIndex":19}]},{"id":113164,"frames":[],"threadState":{"r13":{"value":0},"rax":{"value":33554800},"rflags":{"value":512},"cpu":{"value":0},"r14":{"value":1},"rsi":{"value":149763},"r8":{"value":409604},"cr2":{"value":0},"rdx":{"value":123145437184000},"r10":{"value":0},"r9":{"value":18446744073709551615},"r15":{"value":123145437707136},"rbx":{"value":123145437708288},"trap":{"value":133},"err":{"value":33554800},"r11":{"value":582},"rip":{"value":140703551059980},"rbp":{"value":0},"rsp":{"value":123145437708288},"r12":{"value":1982472},"rcx":{"value":0},"flavor":"x86_THREAD_STATE","rdi":{"value":123145437708288}}},{"id":119257,"name":"com.apple.coremedia.sharedRootQueue.47","threadState":{"r13":{"value":18446744071411073023},"rax":{"value":14},"rflags":{"value":514},"cpu":{"value":0},"r14":{"value":140595913065200},"rsi":{"value":4294967180035883012},"r8":{"value":1},"cr2":{"value":0},"rdx":{"value":999999973},"r10":{"value":4999999973},"r9":{"value":0},"r15":{"value":1000000000},"rbx":{"value":5458130553362},"trap":{"value":133},"err":{"value":16777254},"r11":{"value":514},"rip":{"value":140703550798562},"rbp":{"value":123145421197120},"rsp":{"value":123145421197080},"r12":{"value":0},"rcx":{"value":123145421197080},"flavor":"x86_THREAD_STATE","rdi":{"value":81751}},"frames":[{"imageOffset":2786,"symbol":"semaphore_timedwait_trap","symbolLocation":10,"imageIndex":13},{"imageOffset":196999,"symbol":"_dispatch_sema4_timedwait","symbolLocation":52,"imageIndex":27},{"imageOffset":11903,"symbol":"_dispatch_semaphore_wait_slow","symbolLocation":58,"imageIndex":27},{"imageOffset":67438,"symbol":"_dispatch_worker_thread","symbolLocation":322,"imageIndex":27},{"imageOffset":23881,"symbol":"_pthread_start","symbolLocation":115,"imageIndex":19},{"imageOffset":6191,"symbol":"thread_start","symbolLocation":15,"imageIndex":19}]},{"triggered":true,"id":120100,"threadState":{"r13":{"value":0},"rax":{"value":0},"rflags":{"value":582},"cpu":{"value":0},"r14":{"value":146535},"rsi":{"value":6},"r8":{"value":140704634453232,"symbolLocation":1072,"symbol":"usual_extra"},"cr2":{"value":0},"rdx":{"value":0},"r10":{"value":140704636827456,"symbolLocation":0,"symbol":"_os_xbs_chrooted"},"r9":{"value":0},"r15":{"value":22},"rbx":{"value":6},"trap":{"value":133},"err":{"value":33554760},"r11":{"value":582},"rip":{"value":140703550826462,"matchesCrashFrame":1},"rbp":{"value":123145421729440},"rsp":{"value":123145421729400},"r12":{"value":4559133104,"symbolLocation":24672,"symbol":"webrtc::(anonymous namespace)::HEX"},"rcx":{"value":123145421729400},"flavor":"x86_THREAD_STATE","rdi":{"value":146535}},"queue":"IncomingVideoStreamQueue","frames":[{"imageOffset":30686,"symbol":"__pthread_kill","symbolLocation":10,"imageIndex":13},{"imageOffset":23131,"symbol":"pthread_kill","symbolLocation":259,"imageIndex":19},{"imageOffset":522068,"symbol":"abort","symbolLocation":126,"imageIndex":28},{"imageOffset":2406870,"sourceLine":79,"sourceFile":"checks.cc","symbol":"webrtc::webrtc_checks_impl::WriteFatalLog(std::__Cr::basic_string_view<char, std::__Cr::char_traits<char>>)","imageIndex":1,"symbolLocation":70},{"symbol":"webrtc::webrtc_checks_impl::WriteFatalLog(char const*, int, std::__Cr::basic_string_view<char, std::__Cr::char_traits<char>>)","inline":true,"imageIndex":1,"imageOffset":2408828,"symbolLocation":8,"sourceLine":85,"sourceFile":"checks.cc"},{"imageOffset":2408828,"sourceLine":180,"sourceFile":"checks.cc","symbol":"webrtc::webrtc_checks_impl::FatalLog(char const*, int, char const*, webrtc::webrtc_checks_impl::CheckArgType const*, ...)","imageIndex":1,"symbolLocation":492},{"symbol":"void webrtc::webrtc_checks_impl::LogStreamer<>::CallCheckOp<webrtc::webrtc_checks_impl::Val<(webrtc::webrtc_checks_impl::CheckArgType)1, int>, webrtc::webrtc_checks_impl::Val<(webrtc::webrtc_checks_impl::CheckArgType)1, int>>(char const*, int, char const*, webrtc::webrtc_checks_impl::Val<(webrtc::webrtc_checks_impl::CheckArgType)1, int> const&, webrtc::webrtc_checks_impl::Val<(webrtc::webrtc_checks_impl::CheckArgType)1, int> const&)","inline":true,"imageIndex":1,"imageOffset":3093312,"symbolLocation":10,"sourceLine":272,"sourceFile":"checks.h"},{"symbol":"void webrtc::webrtc_checks_impl::LogStreamer<webrtc::webrtc_checks_impl::Val<(webrtc::webrtc_checks_impl::CheckArgType)1, int>>::CallCheckOp<webrtc::webrtc_checks_impl::Val<(webrtc::webrtc_checks_impl::CheckArgType)1, int>>(char const*, int, char const*, webrtc::webrtc_checks_impl::Val<(webrtc::webrtc_checks_impl::CheckArgType)1, int> const&) const","inline":true,"imageIndex":1,"imageOffset":3093312,"symbolLocation":10,"sourceLine":321,"sourceFile":"checks.h"},{"symbol":"void webrtc::webrtc_checks_impl::LogStreamer<webrtc::webrtc_checks_impl::Val<(webrtc::webrtc_checks_impl::CheckArgType)1, int>, webrtc::webrtc_checks_impl::Val<(webrtc::webrtc_checks_impl::CheckArgType)1, int>>::CallCheckOp<>(char const*, int, char const*) const","inline":true,"imageIndex":1,"imageOffset":3093312,"symbolLocation":10,"sourceLine":321,"sourceFile":"checks.h"},{"symbol":"void webrtc::webrtc_checks_impl::FatalLogCall<true>::operator&<webrtc::webrtc_checks_impl::Val<(webrtc::webrtc_checks_impl::CheckArgType)1, int>, webrtc::webrtc_checks_impl::Val<(webrtc::webrtc_checks_impl::CheckArgType)1, int>>(webrtc::webrtc_checks_impl::LogStreamer<webrtc::webrtc_checks_impl::Val<(webrtc::webrtc_checks_impl::CheckArgType)1, int>, webrtc::webrtc_checks_impl::Val<(webrtc::webrtc_checks_impl::CheckArgType)1, int>> const&)","inline":true,"imageIndex":1,"imageOffset":3093312,"symbolLocation":10,"sourceLine":350,"sourceFile":"checks.h"},{"imageOffset":3093312,"sourceFile":"video_frame_buffer.cc","symbol":"webrtc::CheckValidDimensions(int, int, int, int, int)","symbolLocation":208,"imageIndex":1},{"symbol":"webrtc::(anonymous namespace)::I420DataSize(int, int, int, int, int)","inline":true,"imageIndex":1,"imageOffset":3074164,"symbolLocation":20,"sourceLine":41,"sourceFile":"i420_buffer.cc"},{"symbol":"webrtc::I420Buffer::I420Buffer(int, int, int, int, int)","inline":true,"imageIndex":1,"imageOffset":3074164,"symbolLocation":40,"sourceLine":64,"sourceFile":"i420_buffer.cc"},{"symbol":"webrtc::I420Buffer::I420Buffer(int, int)","inline":true,"imageIndex":1,"imageOffset":3074164,"symbolLocation":57,"sourceLine":51,"sourceFile":"i420_buffer.cc"},{"symbol":"webrtc::RefCountedObject<webrtc::I420Buffer>::RefCountedObject<int&, int&>(int&, int&)","inline":true,"imageIndex":1,"imageOffset":3074164,"symbolLocation":64,"sourceLine":33,"sourceFile":"ref_counted_object.h"},{"symbol":"webrtc::RefCountedObject<webrtc::I420Buffer>::RefCountedObject<int&, int&>(int&, int&)","inline":true,"imageIndex":1,"imageOffset":3074164,"symbolLocation":64,"sourceLine":35,"sourceFile":"ref_counted_object.h"},{"imageOffset":3074164,"sourceLine":90,"sourceFile":"make_ref_counted.h","symbol":"webrtc::scoped_refptr<webrtc::I420Buffer> webrtc::make_ref_counted<webrtc::I420Buffer, int&, int&, (webrtc::I420Buffer*)0>(int&, int&)","imageIndex":1,"symbolLocation":100},{"imageOffset":3074044,"sourceLine":74,"sourceFile":"i420_buffer.cc","symbol":"webrtc::I420Buffer::Create(int, int)","imageIndex":1,"symbolLocation":28},{"imageOffset":5177369,"sourceLine":28,"sourceFile":"RTCNativeI420Buffer.mm","symbol":"-[RTCI420Buffer initWithWidth:height:]","imageIndex":1,"symbolLocation":73},{"imageOffset":5179890,"sourceLine":183,"sourceFile":"RTCCVPixelBuffer.mm","symbol":"-[RTCCVPixelBuffer toI420]","imageIndex":1,"symbolLocation":130},{"imageOffset":141114,"sourceLine":133,"sourceFile":"FlutterRTCVideoRenderer.m","symbol":"-[FlutterRTCVideoRenderer copyI420ToCVPixelBuffer:withFrame:]","imageIndex":0,"symbolLocation":85},{"imageOffset":142039,"sourceLine":204,"sourceFile":"FlutterRTCVideoRenderer.m","symbol":"-[FlutterRTCVideoRenderer renderFrame:]","imageIndex":0,"symbolLocation":91},{"imageOffset":11641900,"sourceLine":39,"sourceFile":"RTCVideoRendererAdapter.mm","symbol":"webrtc::VideoRendererAdapter::OnFrame(webrtc::VideoFrame const&)","imageIndex":1,"symbolLocation":348},{"imageOffset":3266212,"sourceLine":103,"sourceFile":"video_broadcaster.cc","symbol":"webrtc::VideoBroadcaster::OnFrame(webrtc::VideoFrame const&)","imageIndex":1,"symbolLocation":452},{"imageOffset":5294553,"sourceLine":3841,"sourceFile":"webrtc_video_engine.cc","symbol":"webrtc::WebRtcVideoReceiveChannel::WebRtcVideoReceiveStream::OnFrame(webrtc::VideoFrame const&)","imageIndex":1,"symbolLocation":217},{"imageOffset":6342212,"sourceLine":705,"sourceFile":"video_receive_stream2.cc","symbol":"webrtc::internal::VideoReceiveStream2::OnFrame(webrtc::VideoFrame const&)","imageIndex":1,"symbolLocation":36},{"imageOffset":6636052,"sourceLine":72,"sourceFile":"incoming_video_stream.cc","symbol":"webrtc::IncomingVideoStream::Dequeue()","imageIndex":1,"symbolLocation":196},{"symbol":"absl::internal_any_invocable::Impl<void () &&>::operator()() &&","inline":true,"imageIndex":1,"imageOffset":13104771,"symbolLocation":3,"sourceLine":774,"sourceFile":"any_invocable.h"},{"imageOffset":13104771,"sourceLine":159,"sourceFile":"task_queue_gcd.cc","symbol":"webrtc::(anonymous namespace)::TaskQueueGcd::RunTask(void*)","imageIndex":1,"symbolLocation":51},{"imageOffset":96434,"symbol":"_dispatch_client_callout","symbolLocation":6,"imageIndex":27},{"imageOffset":20085,"symbol":"_dispatch_continuation_pop","symbolLocation":518,"imageIndex":27},{"imageOffset":83546,"symbol":"_dispatch_source_invoke","symbolLocation":2203,"imageIndex":27},{"imageOffset":32815,"symbol":"_dispatch_lane_serial_drain","symbolLocation":319,"imageIndex":27},{"imageOffset":35909,"symbol":"_dispatch_lane_invoke","symbolLocation":382,"imageIndex":27},{"imageOffset":72179,"symbol":"_dispatch_root_queue_drain_deferred_wlh","symbolLocation":275,"imageIndex":27},{"imageOffset":70581,"symbol":"_dispatch_workloop_worker_thread","symbolLocation":867,"imageIndex":27},{"imageOffset":10271,"symbol":"_pthread_wqthread","symbolLocation":298,"imageIndex":19},{"imageOffset":6171,"symbol":"start_wqthread","symbolLocation":15,"imageIndex":19}]},{"id":120928,"frames":[],"threadState":{"r13":{"value":0},"rax":{"value":33554800},"rflags":{"value":512},"cpu":{"value":0},"r14":{"value":1},"rsi":{"value":166135},"r8":{"value":409604},"cr2":{"value":0},"rdx":{"value":123145419063296},"r10":{"value":0},"r9":{"value":18446744073709551615},"r15":{"value":123145419586432},"rbx":{"value":123145419587584},"trap":{"value":133},"err":{"value":33554800},"r11":{"value":582},"rip":{"value":140703551059980},"rbp":{"value":0},"rsp":{"value":123145419587584},"r12":{"value":1982472},"rcx":{"value":0},"flavor":"x86_THREAD_STATE","rdi":{"value":123145419587584}}},{"id":121100,"name":"CVDisplayLink","threadState":{"r13":{"value":20986382739214336},"rax":{"value":260},"rflags":{"value":663},"cpu":{"value":0},"r14":{"value":4886016},"rsi":{"value":20986382739214336},"r8":{"value":0},"cr2":{"value":0},"rdx":{"value":4886016},"r10":{"value":0},"r9":{"value":65704},"r15":{"value":16306419},"rbx":{"value":4886528},"trap":{"value":133},"err":{"value":33554737},"r11":{"value":663},"rip":{"value":140703550809874},"rbp":{"value":123145419050464},"rsp":{"value":123145419050312},"r12":{"value":22},"rcx":{"value":123145419050312},"flavor":"x86_THREAD_STATE","rdi":{"value":140596056490104}},"frames":[{"imageOffset":14098,"symbol":"__psynch_cvwait","symbolLocation":10,"imageIndex":13},{"imageOffset":25129,"symbol":"_pthread_cond_wait","symbolLocation":1044,"imageIndex":19},{"imageOffset":14609,"symbol":"CVDisplayLink::waitUntil(unsigned long long)","symbolLocation":375,"imageIndex":29},{"imageOffset":10324,"symbol":"CVDisplayLink::runIOThread()","symbolLocation":524,"imageIndex":29},{"imageOffset":23881,"symbol":"_pthread_start","symbolLocation":115,"imageIndex":19},{"imageOffset":6191,"symbol":"thread_start","symbolLocation":15,"imageIndex":19}]}],
+  "usedImages" : [
+  {
+    "source" : "P",
+    "arch" : "x86_64",
+    "base" : 4503658496,
+    "CFBundleShortVersionString" : "0.0.24",
+    "CFBundleIdentifier" : "com.microdit.macosClient",
+    "size" : 299008,
+    "uuid" : "2bb09267-5059-345d-abec-7bda2b9119be",
+    "path" : "\/Volumes\/*\/macos_client.app\/Contents\/MacOS\/macos_client",
+    "name" : "macos_client",
+    "CFBundleVersion" : "24"
+  },
+  {
+    "source" : "P",
+    "arch" : "x86_64",
+    "base" : 4543844352,
+    "CFBundleShortVersionString" : "1.0",
+    "CFBundleIdentifier" : "org.webrtc.WebRTC",
+    "size" : 15790080,
+    "uuid" : "4c4c4436-5555-3144-a19d-52769b5075d3",
+    "path" : "\/Volumes\/*\/macos_client.app\/Contents\/Frameworks\/WebRTC.framework\/Versions\/A\/WebRTC",
+    "name" : "WebRTC",
+    "CFBundleVersion" : "1.0"
+  },
+  {
+    "source" : "P",
+    "arch" : "x86_64",
+    "base" : 4561350656,
+    "CFBundleShortVersionString" : "1.0",
+    "CFBundleIdentifier" : "io.flutter.flutter-macos",
+    "size" : 14618624,
+    "uuid" : "4c4c4405-5555-3144-a12a-a9ed48fae461",
+    "path" : "\/Volumes\/*\/macos_client.app\/Contents\/Frameworks\/FlutterMacOS.framework\/Versions\/A\/FlutterMacOS",
+    "name" : "FlutterMacOS",
+    "CFBundleVersion" : "1.0"
+  },
+  {
+    "source" : "P",
+    "arch" : "x86_64h",
+    "base" : 4542259200,
+    "size" : 53248,
+    "uuid" : "9564e919-df67-3ce5-bb9b-8a9cbab201e1",
+    "path" : "\/usr\/lib\/libobjc-trampolines.dylib",
+    "name" : "libobjc-trampolines.dylib"
+  },
+  {
+    "source" : "P",
+    "arch" : "x86_64",
+    "base" : 4971507712,
+    "CFBundleShortVersionString" : "1.0",
+    "CFBundleIdentifier" : "io.flutter.flutter.app",
+    "size" : 8339456,
+    "uuid" : "d3006944-dbc3-976f-9bd4-af81769a493d",
+    "path" : "\/Volumes\/*\/macos_client.app\/Contents\/Frameworks\/App.framework\/Versions\/A\/App",
+    "name" : "App",
+    "CFBundleVersion" : "1.0"
+  },
+  {
+    "source" : "P",
+    "arch" : "x86_64",
+    "base" : 4994850816,
+    "CFBundleShortVersionString" : "810.0",
+    "CFBundleIdentifier" : "com.apple.cmio.DAL.VDC-4",
+    "size" : 274432,
+    "uuid" : "c5ea1c11-0b43-3989-8b18-7af7cd829085",
+    "path" : "\/System\/Library\/Frameworks\/CoreMediaIO.framework\/Versions\/A\/Resources\/VDC.plugin\/Contents\/MacOS\/VDC",
+    "name" : "VDC",
+    "CFBundleVersion" : "497.120.3"
+  },
+  {
+    "source" : "P",
+    "arch" : "x86_64",
+    "base" : 5073965056,
+    "CFBundleShortVersionString" : "1000.0",
+    "CFBundleIdentifier" : "com.apple.CMIOBaseUnits",
+    "size" : 1392640,
+    "uuid" : "75877117-6dcf-3fa4-b9ee-8365533fb413",
+    "path" : "\/System\/Library\/Frameworks\/CoreMediaIO.framework\/Versions\/A\/Resources\/BaseUnits\/CMIOBaseUnits.bundle\/Contents\/MacOS\/CMIOBaseUnits",
+    "name" : "CMIOBaseUnits",
+    "CFBundleVersion" : "5617.100.6.0.11"
+  },
+  {
+    "source" : "P",
+    "arch" : "x86_64",
+    "base" : 5098827776,
+    "CFBundleShortVersionString" : "1000.0",
+    "CFBundleIdentifier" : "com.apple.CMIOUnits",
+    "size" : 741376,
+    "uuid" : "945b040d-6fb6-3eb3-8394-238bc777089a",
+    "path" : "\/System\/Library\/Frameworks\/CoreMediaIO.framework\/Versions\/A\/Resources\/CMIOUnits.bundle\/Contents\/MacOS\/CMIOUnits",
+    "name" : "CMIOUnits",
+    "CFBundleVersion" : "5617.100.6.0.11"
+  },
+  {
+    "source" : "P",
+    "arch" : "x86_64h",
+    "base" : 5188087808,
+    "CFBundleShortVersionString" : "7.0",
+    "CFBundleIdentifier" : "com.apple.audio.codecs.Components",
+    "size" : 11046912,
+    "uuid" : "d11a9fae-07d2-3b60-9698-2b0f6c03e28e",
+    "path" : "\/System\/Library\/Components\/AudioCodecs.component\/Contents\/MacOS\/AudioCodecs",
+    "name" : "AudioCodecs",
+    "CFBundleVersion" : "7.0"
+  },
+  {
+    "source" : "P",
+    "arch" : "x86_64",
+    "base" : 5160345600,
+    "CFBundleShortVersionString" : "1.14",
+    "CFBundleIdentifier" : "com.apple.audio.units.Components",
+    "size" : 1355776,
+    "uuid" : "c2bd3c53-a8d6-3205-bb20-89a89b000046",
+    "path" : "\/System\/Library\/Components\/CoreAudio.component\/Contents\/MacOS\/CoreAudio",
+    "name" : "CoreAudio",
+    "CFBundleVersion" : "1.14"
+  },
+  {
+    "source" : "P",
+    "arch" : "x86_64",
+    "base" : 5173796864,
+    "CFBundleShortVersionString" : "1.0",
+    "CFBundleIdentifier" : "com.apple.audio.AudioDSPComponents",
+    "size" : 8278016,
+    "uuid" : "1dd5ea1f-8e1e-32ad-90b0-7d8ca51a722c",
+    "path" : "\/System\/Library\/Components\/AudioDSP.component\/Contents\/MacOS\/AudioDSP",
+    "name" : "AudioDSP",
+    "CFBundleVersion" : "1"
+  },
+  {
+    "source" : "P",
+    "arch" : "x86_64",
+    "base" : 5241307136,
+    "CFBundleShortVersionString" : "24.5.9",
+    "CFBundleIdentifier" : "com.apple.AppleIntelKBLGraphicsVADriver",
+    "size" : 25542656,
+    "uuid" : "60ecf5ce-ec41-35a2-927d-6d8c2c455549",
+    "path" : "\/System\/Library\/Extensions\/AppleIntelKBLGraphicsVADriver.bundle\/Contents\/MacOS\/AppleIntelKBLGraphicsVADriver",
+    "name" : "AppleIntelKBLGraphicsVADriver",
+    "CFBundleVersion" : "24.0.5"
+  },
+  {
+    "source" : "P",
+    "arch" : "x86_64",
+    "base" : 5097152512,
+    "CFBundleShortVersionString" : "24.5.9",
+    "CFBundleIdentifier" : "com.apple.AppleIntelCFLGraphicsVAME",
+    "size" : 12288,
+    "uuid" : "34fa965d-f8ad-3bf6-8cbd-1e72840919ce",
+    "path" : "\/System\/Library\/Extensions\/AppleIntelCFLGraphicsVAME.bundle\/Contents\/MacOS\/AppleIntelCFLGraphicsVAME",
+    "name" : "AppleIntelCFLGraphicsVAME",
+    "CFBundleVersion" : "24.0.5"
+  },
+  {
+    "source" : "P",
+    "arch" : "x86_64",
+    "base" : 140703550795776,
+    "size" : 255440,
+    "uuid" : "a6d8c216-4f74-3793-bd68-0156d505de47",
+    "path" : "\/usr\/lib\/system\/libsystem_kernel.dylib",
+    "name" : "libsystem_kernel.dylib"
+  },
+  {
+    "source" : "P",
+    "arch" : "x86_64h",
+    "base" : 140703551336448,
+    "CFBundleShortVersionString" : "6.9",
+    "CFBundleIdentifier" : "com.apple.CoreFoundation",
+    "size" : 4971013,
+    "uuid" : "b7f5aeea-bdbd-3bbd-a1d1-baf62215be44",
+    "path" : "\/System\/Library\/Frameworks\/CoreFoundation.framework\/Versions\/A\/CoreFoundation",
+    "name" : "CoreFoundation",
+    "CFBundleVersion" : "5026.6.7.5"
+  },
+  {
+    "source" : "P",
+    "arch" : "x86_64",
+    "base" : 140703766487040,
+    "CFBundleShortVersionString" : "2.1.1",
+    "CFBundleIdentifier" : "com.apple.HIToolbox",
+    "size" : 3001295,
+    "uuid" : "712d1800-c63f-3298-89c9-3e1b26d572f4",
+    "path" : "\/System\/Library\/Frameworks\/Carbon.framework\/Versions\/A\/Frameworks\/HIToolbox.framework\/Versions\/A\/HIToolbox",
+    "name" : "HIToolbox"
+  },
+  {
+    "source" : "P",
+    "arch" : "x86_64",
+    "base" : 140703617142784,
+    "CFBundleShortVersionString" : "6.9",
+    "CFBundleIdentifier" : "com.apple.AppKit",
+    "size" : 25152279,
+    "uuid" : "e618d025-5817-3377-984d-da92213b1a78",
+    "path" : "\/System\/Library\/Frameworks\/AppKit.framework\/Versions\/C\/AppKit",
+    "name" : "AppKit",
+    "CFBundleVersion" : "2685.70.102"
+  },
+  {
+    "source" : "P",
+    "arch" : "x86_64",
+    "base" : 140703546912768,
+    "size" : 706640,
+    "uuid" : "22cc4f6a-197f-37c2-bbfd-3b5e8229e756",
+    "path" : "\/usr\/lib\/dyld",
+    "name" : "dyld"
+  },
+  {
+    "size" : 0,
+    "source" : "A",
+    "base" : 0,
+    "uuid" : "00000000-0000-0000-0000-000000000000"
+  },
+  {
+    "source" : "P",
+    "arch" : "x86_64",
+    "base" : 140703551053824,
+    "size" : 48832,
+    "uuid" : "091a35d0-ecf6-3370-bf9b-860e41cd07e2",
+    "path" : "\/usr\/lib\/system\/libsystem_pthread.dylib",
+    "name" : "libsystem_pthread.dylib"
+  },
+  {
+    "source" : "P",
+    "arch" : "x86_64",
+    "base" : 140703672205312,
+    "CFBundleShortVersionString" : "1.22",
+    "CFBundleIdentifier" : "com.apple.HIServices",
+    "size" : 415868,
+    "uuid" : "e4410f37-09ae-393a-9f2c-dac1b9c0ef62",
+    "path" : "\/System\/Library\/Frameworks\/ApplicationServices.framework\/Versions\/A\/Frameworks\/HIServices.framework\/Versions\/A\/HIServices",
+    "name" : "HIServices"
+  },
+  {
+    "source" : "P",
+    "arch" : "x86_64",
+    "base" : 140703570804736,
+    "CFBundleShortVersionString" : "6.9",
+    "CFBundleIdentifier" : "com.apple.Foundation",
+    "size" : 17035107,
+    "uuid" : "047f640d-8c2b-3201-aabf-659efeca5c64",
+    "path" : "\/System\/Library\/Frameworks\/Foundation.framework\/Versions\/C\/Foundation",
+    "name" : "Foundation",
+    "CFBundleVersion" : "5026.6.7.5"
+  },
+  {
+    "source" : "P",
+    "arch" : "x86_64",
+    "base" : 140703761649664,
+    "CFBundleShortVersionString" : "1.0",
+    "CFBundleIdentifier" : "com.apple.audio.caulk",
+    "size" : 149792,
+    "uuid" : "b654abcf-daf4-3555-a964-06d125afef47",
+    "path" : "\/System\/Library\/PrivateFrameworks\/caulk.framework\/Versions\/A\/caulk",
+    "name" : "caulk"
+  },
+  {
+    "source" : "P",
+    "arch" : "x86_64",
+    "base" : 140703761801216,
+    "CFBundleShortVersionString" : "1.0",
+    "CFBundleIdentifier" : "com.apple.CoreMedia",
+    "size" : 1737579,
+    "uuid" : "5b257039-4fc4-37f2-8e81-b310002cc57a",
+    "path" : "\/System\/Library\/Frameworks\/CoreMedia.framework\/Versions\/A\/CoreMedia",
+    "name" : "CoreMedia",
+    "CFBundleVersion" : "3330.13.105.4"
+  },
+  {
+    "source" : "P",
+    "arch" : "x86_64",
+    "base" : 140703893061632,
+    "CFBundleShortVersionString" : "1000.0",
+    "CFBundleIdentifier" : "com.apple.CoreMediaIO",
+    "size" : 1106890,
+    "uuid" : "3eaf1bca-c660-35e6-b336-9de042d838df",
+    "path" : "\/System\/Library\/Frameworks\/CoreMediaIO.framework\/Versions\/A\/CoreMediaIO",
+    "name" : "CoreMediaIO",
+    "CFBundleVersion" : "5617.100.6.0.11"
+  },
+  {
+    "source" : "P",
+    "arch" : "x86_64",
+    "base" : 140712177115136,
+    "size" : 235527,
+    "uuid" : "f59f5c4e-9f5a-3902-88a5-a562059d2343",
+    "path" : "\/usr\/lib\/libAudioIssueDetector.dylib",
+    "name" : "libAudioIssueDetector.dylib"
+  },
+  {
+    "source" : "P",
+    "arch" : "x86_64",
+    "base" : 140703597133824,
+    "CFBundleShortVersionString" : "5.0",
+    "CFBundleIdentifier" : "com.apple.audio.CoreAudio",
+    "size" : 8037018,
+    "uuid" : "797d4259-297c-3bfb-bcba-611d9c187184",
+    "path" : "\/System\/Library\/Frameworks\/CoreAudio.framework\/Versions\/A\/CoreAudio",
+    "name" : "CoreAudio",
+    "CFBundleVersion" : "5.0"
+  },
+  {
+    "source" : "P",
+    "arch" : "x86_64",
+    "base" : 140703549263872,
+    "size" : 294290,
+    "uuid" : "9418808d-59a5-39ef-be7a-361b04adb17e",
+    "path" : "\/usr\/lib\/system\/libdispatch.dylib",
+    "name" : "libdispatch.dylib"
+  },
+  {
+    "source" : "P",
+    "arch" : "x86_64",
+    "base" : 140703549571072,
+    "size" : 556704,
+    "uuid" : "7680836e-f1bc-39b8-9996-5d290985a05f",
+    "path" : "\/usr\/lib\/system\/libsystem_c.dylib",
+    "name" : "libsystem_c.dylib"
+  },
+  {
+    "source" : "P",
+    "arch" : "x86_64",
+    "base" : 140703729991680,
+    "CFBundleShortVersionString" : "1.8",
+    "CFBundleIdentifier" : "com.apple.CoreVideo",
+    "size" : 472424,
+    "uuid" : "6939ac9c-8573-3a0d-bd9b-51d97e90f8b4",
+    "path" : "\/System\/Library\/Frameworks\/CoreVideo.framework\/Versions\/A\/CoreVideo",
+    "name" : "CoreVideo",
+    "CFBundleVersion" : "0.0"
+  }
+],
+  "sharedCache" : {
+  "base" : 140703502258176,
+  "size" : 30064771072,
+  "uuid" : "5a3da575-f02e-33dc-9b14-f663050011e6"
+},
+  "vmSummary" : "ReadOnly portion of Libraries: Total=1.5G resident=0K(0%) swapped_out_or_unallocated=1.5G(100%)\nWritable regions: Total=638.7M written=0K(0%) resident=0K(0%) swapped_out=0K(0%) unallocated=638.7M(100%)\n\n                                VIRTUAL   REGION \nREGION TYPE                        SIZE    COUNT (non-coalesced) \n===========                     =======  ======= \nAccelerate framework               128K        1 \nActivity Tracing                   256K        1 \nAttributeGraph Data               1024K        1 \nColorSync                           12K        3 \nCoreAnimation                     2388K       55 \nCoreGraphics                        12K        2 \nCoreMedia memory pool              112K        4 \nCoreUI image data                  348K        3 \nDispatch continuations           160.0M        2 \nFoundation                          40K        2 \nIOKit                             7940K        1 \nKernel Alloc Once                    8K        1 \nMALLOC                           426.6M      113 \nMALLOC guard page                   96K       24 \nSTACK GUARD                       56.1M       27 \nStack                             24.7M       29 \nVM_ALLOCATE                       22.5M       64 \nVM_ALLOCATE (reserved)              32K        1         reserved VM address space (unallocated)\n__CTF                               824        1 \n__DATA                            48.7M     1035 \n__DATA_CONST                     126.5M     1079 \n__DATA_DIRTY                      8866K      902 \n__FONT_DATA                        2352        1 \n__LINKEDIT                       157.4M       14 \n__OBJC_RO                         65.2M        1 \n__OBJC_RW                         2598K        1 \n__TEXT                             1.4G     1099 \n__TPRO_CONST                         16        2 \nmapped file                      345.3M       49 \nshared memory                      976K       19 \n===========                     =======  ======= \nTOTAL                              2.8G     4537 \nTOTAL, minus reserved VM space     2.8G     4537 \n",
+  "legacyInfo" : {
+  "threadTriggered" : {
+    "queue" : "IncomingVideoStreamQueue"
+  }
+},
+  "logWritingSignature" : "fd2b4ece02065a4cc38ae3aa8ba3cc4306093c88",
+  "roots_installed" : 0,
+  "bug_type" : "309",
+  "trmStatus" : 2105856,
+  "voucherInfos" : [{"proximateName":"VTDecoderXPCService","thread_id":120100}],
+  "trialInfo" : {
+  "rollouts" : [
+
+  ],
+  "experiments" : [
+
+  ]
+}
+}
+
+Model: iMac20,1, BootROM 2103.160.2.0.0 (iBridge: 24.16.6005.0.0,0), 10 processors, 10-Core Intel Core i9, 3.6 GHz, 32 GB, SMC 
+Graphics: AMD Radeon Pro 5500 XT, AMD Radeon Pro 5500 XT, PCIe, 8 GB
+Display: iMac, Retina 5K (5120 x 2880), Main, MirrorOff, Online
+Memory Module: Slot 2 (Channel A / DIMM 0), 16 GB, DDR4, 2667 MHz, SK Hynix, HMA82GS6DJR8N-VK
+Memory Module: Slot 4 (Channel B / DIMM 0), 16 GB, DDR4, 2667 MHz, SK Hynix, HMA82GS6DJR8N-VK
+AirPort: spairport_wireless_card_type_wifi (0x14E4, 0x7BF), wl0: Jul 26 2024 22:36:01 version 9.30.514.0.32.5.94 FWID 01-68d7ff80
+Bluetooth: Version (null), 0 services, 0 devices, 0 incoming serial ports
+Network Service: Ethernet, Ethernet, en0
+Thunderbolt Bus: iMac, Apple Inc., 63.3
+
+1103앱이 또 죽었다. 1101이 먼저 죽고 이어서 죽음. 로그 이다.
+1103 앱죽었다. 1101이 먼저 죽고 이어서 죽음.
+-------------------------------------
+Translated Report (Full Report Below)
+-------------------------------------
+Process:             macos_client [8935]
+
+
+1103 통신로그
+[2026-11-13T10:29:50.777871] INFO [usr=- host=- ip=-] AppLogger 초기화 완료 file=/Users/microdit/Library/Containers/com.microdit.macosClient/Data/Library/Application Support/com.microdit.macosClient/logs/app.log identity=usr=- host=- ip=- mode=release
+[2026-11-13T10:29:50.778484] INFO [usr=- host=- ip=-] 원격 로그 업로더 시작 session=mweaui7u-946hj2 mode=INFO + 이벤트 url=http://192.168.0.3:8091/api/client-logs
+[2026-11-13T10:29:50.814866] EVENT UI LOGIN action=serverConfigRefresh params=auto=true
+[2026-11-13T10:29:51.082860] INFO [usr=- host=- ip=-] 서버 설정 갱신 via=http://192.168.0.3:8091 domain=192.168.0.3 ws=ws://192.168.0.3:8088/ws changed=false
+[2026-11-13T10:30:04.197291] EVENT UI LOGIN action=quickConnectFilled params=extension=1102
+[2026-11-13T10:30:05.007331] EVENT UI LOGIN action=quickConnectFilled params=extension=1103
+[2026-11-13T10:30:06.121423] EVENT UI LOGIN action=loginPressed params=username=1103 domain=192.168.0.3 port=5060 transport=ws wsServer=ws://192.168.0.3:8088/ws
+[2026-11-13T10:30:06.121526] INFO [usr=- host=- ip=-] SIP state -> connecting
+[2026-11-13T10:30:06.122999] INFO (동일 로그 2회 반복 스킵 요약)
+[2026-11-13T10:30:06.123060] EVENT SIP op=init target=- state=- params=ws=ws://192.168.0.3:8088/ws domain=192.168.0.3 port=5060 transport=ws
+[2026-11-13T10:30:06.131101] INFO [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP state -> connected
+[2026-11-13T10:30:06.137279] INFO (동일 로그 2회 반복 스킵 요약)
+[2026-11-13T10:30:06.137333] INFO [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP state -> registered
+[2026-11-13T10:30:06.137947] EVENT LOGIN event=loginResult state=registered username=1103 error=-
+[2026-11-13T10:30:06.213638] INFO [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] MEDIA device resolve camera=기본 mic=기본 speaker=기본
+[2026-11-13T10:30:06.218617] EVENT MEDIA event=localStreamReady state=video=1 audio=1 frontCamera=true audioMuted=false
+[2026-11-13T10:30:17.462042] EVENT UI DIALER action=callPressed params=target=6100
+[2026-11-13T10:30:17.462299] INFO [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP call -> 6100 voiceOnly=false hasLocalStream=true
+[2026-11-13T10:30:17.462708] EVENT DIALER event=callResult state=pushed target=6100 error=-
+[2026-11-13T10:30:17.472880] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP remote-track recovery armed id=mxsbdjrlgqtixjykglww7020282414
+[2026-11-13T10:30:17.472959] EVENT SIP op=callInitiation target=6100 state=initiated params=direction=outgoing id=mxsbdjrlgqtixjykglww7020282414
+[2026-11-13T10:30:17.473034] EVENT SIP op=callProgress target=6100 state=CONNECTING params=id=mxsbdjrlgqtixjykglww7020282414
+[2026-11-13T10:30:17.474800] INFO [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP codec policy target=6100 type=offer video=h264Only
+[2026-11-13T10:30:17.574796] EVENT SIP op=mediaStream target=6100 state=local params=video=1 audio=1 id=mxsbdjrlgqtixjykglww7020282414
+[2026-11-13T10:30:17.769878] INFO [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] CONFERENCE participants room=6100 n=2 [A10 회의실 (1201):V,오세훈 서울시장 (1102):V]
+[2026-11-13T10:30:17.997835] EVENT SIP op=callEstablished target=6100 state=ACCEPTED params=id=mxsbdjrlgqtixjykglww7020282414
+[2026-11-13T10:30:17.997983] EVENT SIP op=callEstablished target=6100 state=CONFIRMED params=id=mxsbdjrlgqtixjykglww7020282414
+[2026-11-13T10:30:18.098982] EVENT SIP op=mediaStream target=6100 state=remote params=video=1 audio=1 id=mxsbdjrlgqtixjykglww7020282414
+[2026-11-13T10:30:18.099087] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] remote session mxsbdjrlgqtixjykglww7020282414 handled: streams=1 event(video=1 audio=1) session(video=1 audio=1)
+[2026-11-13T10:30:18.099165] EVENT MEDIA event=remoteStreamAdded state=video=1 audio=1 sessionId=mxsbdjrlgqtixjykglww7020282414 sessionStreams=1 sessionVideo=1 sessionAudio=1
+[2026-11-13T10:30:19.474417] EVENT SIP op=mediaStream target=6100 state=remote params=video=1 audio=1 id=mxsbdjrlgqtixjykglww7020282414
+[2026-11-13T10:30:19.474510] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] remote session mxsbdjrlgqtixjykglww7020282414 handled: streams=1 event(video=1 audio=1) session(video=1 audio=1)
+[2026-11-13T10:30:19.474569] EVENT MEDIA event=remoteStreamAdded state=video=1 audio=1 sessionId=mxsbdjrlgqtixjykglww7020282414 sessionStreams=1 sessionVideo=1 sessionAudio=1
+[2026-11-13T10:30:19.510178] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] remote video tile 등록(전용) track=5c7e58e1-ffd3-45f1-926e-bbde09415918
+[2026-11-13T10:30:22.883550] INFO [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] CONFERENCE participants room=6100 n=3 [A10 회의실 (1201):V,오세훈 서울시장 (1102):V,추미애 경기도지사 (1103):V*]
+[2026-11-13T10:30:23.000258] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=26832 audioPackets=223 videoBytes=503269
+[2026-11-13T10:30:24.384262] INFO [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] VIDEO resync reason=auto:join localKick=true remoteTiles=1
+[2026-11-13T10:30:24.790453] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] remote video tile 등록(전용) track=5c7e58e1-ffd3-45f1-926e-bbde09415918
+[2026-11-13T10:30:28.000169] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=56977 audioPackets=473 videoBytes=1883428
+[2026-11-13T10:30:32.999299] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=86163 audioPackets=723 videoBytes=3338868
+[2026-11-13T10:30:38.001233] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=116083 audioPackets=973 videoBytes=4655713
+[2026-11-13T10:30:43.000319] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=147391 audioPackets=1223 videoBytes=5910992
+[2026-11-13T10:30:47.999356] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=177631 audioPackets=1473 videoBytes=6988513
+[2026-11-13T10:30:47.999518] INFO [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP media summary 30s audioKB=173 videoKB=6825 videoTracks=1/1 audioLost=0 ice=RTCIceConnectionStateCompleted
+[2026-11-13T10:30:47.999571] INFO [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP video summary 30s in=1280x720@29fps decodedFrames+837 keyframes=11 freeze=0 pli=1 nack=2 vLost=283 | out=960x540@30fps target=2000kbps limit=bandwidth
+[2026-11-13T10:30:52.999510] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=209174 audioPackets=1723 videoBytes=8025171
+[2026-11-13T10:30:58.000658] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=240298 audioPackets=1973 videoBytes=9241124
+[2026-11-13T10:31:03.000715] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=271480 audioPackets=2223 videoBytes=10460404
+[2026-11-13T10:31:08.000205] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=301816 audioPackets=2473 videoBytes=11582102
+[2026-11-13T10:31:12.999182] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=332895 audioPackets=2723 videoBytes=12722510
+[2026-11-13T10:31:17.999403] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=363085 audioPackets=2973 videoBytes=13877352
+[2026-11-13T10:31:17.999553] INFO [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP media summary 30s audioKB=181 videoKB=6727 videoTracks=1/1 audioLost=0 ice=RTCIceConnectionStateCompleted
+[2026-11-13T10:31:17.999595] INFO [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP video summary 30s in=1280x720@30fps decodedFrames+900 keyframes=12 freeze=0 pli=1 nack=2 vLost=283 | out=1280x720@30fps target=2500kbps limit=none
+[2026-11-13T10:31:18.002715] INFO [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] CONFERENCE participants room=6100 n=4 [A10 회의실 (1201):V,오세훈 서울시장 (1102):V,추미애 경기도지사 (1103):V*,1101:A]
+[2026-11-13T10:31:19.504856] INFO [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] VIDEO resync reason=auto:join localKick=true remoteTiles=1
+[2026-11-13T10:31:19.908280] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] remote video tile 등록(전용) track=5c7e58e1-ffd3-45f1-926e-bbde09415918
+[2026-11-13T10:31:22.999589] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=394815 audioPackets=3223 videoBytes=14770752
+[2026-11-13T10:31:27.999867] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=426355 audioPackets=3473 videoBytes=16262333
+[2026-11-13T10:31:32.999218] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=455537 audioPackets=3722 videoBytes=17672756
+[2026-11-13T10:31:37.999434] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=485706 audioPackets=3972 videoBytes=19128053
+[2026-11-13T10:31:42.998295] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=514863 audioPackets=4222 videoBytes=20623064
+[2026-11-13T10:31:47.998262] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=542332 audioPackets=4472 videoBytes=22143673
+[2026-11-13T10:31:47.998370] INFO [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP media summary 30s audioKB=175 videoKB=8073 videoTracks=1/1 audioLost=0 ice=RTCIceConnectionStateCompleted
+[2026-11-13T10:31:47.998410] INFO [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP video summary 30s in=1280x720@30fps decodedFrames+896 keyframes=19 freeze=0 pli=1 nack=2 vLost=283 | out=1280x720@30fps target=2500kbps limit=none
+[2026-11-13T10:31:52.998659] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=569761 audioPackets=4722 videoBytes=23646857
+[2026-11-13T10:31:57.998698] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=597180 audioPackets=4972 videoBytes=25076474
+[2026-11-13T10:32:03.000031] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=623757 audioPackets=5222 videoBytes=26367840
+[2026-11-13T10:32:07.999599] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=650225 audioPackets=5472 videoBytes=27649865
+[2026-11-13T10:32:12.999111] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=679836 audioPackets=5722 videoBytes=28979187
+[2026-11-13T10:32:17.998380] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=708970 audioPackets=5972 videoBytes=30081916
+[2026-11-13T10:32:17.998478] INFO [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP media summary 30s audioKB=163 videoKB=7752 videoTracks=1/1 audioLost=0 ice=RTCIceConnectionStateCompleted
+[2026-11-13T10:32:17.998511] INFO [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP video summary 30s in=1280x720@30fps decodedFrames+855 keyframes=27 freeze=0 pli=1 nack=2 vLost=283 | out=1280x720@30fps target=2500kbps limit=none
+[2026-11-13T10:32:22.998796] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=739454 audioPackets=6222 videoBytes=31380816
+[2026-11-13T10:32:28.000743] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=768016 audioPackets=6472 videoBytes=32812829
+[2026-11-13T10:32:33.000856] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=796535 audioPackets=6721 videoBytes=34237058
+[2026-11-13T10:32:37.998346] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=824346 audioPackets=6971 videoBytes=35334618
+[2026-11-13T10:32:42.999636] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=853147 audioPackets=7221 videoBytes=36178475
+[2026-11-13T10:32:47.998786] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=882039 audioPackets=7471 videoBytes=37116496
+[2026-11-13T10:32:47.998909] INFO [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP media summary 30s audioKB=169 videoKB=6870 videoTracks=1/1 audioLost=0 ice=RTCIceConnectionStateCompleted
+[2026-11-13T10:32:47.998975] INFO [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP video summary 30s in=1280x720@30fps decodedFrames+705 keyframes=39 freeze=0 pli=1 nack=3 vLost=283 | out=1280x720@30fps target=2500kbps limit=none
+[2026-11-13T10:32:52.998630] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=913495 audioPackets=7721 videoBytes=38393329
+[2026-11-13T10:32:57.998056] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=943544 audioPackets=7971 videoBytes=39914752
+[2026-11-13T10:33:02.998009] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=972878 audioPackets=8221 videoBytes=41223178
+[2026-11-13T10:33:07.996745] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=1002142 audioPackets=8471 videoBytes=42637572
+[2026-11-13T10:33:12.996943] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=1030349 audioPackets=8721 videoBytes=44149133
+[2026-11-13T10:33:17.997677] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=1058963 audioPackets=8971 videoBytes=45658646
+[2026-11-13T10:33:17.997790] INFO [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP media summary 30s audioKB=173 videoKB=8342 videoTracks=1/1 audioLost=0 ice=RTCIceConnectionStateCompleted
+[2026-11-13T10:33:17.997829] INFO [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP video summary 30s in=1280x720@30fps decodedFrames+897 keyframes=45 freeze=0 pli=1 nack=3 vLost=283 | out=1280x720@30fps target=2500kbps limit=none
+[2026-11-13T10:33:22.997962] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=1088533 audioPackets=9220 videoBytes=47130489
+[2026-11-13T10:33:27.997482] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=1115012 audioPackets=9470 videoBytes=48060273
+[2026-11-13T10:33:31.502155] EVENT UI CONFERENCE action=participantSelected params=index=1 label=발언자 영상
+[2026-11-13T10:33:32.605629] EVENT UI CONFERENCE action=participantSelected params=index=2 label=A10 회의실 (1201)
+[2026-11-13T10:33:32.998460] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=1144077 audioPackets=9720 videoBytes=48992591
+[2026-11-13T10:33:34.123358] EVENT UI CONFERENCE action=participantSelected params=index=3 label=오세훈 서울시장 (1102)
+[2026-11-13T10:33:35.249474] EVENT UI CONFERENCE action=participantSelected params=index=4 label=1101
+[2026-11-13T10:33:37.996909] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=1174614 audioPackets=9970 videoBytes=49855400
+[2026-11-13T10:33:38.850390] EVENT UI CONFERENCE action=participantSelected params=index=1 label=발언자 영상
+[2026-11-13T10:33:42.998294] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=1204304 audioPackets=10220 videoBytes=51108016
+[2026-11-13T10:33:47.996764] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=1235680 audioPackets=10470 videoBytes=52435929
+[2026-11-13T10:33:47.996861] INFO [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP media summary 30s audioKB=173 videoKB=6618 videoTracks=1/1 audioLost=0 ice=RTCIceConnectionStateCompleted
+[2026-11-13T10:33:47.996894] INFO [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP video summary 30s in=1280x720@30fps decodedFrames+901 keyframes=51 freeze=0 pli=1 nack=3 vLost=283 | out=1280x720@30fps target=2500kbps limit=none
+[2026-11-13T10:33:52.997797] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=1266940 audioPackets=10720 videoBytes=53918204
+[2026-11-13T10:33:57.997077] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=1297825 audioPackets=10970 videoBytes=55099416
+[2026-11-13T10:34:02.997546] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=1327938 audioPackets=11220 videoBytes=56522414
+[2026-11-13T10:34:07.998396] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=1359715 audioPackets=11470 videoBytes=58036736
+[2026-11-13T10:34:12.996879] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=1389072 audioPackets=11720 videoBytes=59433209
+[2026-11-13T10:34:17.996507] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=1418571 audioPackets=11970 videoBytes=60722838
+[2026-11-13T10:34:17.996615] INFO [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP media summary 30s audioKB=179 videoKB=8093 videoTracks=1/1 audioLost=0 ice=RTCIceConnectionStateCompleted
+[2026-11-13T10:34:17.996658] INFO [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP video summary 30s in=1280x720@30fps decodedFrames+900 keyframes=57 freeze=0 pli=1 nack=3 vLost=283 | out=1280x720@30fps target=2500kbps limit=none
+[2026-11-13T10:34:22.996702] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=1450270 audioPackets=12220 videoBytes=62029733
+[2026-11-13T10:34:27.996500] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=1481547 audioPackets=12470 videoBytes=63430520
+[2026-11-13T10:34:32.996324] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=1511770 audioPackets=12720 videoBytes=64837699
+[2026-11-13T10:34:37.997020] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=1542577 audioPackets=12970 videoBytes=66371787
+[2026-11-13T10:34:42.996612] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=1572190 audioPackets=13220 videoBytes=67894670
+[2026-11-13T10:34:47.996327] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=1601560 audioPackets=13470 videoBytes=69328463
+[2026-11-13T10:34:47.996437] INFO [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP media summary 30s audioKB=179 videoKB=8404 videoTracks=1/1 audioLost=0 ice=RTCIceConnectionStateCompleted
+[2026-11-13T10:34:47.996480] INFO [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP video summary 30s in=1280x720@30fps decodedFrames+900 keyframes=59 freeze=0 pli=1 nack=3 vLost=283 | out=1280x720@30fps target=2500kbps limit=none
+[2026-11-13T10:34:52.995710] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=1630145 audioPackets=13720 videoBytes=70484875
+[2026-11-13T10:34:57.995265] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=1661517 audioPackets=13970 videoBytes=71896834
+[2026-11-13T10:35:02.996699] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=1692635 audioPackets=14220 videoBytes=73210530
+[2026-11-13T10:35:07.995867] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=1721554 audioPackets=14470 videoBytes=74633188
+[2026-11-13T10:35:12.996298] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=1751632 audioPackets=14719 videoBytes=76164563
+[2026-11-13T10:35:17.995542] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=1783568 audioPackets=14969 videoBytes=77635201
+[2026-11-13T10:35:17.995649] INFO [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP media summary 30s audioKB=178 videoKB=8112 videoTracks=1/1 audioLost=0 ice=RTCIceConnectionStateCompleted
+[2026-11-13T10:35:17.995687] INFO [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP video summary 30s in=1280x720@27fps decodedFrames+892 keyframes=69 freeze=0 pli=1 nack=3 vLost=283 | out=1280x720@30fps target=2500kbps limit=none
+[2026-11-13T10:35:22.995827] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=1811682 audioPackets=15219 videoBytes=79043152
+[2026-11-13T10:35:27.996745] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=1841195 audioPackets=15469 videoBytes=80507900
+[2026-11-13T10:35:32.996912] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=1869242 audioPackets=15719 videoBytes=81959578
+[2026-11-13T10:35:37.995429] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=1898732 audioPackets=15969 videoBytes=83293590
+[2026-11-13T10:35:42.996078] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=1928297 audioPackets=16219 videoBytes=84578251
+[2026-11-13T10:35:47.995410] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=1958486 audioPackets=16469 videoBytes=86054871
+[2026-11-13T10:35:47.995507] INFO [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP media summary 30s audioKB=171 videoKB=8222 videoTracks=1/1 audioLost=0 ice=RTCIceConnectionStateCompleted
+[2026-11-13T10:35:47.995557] INFO [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP video summary 30s in=1280x720@24fps decodedFrames+871 keyframes=74 freeze=0 pli=1 nack=3 vLost=283 | out=1280x720@30fps target=2500kbps limit=none
+[2026-11-13T10:35:52.995283] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=1988283 audioPackets=16719 videoBytes=87358044
+[2026-11-13T10:35:57.994139] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=2017962 audioPackets=16969 videoBytes=88755561
+[2026-11-13T10:36:02.995585] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=2048584 audioPackets=17219 videoBytes=90148632
+[2026-11-13T10:36:07.994879] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=2080155 audioPackets=17469 videoBytes=91644327
+[2026-11-13T10:36:12.995029] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=2112232 audioPackets=17719 videoBytes=93062628
+[2026-11-13T10:36:17.995168] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=2144439 audioPackets=17969 videoBytes=94458904
+[2026-11-13T10:36:17.995297] INFO [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP media summary 30s audioKB=182 videoKB=8207 videoTracks=1/1 audioLost=0 ice=RTCIceConnectionStateCompleted
+[2026-11-13T10:36:17.995343] INFO [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP video summary 30s in=1280x720@27fps decodedFrames+846 keyframes=79 freeze=0 pli=1 nack=3 vLost=283 | out=1280x720@30fps target=2500kbps limit=none
+[2026-11-13T10:36:22.994447] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=2176635 audioPackets=18219 videoBytes=95936449
+[2026-11-13T10:36:27.996027] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=2205431 audioPackets=18469 videoBytes=97304705
+[2026-11-13T10:36:32.993959] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=2233550 audioPackets=18717 videoBytes=98488018
+[2026-11-13T10:36:37.993624] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=2262086 audioPackets=18967 videoBytes=99831185
+[2026-11-13T10:36:42.993937] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=2290881 audioPackets=19217 videoBytes=101185222
+[2026-11-13T10:36:47.994652] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=2319951 audioPackets=19467 videoBytes=102607010
+[2026-11-13T10:36:47.994793] INFO [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP media summary 30s audioKB=171 videoKB=7957 videoTracks=1/1 audioLost=0 ice=RTCIceConnectionStateCompleted
+[2026-11-13T10:36:47.994849] INFO [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP video summary 30s in=1280x720@7fps decodedFrames+663 keyframes=90 freeze=6 pli=1 nack=3 vLost=283 | out=1280x720@30fps target=2500kbps limit=none
+[2026-11-13T10:36:52.994233] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=2348961 audioPackets=19717 videoBytes=103427934
+[2026-11-13T10:36:57.995423] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=2377574 audioPackets=19967 videoBytes=104573998
+[2026-11-13T10:37:02.994973] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=2405174 audioPackets=20217 videoBytes=105142665
+[2026-11-13T10:37:07.994830] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=2434208 audioPackets=20467 videoBytes=106167786
+[2026-11-13T10:37:12.994253] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=2464544 audioPackets=20717 videoBytes=107307585
+[2026-11-13T10:37:17.993372] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=2494940 audioPackets=20967 videoBytes=108021470
+[2026-11-13T10:37:17.993469] INFO [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP media summary 30s audioKB=171 videoKB=5288 videoTracks=1/1 audioLost=0 ice=RTCIceConnectionStateCompleted
+[2026-11-13T10:37:17.993502] INFO [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP video summary 30s in=1280x720@4fps decodedFrames+241 keyframes=102 freeze=10 pli=1 nack=3 vLost=283 | out=1280x720@30fps target=2500kbps limit=none
+[2026-11-13T10:37:22.994431] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=2527071 audioPackets=21217 videoBytes=108900979
+[2026-11-13T10:37:27.994620] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=2558103 audioPackets=21466 videoBytes=109906065
+[2026-11-13T10:37:32.994301] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=2587428 audioPackets=21716 videoBytes=110655379
+[2026-11-13T10:37:37.993714] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=2616267 audioPackets=21966 videoBytes=111407209
+[2026-11-13T10:37:42.993550] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=2644842 audioPackets=22216 videoBytes=112176760
+[2026-11-13T10:37:47.993079] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=2675550 audioPackets=22466 videoBytes=112955201
+[2026-11-13T10:37:47.993183] INFO [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP media summary 30s audioKB=176 videoKB=4818 videoTracks=1/1 audioLost=0 ice=RTCIceConnectionStateCompleted
+[2026-11-13T10:37:47.993224] INFO [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP video summary 30s in=960x540@10fps decodedFrames+179 keyframes=111 freeze=18 pli=1 nack=3 vLost=283 | out=1280x720@30fps target=2500kbps limit=none
+[2026-11-13T10:37:52.992779] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=2704764 audioPackets=22716 videoBytes=114091004
+[2026-11-13T10:37:57.992939] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=2734013 audioPackets=22966 videoBytes=115106971
+[2026-11-13T10:37:59.474844] INFO [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] VIDEO resync reason=auto:remote:1102 localKick=true remoteTiles=1
+[2026-11-13T10:37:59.878973] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] remote video tile 등록(전용) track=5c7e58e1-ffd3-45f1-926e-bbde09415918
+[2026-11-13T10:38:02.992649] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=2764727 audioPackets=23216 videoBytes=116539374
+[2026-11-13T10:38:07.992962] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=2794963 audioPackets=23466 videoBytes=117665419
+[2026-11-13T10:38:12.993445] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=2822721 audioPackets=23716 videoBytes=118740704
+[2026-11-13T10:38:17.992901] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=2849929 audioPackets=23966 videoBytes=119823956
+[2026-11-13T10:38:17.993013] INFO [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP media summary 30s audioKB=170 videoKB=6708 videoTracks=1/1 audioLost=0 ice=RTCIceConnectionStateCompleted
+[2026-11-13T10:38:17.993068] INFO [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP video summary 30s in=1280x720@29fps decodedFrames+579 keyframes=117 freeze=19 pli=1 nack=3 vLost=283 | out=1280x720@30fps target=2500kbps limit=none
+[2026-11-13T10:38:22.994698] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=2878120 audioPackets=24215 videoBytes=121265035
+[2026-11-13T10:38:27.993875] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=2905361 audioPackets=24465 videoBytes=122689176
+[2026-11-13T10:38:32.993010] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=2932784 audioPackets=24715 videoBytes=124182863
+[2026-11-13T10:38:37.992453] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=2964652 audioPackets=24965 videoBytes=125718520
+[2026-11-13T10:38:42.993935] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=2996754 audioPackets=25215 videoBytes=127260152
+[2026-11-13T10:38:47.994261] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=3028695 audioPackets=25465 videoBytes=128770064
+[2026-11-13T10:38:47.994395] INFO [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP media summary 30s audioKB=175 videoKB=8736 videoTracks=1/1 audioLost=0 ice=RTCIceConnectionStateCompleted
+[2026-11-13T10:38:47.994449] INFO [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP video summary 30s in=1280x720@25fps decodedFrames+864 keyframes=119 freeze=19 pli=1 nack=3 vLost=283 | out=1280x720@30fps target=2500kbps limit=none
+[2026-11-13T10:38:52.992408] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=3060702 audioPackets=25715 videoBytes=130107456
+[2026-11-13T10:38:57.994075] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=3092815 audioPackets=25965 videoBytes=131484189
+[2026-11-13T10:39:02.992362] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=3124837 audioPackets=26215 videoBytes=132863713
+[2026-11-13T10:39:07.992702] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=3156542 audioPackets=26463 videoBytes=134132668
+[2026-11-13T10:39:12.992875] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=3188609 audioPackets=26713 videoBytes=135574204
+[2026-11-13T10:39:17.992228] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=3220829 audioPackets=26963 videoBytes=137119390
+[2026-11-13T10:39:17.992368] INFO [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP media summary 30s audioKB=188 videoKB=8154 videoTracks=1/1 audioLost=0 ice=RTCIceConnectionStateCompleted
+[2026-11-13T10:39:17.992411] INFO [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP video summary 30s in=1280x720@31fps decodedFrames+825 keyframes=119 freeze=19 pli=1 nack=3 vLost=283 | out=1280x720@30fps target=2500kbps limit=none
+[2026-11-13T10:39:22.992623] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=3252958 audioPackets=27213 videoBytes=138629219
+[2026-11-13T10:39:27.991] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=3284899 audioPackets=27463 videoBytes=140113134
+[2026-11-13T10:39:32.995231] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=3316959 audioPackets=27713 videoBytes=141604274
+[2026-11-13T10:39:37.992208] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=3349027 audioPackets=27963 videoBytes=143049739
+[2026-11-13T10:39:42.993781] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=3379941 audioPackets=28213 videoBytes=144548150
+[2026-11-13T10:39:47.990622] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=3406892 audioPackets=28463 videoBytes=145662727
+[2026-11-13T10:39:47.990719] INFO [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP media summary 30s audioKB=182 videoKB=8343 videoTracks=1/1 audioLost=0 ice=RTCIceConnectionStateCompleted
+[2026-11-13T10:39:47.990752] INFO [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP video summary 30s in=1280x720@29fps decodedFrames+733 keyframes=121 freeze=19 pli=1 nack=3 vLost=283 | out=1280x720@30fps target=2500kbps limit=none
+[2026-11-13T10:39:52.992860] DEBUG [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP stats inbound audioBytes=3437075 audioPackets=28713 videoBytes=147060091

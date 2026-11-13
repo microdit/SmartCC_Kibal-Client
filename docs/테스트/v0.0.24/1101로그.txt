@@ -1,0 +1,209 @@
+[2026-11-13T01:42:50.048463] INFO [usr=- host=- ip=-] AppLogger 초기화 완료 file=/Users/microdit/Library/Containers/com.microdit.macosClient/Data/Library/Application Support/com.microdit.macosClient/logs/app.log identity=usr=- host=- ip=- mode=release
+[2026-11-13T01:42:50.050474] INFO [usr=- host=- ip=-] 원격 로그 업로더 시작 session=mwds0ri8-q6h85v mode=INFO + 이벤트 url=http://192.168.0.3:8091/api/client-logs
+[2026-11-13T01:42:50.104662] EVENT UI LOGIN action=serverConfigRefresh params=auto=true
+[2026-11-13T01:42:50.514042] INFO [usr=- host=- ip=-] 서버 설정 갱신 via=http://192.168.0.3:8091 domain=192.168.0.3 ws=ws://192.168.0.3:8088/ws changed=false
+[2026-11-13T01:42:57.224847] EVENT UI LOGIN action=quickConnectFilled params=extension=1101
+[2026-11-13T01:43:09.045756] EVENT UI LOGIN action=loginPressed params=username=1101 domain=192.168.0.3 port=5060 transport=ws wsServer=ws://192.168.0.3:8088/ws
+[2026-11-13T01:43:09.045896] INFO [usr=- host=- ip=-] SIP state -> connecting
+[2026-11-13T01:43:09.048379] INFO (동일 로그 2회 반복 스킵 요약)
+[2026-11-13T01:43:09.048464] EVENT SIP op=init target=- state=- params=ws=ws://192.168.0.3:8088/ws domain=192.168.0.3 port=5060 transport=ws
+[2026-11-13T01:43:09.054258] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP state -> connected
+[2026-11-13T01:43:09.060856] INFO (동일 로그 2회 반복 스킵 요약)
+[2026-11-13T01:43:09.060943] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP state -> registered
+[2026-11-13T01:43:09.061026] EVENT LOGIN event=loginResult state=registered username=1101 error=-
+[2026-11-13T01:43:09.206374] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] MEDIA device resolve camera=기본 mic=기본 speaker=기본
+[2026-11-13T01:43:10.654691] EVENT MEDIA event=localStreamReady state=video=0 audio=1 frontCamera=true audioMuted=false
+[2026-11-13T01:43:22.375234] EVENT UI DIALER action=callPressed params=target=1201
+[2026-11-13T01:43:22.375721] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP call -> 1201 voiceOnly=true hasLocalStream=true
+[2026-11-13T01:43:22.376329] EVENT DIALER event=callResult state=pushed target=1201 error=-
+[2026-11-13T01:43:22.399266] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP remote-track recovery armed id=31890gareo8majf9trax72wbo95rwy
+[2026-11-13T01:43:22.399380] EVENT SIP op=callInitiation target=1201 state=initiated params=direction=outgoing id=31890gareo8majf9trax72wbo95rwy
+[2026-11-13T01:43:22.399471] EVENT SIP op=callProgress target=1201 state=CONNECTING params=id=31890gareo8majf9trax72wbo95rwy
+[2026-11-13T01:43:22.500559] EVENT SIP op=mediaStream target=1201 state=local params=video=0 audio=1 id=31890gareo8majf9trax72wbo95rwy
+[2026-11-13T01:43:22.976580] EVENT SIP op=callTerminated target=1201 state=FAILED params=id=31890gareo8majf9trax72wbo95rwy cause=Code: [404], Cause: Not Found, Reason: Not Found
+[2026-11-13T01:43:22.976722] EVENT UI CALL action=remoteEndedDetected params=target=-
+[2026-11-13T01:43:22.978611] EVENT MEDIA event=localStreamReleased state=-
+[2026-11-13T01:43:31.900384] EVENT UI DIALER action=callPressed params=target=6100
+[2026-11-13T01:43:31.932748] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] MEDIA device resolve camera=기본 mic=기본 speaker=기본
+[2026-11-13T01:43:31.939646] EVENT MEDIA event=localStreamReady state=video=0 audio=1 frontCamera=true audioMuted=false
+[2026-11-13T01:43:31.939777] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP call -> 6100 voiceOnly=true hasLocalStream=true
+[2026-11-13T01:43:31.940180] EVENT DIALER event=callResult state=pushed target=6100 error=-
+[2026-11-13T01:43:31.948343] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP remote-track recovery armed id=31890nr2lr6d94gm4x2b2j973sz700
+[2026-11-13T01:43:31.948481] EVENT SIP op=callInitiation target=6100 state=initiated params=direction=outgoing id=31890nr2lr6d94gm4x2b2j973sz700
+[2026-11-13T01:43:31.948573] EVENT SIP op=callProgress target=6100 state=CONNECTING params=id=31890nr2lr6d94gm4x2b2j973sz700
+[2026-11-13T01:43:31.966374] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP codec policy target=6100 type=offer video=h264Only
+[2026-11-13T01:43:32.049263] EVENT SIP op=mediaStream target=6100 state=local params=video=0 audio=1 id=31890nr2lr6d94gm4x2b2j973sz700
+[2026-11-13T01:43:32.493622] EVENT SIP op=callEstablished target=6100 state=ACCEPTED params=id=31890nr2lr6d94gm4x2b2j973sz700
+[2026-11-13T01:43:32.493824] EVENT SIP op=callEstablished target=6100 state=CONFIRMED params=id=31890nr2lr6d94gm4x2b2j973sz700
+[2026-11-13T01:43:32.594432] EVENT SIP op=mediaStream target=6100 state=remote params=video=1 audio=1 id=31890nr2lr6d94gm4x2b2j973sz700
+[2026-11-13T01:43:32.594588] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] remote session 31890nr2lr6d94gm4x2b2j973sz700 handled: streams=1 event(video=1 audio=1) session(video=1 audio=1)
+[2026-11-13T01:43:32.594658] EVENT MEDIA event=remoteStreamAdded state=video=1 audio=1 sessionId=31890nr2lr6d94gm4x2b2j973sz700 sessionStreams=1 sessionVideo=1 sessionAudio=1
+[2026-11-13T01:43:32.594695] EVENT SIP op=mediaStream target=6100 state=remote params=video=1 audio=1 id=31890nr2lr6d94gm4x2b2j973sz700
+[2026-11-13T01:43:32.594729] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] remote session 31890nr2lr6d94gm4x2b2j973sz700 handled: streams=1 event(video=1 audio=1) session(video=1 audio=1)
+[2026-11-13T01:43:32.594763] EVENT MEDIA event=remoteStreamAdded state=video=1 audio=1 sessionId=31890nr2lr6d94gm4x2b2j973sz700 sessionStreams=1 sessionVideo=1 sessionAudio=1
+[2026-11-13T01:43:34.381896] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] remote video tile 등록(전용) track=8c1fe1b6-5f3a-483e-8920-64ab9aec3a40
+[2026-11-13T01:43:37.161962] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] CONFERENCE participants room=6100 n=1 [오세훈 서울시장 (1101):A*]
+[2026-11-13T01:43:37.497424] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=22151 audioPackets=219 videoBytes=0
+[2026-11-13T01:43:42.497244] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=22889 audioPackets=465 videoBytes=0
+[2026-11-13T01:43:47.496828] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=23627 audioPackets=711 videoBytes=0
+[2026-11-13T01:43:52.496518] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=24350 audioPackets=952 videoBytes=0
+[2026-11-13T01:43:57.498755] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=25076 audioPackets=1194 videoBytes=0
+[2026-11-13T01:43:58.126785] EVENT UI CONFERENCE action=leavePressed params=room=6100
+[2026-11-13T01:43:58.127116] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP hangup (local)
+[2026-11-13T01:43:58.127314] EVENT UI CONFERENCE action=autoCloseOnCallEnd
+[2026-11-13T01:43:58.127596] EVENT SIP op=callTerminated target=6100 state=ENDED params=id=31890nr2lr6d94gm4x2b2j973sz700 cause=Code: [200], Cause: Terminated, Reason: Terminated by local
+[2026-11-13T01:44:05.263888] EVENT SIP op=callInitiation target=1201 state=initiated params=direction=incoming id=a353c95d-4b79-4ea1-8b27-bdd1d40189825cd79d19-7dcf-4afb-8161-65bd427fa03c
+[2026-11-13T01:44:05.264013] EVENT UI INCOMING action=dialogShown params=target=1201
+[2026-11-13T01:44:05.264175] EVENT SIP op=callProgress target=1201 state=PROGRESS params=id=a353c95d-4b79-4ea1-8b27-bdd1d40189825cd79d19-7dcf-4afb-8161-65bd427fa03c
+[2026-11-13T01:44:07.429439] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP accept <- 1201 voiceOnly=true peerOffersVideo=true localVideo=false
+[2026-11-13T01:44:07.429573] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP accept video=recvonly
+[2026-11-13T01:44:07.429681] EVENT UI INCOMING action=accepted params=target=1201 ok=true
+[2026-11-13T01:44:07.438294] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP remote-track recovery armed id=a353c95d-4b79-4ea1-8b27-bdd1d40189825cd79d19-7dcf-4afb-8161-65bd427fa03c
+[2026-11-13T01:44:07.438388] EVENT SIP op=callProgress target=1201 state=CONNECTING params=id=a353c95d-4b79-4ea1-8b27-bdd1d40189825cd79d19-7dcf-4afb-8161-65bd427fa03c
+[2026-11-13T01:44:07.535461] EVENT SIP op=mediaStream target=1201 state=local params=video=0 audio=1 id=a353c95d-4b79-4ea1-8b27-bdd1d40189825cd79d19-7dcf-4afb-8161-65bd427fa03c
+[2026-11-13T01:44:07.540286] EVENT SIP op=mediaStream target=1201 state=remote params=video=1 audio=1 id=a353c95d-4b79-4ea1-8b27-bdd1d40189825cd79d19-7dcf-4afb-8161-65bd427fa03c
+[2026-11-13T01:44:07.540391] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] remote session a353c95d-4b79-4ea1-8b27-bdd1d40189825cd79d19-7dcf-4afb-8161-65bd427fa03c handled: streams=1 event(video=1 audio=1) session(video=1 audio=1)
+[2026-11-13T01:44:07.540450] EVENT MEDIA event=remoteStreamAdded state=video=1 audio=1 sessionId=a353c95d-4b79-4ea1-8b27-bdd1d40189825cd79d19-7dcf-4afb-8161-65bd427fa03c sessionStreams=1 sessionVideo=1 sessionAudio=1
+[2026-11-13T01:44:07.540485] EVENT SIP op=mediaStream target=1201 state=remote params=video=1 audio=1 id=a353c95d-4b79-4ea1-8b27-bdd1d40189825cd79d19-7dcf-4afb-8161-65bd427fa03c
+[2026-11-13T01:44:07.540518] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] remote session a353c95d-4b79-4ea1-8b27-bdd1d40189825cd79d19-7dcf-4afb-8161-65bd427fa03c handled: streams=1 event(video=1 audio=1) session(video=1 audio=1)
+[2026-11-13T01:44:07.540550] EVENT MEDIA event=remoteStreamAdded state=video=1 audio=1 sessionId=a353c95d-4b79-4ea1-8b27-bdd1d40189825cd79d19-7dcf-4afb-8161-65bd427fa03c sessionStreams=1 sessionVideo=1 sessionAudio=1
+[2026-11-13T01:44:07.541451] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] remote video tile 등록(전용) track=2e61abae-9535-46e7-a880-d13468f06446
+[2026-11-13T01:44:07.944012] EVENT SIP op=callEstablished target=1201 state=ACCEPTED params=id=a353c95d-4b79-4ea1-8b27-bdd1d40189825cd79d19-7dcf-4afb-8161-65bd427fa03c
+[2026-11-13T01:44:07.951216] EVENT SIP op=callEstablished target=1201 state=CONFIRMED params=id=a353c95d-4b79-4ea1-8b27-bdd1d40189825cd79d19-7dcf-4afb-8161-65bd427fa03c
+[2026-11-13T01:44:08.959691] EVENT SIP op=callTerminated target=1201 state=ENDED params=id=a353c95d-4b79-4ea1-8b27-bdd1d40189825cd79d19-7dcf-4afb-8161-65bd427fa03c cause=Code: [200], Cause: Terminated, Reason: BYE Received
+[2026-11-13T01:44:08.959811] EVENT UI CALL action=remoteEndedDetected params=target=-
+[2026-11-13T01:44:10.007533] EVENT MEDIA event=localStreamReleased state=-
+[2026-11-13T01:45:43.238680] EVENT UI DIALER action=callPressed params=target=6000
+[2026-11-13T01:45:43.256371] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] MEDIA device resolve camera=기본 mic=기본 speaker=기본
+[2026-11-13T01:45:43.258265] EVENT MEDIA event=localStreamReady state=video=0 audio=1 frontCamera=true audioMuted=false
+[2026-11-13T01:45:43.258392] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP call -> 6000 voiceOnly=true hasLocalStream=true
+[2026-11-13T01:45:43.258928] EVENT DIALER event=callResult state=pushed target=6000 error=-
+[2026-11-13T01:45:43.277284] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP remote-track recovery armed id=3189020658263123159wlgy2ym774t
+[2026-11-13T01:45:43.277383] EVENT SIP op=callInitiation target=6000 state=initiated params=direction=outgoing id=3189020658263123159wlgy2ym774t
+[2026-11-13T01:45:43.277438] EVENT SIP op=callProgress target=6000 state=CONNECTING params=id=3189020658263123159wlgy2ym774t
+[2026-11-13T01:45:43.378161] EVENT SIP op=mediaStream target=6000 state=local params=video=0 audio=1 id=3189020658263123159wlgy2ym774t
+[2026-11-13T01:45:43.815218] EVENT SIP op=callEstablished target=6000 state=ACCEPTED params=id=3189020658263123159wlgy2ym774t
+[2026-11-13T01:45:43.815433] EVENT SIP op=callEstablished target=6000 state=CONFIRMED params=id=3189020658263123159wlgy2ym774t
+[2026-11-13T01:45:43.915032] EVENT SIP op=mediaStream target=6000 state=remote params=video=1 audio=1 id=3189020658263123159wlgy2ym774t
+[2026-11-13T01:45:43.915174] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] remote session 3189020658263123159wlgy2ym774t handled: streams=1 event(video=1 audio=1) session(video=1 audio=1)
+[2026-11-13T01:45:43.915261] EVENT MEDIA event=remoteStreamAdded state=video=1 audio=1 sessionId=3189020658263123159wlgy2ym774t sessionStreams=1 sessionVideo=1 sessionAudio=1
+[2026-11-13T01:45:45.516347] EVENT SIP op=mediaStream target=6000 state=remote params=video=1 audio=1 id=3189020658263123159wlgy2ym774t
+[2026-11-13T01:45:45.521655] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] remote session 3189020658263123159wlgy2ym774t handled: streams=1 event(video=1 audio=1) session(video=1 audio=1)
+[2026-11-13T01:45:45.522054] EVENT MEDIA event=remoteStreamAdded state=video=1 audio=1 sessionId=3189020658263123159wlgy2ym774t sessionStreams=1 sessionVideo=1 sessionAudio=1
+[2026-11-13T01:45:45.576700] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] remote video tile 등록(전용) track=5f25df49-021b-423f-b5b7-30be8f44b98b
+[2026-11-13T01:45:48.500043] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] CONFERENCE participants room=6000 n=1 [오세훈 서울시장 (1101):A*]
+[2026-11-13T01:45:48.818518] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=22145 audioPackets=217 videoBytes=0
+[2026-11-13T01:45:51.083855] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP re-INVITE 수신 hasAudio=true hasVideo=true -> 자동 수락
+[2026-11-13T01:45:51.084082] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP re-INVITE 응답 전송 accepted=true recvOnlyVideo=true
+[2026-11-13T01:45:51.183028] EVENT SIP op=mediaStream target=6000 state=remote params=video=2 audio=1 id=3189020658263123159wlgy2ym774t
+[2026-11-13T01:45:51.183214] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] remote session 3189020658263123159wlgy2ym774t handled: streams=2 event(video=2 audio=1) session(video=3 audio=2)
+[2026-11-13T01:45:51.183281] EVENT MEDIA event=remoteStreamAdded state=video=2 audio=1 sessionId=3189020658263123159wlgy2ym774t sessionStreams=2 sessionVideo=3 sessionAudio=2
+[2026-11-13T01:45:51.183927] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] remote video tile 등록(전용) track=155d465f-6838-4267-ac74-fd429a45352a
+[2026-11-13T01:45:51.588586] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP transceivers 0:audio:SendRecv/SendRecv 1:video:RecvOnly/RecvOnly
+[2026-11-13T01:45:53.614579] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] CONFERENCE participants room=6000 n=2 [오세훈 서울시장 (1101):A*,A10 회의실 (1201):V]
+[2026-11-13T01:45:53.817451] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=34113 audioPackets=460 videoBytes=0
+[2026-11-13T01:45:55.116770] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] VIDEO resync reason=auto:join localKick=false remoteTiles=2
+[2026-11-13T01:45:55.219832] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] remote video tile 등록(전용) track=5f25df49-021b-423f-b5b7-30be8f44b98b
+[2026-11-13T01:45:55.220265] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] remote video tile 등록(전용) track=155d465f-6838-4267-ac74-fd429a45352a
+[2026-11-13T01:45:58.818302] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=53327 audioPackets=704 videoBytes=0
+[2026-11-13T01:46:03.817058] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=79525 audioPackets=946 videoBytes=0
+[2026-11-13T01:46:08.817987] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=100086 audioPackets=1191 videoBytes=0
+[2026-11-13T01:46:13.735060] EVENT UI CONFERENCE action=leavePressed params=room=6000
+[2026-11-13T01:46:13.735375] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP hangup (local)
+[2026-11-13T01:46:13.735510] EVENT UI CONFERENCE action=autoCloseOnCallEnd
+[2026-11-13T01:46:13.735737] EVENT SIP op=callTerminated target=6000 state=ENDED params=id=3189020658263123159wlgy2ym774t cause=Code: [200], Cause: Terminated, Reason: Terminated by local
+[2026-11-13T01:46:23.947076] EVENT UI DIALER action=callPressed params=target=1201
+[2026-11-13T01:46:23.947461] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP call -> 1201 voiceOnly=true hasLocalStream=true
+[2026-11-13T01:46:23.947884] EVENT DIALER event=callResult state=pushed target=1201 error=-
+[2026-11-13T01:46:23.968707] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP remote-track recovery armed id=318904d89u5wyj628r1v974e48ot26
+[2026-11-13T01:46:23.968826] EVENT SIP op=callInitiation target=1201 state=initiated params=direction=outgoing id=318904d89u5wyj628r1v974e48ot26
+[2026-11-13T01:46:23.968898] EVENT SIP op=callProgress target=1201 state=CONNECTING params=id=318904d89u5wyj628r1v974e48ot26
+[2026-11-13T01:46:24.071786] EVENT SIP op=mediaStream target=1201 state=local params=video=0 audio=1 id=318904d89u5wyj628r1v974e48ot26
+[2026-11-13T01:46:24.497655] EVENT SIP op=callTerminated target=1201 state=FAILED params=id=318904d89u5wyj628r1v974e48ot26 cause=Code: [404], Cause: Not Found, Reason: Not Found
+[2026-11-13T01:46:24.497791] EVENT UI CALL action=remoteEndedDetected params=target=-
+[2026-11-13T01:46:24.499679] EVENT MEDIA event=localStreamReleased state=-
+[2026-11-13T01:47:01.064371] EVENT SIP op=callInitiation target=1201 state=initiated params=direction=incoming id=de511b2d-e278-4fdd-9cb1-e00b4adfad7fb2c987f2-e5ff-4a64-a36f-d43eca3cb6fa
+[2026-11-13T01:47:01.064498] EVENT UI INCOMING action=dialogShown params=target=1201
+[2026-11-13T01:47:01.064621] EVENT SIP op=callProgress target=1201 state=PROGRESS params=id=de511b2d-e278-4fdd-9cb1-e00b4adfad7fb2c987f2-e5ff-4a64-a36f-d43eca3cb6fa
+[2026-11-13T01:47:03.334993] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] MEDIA device resolve camera=기본 mic=기본 speaker=기본
+[2026-11-13T01:47:03.336035] EVENT MEDIA event=localStreamReady state=video=0 audio=1 frontCamera=true audioMuted=false
+[2026-11-13T01:47:03.336109] EVENT UI INCOMING action=dialogShown params=target=1201
+[2026-11-13T01:47:03.336214] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP accept <- 1201 voiceOnly=true peerOffersVideo=true localVideo=false
+[2026-11-13T01:47:03.336267] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP accept video=recvonly
+[2026-11-13T01:47:03.336329] EVENT UI INCOMING action=accepted params=target=1201 ok=true
+[2026-11-13T01:47:03.344863] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP remote-track recovery armed id=de511b2d-e278-4fdd-9cb1-e00b4adfad7fb2c987f2-e5ff-4a64-a36f-d43eca3cb6fa
+[2026-11-13T01:47:03.344954] EVENT SIP op=callProgress target=1201 state=CONNECTING params=id=de511b2d-e278-4fdd-9cb1-e00b4adfad7fb2c987f2-e5ff-4a64-a36f-d43eca3cb6fa
+[2026-11-13T01:47:03.441389] EVENT SIP op=mediaStream target=1201 state=local params=video=0 audio=1 id=de511b2d-e278-4fdd-9cb1-e00b4adfad7fb2c987f2-e5ff-4a64-a36f-d43eca3cb6fa
+[2026-11-13T01:47:03.446128] EVENT SIP op=mediaStream target=1201 state=remote params=video=1 audio=1 id=de511b2d-e278-4fdd-9cb1-e00b4adfad7fb2c987f2-e5ff-4a64-a36f-d43eca3cb6fa
+[2026-11-13T01:47:03.446217] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] remote session de511b2d-e278-4fdd-9cb1-e00b4adfad7fb2c987f2-e5ff-4a64-a36f-d43eca3cb6fa handled: streams=1 event(video=1 audio=1) session(video=1 audio=1)
+[2026-11-13T01:47:03.446274] EVENT MEDIA event=remoteStreamAdded state=video=1 audio=1 sessionId=de511b2d-e278-4fdd-9cb1-e00b4adfad7fb2c987f2-e5ff-4a64-a36f-d43eca3cb6fa sessionStreams=1 sessionVideo=1 sessionAudio=1
+[2026-11-13T01:47:03.446309] EVENT SIP op=mediaStream target=1201 state=remote params=video=1 audio=1 id=de511b2d-e278-4fdd-9cb1-e00b4adfad7fb2c987f2-e5ff-4a64-a36f-d43eca3cb6fa
+[2026-11-13T01:47:03.446344] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] remote session de511b2d-e278-4fdd-9cb1-e00b4adfad7fb2c987f2-e5ff-4a64-a36f-d43eca3cb6fa handled: streams=1 event(video=1 audio=1) session(video=1 audio=1)
+[2026-11-13T01:47:03.446378] EVENT MEDIA event=remoteStreamAdded state=video=1 audio=1 sessionId=de511b2d-e278-4fdd-9cb1-e00b4adfad7fb2c987f2-e5ff-4a64-a36f-d43eca3cb6fa sessionStreams=1 sessionVideo=1 sessionAudio=1
+[2026-11-13T01:47:03.447410] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] remote video tile 등록(전용) track=6fdea105-c7e8-468e-aaa8-90419cd0aeca
+[2026-11-13T01:47:03.851155] EVENT SIP op=callEstablished target=1201 state=ACCEPTED params=id=de511b2d-e278-4fdd-9cb1-e00b4adfad7fb2c987f2-e5ff-4a64-a36f-d43eca3cb6fa
+[2026-11-13T01:47:03.855394] EVENT SIP op=callEstablished target=1201 state=CONFIRMED params=id=de511b2d-e278-4fdd-9cb1-e00b4adfad7fb2c987f2-e5ff-4a64-a36f-d43eca3cb6fa
+[2026-11-13T01:47:04.834241] EVENT SIP op=callTerminated target=1201 state=ENDED params=id=de511b2d-e278-4fdd-9cb1-e00b4adfad7fb2c987f2-e5ff-4a64-a36f-d43eca3cb6fa cause=Code: [200], Cause: Terminated, Reason: BYE Received
+[2026-11-13T01:47:04.834362] EVENT UI CALL action=remoteEndedDetected params=target=-
+[2026-11-13T01:47:05.772752] EVENT MEDIA event=localStreamReleased state=-
+[2026-11-13T01:47:34.148999] EVENT UI DIALER action=callPressed params=target=6100
+[2026-11-13T01:47:34.170781] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] MEDIA device resolve camera=기본 mic=기본 speaker=기본
+[2026-11-13T01:47:34.173413] EVENT MEDIA event=localStreamReady state=video=0 audio=1 frontCamera=true audioMuted=false
+[2026-11-13T01:47:34.173521] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP call -> 6100 voiceOnly=true hasLocalStream=true
+[2026-11-13T01:47:34.173905] EVENT DIALER event=callResult state=pushed target=6100 error=-
+[2026-11-13T01:47:34.178556] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP remote-track recovery armed id=318904pv9m51ikql6y2pl0mz5t37vv
+[2026-11-13T01:47:34.178634] EVENT SIP op=callInitiation target=6100 state=initiated params=direction=outgoing id=318904pv9m51ikql6y2pl0mz5t37vv
+[2026-11-13T01:47:34.178688] EVENT SIP op=callProgress target=6100 state=CONNECTING params=id=318904pv9m51ikql6y2pl0mz5t37vv
+[2026-11-13T01:47:34.190045] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP codec policy target=6100 type=offer video=h264Only
+[2026-11-13T01:47:34.280295] EVENT SIP op=mediaStream target=6100 state=local params=video=0 audio=1 id=318904pv9m51ikql6y2pl0mz5t37vv
+[2026-11-13T01:47:34.373763] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] CONFERENCE participants room=6100 n=1 [A10 회의실 (1201):V]
+[2026-11-13T01:47:34.717216] EVENT SIP op=callEstablished target=6100 state=ACCEPTED params=id=318904pv9m51ikql6y2pl0mz5t37vv
+[2026-11-13T01:47:34.717400] EVENT SIP op=callEstablished target=6100 state=CONFIRMED params=id=318904pv9m51ikql6y2pl0mz5t37vv
+[2026-11-13T01:47:34.817639] EVENT SIP op=mediaStream target=6100 state=remote params=video=1 audio=1 id=318904pv9m51ikql6y2pl0mz5t37vv
+[2026-11-13T01:47:34.817810] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] remote session 318904pv9m51ikql6y2pl0mz5t37vv handled: streams=1 event(video=1 audio=1) session(video=1 audio=1)
+[2026-11-13T01:47:34.817876] EVENT MEDIA event=remoteStreamAdded state=video=1 audio=1 sessionId=318904pv9m51ikql6y2pl0mz5t37vv sessionStreams=1 sessionVideo=1 sessionAudio=1
+[2026-11-13T01:47:36.316902] EVENT SIP op=mediaStream target=6100 state=remote params=video=1 audio=1 id=318904pv9m51ikql6y2pl0mz5t37vv
+[2026-11-13T01:47:36.317051] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] remote session 318904pv9m51ikql6y2pl0mz5t37vv handled: streams=1 event(video=1 audio=1) session(video=1 audio=1)
+[2026-11-13T01:47:36.317105] EVENT MEDIA event=remoteStreamAdded state=video=1 audio=1 sessionId=318904pv9m51ikql6y2pl0mz5t37vv sessionStreams=1 sessionVideo=1 sessionAudio=1
+[2026-11-13T01:47:36.346634] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] remote video tile 등록(전용) track=f01d6a45-6f58-4c98-95f6-c79bf58ffa90
+[2026-11-13T01:47:39.468705] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] CONFERENCE participants room=6100 n=2 [A10 회의실 (1201):V,오세훈 서울시장 (1101):A*]
+[2026-11-13T01:47:39.720773] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=23315 audioPackets=226 videoBytes=1418747
+[2026-11-13T01:47:40.969657] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] VIDEO resync reason=auto:join localKick=false remoteTiles=1
+[2026-11-13T01:47:41.071762] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] remote video tile 등록(전용) track=f01d6a45-6f58-4c98-95f6-c79bf58ffa90
+[2026-11-13T01:47:44.721441] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=53591 audioPackets=476 videoBytes=3490592
+[2026-11-13T01:47:48.864336] EVENT UI CONFERENCE action=videoSyncAll params=room=6100
+[2026-11-13T01:47:48.871616] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] VIDEO resync reason=manual localKick=false remoteTiles=1
+[2026-11-13T01:47:48.975552] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] remote video tile 등록(전용) track=f01d6a45-6f58-4c98-95f6-c79bf58ffa90
+[2026-11-13T01:47:49.720175] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=74641 audioPackets=726 videoBytes=5542826
+[2026-11-13T01:47:51.898504] EVENT UI CONFERENCE action=leavePressed params=room=6100
+[2026-11-13T01:47:51.898751] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP hangup (local)
+[2026-11-13T01:47:51.898821] EVENT UI CONFERENCE action=autoCloseOnCallEnd
+[2026-11-13T01:47:51.899142] EVENT SIP op=callTerminated target=6100 state=ENDED params=id=318904pv9m51ikql6y2pl0mz5t37vv cause=Code: [200], Cause: Terminated, Reason: Terminated by local
+[2026-11-13T01:48:22.878964] EVENT UI DIALER action=callPressed params=target=6100
+[2026-11-13T01:48:22.879305] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP call -> 6100 voiceOnly=true hasLocalStream=true
+[2026-11-13T01:48:22.879678] EVENT DIALER event=callResult state=pushed target=6100 error=-
+[2026-11-13T01:48:22.905821] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP remote-track recovery armed id=3189063154835ez500472390283701
+[2026-11-13T01:48:22.905932] EVENT SIP op=callInitiation target=6100 state=initiated params=direction=outgoing id=3189063154835ez500472390283701
+[2026-11-13T01:48:22.905991] EVENT SIP op=callProgress target=6100 state=CONNECTING params=id=3189063154835ez500472390283701
+[2026-11-13T01:48:22.927345] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP codec policy target=6100 type=offer video=h264Only
+[2026-11-13T01:48:23.008400] EVENT SIP op=mediaStream target=6100 state=local params=video=0 audio=1 id=3189063154835ez500472390283701
+[2026-11-13T01:48:23.107103] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] CONFERENCE participants room=6100 n=1 [A10 회의실 (1201):V]
+[2026-11-13T01:48:23.449495] EVENT SIP op=callEstablished target=6100 state=ACCEPTED params=id=3189063154835ez500472390283701
+[2026-11-13T01:48:23.449669] EVENT SIP op=callEstablished target=6100 state=CONFIRMED params=id=3189063154835ez500472390283701
+[2026-11-13T01:48:23.549424] EVENT SIP op=mediaStream target=6100 state=remote params=video=1 audio=1 id=3189063154835ez500472390283701
+[2026-11-13T01:48:23.549592] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] remote session 3189063154835ez500472390283701 handled: streams=1 event(video=1 audio=1) session(video=1 audio=1)
+[2026-11-13T01:48:23.549658] EVENT MEDIA event=remoteStreamAdded state=video=1 audio=1 sessionId=3189063154835ez500472390283701 sessionStreams=1 sessionVideo=1 sessionAudio=1
+[2026-11-13T01:48:25.171576] EVENT SIP op=mediaStream target=6100 state=remote params=video=1 audio=1 id=3189063154835ez500472390283701
+[2026-11-13T01:48:25.171718] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] remote session 3189063154835ez500472390283701 handled: streams=1 event(video=1 audio=1) session(video=1 audio=1)
+[2026-11-13T01:48:25.171774] EVENT MEDIA event=remoteStreamAdded state=video=1 audio=1 sessionId=3189063154835ez500472390283701 sessionStreams=1 sessionVideo=1 sessionAudio=1
+[2026-11-13T01:48:25.199587] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] remote video tile 등록(전용) track=ddb3b8a6-b520-49de-b0e7-854859f4fa13
+[2026-11-13T01:48:28.279907] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] CONFERENCE participants room=6100 n=3 [A10 회의실 (1201):V,오세훈 서울시장 (1101):A*,A10 회의실 (1201):V]
+[2026-11-13T01:48:28.452364] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=14275 audioPackets=225 videoBytes=786869
+[2026-11-13T01:48:29.781606] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] VIDEO resync reason=auto:join localKick=false remoteTiles=1
+[2026-11-13T01:48:29.883721] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] remote video tile 등록(전용) track=ddb3b8a6-b520-49de-b0e7-854859f4fa13
+[2026-11-13T01:48:33.452112] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=41948 audioPackets=475 videoBytes=2977488
+[2026-11-13T01:48:38.452769] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=73914 audioPackets=725 videoBytes=5113410
+[2026-11-13T01:48:39.629905] EVENT UI CONFERENCE action=participantSelected params=index=3 label=A10 회의실 (1201)
+[2026-11-13T01:48:40.596904] EVENT UI CONFERENCE action=participantSelected params=index=2 label=A10 회의실 (1201)
+[2026-11-13T01:48:41.730395] EVENT UI CONFERENCE action=participantSelected params=index=1 label=발언자 영상
+[2026-11-13T01:48:43.451932] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=106147 audioPackets=975 videoBytes=7259799

@@ -146,25 +146,42 @@ class _ConferenceViewState extends State<ConferenceView> {
     }
   }
 
+  bool _joining = false;
+
   Future<void> _join() async {
+    if (_joining) return;
     final sipProvider = context.read<SipProvider>();
     final mediaProvider = context.read<MediaProvider>();
     final room = _roomController.text.trim();
 
     if (room.isEmpty) return;
-
-    AppLogger.instance.ui('CONFERENCE', 'joinPressed',
-        params: {'room': room, 'registered': sipProvider.isRegistered});
-
-    if (!mediaProvider.hasLocalStream) {
-      AppLogger.instance.d('CONFERENCE: 로컬 미디어 없음 → getLocalMedia() 선행');
-      await mediaProvider.getLocalMedia();
+    if (sipProvider.isInCall) {
+      AppLogger.instance.ui('CONFERENCE', 'joinSkipped',
+          params: {'reason': 'alreadyInCall', 'room': room});
+      return;
     }
 
-    await sipProvider.call(room, mediaStream: mediaProvider.localStream);
-    if (mounted && mediaProvider.lastMissingDevices.isNotEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('저장된 장치 없음: ${mediaProvider.lastMissingDevices.join(', ')} — 기본 장치 사용')));
+    setState(() => _joining = true);
+    try {
+      AppLogger.instance.ui('CONFERENCE', 'joinPressed',
+          params: {'room': room, 'registered': sipProvider.isRegistered});
+
+      if (!mediaProvider.hasLocalStream) {
+        AppLogger.instance.d('CONFERENCE: 로컬 미디어 없음 → getLocalMedia() 선행');
+        await mediaProvider.getLocalMedia();
+      }
+
+      await sipProvider.call(room, mediaStream: mediaProvider.localStream);
+      if (mounted && mediaProvider.lastMissingDevices.isNotEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text('저장된 장치 없음: ${mediaProvider.lastMissingDevices.join(', ')} — 기본 장치 사용')));
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _joining = false);
+      } else {
+        _joining = false;
+      }
     }
   }
 
@@ -275,9 +292,20 @@ class _ConferenceViewState extends State<ConferenceView> {
             ),
             const SizedBox(height: 16),
             FilledButton.icon(
-              onPressed: sipProvider.isRegistered ? _join : null,
-              icon: const Icon(Icons.login),
-              label: Text(sipProvider.isRegistered ? '회의 참가' : 'SIP 미등록'),
+              onPressed: (sipProvider.isRegistered && !_joining && !sipProvider.isInCall)
+                  ? _join
+                  : null,
+              icon: _joining
+                  ? const SizedBox(
+                      width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2))
+                  : const Icon(Icons.login),
+              label: Text(!sipProvider.isRegistered
+                  ? 'SIP 미등록'
+                  : sipProvider.isInCall
+                      ? '통화 중'
+                      : _joining
+                          ? '참가 중...'
+                          : '회의 참가'),
             ),
             if (sipProvider.error != null)
               Padding(

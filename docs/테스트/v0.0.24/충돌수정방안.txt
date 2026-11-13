@@ -1,0 +1,59 @@
+▼Todo
+[✓] F1/F2/G3 구현·정적/서버 검증·v0.0.24 빌드·문서·커밋 완료
+[✓] v0.0.24 배포 상태 실측 + DMG ~/Downloads 준비 + 문서/커밋
+[•] 실기 선행: 1101(MacPro)·1103(iMac)에 v0.0.24 설치, 1201 재등록
+[ ] 실기 판정: T-F1(1103→1201 A10 영상) / T-F2(1101 5분) / T-G3·G1(6100 2명) / T-G5(채널 정리)
+
+
+교차검증 요약 (v0.0.24, 1102/1103)
+- 대상: docs/테스트/v0.0.24/1102로그.txt, 1103로그.txt (크래시 리포트+재실행 통신로그 혼재) ↔ 서버 asterisk /var/log/asterisk/messages, pjsip/core/confbridge, OPS /var/lib/kibal-ops/client-logs/{1102,1103}.{log,meta.json}(v0.0.24 확인).
+- 현 서버 상태: pjsip 1102·1201 Avail(1103 미등록), confbridge 6100=1201·1102, core show channels 4ch/2calls.
+문제점
+우선순위	문제	근거(교차검증)
+P0	수신 영상 프레임 invalid dimensions → WebRTC fatal SIGABRT (1102/1103 공통, 앱 즉시 종료)	1102: 10:21:57.7059+09 Thread 30 / 1103: 10:26:53.4933+09 Thread 24, 큐 IncomingVideoStreamQueue. 스택: IncomingVideoStream::Dequeue → VideoReceiveStream2::OnFrame → WebRtcVideoReceiveChannel::OnFrame → VideoBroadcaster::OnFrame → RTCVideoRendererAdapter::OnFrame → FlutterRTCVideoRenderer renderFrame/copyI420ToCVPixelBuffer (FlutterRTCVideoRenderer.m:204,133) → RTCCVPixelBuffer toI420 → RTCI420Buffer initWithWidth:height → I420Buffer::Create → CheckValidDimensions → FatalLog(abort). 참가자 퇴장/발화자·해상도 전환·resync 구간에서 0/비정상 크기 프레임이 렌더러로 전달된 정황 → flutter_webrtc/렌더 파이프라인에서 invalid-dimension 프레임 드롭 가드 필요.
+P1	서버 Asterisk messages 로그 공백으로 실기 구간 서버 근거 부재	/var/log/asterisk/messages 마지막이 2026-11-13 01:45:46 UTC로 10:2110:57 KST(01:2101:57 UTC) 실기 기록 없음. 이번 세션의 SIP/코덱/BYE/DTLS 서버 에러는 messages로 확정 불가(로테이션·파일핸들/수집 경로 점검 필요).
+P1	1103 중복 입장(자기 2회, G5/H5 재현)	1103 로그: 10:21:54 재호출 후 10:22:00 CONFERENCE n=4 [1201:V,1102:V,1103:V*,1103:V*](1103 중복) → 이후 n=3→2 정리.
+P1	영상 없는 참가자/전환 시 수신 품질 급락(H1 미적용 영향과 합치)	1103: 10:31:18 n=4 [...,1101:A] 포함 구간 10:36:47 7fps/decoded+663/freeze6 → 10:37:17 4fps/+241/freeze10 → 10:37:47 960x540@10fps/+179/freeze18, 10:37:59 auto:resync remote:1102 후 회복(OPS last_seen 10:44:18). 1102: 1103 퇴장 10:45:44 n=3→10:45:49 n=2, auto:leave localKick=true remoteTiles=0 연속 후 수신 1280x720→640x360→320x180→1920x1080, freeze 8→33·decoded 저하(OPS last_seen 10:57:19).
+P2	과거 Flutter NPE 로그 잔존	1102 수집 로그에 13:04~13:05 FlutterError: Null check operator used on a null value (framework.dart:3666) 반복(별도 추적).
+확인된 정상/미검증
+- 6100 입장 시그널링: 양측 SIP codec policy target=6100 type=offer video=h264Only, ACCEPTED/CONFIRMED, CONFERENCE participants n=2→3·ICE completed·수신 정상 구간 존재.
+- F1/H6 미검증: 이번 세션에 110x↔1201 1:1 호출 없음(1201 1:1 코덱정책/착신 h264 BYE 판단 불가).
+- 파일 구성 주의: 1102 헤더 표기는 “1101 앱 죽을때 로그”이나 프로세스/사용자는 1102(atomui-MacBookPro, 10:21:57 크래시)이며, 두 파일 모두 크래시 리포트 뒤에 재실행 세션 통신 로그가 이어붙어 있음(복수 세션/크래시 혼재).
+정리 문서(커밋·origin 반영)
+- Client: wiki/06_Reports/20261113_v0.0.24_앱크래시_교차검증보고서_v1.0.md, wiki/07_Logs/작업로그_20261113.md(§2), docs/AGENTS.md, docs/_작업이력/2026-11-13.md — 커밋 2f95551
+- Server: wiki/07_Logs/작업로그_20261113.md(§2), docs/AGENTS.md, docs/_작업이력/2026-11-13.md(서버 로그 공백 이슈 기록) — 커밋 654131a
+권고 후속
+1. W-Crash(P0): flutter_webrtc 렌더러/수신 콜백에서 0-dimension·null CVPixelBuffer/I420 프레임 드롭 가드 및 퇴장·resync·해상도전환 재현 검증(필요 시 플러그인 패치/업스트림 확인).
+2. 서버(P1): Asterisk messages 01:45:46 UTC 이후 미기록 원인(로테이션/핸들/수집) 복구 후 재실기.
+3. H5/G5·H1: 1103 중복 입장 억제, 영상없는 발화자 시 브리지 소스 보장(W3) 후 품질/안정성 재검증. 1:1(F1/H6)은 별도 수집.
+
+
+
+
+지금까지 한 것(요약)
+- 1101 v0.0.24 실기 교차검증: 영상 없는 참가자 식별 단절(has_video는 OPS/클라에 있으나 ConfBridge follow_talker가 미소비, video_source 없음), 1:1 즉시 종료 원인(발신 404/cause3, 착신 ~1s BYE Don't know how to send format h264), ADR-008/D1·ADR-009/F2 실기 근거 정리, follow_talker 자기영상 정정.
+- 1102/1103 v0.0.24 크래시 교차검증: 공통 P0 CheckValidDimensions→SIGABRT(IncomingVideoStreamQueue→FlutterRTCVideoRenderer.renderFrame:/copyI420ToCVPixelBuffer:204,133→RTCI420Buffer invalid/0-dim 프레임, macOS Intel). H5/G5 중복 입장(1103:V 2개), 1101(:A) 포함 품질 급락/auto:resync·퇴장 흔적 정리.
+- 문서/커밋: Client 811f616,d8dbeeb,2f95551, Server f93eecf,4215fb4,654131a → 각 origin push(분석·실험·보고서·후속계획서 v2.0·ADR/지식·로그/AGENTS 갱신). NAS(dev/prd) 미푸시(정책).
+이번 확인으로 추가된 사실
+- 서버 full 로그에 실기 구간 존재(logger: full DEBUGVERBOSE, messages NOTICEERROR). 크래시 시각 전후(UTC):
+- 1102 01:21:57.7 KST 전후: 01:21:53 1103-0000000a 6100 joined(softmix, kibal_bridge_ft), Video source in bridge '6100'가 1201/1102 간 전환 반복 — 1102/1103 채널 leave·SIP/코덱 오류는 full에 없음.
+- 1103 01:26:53.5 KST 전후: 01:26:47 1102-0000000b joined, 01:26:51 video source→1102, 01:26:51 WARNING Web socket closed abruptly + 1103 contact removed/shutdown → Unreachable(등록/소켓 단절), 그러나 1103-0000000c는 01:44:31 shutdown 제거 후에도 01:45:46 left softmix까지 bridge 유지(장시간 stale 채널, H5/G5 정합 단서).
+- 1103 재참여 흔적: 1103-0000000c가 01:39~01:42, 01:44:25 구간 video source로 다수 선택됨(발화 감지/소스 전환).
+- messages 갭 복구됨: logger reload 후 /var/log/asterisk/messages에 02:18:27 Asterisk 22.8.1 ... append 확인(기존 01:45:46 이후 미기록 상태 해소). 근본 원인(핸들/로테이션)은 미확정.
+- 1201 1:1(01:43~01:47 UTC) full: 해당 창에 1101↔1201 관련 SIP/dialog/BYE/h264 packets 라인 미검색(주로 video-source/remote-UNIX 폴링). 서버측 1:1 실패 상세는 여전히 messages 갭 구간이라 full에 남은 범위 한정.
+- 클라이언트 코드 현황: sip_client.call()은 isInCall/기존콜 시 거부(sip_client.dart:299), 회의 _join()은 무조건 call()(conference_screen.dart:149,164) — UI 중복 탭/경합 시 이중 채널 가능성(H5) 점검 대상. 원격 트랙은 onTrack 래핑·복구·_syncRemoteVideoStreams로 전용 렌더스트림 생성(media_manager.dart:425+)하나, 무효(0-dim) 프레임을 렌더 전 차단하는 앱 레벨 가드 없음. pubspec.yaml은 flutter_webrtc: ^1.6.3(lock 파일 없음).
+- P0 크래시 참고: 사용 중 스택은 renderFrame→copyI420ToCVPixelBuffer→toI420→I420Buffer::Create→CheckValidDimensions(0-dim 프레임). 확인한 범위에서 flutter_webrtc darwin 렌더러는 크기/유효성 가드 없이 변환 수행; livekit 2.13.1은 1.6.2+hotfix.4로 "dispose 중 in-flight frame" macOS/iOS 크래시 수정 언급(스택 상이 가능), 2.13.2는 1.6.3 보안 bump — 동일 CheckValidDimensions 수정 여부는 미확인.
+막힌 점/결정 필요
+- NAS dev/prd(192.168.11.2) 접근 불가로 3-way 동기화 불가(정책상 제외).
+- AMI 비활성(Manager: No)이라 H1(ConfbridgeSetSingleVideoSrc) 구현 불가 — manager.conf/바인드·권한·OPS 연동·컨테이너 재생성 범위 승인 필요.
+- F1(1103↔1201 v0.0.24), H5 중복채널 재현/정리, H6(h264 BYE), P0 크래시 재현 검증은 실기 필요.
+다음 단계(제안)
+1. P0(우선): flutter_webrtc 1.6.3 darwin FlutterRTCVideoRenderer/WebRTC에서 0-dim 프레임 방어 가능 여부 확인 후, (승인 시) 플러그인 패치/포크·업데이트 또는 앱 측 트랙/타일 생명주기(resync, remoteTiles=0·퇴장·해상도 전환, retainRemoteVideoTracks) 보강 방안 확정·검증.
+2. 서버/H5: full에서 1103 stale 채널(-0000000c, shutdown~01:45:46 leave) 발생 조건 추적 + 클라 _join/재입장 가드 검토; 필요 시 H1 AMI 설계 승인 후 진행.
+3. 원하시면 위 중 P0 코드 방어안 조사/적용 또는 H5 재현 시나리오·클라 가드 수정부터 바로 진행할까요? (NAS 배포/AMI 활성화는 별도 승인 필요)
+▣  Build · Iceman Free · 2m 50s
+/agents       Switch agent
+
+
+
+
