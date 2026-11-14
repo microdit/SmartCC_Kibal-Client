@@ -11,6 +11,7 @@
 |------|---------|------|
 | DEV (SIP 서버) | `192.168.0.3` | 2026-11-12 유선 전환(구 `192.168.11.39`). Docker: `kibal-dev-asterisk`(dev), `kibal-dev-ops`(ops) |
 | Client workspace | `/Users/microdit/Downloads/dev/SmartCC_Kibal-Client` | macOS |
+| 외부 접근 | OPS 8091 / SIP WS 8088 / RTP 10000-10200 | IPTime1→IPTime2 이중 포트포워딩 (가이드: `docs/보고서/20261114_외부망접근_실행계획_v1.0.md`) |
 | GitHub | `git@github.com:microdit/SmartCC_Kibal-Client.git` | origin |
 | Python venv | `./venv_client/` | Python 3.11 + chromadb 1.5.9 |
 | Web | `./web/` | React + TypeScript + Vite |
