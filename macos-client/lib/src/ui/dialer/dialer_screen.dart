@@ -9,6 +9,7 @@ import '../../utils/app_logger.dart';
 import '../../utils/constants.dart';
 import '../../utils/formatters.dart';
 import '../../utils/ops_directory.dart';
+import '../../utils/server_config.dart';
 
 /// 다이얼러 화면
 /// 
@@ -27,6 +28,7 @@ class _DialerScreenState extends State<DialerScreen> {
   final _targetFocus = FocusNode();
   OpsDirectory _directory = const OpsDirectory();
   bool _directoryLoaded = false;
+  bool _refreshingServer = false;
 
   @override
   void initState() {
@@ -40,12 +42,17 @@ class _DialerScreenState extends State<DialerScreen> {
     if (mounted) setState(() {});
   }
 
-  Future<void> _loadDirectory() async {
+  Future<void> _loadDirectory({bool refreshServerConfig = false}) async {
+    if (refreshServerConfig) {
+      if (mounted) setState(() => _refreshingServer = true);
+      await ServerConfigService.instance.refresh();
+    }
     final dir = await OpsDirectory.fetch();
     if (!mounted) return;
     setState(() {
       _directory = dir;
       _directoryLoaded = true;
+      _refreshingServer = false;
     });
   }
 
@@ -320,9 +327,12 @@ class _DialerScreenState extends State<DialerScreen> {
                 ),
                 const Spacer(),
                 IconButton(
-                  icon: const Icon(Icons.refresh, size: 18),
-                  tooltip: 'OPS 목록 새로고침',
-                  onPressed: _loadDirectory,
+                  icon: _refreshingServer
+                      ? const SizedBox(
+                          width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2))
+                      : const Icon(Icons.sync, size: 18),
+                  tooltip: '서버 설정·연락처·회의실 갱신',
+                  onPressed: _refreshingServer ? null : () => _loadDirectory(refreshServerConfig: true),
                 ),
               ],
             ),

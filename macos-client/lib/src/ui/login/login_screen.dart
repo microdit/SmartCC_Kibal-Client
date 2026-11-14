@@ -411,41 +411,48 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  /// OPS(/api/client/config)에서 서버 주소를 받아 도메인·WS 입력값을 갱신한다.
+  /// OPS(/api/client/config)에서 서버 주소(IP/WS/OPS)와 연락처·회의실 목록을 함께 갱신한다.
   Future<void> _refreshServerConfig({required bool auto}) async {
     if (_refreshingConfig) return;
     setState(() {
       _refreshingConfig = true;
-      _configStatus = 'OPS에서 서버 설정 확인 중…';
+      _configStatus = '서버 설정/연락처/회의실 확인 중…';
     });
     AppLogger.instance.ui('LOGIN', 'serverConfigRefresh', params: {'auto': auto});
     final before = ServerConfigService.instance.current;
     final cfg = await ServerConfigService.instance
         .refresh(hintDomain: _domainController.text.trim());
     if (!mounted) return;
-    setState(() {
-      _refreshingConfig = false;
-      if (cfg == null) {
-        _configStatus = '서버 설정 갱신 실패 — OPS 응답 없음(현재 입력값 사용)';
-        return;
-      }
-      final changed = !cfg.sameAddressAs(before) ||
-          _domainController.text.trim() != cfg.sipDomain ||
-          _wsServerController.text.trim() != cfg.wsServer;
+
+    final configChanged = cfg != null &&
+        (!cfg.sameAddressAs(before) ||
+            _domainController.text.trim() != cfg.sipDomain ||
+            _wsServerController.text.trim() != cfg.wsServer);
+    if (cfg != null) {
       _domainController.text = cfg.sipDomain;
       _portController.text = cfg.sipPort.toString();
       _wsServerController.text = cfg.wsServer;
-      _configStatus = changed
-          ? '서버 주소 갱신됨: ${cfg.sipDomain}'
-          : '서버 설정 최신: ${cfg.sipDomain}';
+    }
+
+    await _loadQuickContacts();
+    if (!mounted) return;
+
+    final configMsg = cfg == null
+        ? '서버 설정 갱신 실패 — OPS 응답 없음(현재 입력값 사용)'
+        : (configChanged ? '서버 주소 갱신됨: ${cfg.sipDomain}' : '서버 설정 최신: ${cfg.sipDomain}');
+    setState(() {
+      _refreshingConfig = false;
+      _configStatus = '$configMsg · 연락처 ${_quickContacts.length}건 갱신';
     });
-    if (cfg != null) {
-      await _loadQuickContacts();
-      if (!auto && mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('서버 설정 적용: ${cfg.sipDomain} / ${cfg.wsServer}')),
-        );
-      }
+
+    if (!auto && mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(cfg == null
+              ? '연락처/회의실 갱신 완료(서버 주소 응답 없음) · 연락처 ${_quickContacts.length}건'
+              : '서버 설정·연락처·회의실 갱신: ${cfg.sipDomain} · 연락처 ${_quickContacts.length}건'),
+        ),
+      );
     }
   }
 
