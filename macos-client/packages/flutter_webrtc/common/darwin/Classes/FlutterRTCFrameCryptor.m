@@ -398,7 +398,7 @@
   NSNumber* discardFrameWhenCryptorNotReady = keyProviderOptions[@"discardFrameWhenCryptorNotReady"];
 
   NSNumber* keyDerivationAlgorithm = keyProviderOptions[@"keyDerivationAlgorithm"];
-  
+
   RTCFrameCryptorKeyProvider* keyProvider =
       [[RTCFrameCryptorKeyProvider alloc] initWithRatchetSalt:ratchetSalt.data
                                            ratchetWindowSize:[ratchetWindowSize intValue]
@@ -435,7 +435,7 @@
   if(keyProvider == nil) {
     return;
   }
- 
+
   NSNumber* keyIndex = constraints[@"keyIndex"];
   if (keyIndex == nil) {
     result([FlutterError errorWithCode:@"keyProviderSetKeyFailed"

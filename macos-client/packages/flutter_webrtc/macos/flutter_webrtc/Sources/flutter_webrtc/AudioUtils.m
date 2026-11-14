@@ -70,7 +70,7 @@
 + (void)setSpeakerphoneOn:(BOOL)enable {
   RTCAudioSession* session = [RTCAudioSession sharedInstance];
   RTCAudioSessionConfiguration* config = [RTCAudioSessionConfiguration webRTCConfiguration];
-    
+
   if(enable && config.category != AVAudioSessionCategoryPlayAndRecord) {
     NSLog(@"setSpeakerphoneOn: Category option 'defaultToSpeaker' is only applicable with category 'playAndRecord', ignore.");
     return;
@@ -167,7 +167,7 @@
     return AVAudioSessionModeMoviePlayback;
   } else if([@"spokenAudio" isEqualToString:mode]) {
     return AVAudioSessionModeSpokenAudio;
-  } 
+  }
   return AVAudioSessionModeDefault;
 }
 
@@ -195,7 +195,7 @@
   NSString* appleAudioCategory = configuration[@"appleAudioCategory"];
   NSArray* appleAudioCategoryOptions = configuration[@"appleAudioCategoryOptions"];
   NSString* appleAudioMode = configuration[@"appleAudioMode"];
-  
+
   [session lockForConfiguration];
 
   if(appleAudioCategoryOptions != nil) {

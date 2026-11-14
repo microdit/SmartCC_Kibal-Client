@@ -86,4 +86,4 @@ void flutter_web_r_t_c_plugin_register_with_registrar(
 
 flutter_webrtc_plugin::FlutterWebRTC* flutter_webrtc_plugin_get_shared_instance() {
   return g_shared_instance;
-} 
+}

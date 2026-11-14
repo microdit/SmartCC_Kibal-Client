@@ -79,7 +79,7 @@ pc.onTrack((RTCTrackEvent event) async {
                     receiver: receiver,
                     algorithm: Algorithm.kAesGcm,
                     keyProvider: keyProvider);
-        
+
     frameCyrptor.onFrameCryptorStateChanged = (participantId, state) =>
             print('DE onFrameCryptorStateChanged $participantId $state');
 

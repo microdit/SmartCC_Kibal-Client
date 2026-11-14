@@ -88,7 +88,7 @@ class DataChannelObserver implements DataChannel.Observer, EventChannel.StreamHa
             eventSink = null;
         }
     }
-    
+
     @Override
     public void onBufferedAmountChange(long amount) {
         ConstraintsMap params = new ConstraintsMap();

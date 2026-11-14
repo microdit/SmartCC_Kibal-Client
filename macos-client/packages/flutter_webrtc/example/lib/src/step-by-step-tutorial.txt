@@ -2,7 +2,7 @@
 * get display media audio/video, audio only, video only
 * get sources/change audio input/output
 * audio/video loopback simple
-* getStats 
+* getStats
 * replace track in calling, turn on/off video or audio
 * set set codec preferences
 * simulcast sender

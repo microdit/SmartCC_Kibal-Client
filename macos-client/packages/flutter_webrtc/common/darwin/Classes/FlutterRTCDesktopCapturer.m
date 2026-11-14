@@ -42,7 +42,7 @@ NSArray<RTCDesktopSource*>* _captureSources;
   RTCVideoSource* videoSource = [self.peerConnectionFactory videoSourceForScreenCast:YES];
   NSString* trackUUID = [[NSUUID UUID] UUIDString];
   VideoProcessingAdapter *videoProcessingAdapter = [[VideoProcessingAdapter alloc] initWithRTCVideoSource:videoSource];
-  
+
 #if TARGET_OS_IPHONE
   BOOL useBroadcastExtension = false;
   BOOL presentBroadcastPicker = false;

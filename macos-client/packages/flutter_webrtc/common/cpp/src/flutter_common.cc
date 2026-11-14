@@ -162,7 +162,7 @@ class EventChannelProxyImpl : public EventChannelProxy {
            on_listen_called_ = false;
            return nullptr;
          });
- 
+
      channel_->SetStreamHandler(std::move(handler));
    }
 
@@ -213,7 +213,7 @@ class EventChannelProxyImpl : public EventChannelProxy {
       sink_->Success(event);
      }
    }
- 
+
   private:
    std::unique_ptr<EventChannel> channel_;
    std::shared_ptr<flutter::EventSink<flutter::EncodableValue>> sink_;

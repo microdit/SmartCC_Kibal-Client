@@ -83,7 +83,7 @@ public class OrientationAwareScreenCapturer implements VideoCapturer, VideoSink 
         final Display display = windowManager.getDefaultDisplay();
         final DisplayMetrics metrics = new DisplayMetrics();
         display.getRealMetrics(metrics);
-        
+
         return metrics.heightPixels > metrics.widthPixels;
     }
 

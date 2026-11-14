@@ -285,8 +285,8 @@ IAudioClient* ApplicationLoopbackCapturer::TryInitApplicationLoopback() {
     IActivateAudioInterfaceAsyncOperation* async_op = nullptr;
     HRESULT hr = ActivateAudioInterfaceAsync(
         VIRTUAL_AUDIO_DEVICE_PROCESS_LOOPBACK,
-        __uuidof(IAudioClient), 
-        &pv, 
+        __uuidof(IAudioClient),
+        &pv,
         handler,
         &async_op
       );
@@ -485,19 +485,19 @@ void ApplicationLoopbackCapturer::CaptureThread() {
         const bool silent = (flags & AUDCLNT_BUFFERFLAGS_SILENT) != 0;
         if (!silent) {
           conv.resize(num_frames * out_channels);
-          
+
           for (size_t f = 0; f < num_frames; ++f) {
             // Find the start of this frame in the raw WASAPI buffer
             const BYTE* frame_ptr = data + (f * in_channels * bytes_per_sample);
-            
+
             // Extract the Left channel
             int16_t left = extractor(frame_ptr);
-            
+
             // Extract the Right channel (or duplicate Left if mono input)
-            int16_t right = (in_channels > 1) 
-                ? extractor(frame_ptr + bytes_per_sample) 
+            int16_t right = (in_channels > 1)
+                ? extractor(frame_ptr + bytes_per_sample)
                 : left;
-                
+
             // Write to our stereo output buffer
             conv[f] = static_cast<int16_t>((static_cast<int32_t>(left) + right) / 2);
           }

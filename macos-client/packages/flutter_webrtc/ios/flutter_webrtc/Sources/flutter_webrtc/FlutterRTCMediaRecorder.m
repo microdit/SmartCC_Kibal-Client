@@ -60,7 +60,7 @@
                         sourceFormatHint:_audioSink.format];
         _audioWriter.expectsMediaDataInRealTime = true;
     }
-    
+
     NSError *error;
     self.assetWriter = [[AVAssetWriter alloc]
             initWithURL:self.output
@@ -83,7 +83,7 @@
     }
     [self.assetWriter startWriting];
     [self.assetWriter startSessionAtSourceTime:kCMTimeZero];
-    
+
     isInitialized = true;
 }
 
@@ -112,7 +112,7 @@
     }
     CMVideoFormatDescriptionRef formatDescription = NULL;
     OSStatus status = CMVideoFormatDescriptionCreateForImageBuffer(kCFAllocatorDefault, pixelBufferRef, &formatDescription);
-    
+
     if (status != noErr || formatDescription == NULL) {
         NSLog(@"Failed to create format description: %d", (int)status);
         if (shouldRelease) {
@@ -122,7 +122,7 @@
     }
 
     CMSampleTimingInfo timingInfo;
-    
+
     timingInfo.decodeTimeStamp = kCMTimeInvalid;
     if (_startTime == -1) {
         _startTime = frame.timeStampNs / 1000;
@@ -148,7 +148,7 @@
     } else {
         NSLog(@"Failed to create sample buffer: %d", (int)status);
     }
-    
+
     // Release Core Foundation objects to prevent memory leaks
     if (outBuffer != NULL) {
         CFRelease(outBuffer);

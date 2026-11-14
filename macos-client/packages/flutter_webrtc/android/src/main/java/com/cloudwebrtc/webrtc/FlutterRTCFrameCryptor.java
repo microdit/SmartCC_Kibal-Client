@@ -309,12 +309,12 @@ public class FlutterRTCFrameCryptor {
         int keyRingSize = (int) keyProviderOptions.get("keyRingSize");
         boolean discardFrameWhenCryptorNotReady = (boolean) keyProviderOptions.get("discardFrameWhenCryptorNotReady");
         int keyDerivationAlgorithm = (int) keyProviderOptions.get("keyDerivationAlgorithm");
-        FrameCryptorKeyProvider keyProvider = FrameCryptorFactory.createFrameCryptorKeyProvider(sharedKey, 
-            ratchetSalt, 
-            ratchetWindowSize, 
-            uncryptedMagicBytes, 
-            failureTolerance, 
-            keyRingSize, 
+        FrameCryptorKeyProvider keyProvider = FrameCryptorFactory.createFrameCryptorKeyProvider(sharedKey,
+            ratchetSalt,
+            ratchetWindowSize,
+            uncryptedMagicBytes,
+            failureTolerance,
+            keyRingSize,
             discardFrameWhenCryptorNotReady,
             keyDerivationAlgorithmFromInt(keyDerivationAlgorithm));
         ConstraintsMap paramsResult = new ConstraintsMap();

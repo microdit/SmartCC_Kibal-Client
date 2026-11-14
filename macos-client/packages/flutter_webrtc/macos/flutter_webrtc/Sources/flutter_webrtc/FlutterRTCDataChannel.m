@@ -121,7 +121,7 @@
 }
 
 - (void)dataChannelGetBufferedAmount:(nonnull NSString*)peerConnectionId
-          dataChannelId:(nonnull NSString*)dataChannelId 
+          dataChannelId:(nonnull NSString*)dataChannelId
                 result:(nonnull FlutterResult)result {
   RTCPeerConnection* peerConnection = self.peerConnections[peerConnectionId];
   RTCDataChannel* dataChannel = peerConnection.dataChannels[dataChannelId];

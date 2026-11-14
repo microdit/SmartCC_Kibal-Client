@@ -158,7 +158,7 @@ class VideoFileRenderer implements VideoSink, SamplesReadyCallback {
     }
 
     private List<EncoderConfig> getSupportedConfigurations(int frameWidth, int frameHeight) {
-        
+
         int[] bitrates = {6000000, 4000000, 2000000, 1000000};
         int[] profiles = {
                 MediaCodecInfo.CodecProfileLevel.AVCProfileBaseline,

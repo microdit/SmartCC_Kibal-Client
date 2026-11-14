@@ -32,10 +32,10 @@
                         result:(nonnull FlutterResult)result;
 
 - (void)frameCryptorSetEnabled:(nonnull NSDictionary*)constraints
-                          result:(nonnull FlutterResult)result; 
+                          result:(nonnull FlutterResult)result;
 
 - (void)frameCryptorGetEnabled:(nonnull NSDictionary*)constraints
-                            result:(nonnull FlutterResult)result;   
+                            result:(nonnull FlutterResult)result;
 
 - (void)frameCryptorDispose:(nonnull NSDictionary*)constraints
                             result:(nonnull FlutterResult)result;
