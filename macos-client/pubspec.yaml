@@ -38,6 +38,9 @@ dependency_overrides:
   # Docker-bridge ICE candidate 보정 패치 (packages/sip_ua)
   sip_ua:
     path: packages/sip_ua
+  # P0: 0-dim/무효 프레임 가드 패치 (CheckValidDimensions SIGABRT 완화)
+  flutter_webrtc:
+    path: packages/flutter_webrtc
 
 dev_dependencies:
   flutter_test:
