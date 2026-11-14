@@ -32,7 +32,12 @@ class _DialerScreenState extends State<DialerScreen> {
   void initState() {
     super.initState();
     _targetController.clear();
+    _targetController.addListener(_onTargetChanged);
     _loadDirectory();
+  }
+
+  void _onTargetChanged() {
+    if (mounted) setState(() {});
   }
 
   Future<void> _loadDirectory() async {
@@ -46,6 +51,7 @@ class _DialerScreenState extends State<DialerScreen> {
 
   @override
   void dispose() {
+    _targetController.removeListener(_onTargetChanged);
     _targetController.dispose();
     _targetFocus.dispose();
     super.dispose();
@@ -299,9 +305,7 @@ class _DialerScreenState extends State<DialerScreen> {
               fontWeight: FontWeight.bold,
               letterSpacing: 2.0,
             ),
-            onChanged: (_) {
-              setState(() {});
-            },
+            onChanged: (_) {},
             textInputAction: TextInputAction.done,
             onFieldSubmitted: (_) => _handleCall(sipProvider),
           ),
