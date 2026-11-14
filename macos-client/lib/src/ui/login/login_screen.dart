@@ -805,10 +805,15 @@ class _LoginScreenState extends State<LoginScreen> {
   
   Future<void> _quickConnect(SipProvider sipProvider, String extension) async {
     _usernameController.text = extension;
-    // 알려진 DEV 계정만 암호 자동 입력, 그 외는 직접 입력
-    _passwordController.text = AppConstants.devQuickAccounts[extension] ?? '';
+    // Ops 동기화 비밀번호 우선, 없으면 DEV 로컬 매핑
+    OpsContact? matched;
+    for (final c in _quickContacts) {
+      if (c.extension == extension) { matched = c; break; }
+    }
+    _passwordController.text = matched?.sipPassword ??
+        AppConstants.devQuickAccounts[extension] ?? '';
     AppLogger.instance.ui('LOGIN', 'quickConnectFilled',
-        params: {'extension': extension});
+        params: {'extension': extension, 'source': matched?.sipPassword != null ? 'ops' : 'local'});
   }
 
   //--------------------------------------------------------------------------

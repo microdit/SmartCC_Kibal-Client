@@ -6,10 +6,12 @@ import 'constants.dart';
 import 'server_config.dart';
 
 class OpsContact {
-  OpsContact({required this.extension, required this.displayName, this.sortOrder});
+  OpsContact({required this.extension, required this.displayName, this.sortOrder, this.sipPassword});
   final String extension;
   final String displayName;
   final int? sortOrder;
+  // Ops 웹에서 설정/수정한 SIP 비밀번호(인증된 /api/client/contacts 응답, 바로 접속 동기화용)
+  final String? sipPassword;
 
   String get label =>
       displayName.isNotEmpty && displayName != extension ? '$extension $displayName' : extension;
@@ -50,6 +52,9 @@ class OpsDirectory {
             extension: ext,
             displayName: (e['display_name'] ?? '').toString(),
             sortOrder: (e['speed_dial_order'] as num?)?.toInt(),
+            sipPassword: (e['sip_password'] is String && (e['sip_password'] as String).isNotEmpty)
+                ? e['sip_password'] as String
+                : null,
           ));
         }
       }
