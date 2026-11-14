@@ -33,7 +33,10 @@ cd .. && ./scripts/git-sync.sh "release(macos): v0.0.18" --no-deploy
 ```bash
 cd ~/Downloads/dev/SmartCC_Kibal-Client && git pull
 cd macos-client && ./scripts/release_macos.sh --no-bump --install
-open /Applications/macos_client.app
+'open /Applications/macos_client.app'
+open /Users/microdit/Downloads/dev/SmartCC_Kibal-Client/macos-client/build/macos/Build/Products/Release/macos_client.app
+
+
 ```
 
 사전: Flutter, Xcode, CocoaPods (`flutter doctor`).
