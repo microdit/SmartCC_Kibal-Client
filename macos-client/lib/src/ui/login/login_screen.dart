@@ -9,6 +9,7 @@ import '../../sip/sip_client.dart';
 import '../../utils/app_logger.dart';
 import '../../utils/constants.dart';
 import '../../utils/formatters.dart';
+import '../../utils/ops_directory.dart';
 import '../../utils/server_config.dart';
 
 /// 로그인/SIP 등록 화면
@@ -51,6 +52,8 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _isInitialLoad = true;
   bool _refreshingConfig = false;
   String? _configStatus;
+  List<OpsContact> _quickContacts = const [];
+  bool _quickContactsLoaded = false;
 
   @override
   void initState() {
@@ -67,6 +70,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
     // 화면 진입 시 OPS에서 최신 서버 주소 자동 갱신(서버 IP 변경 대응)
     WidgetsBinding.instance.addPostFrameCallback((_) => _refreshServerConfig(auto: true));
+    _loadQuickContacts();
     
     // 포커스 리스너
     _usernameFocus.addListener(() {
@@ -74,6 +78,15 @@ class _LoginScreenState extends State<LoginScreen> {
         // 자동 완성 제안
         _showExtensionSuggestions();
       }
+    });
+  }
+
+  Future<void> _loadQuickContacts() async {
+    final dir = await OpsDirectory.fetch();
+    if (!mounted) return;
+    setState(() {
+      _quickContacts = dir.contacts;
+      _quickContactsLoaded = true;
     });
   }
 
@@ -426,10 +439,13 @@ class _LoginScreenState extends State<LoginScreen> {
           ? '서버 주소 갱신됨: ${cfg.sipDomain}'
           : '서버 설정 최신: ${cfg.sipDomain}';
     });
-    if (cfg != null && !auto && mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('서버 설정 적용: ${cfg.sipDomain} / ${cfg.wsServer}')),
-      );
+    if (cfg != null) {
+      await _loadQuickContacts();
+      if (!auto && mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('서버 설정 적용: ${cfg.sipDomain} / ${cfg.wsServer}')),
+        );
+      }
     }
   }
 
@@ -585,24 +601,48 @@ class _LoginScreenState extends State<LoginScreen> {
   //--------------------------------------------------------------------------
   
   Widget _buildQuickConnectButtons(SipProvider sipProvider) {
+    final items = <({String ext, String? label})>[];
+    if (_quickContacts.isNotEmpty) {
+      for (final c in _quickContacts) {
+        items.add((ext: c.extension, label: c.displayName.isNotEmpty ? c.displayName : null));
+      }
+    } else {
+      // OPS 미응답/미설정 시 DEV 폴백
+      for (final ext in AppConstants.devQuickAccounts.keys) {
+        items.add((ext: ext, label: null));
+      }
+    }
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        const Text(
-          '빠른 연결',
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w600,
-            color: Colors.grey,
-          ),
+        Row(
+          children: [
+            const Text(
+              '빠른 연결',
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                color: Colors.grey,
+              ),
+            ),
+            const Spacer(),
+            if (!_quickContactsLoaded)
+              const SizedBox(width: 14, height: 14, child: CircularProgressIndicator(strokeWidth: 2))
+            else
+              IconButton(
+                icon: const Icon(Icons.refresh, size: 18),
+                tooltip: 'OPS 목록 새로고침',
+                onPressed: _loadQuickContacts,
+              ),
+          ],
         ),
         const SizedBox(height: AppConstants.spacingSm),
         Wrap(
           spacing: AppConstants.spacingSm,
           runSpacing: AppConstants.spacingSm,
           children: [
-            for (final ext in AppConstants.devQuickAccounts.keys)
-              _buildQuickConnectButton(sipProvider, ext),
+            for (final it in items)
+              _buildQuickConnectButton(sipProvider, it.ext, label: it.label),
           ],
         ),
       ],
@@ -613,8 +653,8 @@ class _LoginScreenState extends State<LoginScreen> {
   // Quick Connect Button
   //--------------------------------------------------------------------------
   
-  Widget _buildQuickConnectButton(SipProvider sipProvider, String extension) {
-    return OutlinedButton(
+  Widget _buildQuickConnectButton(SipProvider sipProvider, String extension, {String? label}) {
+    final btn = OutlinedButton(
       onPressed: () => _quickConnect(sipProvider, extension),
       style: OutlinedButton.styleFrom(
         padding: const EdgeInsets.symmetric(
@@ -628,6 +668,10 @@ class _LoginScreenState extends State<LoginScreen> {
         style: const TextStyle(fontSize: 14),
       ),
     );
+    if (label != null && label.isNotEmpty) {
+      return Tooltip(message: label, child: btn);
+    }
+    return btn;
   }
 
   //--------------------------------------------------------------------------
@@ -754,7 +798,7 @@ class _LoginScreenState extends State<LoginScreen> {
   
   Future<void> _quickConnect(SipProvider sipProvider, String extension) async {
     _usernameController.text = extension;
-    // 빠른 연결: DEV 계정 암호까지 자동 입력 (<내선>pass)
+    // 알려진 DEV 계정만 암호 자동 입력, 그 외는 직접 입력
     _passwordController.text = AppConstants.devQuickAccounts[extension] ?? '';
     AppLogger.instance.ui('LOGIN', 'quickConnectFilled',
         params: {'extension': extension});

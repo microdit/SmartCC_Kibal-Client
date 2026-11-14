@@ -548,7 +548,7 @@ class _DialerScreenState extends State<DialerScreen> {
   }
 
   Widget _buildCallButton(SipProvider sipProvider) {
-    final canCall = sipProvider.canCall && _targetController.text.trim().isNotEmpty;
+    final hasTarget = _targetController.text.trim().isNotEmpty;
     return Padding(
       padding: const EdgeInsets.fromLTRB(
         AppConstants.spacingMd,
@@ -559,7 +559,7 @@ class _DialerScreenState extends State<DialerScreen> {
       child: SizedBox(
         height: 52,
         child: ElevatedButton.icon(
-          onPressed: canCall ? () => _handleCall(sipProvider) : null,
+          onPressed: hasTarget ? () => _handleCall(sipProvider) : null,
           icon: const Icon(Icons.call),
           label: const Text('통화', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
           style: ElevatedButton.styleFrom(
