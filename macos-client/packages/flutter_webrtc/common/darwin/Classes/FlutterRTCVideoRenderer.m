@@ -133,7 +133,16 @@
   if (outputPixelBuffer == nil || frame == nil || frame.buffer == nil) {
     return;
   }
-  id<RTCI420Buffer> sourceBuffer = [frame.buffer toI420];
+  if (frame.width <= 0 || frame.height <= 0) {
+    return;
+  }
+  id<RTCVideoFrameBuffer> frameBuffer = frame.buffer;
+  if ([frameBuffer width] <= 0 || [frameBuffer height] <= 0) {
+    return;
+  }
+  // RTCCVPixelBuffer.toI420 -> I420Buffer::Create -> CheckValidDimensions can
+  // abort on invalid dimensions; guard before conversion to avoid fatal crash.
+  id<RTCI420Buffer> sourceBuffer = [frameBuffer toI420];
   if (sourceBuffer == nil || sourceBuffer.width <= 0 || sourceBuffer.height <= 0) {
     return;
   }
@@ -204,7 +213,10 @@
 
 #pragma mark - RTCVideoRenderer methods
 - (void)renderFrame:(RTCVideoFrame*)frame {
-  if (frame == nil || frame.width <= 0 || frame.height <= 0) {
+  if (frame == nil || frame.buffer == nil || frame.width <= 0 || frame.height <= 0) {
+    return;
+  }
+  if ([frame.buffer width] <= 0 || [frame.buffer height] <= 0) {
     return;
   }
 

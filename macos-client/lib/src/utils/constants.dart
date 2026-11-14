@@ -55,11 +55,12 @@ class AppConstants {
   // WebRTC extensions (Web)
   static const List<String> webrtcExtensions = ['1101', '1102', '1103', '1104'];
 
-  // 빠른 연결 계정 (DEV 수동 테스트용 — 계정: 암호)
+  // 빠른 연결 계정 (DEV 수동 테스트용 — 계정: 암호, deploy/dev/.env SIP_PASSWORD_* 기준)
   static const Map<String, String> devQuickAccounts = {
     '1101': '1101pass',
     '1102': '1102pass',
     '1103': '1103pass',
+    '1104': '1104pass',
   };
   
   //--------------------------------------------------------------------------
