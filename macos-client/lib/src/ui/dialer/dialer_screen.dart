@@ -4,15 +4,16 @@ import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
 import '../../providers/sip_provider.dart';
 import '../../providers/media_provider.dart';
+import '../../sip/sip_client.dart';
 import '../../utils/app_logger.dart';
 import '../../utils/constants.dart';
 import '../../utils/formatters.dart';
-import '../settings/remote_log_settings_dialog.dart';
+import '../../utils/ops_directory.dart';
 
 /// 다이얼러 화면
 /// 
-/// 전화번호를 입력하고 통화를 시작하는 화면입니다.
-/// 1:1 영상통화, 회의실 참가 기능을 제공합니다.
+/// SIP 등록 후 통화할 상대방 번호를 입력하는 화면입니다.
+/// 숫자 키패드를 사용하여 대상 번호를 입력하고 통화를 시작합니다.
 class DialerScreen extends StatefulWidget {
   const DialerScreen({super.key});
 
@@ -21,21 +22,25 @@ class DialerScreen extends StatefulWidget {
 }
 
 class _DialerScreenState extends State<DialerScreen> {
-  // 전화번호 입력 컨트롤러
+  // 입력 컨트롤러
   final _targetController = TextEditingController();
-  
-  // 전화번호 포커스 노드
   final _targetFocus = FocusNode();
-  
-  // Dahilah_generator
+  OpsDirectory _directory = const OpsDirectory();
+  bool _directoryLoaded = false;
 
   @override
   void initState() {
     super.initState();
-    _targetFocus.addListener(() {
-      if (!_targetFocus.hasFocus) {
-        setState(() {});
-      }
+    _targetController.clear();
+    _loadDirectory();
+  }
+
+  Future<void> _loadDirectory() async {
+    final dir = await OpsDirectory.fetch();
+    if (!mounted) return;
+    setState(() {
+      _directory = dir;
+      _directoryLoaded = true;
     });
   }
 
@@ -49,31 +54,75 @@ class _DialerScreenState extends State<DialerScreen> {
   @override
   Widget build(BuildContext context) {
     final sipProvider = Provider.of<SipProvider>(context);
-    final mediaProvider = Provider.of<MediaProvider>(context);
     
-    // SIP 등록되지 않은 경우 로그인 화면으로 리디렉션
-    if (!sipProvider.isRegistered) {
+    // 수신 통화 상태 확인
+    if (sipProvider.hasIncomingCall) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        context.go('/');
+        if (mounted) context.push('/incoming');
       });
     }
     
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: _buildAppBar(context, sipProvider),
+      appBar: AppBar(
+        title: const Text('Kibal'),
+        centerTitle: false,
+        elevation: 0,
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.black87,
+        actions: [
+          // SIP 상태 표시
+          _buildStatusIndicator(sipProvider),
+          
+          // 설정 메뉴
+          PopupMenuButton<String>(
+            icon: const Icon(Icons.more_vert),
+            onSelected: (value) => _handleMenuAction(value, sipProvider),
+            itemBuilder: (context) => [
+              const PopupMenuItem(
+                value: 'unregister',
+                child: Row(
+                  children: [
+                    Icon(Icons.logout, size: 20),
+                    SizedBox(width: AppConstants.spacingSm),
+                    Text('등록 해제'),
+                  ],
+                ),
+              ),
+              const PopupMenuItem(
+                value: 'settings',
+                child: Row(
+                  children: [
+                    Icon(Icons.settings, size: 20),
+                    SizedBox(width: AppConstants.spacingSm),
+                    Text('설정'),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
       body: SafeArea(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // 상태 바
-            _buildStatusBar(sipProvider, mediaProvider),
+            // 등록 상태 및 정보
+            _buildStatusSection(sipProvider),
             
-            // 입력 필드
+            // 구분선
+            const Divider(height: 1),
+            
+            // 번호 입력 필드
             _buildInputField(sipProvider),
             
             // 다이얼 패드
             _buildDialPad(),
             
-            // 기존 통화 기록 (미구현)
+            // 통화 버튼
+            _buildCallButton(sipProvider),
+            
+            // 통화 기록 (선택 사항 - 현재 미구현)
             // _buildCallHistory(),
           ],
         ),
@@ -82,135 +131,115 @@ class _DialerScreenState extends State<DialerScreen> {
   }
 
   //--------------------------------------------------------------------------
-  // App Bar
+  // Status Indicator
   //--------------------------------------------------------------------------
   
-  PreferredSizeWidget _buildAppBar(BuildContext context, SipProvider sipProvider) {
-    return AppBar(
-      title: const Text('다이얼러'),
-      centerTitle: true,
-      actions: [
-        IconButton(
-          icon: const Icon(Icons.settings_outlined),
-          onPressed: () => _showSettingsDialog(context),
-        ),
-        PopupMenuButton<String>(
-          icon: const Icon(Icons.more_vert_outlined),
-          onSelected: (value) => _handleMenuSelected(value, context),
-          itemBuilder: (context) => [
-            const PopupMenuItem(
-              value: 'media_test',
-              child: ListTile(
-                leading: Icon(Icons.mic_none),
-                title: Text('마이크/카메라 테스트'),
-                contentPadding: EdgeInsets.zero,
-              ),
-            ),
-            const PopupMenuItem(
-              value: 'remote_log',
-              child: ListTile(
-                leading: Icon(Icons.cloud_upload_outlined),
-                title: Text('로그 전송 설정'),
-                contentPadding: EdgeInsets.zero,
-              ),
-            ),
-            const PopupMenuItem(
-              value: 'logout',
-              child: ListTile(
-                leading: Icon(Icons.logout_outlined),
-                title: Text('등록 해제'),
-                contentPadding: EdgeInsets.zero,
-              ),
-            ),
-            const PopupMenuItem(
-              value: 'toggle_camera',
-              child: ListTile(
-                leading: Icon(Icons.camera_front_outlined),
-                title: Text('카메라 전환'),
-                contentPadding: EdgeInsets.zero,
-              ),
-            ),
-            PopupMenuItem(
-              enabled: sipProvider.isInCall,
-              child: const ListTile(
-                leading: Icon(Icons.call_end_outlined),
-                title: Text('통화 종료'),
-                contentPadding: EdgeInsets.zero,
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-
-  //--------------------------------------------------------------------------
-  // Status Bar
-  //--------------------------------------------------------------------------
-  
-  Widget _buildStatusBar(SipProvider sipProvider, MediaProvider mediaProvider) {
+  Widget _buildStatusIndicator(SipProvider sipProvider) {
+    final connecting = sipProvider.isLoading || (!sipProvider.isRegistered && sipProvider.sipState == SipClientState.connecting);
     return Container(
+      margin: const EdgeInsets.only(right: AppConstants.spacingMd),
       padding: const EdgeInsets.symmetric(
         horizontal: AppConstants.spacingMd,
         vertical: AppConstants.spacingSm,
       ),
       decoration: BoxDecoration(
-        color: Colors.grey[50],
-        border: Border.all(color: Colors.grey[200]!),
+        color: _getStatusColor(sipProvider),
+        borderRadius: BorderRadius.circular(AppConstants.borderRadiusFull),
       ),
-      child: Column(
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Row(
-            children: [
-              const Icon(Icons.phone_outlined, size: 16, color: Colors.grey),
-              const SizedBox(width: AppConstants.spacingSm),
-              Text(
-                sipProvider.getRegistrationStatusText(),
-                style: TextStyle(
-                  color: _getStatusColor(sipProvider),
-                  fontWeight: FontWeight.w500,
-                ),
+          if (connecting)
+            const SizedBox(
+              width: 16,
+              height: 16,
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
               ),
-              const Spacer(),
-              if (mediaProvider.hasLocalStream)
-                Row(
-                  children: [
-                    Icon(
-                      mediaProvider.isVideoMuted 
-                          ? Icons.videocam_off_outlined 
-                          : Icons.videocam_outlined,
-                      size: 16,
-                      color: Colors.grey,
-                    ),
-                    const SizedBox(width: AppConstants.spacingXs),
-                    Icon(
-                      mediaProvider.isAudioMuted 
-                          ? Icons.mic_off_outlined 
-                          : Icons.mic_outlined,
-                      size: 16,
-                      color: Colors.grey,
-                    ),
-                  ],
-                ),
-            ],
-          ),
-          if (sipProvider.isInCall)
-            Padding(
-              padding: const EdgeInsets.only(top: AppConstants.spacingXs),
-              child: Row(
-                children: [
-                  const Icon(Icons.call_outlined, size: 14, color: Colors.green),
-                  const SizedBox(width: AppConstants.spacingXs),
-                  Text(
-                    sipProvider.getCallStatusText(),
-                    style: const TextStyle(
-                      color: Colors.green,
-                      fontSize: 12,
-                    ),
-                  ),
-                ],
+            )
+          else
+            Container(
+              width: 10,
+              height: 10,
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                shape: BoxShape.circle,
               ),
             ),
+          const SizedBox(width: AppConstants.spacingSm),
+          Text(
+            sipProvider.isRegistered ? '등록됨' : (connecting ? '연결 중' : '미등록'),
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  //--------------------------------------------------------------------------
+  // Status Section
+  //--------------------------------------------------------------------------
+  
+  Widget _buildStatusSection(SipProvider sipProvider) {
+    final username = sipProvider.config?.username;
+    final display = sipProvider.config?.displayName;
+    final connecting = sipProvider.isLoading || (!sipProvider.isRegistered && sipProvider.sipState == SipClientState.connecting);
+    final avatar = (username != null && username.isNotEmpty)
+        ? (username.length >= 4 ? username.substring(username.length - 4) : username)
+        : '--';
+    return Container(
+      padding: const EdgeInsets.all(AppConstants.spacingMd),
+      color: Colors.grey[50],
+      child: Row(
+        children: [
+          // 아바타
+          CircleAvatar(
+            radius: 24,
+            backgroundColor: Colors.blue,
+            child: Text(
+              avatar,
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          const SizedBox(width: AppConstants.spacingMd),
+          
+          // 정보
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  username != null
+                      ? '$username${(display != null && display.isNotEmpty) ? ' ($display)' : ''}'
+                      : '등록되지 않음',
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(height: AppConstants.spacingXs),
+                Text(
+                  sipProvider.isRegistered
+                      ? 'SIP 서버에 연결되었습니다'
+                      : connecting
+                          ? '서버에 연결 중...'
+                          : '연결되지 않음',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.grey[600],
+                  ),
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );
@@ -242,7 +271,7 @@ class _DialerScreenState extends State<DialerScreen> {
             focusNode: _targetFocus,
             decoration: InputDecoration(
               labelText: '대상 번호',
-              hintText: '1002 또는 6000 (회의실)',
+              hintText: '내선번호 또는 회의실 번호',
               prefixIcon: const Icon(Icons.dialpad_outlined),
               border: const OutlineInputBorder(),
               suffixIcon: Row(
@@ -277,23 +306,68 @@ class _DialerScreenState extends State<DialerScreen> {
             onFieldSubmitted: (_) => _handleCall(sipProvider),
           ),
           const SizedBox(height: AppConstants.spacingSm),
-          
-          // Quick dial buttons
-          Wrap(
-            spacing: AppConstants.spacingSm,
-            runSpacing: AppConstants.spacingSm,
-            alignment: WrapAlignment.center,
-            children: [
-              _buildQuickDialButton('1001'),
-              _buildQuickDialButton('1002'),
-              _buildQuickDialButton('1003'),
-              _buildQuickDialButton('1004'),
-              _buildQuickDialButton('6000', isConference: true),
-              _buildQuickDialButton('6100', isConference: true),
-            ],
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Row(
+              children: [
+                const Text(
+                  '빠른 연결',
+                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Colors.grey),
+                ),
+                const Spacer(),
+                IconButton(
+                  icon: const Icon(Icons.refresh, size: 18),
+                  tooltip: 'OPS 목록 새로고침',
+                  onPressed: _loadDirectory,
+                ),
+              ],
+            ),
           ),
+          _buildQuickDialWrap(),
         ],
       ),
+    );
+  }
+
+  Widget _buildQuickDialWrap() {
+    final contacts = _directory.contacts;
+    final rooms = _directory.rooms;
+    if (!_directoryLoaded) {
+      return const Padding(
+        padding: EdgeInsets.symmetric(vertical: 8),
+        child: SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2)),
+      );
+    }
+    final children = <Widget>[];
+    if (contacts.isEmpty && rooms.isEmpty) {
+      // OPS 미응답/미설정 시 최소 폴백
+      for (final n in const ['1101', '1102', '1103']) {
+        children.add(_buildQuickDialButton(n));
+      }
+      for (final n in const ['6000', '6100']) {
+        children.add(_buildQuickDialButton(n, isConference: true));
+      }
+    } else {
+      for (final c in contacts) {
+        children.add(_buildQuickDialButton(
+          c.extension,
+          isConference: AppConstants.isConferenceRoom(c.extension),
+          tooltip: c.displayName.isNotEmpty ? c.displayName : null,
+        ));
+      }
+      for (final r in rooms) {
+        children.add(_buildQuickDialButton(
+          r.room,
+          isConference: true,
+          tooltip: r.name.isNotEmpty ? r.name : null,
+        ));
+      }
+    }
+    return Wrap(
+      spacing: AppConstants.spacingSm,
+      runSpacing: AppConstants.spacingSm,
+      alignment: WrapAlignment.center,
+      children: children,
     );
   }
 
@@ -301,8 +375,8 @@ class _DialerScreenState extends State<DialerScreen> {
   // Quick Dial Button
   //--------------------------------------------------------------------------
   
-  Widget _buildQuickDialButton(String number, {bool isConference = false}) {
-    return OutlinedButton(
+  Widget _buildQuickDialButton(String number, {bool isConference = false, String? tooltip}) {
+    final btn = OutlinedButton(
       onPressed: () => _quickDial(number),
       style: OutlinedButton.styleFrom(
         padding: const EdgeInsets.symmetric(
@@ -316,7 +390,7 @@ class _DialerScreenState extends State<DialerScreen> {
         children: [
           if (isConference)
             const Icon(Icons.groups_outlined, size: 16),
-          const SizedBox(width: AppConstants.spacingXs),
+          if (isConference) const SizedBox(width: AppConstants.spacingXs),
           Text(
             number,
             style: TextStyle(
@@ -327,6 +401,10 @@ class _DialerScreenState extends State<DialerScreen> {
         ],
       ),
     );
+    if (tooltip != null && tooltip.isNotEmpty) {
+      return Tooltip(message: tooltip, child: btn);
+    }
+    return btn;
   }
 
   //--------------------------------------------------------------------------
@@ -344,22 +422,15 @@ class _DialerScreenState extends State<DialerScreen> {
           mainAxisSpacing: AppConstants.spacingSm,
           physics: const NeverScrollableScrollPhysics(),
           children: [
-            // Row 1
             _buildDialButton('1'),
             _buildDialButton('2', letters: 'ABC'),
             _buildDialButton('3', letters: 'DEF'),
-            
-            // Row 2
             _buildDialButton('4', letters: 'GHI'),
             _buildDialButton('5', letters: 'JKL'),
             _buildDialButton('6', letters: 'MNO'),
-            
-            // Row 3
             _buildDialButton('7', letters: 'PQRS'),
             _buildDialButton('8', letters: 'TUV'),
             _buildDialButton('9', letters: 'WXYZ'),
-            
-            // Row 4
             _buildDialButton('*'),
             _buildDialButton('0', letters: '+'),
             _buildDialButton('#'),
@@ -369,10 +440,6 @@ class _DialerScreenState extends State<DialerScreen> {
     );
   }
 
-  //--------------------------------------------------------------------------
-  // Dial Button
-  //--------------------------------------------------------------------------
-  
   Widget _buildDialButton(String number, {String? letters}) {
     return ElevatedButton(
       onPressed: () => _handleDialInput(number),
@@ -406,37 +473,6 @@ class _DialerScreenState extends State<DialerScreen> {
     );
   }
 
-  //--------------------------------------------------------------------------
-  // Call History (Placeholder)
-  //--------------------------------------------------------------------------
-  
-  /*
-  Widget _buildCallHistory() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: AppConstants.spacingMd),
-          child: Text(
-            '최근 통화',
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
-              color: Colors.grey,
-            ),
-          ),
-        ),
-        const SizedBox(height: AppConstants.spacingSm),
-        // 통화 기록 목록 (미구현)
-      ],
-    );
-  }
-  */
-
-  //--------------------------------------------------------------------------
-  // Dial Input Handler
-  //--------------------------------------------------------------------------
-  
   void _handleDialInput(String input) {
     if (input == '<') {
       _handleBackspace();
@@ -451,10 +487,6 @@ class _DialerScreenState extends State<DialerScreen> {
     }
   }
 
-  //--------------------------------------------------------------------------
-  // Backspace Handler
-  //--------------------------------------------------------------------------
-  
   void _handleBackspace() {
     final current = _targetController.text;
     if (current.isNotEmpty) {
@@ -465,10 +497,6 @@ class _DialerScreenState extends State<DialerScreen> {
     }
   }
 
-  //--------------------------------------------------------------------------
-  // Quick Dial
-  //--------------------------------------------------------------------------
-  
   void _quickDial(String number) {
     _targetController.text = number;
     _targetController.selection = TextSelection.fromPosition(
@@ -477,10 +505,6 @@ class _DialerScreenState extends State<DialerScreen> {
     _targetFocus.requestFocus();
   }
 
-  //--------------------------------------------------------------------------
-  // Call Handler
-  //--------------------------------------------------------------------------
-  
   Future<void> _handleCall(SipProvider sipProvider) async {
     final target = _targetController.text.trim();
     AppLogger.instance.ui('DIALER', 'callPressed',
@@ -496,7 +520,6 @@ class _DialerScreenState extends State<DialerScreen> {
       return;
     }
     
-    // 로컬 미디어 확보 후 통화 시작
     final mediaProvider = Provider.of<MediaProvider>(context, listen: false);
     if (!mediaProvider.hasLocalStream) {
       await mediaProvider.getLocalMedia();
@@ -514,149 +537,65 @@ class _DialerScreenState extends State<DialerScreen> {
         details: {'target': target, 'error': sipProvider.error});
 
     if (success) {
-      // 회의실 번호는 다자간(참가자 카드) 화면, 그 외는 1:1 통화 화면 (B1/F1)
       if (AppConstants.isConferenceRoom(target)) {
         context.push('/conference');
       } else {
-        context.push('/call', extra: target);
+        context.push('/call');
       }
     } else {
-      _showErrorDialog(context, '통화 시작에 실패했습니다: ${sipProvider.error}');
+      _showErrorDialog(context, sipProvider.error ?? '통화 연결에 실패했습니다');
     }
   }
 
-  //--------------------------------------------------------------------------
-  // Settings Dialog
-  //--------------------------------------------------------------------------
-  
-  void _showSettingsDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('설정'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ListTile(
-              leading: const Icon(Icons.camera_alt_outlined),
-              title: const Text('카메라 전환'),
-              trailing: const Icon(Icons.chevron_right_outlined),
-              onTap: () => _handleCameraToggle(context),
-            ),
-            ListTile(
-              leading: const Icon(Icons.mic_outlined),
-              title: const Text('마이크 뮤트'),
-              trailing: const Icon(Icons.chevron_right_outlined),
-              onTap: () => _handleAudioToggle(context),
-            ),
-            ListTile(
-              leading: const Icon(Icons.videocam_outlined),
-              title: const Text('비디오 뮤트'),
-              trailing: const Icon(Icons.chevron_right_outlined),
-              onTap: () => _handleVideoToggle(context),
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('닫기'),
+  Widget _buildCallButton(SipProvider sipProvider) {
+    final canCall = sipProvider.canCall && _targetController.text.trim().isNotEmpty;
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(
+        AppConstants.spacingMd,
+        AppConstants.spacingSm,
+        AppConstants.spacingMd,
+        AppConstants.spacingMd,
+      ),
+      child: SizedBox(
+        height: 52,
+        child: ElevatedButton.icon(
+          onPressed: canCall ? () => _handleCall(sipProvider) : null,
+          icon: const Icon(Icons.call),
+          label: const Text('통화', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.green,
+            foregroundColor: Colors.white,
+            disabledBackgroundColor: Colors.grey[300],
           ),
-        ],
+        ),
       ),
     );
   }
 
-  //--------------------------------------------------------------------------
-  // Camera Toggle Handler
-  //--------------------------------------------------------------------------
-  
-  Future<void> _handleCameraToggle(BuildContext context) async {
-    AppLogger.instance.ui('SETTINGS', 'cameraTogglePressed');
-    AppLogger.instance.d('UI dialer cameraToggle');
-    final mediaProvider = Provider.of<MediaProvider>(context, listen: false);
-    await mediaProvider.toggleCamera();
-    if (context.mounted) Navigator.of(context).pop();
-  }
-
-  //--------------------------------------------------------------------------
-  // Audio Toggle Handler
-  //--------------------------------------------------------------------------
-  
-  Future<void> _handleAudioToggle(BuildContext context) async {
-    final mediaProvider = Provider.of<MediaProvider>(context, listen: false);
-    AppLogger.instance.ui('SETTINGS', 'audioTogglePressed');
-    await mediaProvider.toggleAudio();
-    AppLogger.instance.evt('MEDIA', 'audioToggled',
-        state: 'muted=${!mediaProvider.isAudioMuted}');
-    if (context.mounted) Navigator.of(context).pop();
-  }
-
-  //--------------------------------------------------------------------------
-  // Video Toggle Handler
-  //--------------------------------------------------------------------------
-  
-  Future<void> _handleVideoToggle(BuildContext context) async {
-    final mediaProvider = Provider.of<MediaProvider>(context, listen: false);
-    AppLogger.instance.ui('SETTINGS', 'videoTogglePressed');
-    await mediaProvider.toggleVideo();
-    AppLogger.instance.evt('MEDIA', 'videoToggled',
-        state: 'hasVideo=${mediaProvider.hasLocalVideo}');
-    if (context.mounted) Navigator.of(context).pop();
-  }
-
-  //--------------------------------------------------------------------------
-  // Menu Selected Handler
-  //--------------------------------------------------------------------------
-  
-  Future<void> _handleMenuSelected(String value, BuildContext context) async {
-    switch (value) {
-      case 'remote_log':
-        await showRemoteLogSettingsDialog(context);
-        break;
-      case 'logout':
-        final sipProvider = Provider.of<SipProvider>(context, listen: false);
-        final mediaProvider = Provider.of<MediaProvider>(context, listen: false);
-        
-        await mediaProvider.releaseLocalMedia();
-        await sipProvider.disconnect();
-        sipProvider.clearConfig();
-        
-        if (context.mounted) {
-          context.go('/');
-        }
-        break;
-      case 'toggle_camera':
-        if (context.mounted) {
-          await _handleCameraToggle(context);
-        }
-        break;
-      case 'media_test':
-        if (context.mounted) {
-          AppLogger.instance.ui('DIALER', 'mediaTestMenuSelected');
-          context.push('/mediaTest');
-        }
-        break;
-    }
-  }
-
-  //--------------------------------------------------------------------------
-  // Error Dialog
-  //--------------------------------------------------------------------------
-  
   void _showErrorDialog(BuildContext context, String message) {
-    showDialog(
+    showDialog<void>(
       context: context,
-      builder: (context) => AlertDialog(
+      builder: (ctx) => AlertDialog(
         title: const Text('오류'),
         content: Text(message),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('확인'),
-          ),
+          TextButton(onPressed: () => Navigator.of(ctx).pop(), child: const Text('확인')),
         ],
       ),
     );
+  }
+
+  void _handleMenuAction(String value, SipProvider sipProvider) {
+    switch (value) {
+      case 'unregister':
+        sipProvider.unregister();
+        if (mounted) context.go('/login');
+        break;
+      case 'settings':
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('설정 화면은 준비 중입니다')),
+        );
+        break;
+    }
   }
 }
