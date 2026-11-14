@@ -99,7 +99,8 @@
 - **순번(W1~W5)**: ①W1 H5 좀비/중복(서버 정리 완료, 클라 가드 유지) → ②W2 **P0 `CheckValidDimensions` 근본**(진행) → ③W3 H5/F1/H6 실기 재검증 → ④W4 H1 서버 AMI 영상소스 보장 연계 확인 → ⑤W5 릴리스·origin 동기화·모니터링.
 - **W2 진행(패치·빌드 완료)**: `packages/flutter_webrtc`(1.6.3 포크, darwin 0-dim/무효 프레임 가드·픽셀버퍼 리사이즈) + `dependency_overrides`. `pub get`/`test` 17/17, debug·release 빌드 성공(Release app 76M, SHA256 `c24dfa4…9832`, v0.0.24+24). 실기 배포/크래시 재현 검증 미수행.
 - **문서**: [[wiki/01_Projects/20261114_후속작업_통합계획서_v3.0]], [[wiki/07_Logs/작업로그_20261114]], `docs/_작업이력/2026-11-14.md`.
-- **전제/차단**: NAS(dev/prd) 미접속→origin 기준. W3 다단말·1201 실기 필요(절차서: [[wiki/03_Guides/20261114_W3_실기재검증_절차서_v1.0]]). 서버 H1은 승인/AMI 필요.
+- **W3 배포준비**: 릴리스 DMG `~/Downloads/macos_client_v0.0.24+24_w2.dmg`(37M, sha256 `4c5caa3d…c63a`) 생성, 현황 [[wiki/08_Experiments/20261114_W3_실기재검증_배포준비_v1.0]].
+- **전제/차단**: NAS(dev/prd) 미접속→origin 기준. W3 실기(다단말·1201, 활성통화 종료 후) 필요. 서버 H1은 승인/AMI 필요.
 
 ## 이전 진행 (2026-11-13 02:00, 요약) — F1/F2/G3 구현·v0.0.24
 - F1 `_pendingCallTarget`, F2 A4 롤백, G3 `enable_events=yes` 반영(v0.0.24 build 24, sha256 `c8c6e4a7…`). ADR-008/D1·ADR-009/F2 실기 확인, G3 부분검증. 잔여: P0 크래시, H1/H5/F1/H6 재검증. 상세: [[wiki/06_Reports/20261113_F1F2G3_구현완료보고서_v1.0]], [[docs/보고서/20261113_후속작업계획서_v2.0]], [[wiki/07_Logs/작업로그_20261113]]
@@ -121,6 +122,7 @@
 - [[wiki/08_Experiments/20261113_1대1_즉시종료_교차검증_v1.0]] — 1101 v0.0.24 실기 KST↔UTC 교차검증
 - [[docs/보고서/20261113_후속작업계획서_v2.0.md]] — v2.0 후속(W0~W4, H1~H6)·NAS(dev/prd) 배포 제외 정책
 - [[wiki/01_Projects/20261114_후속작업_통합계획서_v3.0.md]] — 2026-11-14 통합계획(W1~W5)
+- [[wiki/08_Experiments/20261114_W3_실기재검증_배포준비_v1.0.md]] — W3 배포준비/현황
 - [[wiki/07_Logs/작업로그_20261114.md]] — 2026-11-14 로그
 - [[wiki/07_Logs/작업로그_20261113.md]] — 2026-11-13 로그
 - [[wiki/06_Reports/20261113_v0.0.24_앱크래시_교차검증보고서_v1.0.md]] — 1102/1103 WebRTC `CheckValidDimensions` fatal 크래시·서버 로그 공백 교차검증
