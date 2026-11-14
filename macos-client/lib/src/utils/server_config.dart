@@ -21,6 +21,9 @@ class ServerConfig {
     this.publicHost,
     this.updatedAt,
     this.source = 'default',
+    this.clientKey = '',
+    this.clientExtension = '',
+    this.manifest,
   });
 
   final String sipDomain;
@@ -35,6 +38,12 @@ class ServerConfig {
 
   /// default | saved | ops
   final String source;
+
+  /// 내선별 클라이언트 키(사용자 수동 입력, ADR-006) — 비어있으면 전역키 fallback
+  final String clientKey;
+  final String clientExtension;
+  /// 서버 manifest(D1): config_version, latest/min_supported, update flags 등
+  final Map<String, dynamic>? manifest;
 
   static String get filePath => '${AppLogger.logDirectory}/server-config.json';
 
@@ -59,6 +68,9 @@ class ServerConfig {
         'clientLogUrl': clientLogUrl,
         'publicHost': publicHost,
         'updatedAt': updatedAt,
+        'clientKey': clientKey,
+        'clientExtension': clientExtension,
+        'manifest': manifest,
       };
 
   static ServerConfig? _fromJson(Map<String, dynamic> j, String source) {
@@ -67,6 +79,7 @@ class ServerConfig {
     if (domain == null || domain.isEmpty || ws == null || ws.isEmpty) return null;
     final ops = (j['opsBaseUrl'] ?? j['ops_base_url']) as String? ??
         'http://$domain:${AppConstants.opsPort}';
+    final man = j['manifest'];
     return ServerConfig(
       sipDomain: domain,
       sipPort: ((j['sipPort'] ?? j['sip_port']) as num?)?.toInt() ??
@@ -78,6 +91,9 @@ class ServerConfig {
       publicHost: (j['publicHost'] ?? j['public_host']) as String?,
       updatedAt: (j['updatedAt'] ?? j['updated_at']) as String?,
       source: source,
+      clientKey: (j['clientKey'] as String?) ?? '',
+      clientExtension: (j['clientExtension'] as String?) ?? '',
+      manifest: man is Map<String, dynamic> ? man : (man is Map ? Map<String, dynamic>.from(man) : null),
     );
   }
 
@@ -103,6 +119,39 @@ class ServerConfig {
 
   bool sameAddressAs(ServerConfig other) =>
       sipDomain == other.sipDomain && wsServer == other.wsServer;
+
+  String? get configVersion => manifest?['config_version'] as String?;
+  String? get latestVersion => manifest?['latest_version'] as String?;
+  String? get minSupportedVersion => manifest?['min_supported_version'] as String?;
+  bool get updateRequired => manifest?['update_required'] == true;
+  bool get updateRecommended => manifest?['update_recommended'] == true;
+  String get releaseNotes => (manifest?['release_notes'] as String?) ?? '';
+
+  ServerConfig copyWith({
+    String? sipDomain,
+    int? sipPort,
+    String? wsServer,
+    String? opsBaseUrl,
+    String? clientLogUrl,
+    String? publicHost,
+    String? updatedAt,
+    String? source,
+    String? clientKey,
+    String? clientExtension,
+    Map<String, dynamic>? manifest,
+  }) => ServerConfig(
+        sipDomain: sipDomain ?? this.sipDomain,
+        sipPort: sipPort ?? this.sipPort,
+        wsServer: wsServer ?? this.wsServer,
+        opsBaseUrl: opsBaseUrl ?? this.opsBaseUrl,
+        clientLogUrl: clientLogUrl ?? this.clientLogUrl,
+        publicHost: publicHost ?? this.publicHost,
+        updatedAt: updatedAt ?? this.updatedAt,
+        source: source ?? this.source,
+        clientKey: clientKey ?? this.clientKey,
+        clientExtension: clientExtension ?? this.clientExtension,
+        manifest: manifest ?? this.manifest,
+      );
 
   @override
   String toString() =>
@@ -135,16 +184,16 @@ class ServerConfigService {
   }
 
   /// OPS에 접속해 최신 설정을 받는다. 성공 시 저장 후 반환, 모두 실패 시 null.
-  Future<ServerConfig?> refresh({String? hintDomain, String? clientKey}) async {
-    final key = clientKey ?? AppConstants.opsClientKey;
+  Future<ServerConfig?> refresh({String? hintDomain, String? clientKey, String? extension}) async {
+    final key = clientKey ?? (_current.clientKey.trim().isNotEmpty ? _current.clientKey.trim() : AppConstants.opsClientKey);
     for (final base in candidates(hintDomain: hintDomain)) {
-      final cfg = await _fetch(base, key);
+      final cfg = await _fetch(base, key, extension: extension ?? _current.clientExtension);
       if (cfg != null) {
-        final changed = !cfg.sameAddressAs(_current);
+        final changed = !cfg.sameAddressAs(_current) || cfg.configVersion != _current.configVersion;
         _current = cfg;
         cfg.save();
         AppLogger.instance.i('서버 설정 갱신 via=$base '
-            'domain=${cfg.sipDomain} ws=${cfg.wsServer} changed=$changed');
+            'domain=${cfg.sipDomain} ws=${cfg.wsServer} changed=$changed ver=${cfg.configVersion}');
         return cfg;
       }
     }
@@ -153,20 +202,39 @@ class ServerConfigService {
     return null;
   }
 
-  Future<ServerConfig?> _fetch(String base, String key) async {
+  void updateClientCredentials({String? clientKey, String? clientExtension}) {
+    _current = _current.copyWith(
+      clientKey: clientKey ?? _current.clientKey,
+      clientExtension: clientExtension ?? _current.clientExtension,
+    );
+    _current.save();
+  }
+
+  Future<ServerConfig?> _fetch(String base, String key, {String? extension}) async {
     final client = HttpClient()..connectionTimeout = perCandidateTimeout;
     try {
       final req = await client
           .getUrl(Uri.parse('$base/api/client/config'))
           .timeout(perCandidateTimeout);
-      if (key.isNotEmpty) req.headers.add('X-Client-Key', key);
+      final useExt = (extension ?? _current.clientExtension).trim();
+      final useKey = key.isNotEmpty ? key : (_current.clientKey.trim().isNotEmpty ? _current.clientKey.trim() : AppConstants.opsClientKey);
+      if (useKey.isNotEmpty) req.headers.add('X-Client-Key', useKey);
+      if (useExt.isNotEmpty && _current.clientKey.trim().isNotEmpty) {
+        req.headers.add('X-Client-Extension', useExt);
+      }
       final res = await req.close().timeout(perCandidateTimeout);
       final body = await res.transform(utf8.decoder).join();
       if (res.statusCode != 200) return null;
       final json = jsonDecode(body) as Map<String, dynamic>;
       final data = json['data'];
       if (data is! Map<String, dynamic>) return null;
-      return ServerConfig._fromJson(data, 'ops');
+      final fetched = ServerConfig._fromJson(data, 'ops');
+      if (fetched == null) return null;
+      // 로컬 인증 입력값 유지
+      return fetched.copyWith(
+        clientKey: _current.clientKey,
+        clientExtension: _current.clientExtension,
+      );
     } catch (_) {
       return null;
     } finally {

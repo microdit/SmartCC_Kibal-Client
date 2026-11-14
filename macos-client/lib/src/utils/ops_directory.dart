@@ -84,7 +84,13 @@ class OpsDirectory {
     final client = HttpClient()..connectionTimeout = _timeout;
     try {
       final req = await client.getUrl(Uri.parse(url)).timeout(_timeout);
-      if (key.isNotEmpty) req.headers.add('X-Client-Key', key);
+      final cfg = ServerConfigService.instance.current;
+      final useKey = cfg.clientKey.trim().isNotEmpty ? cfg.clientKey.trim() : key;
+      final useExt = cfg.clientExtension.trim();
+      if (useKey.isNotEmpty) req.headers.add('X-Client-Key', useKey);
+      if (useExt.isNotEmpty && cfg.clientKey.trim().isNotEmpty) {
+        req.headers.add('X-Client-Extension', useExt);
+      }
       final res = await req.close().timeout(_timeout);
       final body = await res.transform(utf8.decoder).join();
       if (res.statusCode != 200) return null;

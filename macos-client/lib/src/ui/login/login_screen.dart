@@ -45,13 +45,16 @@ class _LoginScreenState extends State<LoginScreen> {
   
   // WebSocket 서버 URL
   final _wsServerController = TextEditingController();
-  
-  // 오토 컴플리트 확장 번호
-  
+
+  // Ops 클라이언트 키(내선별, ADR-006) — 수동 입력
+  final _clientKeyController = TextEditingController();
+  final _clientExtController = TextEditingController();
+
   // 초기 로드 완료 여부
   bool _isInitialLoad = true;
   bool _refreshingConfig = false;
   String? _configStatus;
+  String? _updateNotice;
   List<OpsContact> _quickContacts = const [];
   bool _quickContactsLoaded = false;
 
@@ -67,6 +70,8 @@ class _LoginScreenState extends State<LoginScreen> {
     _domainController.text = saved.sipDomain;
     _portController.text = saved.sipPort.toString();
     _wsServerController.text = saved.wsServer;
+    _clientKeyController.text = saved.clientKey;
+    _clientExtController.text = saved.clientExtension;
 
     // 화면 진입 시 OPS에서 최신 서버 주소 자동 갱신(서버 IP 변경 대응)
     WidgetsBinding.instance.addPostFrameCallback((_) => _refreshServerConfig(auto: true));
@@ -98,6 +103,8 @@ class _LoginScreenState extends State<LoginScreen> {
     _portController.dispose();
     _displayNameController.dispose();
     _wsServerController.dispose();
+    _clientKeyController.dispose();
+    _clientExtController.dispose();
     
     _usernameFocus.dispose();
     _passwordFocus.dispose();
@@ -411,23 +418,34 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  /// OPS(/api/client/config)에서 서버 주소(IP/WS/OPS)와 연락처·회의실 목록을 함께 갱신한다.
+  /// OPS(/api/client/config)에서 서버 주소(IP/WS/OPS)·manifest와 연락처·회의실 목록을 함께 갱신한다.
   Future<void> _refreshServerConfig({required bool auto}) async {
     if (_refreshingConfig) return;
+    // 수동 입력 키/내선 저장(ADR-006)
+    ServerConfigService.instance.updateClientCredentials(
+      clientKey: _clientKeyController.text.trim(),
+      clientExtension: _clientExtController.text.trim().isNotEmpty
+          ? _clientExtController.text.trim()
+          : _usernameController.text.trim(),
+    );
     setState(() {
       _refreshingConfig = true;
       _configStatus = '서버 설정/연락처/회의실 확인 중…';
+      _updateNotice = null;
     });
     AppLogger.instance.ui('LOGIN', 'serverConfigRefresh', params: {'auto': auto});
     final before = ServerConfigService.instance.current;
-    final cfg = await ServerConfigService.instance
-        .refresh(hintDomain: _domainController.text.trim());
+    final cfg = await ServerConfigService.instance.refresh(
+      hintDomain: _domainController.text.trim(),
+      extension: ServerConfigService.instance.current.clientExtension,
+    );
     if (!mounted) return;
 
     final configChanged = cfg != null &&
         (!cfg.sameAddressAs(before) ||
             _domainController.text.trim() != cfg.sipDomain ||
-            _wsServerController.text.trim() != cfg.wsServer);
+            _wsServerController.text.trim() != cfg.wsServer ||
+            cfg.configVersion != before.configVersion);
     if (cfg != null) {
       _domainController.text = cfg.sipDomain;
       _portController.text = cfg.sipPort.toString();
@@ -437,12 +455,24 @@ class _LoginScreenState extends State<LoginScreen> {
     await _loadQuickContacts();
     if (!mounted) return;
 
+    String? notice;
+    if (cfg != null) {
+      final latest = cfg.latestVersion ?? cfg.manifest?['server_version']?.toString();
+      if (cfg.updateRequired) {
+        notice = '업데이트 필요: 현재 ${AppConstants.appVersion} / 최신 ${latest ?? "-"} (필수)';
+      } else if (cfg.updateRecommended) {
+        notice = '업데이트 권장: 현재 ${AppConstants.appVersion} / 최신 ${latest ?? "-"}';
+      } else if (cfg.configVersion != null && cfg.configVersion != before.configVersion) {
+        notice = '서버 설정이 변경되었습니다. 갱신된 정보를 반영했습니다.';
+      }
+    }
     final configMsg = cfg == null
         ? '서버 설정 갱신 실패 — OPS 응답 없음(현재 입력값 사용)'
-        : (configChanged ? '서버 주소 갱신됨: ${cfg.sipDomain}' : '서버 설정 최신: ${cfg.sipDomain}');
+        : (configChanged ? '서버 주소/설정 갱신: ${cfg.sipDomain}' : '서버 설정 최신: ${cfg.sipDomain}');
     setState(() {
       _refreshingConfig = false;
       _configStatus = '$configMsg · 연락처 ${_quickContacts.length}건 갱신';
+      _updateNotice = notice;
     });
 
     if (!auto && mounted) {
@@ -462,6 +492,40 @@ class _LoginScreenState extends State<LoginScreen> {
       children: [
         const SizedBox(height: AppConstants.spacingSm),
         _buildServerConfigBar(),
+        if (_updateNotice != null) ...[
+          const SizedBox(height: AppConstants.spacingSm),
+          Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: (_updateNotice!.contains('필수') ? Colors.red : Colors.amber).withValues(alpha: 0.08),
+              border: Border.all(color: (_updateNotice!.contains('필수') ? Colors.red : Colors.amber).withValues(alpha: 0.4)),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Text(_updateNotice!, style: const TextStyle(fontSize: 12)),
+          ),
+        ],
+        const SizedBox(height: AppConstants.spacingSm),
+        TextFormField(
+          controller: _clientExtController,
+          decoration: const InputDecoration(
+            labelText: '인증 내선(선택)',
+            hintText: '내선별 키 사용 시 내선번호(예: 1101)',
+            prefixIcon: Icon(Icons.badge_outlined),
+            border: OutlineInputBorder(),
+          ),
+          keyboardType: TextInputType.number,
+        ),
+        const SizedBox(height: AppConstants.spacingSm),
+        TextFormField(
+          controller: _clientKeyController,
+          decoration: const InputDecoration(
+            labelText: 'OPS 클라이언트 키(수동 입력)',
+            hintText: '콘솔 OPS 연락처/단축번호에서 발급된 키',
+            prefixIcon: Icon(Icons.vpn_key_outlined),
+            border: OutlineInputBorder(),
+          ),
+          obscureText: true,
+        ),
         const SizedBox(height: AppConstants.spacingSm),
         TextFormField(
           controller: _wsServerController,
