@@ -55,6 +55,7 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _refreshingConfig = false;
   String? _configStatus;
   String? _updateNotice;
+  bool _updateBlocked = false;
   List<OpsContact> _quickContacts = const [];
   bool _quickContactsLoaded = false;
 
@@ -84,6 +85,14 @@ class _LoginScreenState extends State<LoginScreen> {
         _showExtensionSuggestions();
       }
     });
+  }
+
+
+  bool _isVersionBelow(String current, String min) {
+    List<int> p(String v) => v.split(RegExp(r'[.+-]')).take(3).map((e)=>int.tryParse(e.replaceAll(RegExp(r'[^0-9]'),''))??0).toList();
+    final a=p(current), b=p(min);
+    for (var i=0;i<3;i++){final av=i<a.length?a[i]:0; final bv=i<b.length?b[i]:0; if(av<bv) return true; if(av>bv) return false;}
+    return false;
   }
 
   Future<void> _loadQuickContacts() async {
@@ -456,10 +465,14 @@ class _LoginScreenState extends State<LoginScreen> {
     if (!mounted) return;
 
     String? notice;
+    var blocked = false;
     if (cfg != null) {
       final latest = cfg.latestVersion ?? cfg.manifest?['server_version']?.toString();
-      if (cfg.updateRequired) {
-        notice = '업데이트 필요: 현재 ${AppConstants.appVersion} / 최신 ${latest ?? "-"} (필수)';
+      final min = cfg.minSupportedVersion ?? '0.0.0';
+      final belowMin = min.isNotEmpty && _isVersionBelow(AppConstants.appVersion, min);
+      if (cfg.updateRequired || belowMin) {
+        notice = '업데이트 필요(접속 제한): 현재 ${AppConstants.appVersion} / 최신 ${latest ?? "-"} / 최소지원 ${min}';
+        blocked = true;
       } else if (cfg.updateRecommended) {
         notice = '업데이트 권장: 현재 ${AppConstants.appVersion} / 최신 ${latest ?? "-"}';
       } else if (cfg.configVersion != null && cfg.configVersion != before.configVersion) {
@@ -473,6 +486,7 @@ class _LoginScreenState extends State<LoginScreen> {
       _refreshingConfig = false;
       _configStatus = '$configMsg · 연락처 ${_quickContacts.length}건 갱신';
       _updateNotice = notice;
+      _updateBlocked = blocked;
     });
 
     if (!auto && mounted) {
@@ -633,7 +647,7 @@ class _LoginScreenState extends State<LoginScreen> {
         ElevatedButton.icon(
           onPressed: sipProvider.isRegistered 
               ? _handleLogout 
-              : _handleLogin,
+              : (_updateBlocked ? null : _handleLogin),
           icon: Icon(
             sipProvider.isRegistered 
                 ? Icons.logout_outlined 
@@ -726,7 +740,7 @@ class _LoginScreenState extends State<LoginScreen> {
   
   Widget _buildQuickConnectButton(SipProvider sipProvider, String extension, {String? label}) {
     final btn = OutlinedButton(
-      onPressed: () => _quickConnect(sipProvider, extension),
+      onPressed: _updateBlocked ? null : () => _quickConnect(sipProvider, extension),
       style: OutlinedButton.styleFrom(
         padding: const EdgeInsets.symmetric(
           horizontal: AppConstants.spacingMd,
@@ -780,6 +794,10 @@ class _LoginScreenState extends State<LoginScreen> {
   //--------------------------------------------------------------------------
   
   Future<void> _handleLogin() async {
+    if (_updateBlocked) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('필수 업데이트가 필요합니다. 최신 버전으로 업데이트 후 다시 시도하세요.')));
+      return;
+    }
     if (!_formKey.currentState!.validate()) {
       return;
     }
