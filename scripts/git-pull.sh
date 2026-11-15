@@ -126,10 +126,43 @@ else
 fi
 echo
 
-RC=0
+# @>-- 2026-10-29: SmartCC_Kibal-Client 리모트 자동 감지 (origin, github, dev, prd)
+PULL_REMOTE="origin"
+BRANCH_BASE="$BRANCH"
 
-echo "[4/5] Pulling from origin/$BRANCH..."
-git pull origin "$BRANCH" || { echo "  WARN: pull had issues"; RC=1; }
+# 브랜치 이름에서 리모트 접두사 추출 (예: github/feature -> github)
+if echo "$BRANCH" | grep -q '^github/'; then
+    PULL_REMOTE="github"
+    BRANCH_BASE="${BRANCH#github/}"
+elif echo "$BRANCH" | grep -q '^dev/'; then
+    PULL_REMOTE="dev"
+    BRANCH_BASE="${BRANCH#dev/}"
+elif echo "$BRANCH" | grep -q '^prd/'; then
+    PULL_REMOTE="prd"
+    BRANCH_BASE="${BRANCH#prd/}"
+fi
+
+# 실제 리모트 확인: 우선 결정된 리모트, 그 다음 사용 가능한 리모트 순서
+EXISTING_REMOTES=$(git remote 2>/dev/null)
+
+if git rev-parse "${PULL_REMOTE}/$BRANCH_BASE" >/dev/null 2>&1; then
+    # 리모트 브랜치가 존재하는 경우
+    PULL_REMOTE="$PULL_REMOTE"
+elif echo "$EXISTING_REMOTES" | grep -qw "$PULL_REMOTE"; then
+    # 리모트가 존재하지만 브랜치가 다를 수 있음
+    PULL_REMOTE="$PULL_REMOTE"
+else
+    # 기본 리모트 순서로 폴백
+    for remote in origin github dev prd; do
+        if git rev-parse "$remote/$BRANCH_BASE" >/dev/null 2>&1; then
+            PULL_REMOTE="$remote"
+            break
+        fi
+    done
+fi
+
+echo "[4/5] Pulling from $PULL_REMOTE/$BRANCH_BASE..."
+git pull "$PULL_REMOTE" "$BRANCH_BASE" || { echo "  WARN: pull had issues"; RC=1; }
 echo
 
 echo "[5/5] Sync Status Report"
