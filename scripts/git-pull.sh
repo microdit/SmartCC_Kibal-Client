@@ -119,7 +119,7 @@ if git rev-parse --verify "$BRANCH" >/dev/null 2>&1; then
     }
 else
     echo "  Not found locally. Creating from remote..."
-    git checkout -b "$BRANCH" "github/$BRANCH" 2>/dev/null || {
+    git checkout -b "$BRANCH" "origin/$BRANCH" 2>/dev/null || {
         echo "  ERROR: Cannot switch to $BRANCH"
         exit 1
     }
@@ -128,8 +128,8 @@ echo
 
 RC=0
 
-echo "[4/5] Pulling from github/$BRANCH..."
-git pull github "$BRANCH" || { echo "  WARN: pull had issues"; RC=1; }
+echo "[4/5] Pulling from origin/$BRANCH..."
+git pull origin "$BRANCH" || { echo "  WARN: pull had issues"; RC=1; }
 echo
 
 echo "[5/5] Sync Status Report"
@@ -141,7 +141,7 @@ git --no-pager log --oneline -5 2>/dev/null || echo "  (none)"
 echo
 echo "  Branch status:"
 # @>-- 2026-10-29: SmartCC_Kibal remotes (github, prd, dev) 확인
-for remote in github prd dev; do
+for remote in origin prd dev; do
     counts=$(git rev-list --left-right --count "$remote/$BRANCH...HEAD" 2>/dev/null || true)
     if [ -n "$counts" ]; then
         behind=$(echo "$counts" | cut -f1)
@@ -155,7 +155,7 @@ else echo "  RESULT: Issues detected"
 fi
 echo
 echo "  NAS deploy (if needed):"
-echo "    ssh nas2 \"cd /var/services/homes/atom/SmartCC_Kibal && git pull github $BRANCH\""
+echo "    ssh nas2 \"cd /var/services/homes/atom/SmartCC_Kibal-Client && git pull origin $BRANCH\""
 echo
 
 exit $RC

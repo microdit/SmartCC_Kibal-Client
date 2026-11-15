@@ -13,6 +13,7 @@ if [ -z "$PYTHON" ]; then echo "ERROR: no python found"; exit 1; fi
 
 AUTO=0
 STATUS=0
+INTERACTIVE=0
 COMMIT_MSG=""
 # PRD(NAS) 배포 모드: ask(대화형 확인) | yes(--deploy 자동) | no(--no-deploy 생략)
 DEPLOY_MODE="ask"
@@ -89,14 +90,17 @@ for arg in "$@"; do
     case "$arg" in
         --auto) AUTO=1 ;;
         --status) STATUS=1 ;;
+        --interactive) INTERACTIVE=1 ;;
         --deploy) DEPLOY_MODE="yes" ;;
         --no-deploy) DEPLOY_MODE="no" ;;
         --help|-h)
             echo "Usage: $0 \"commit message\""
-            echo "       $0 --auto       (auto-generate from log)"
-            echo "       $0 --auto --deploy      (sync + PRD 배포 자동)"
-            echo "       $0 --auto --no-deploy   (sync, 배포 묻지 않음)"
-            echo "       $0 --status     (show sync status)"
+            echo "       $0 --auto                  (auto-generate from log)"
+            echo "       $0 --interactive           (interactive: branch select/create, confirm push)"
+            echo "       $0 --auto --interactive    (interactive branch/menu + auto commit message)"
+            echo "       $0 --auto --deploy         (sync + PRD 배포 자동)"
+            echo "       $0 --auto --no-deploy      (sync, 배포 묻지 않음)"
+            echo "       $0 --status                (show sync status)"
             exit 0 ;;
     esac
 done
@@ -111,6 +115,70 @@ done
 COMMIT_MSG="${COMMIT_MSG% }"
 
 BRANCH=$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo "main")
+
+# ── Interactive branch menu ──
+if [ "$INTERACTIVE" = "1" ]; then
+    if [ ! -t 0 ]; then
+        echo "  (비대화형 실행 환경 — --interactive 무시, 현재 브랜치 사용: $BRANCH)"
+    else
+        echo "================================================"
+        echo "  Interactive Git Sync"
+        echo "================================================"
+        echo "  Current branch: $BRANCH"
+        echo
+        echo "  Branches:"
+        branches=()
+        while IFS= read -r b; do
+            [ -n "$b" ] && branches+=("$b")
+        done < <(git for-each-ref --format='%(refname:short)' refs/heads 2>/dev/null)
+        if [ ${#branches[@]} -eq 0 ]; then
+            branches+=("$BRANCH")
+        fi
+        for i in "${!branches[@]}"; do
+            idx=$((i + 1))
+            marker=""
+            if [ "${branches[$i]}" = "$BRANCH" ]; then marker=" (current)"; fi
+            echo "    $idx) ${branches[$i]}$marker"
+        done
+        echo "    n) 새 브랜치 생성"
+        echo "    q) 취소"
+        echo
+        read -r -p "  선택 (번호=전환, n=생성, Enter=현재 유지): " _bsel
+        case "${_bsel}" in
+            q|Q)
+                echo "  취소됨."; exit 0 ;;
+            n|N)
+                read -r -p "  새 브랜치 이름: " _newb
+                _newb="${_newb## }"; _newb="${_newb%% }"
+                if [ -z "$_newb" ]; then
+                    echo "  브랜치 이름이 비어 있습니다."; exit 1
+                fi
+                echo "  Creating & switching to: $_newb"
+                git switch -c "$_newb" 2>/dev/null || git checkout -b "$_newb" || { echo "  FAILED: branch create/switch"; exit 1; }
+                BRANCH=$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo "$_newb")
+                echo "  Current branch: $BRANCH"
+                ;;
+            "")
+                echo "  Keeping branch: $BRANCH"
+                ;;
+            *)
+                if [[ "$_bsel" =~ ^[0-9]+$ ]] && [ "$_bsel" -ge 1 ] && [ "$_bsel" -le "${#branches[@]}" ]; then
+                    _target="${branches[$((_bsel - 1))]}"
+                    if [ "$_target" != "$BRANCH" ]; then
+                        echo "  Switching to: $_target"
+                        git switch "$_target" 2>/dev/null || git checkout "$_target" || { echo "  FAILED: branch switch"; exit 1; }
+                        BRANCH=$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo "$_target")
+                    else
+                        echo "  Keeping branch: $BRANCH"
+                    fi
+                else
+                    echo "  잘못된 선택 — 현재 브랜치 유지: $BRANCH"
+                fi
+                ;;
+        esac
+        echo
+    fi
+fi
 
 # ── Status mode ──
 if [ "$STATUS" = "1" ]; then
@@ -151,12 +219,26 @@ fi
 
 # ── Usage check ──
 if [ "$AUTO" = "0" ] && [ -z "$COMMIT_MSG" ]; then
-    echo "Usage: $0 \"commit message\""
-    echo "       $0 --auto       (auto-generate from log)"
-    echo "       $0 --auto --deploy      (sync + PRD 배포 자동)"
-    echo "       $0 --auto --no-deploy   (sync, 배포 묻지 않음)"
-    echo "       $0 --status     (show sync status)"
-    exit 1
+    if [ "$INTERACTIVE" = "1" ] && [ -t 0 ]; then
+        read -r -p "  Commit message (비우면 --auto): " _imsg
+        _imsg="${_imsg## }"; _imsg="${_imsg%% }"
+        if [ -n "$_imsg" ]; then
+            COMMIT_MSG="$_imsg"
+        else
+            AUTO=1
+            echo "  -> auto commit message 사용"
+        fi
+        echo
+    else
+        echo "Usage: $0 \"commit message\""
+        echo "       $0 --auto                  (auto-generate from log)"
+        echo "       $0 --interactive           (interactive: branch select/create, confirm push)"
+        echo "       $0 --auto --interactive    (interactive branch/menu + auto commit message)"
+        echo "       $0 --auto --deploy         (sync + PRD 배포 자동)"
+        echo "       $0 --auto --no-deploy      (sync, 배포 묻지 않음)"
+        echo "       $0 --status                (show sync status)"
+        exit 1
+    fi
 fi
 
 RC=0
@@ -207,17 +289,30 @@ fi
 echo
 
 if [ $RC -ne 2 ]; then
-    echo "[3/4] Pushing to all remotes..."
-    PUSH_OK=0
-    PUSH_FAIL=0
-    for r in $(git remote 2>/dev/null); do
-        if push_remote "$r" "$BRANCH"; then
-            PUSH_OK=$((PUSH_OK + 1))
-        else
-            PUSH_FAIL=$((PUSH_FAIL + 1))
-        fi
-    done
-    echo "  Push complete: $PUSH_OK OK, $PUSH_FAIL failed"
+    _do_push=1
+    if [ "$INTERACTIVE" = "1" ] && [ -t 0 ]; then
+        echo "  Target remotes: $(git remote 2>/dev/null | tr '\n' ' ')"
+        read -r -p "  Push '$BRANCH' to all remotes? [Y/n] " _pans
+        case "$_pans" in
+            n|N|no|NO) _do_push=0 ;;
+        esac
+    fi
+    if [ "$_do_push" = "1" ]; then
+        echo "[3/4] Pushing to all remotes..."
+        PUSH_OK=0
+        PUSH_FAIL=0
+        for r in $(git remote 2>/dev/null); do
+            if push_remote "$r" "$BRANCH"; then
+                PUSH_OK=$((PUSH_OK + 1))
+            else
+                PUSH_FAIL=$((PUSH_FAIL + 1))
+            fi
+        done
+        echo "  Push complete: $PUSH_OK OK, $PUSH_FAIL failed"
+    else
+        echo "[3/4] Push skipped (interactive)."
+        echo "  -> git push <remote> $BRANCH"
+    fi
     echo
 fi
 
