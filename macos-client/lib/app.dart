@@ -3,11 +3,13 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'src/providers/media_provider.dart';
 import 'src/providers/sip_provider.dart';
+import 'src/ui/home/address_book_screen.dart';
 import 'src/ui/login/login_screen.dart';
 import 'src/ui/dialer/dialer_screen.dart';
 import 'src/ui/call/call_screen.dart';
 import 'src/ui/conference/conference_screen.dart';
 import 'src/ui/media/media_test_screen.dart';
+import 'src/ui/settings/settings_screen.dart';
 import 'src/utils/app_logger.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -17,7 +19,15 @@ final _router = GoRouter(
   routes: [
     GoRoute(
       path: '/',
-      builder: (context, state) => const LoginScreen(),
+      builder: (context, state) => const AddressBookScreen(),
+    ),
+    GoRoute(
+      path: '/settings',
+      builder: (context, state) => const SettingsScreen(),
+    ),
+    GoRoute(
+      path: '/login',
+      builder: (context, state) => const LoginScreen(), // 레거시/고급 SIP 등록
     ),
     GoRoute(
       path: '/dialer',
@@ -88,46 +98,49 @@ class _KibalAppState extends State<KibalApp> {
     _incomingDialogShowing = true;
 
     final target = sipProvider.currentCallTarget ?? '알 수 없음';
-    AppLogger.instance.ui('INCOMING', 'dialogShown', params: {'target': target});
+    AppLogger.instance
+        .ui('INCOMING', 'dialogShown', params: {'target': target});
 
-    navigator.push(DialogRoute<void>(
-      context: navigator.context,
-      barrierDismissible: false,
-      builder: (dialogContext) => AlertDialog(
-        title: const Text('수신 통화'),
-        content: Text('$target 님으로부터 통화가 왔습니다.'),
-        actions: [
-          TextButton(
-            onPressed: () async {
-              if (dialogContext.mounted) Navigator.of(dialogContext).pop();
-              await sipProvider.reject();
-              AppLogger.instance
-                  .ui('INCOMING', 'rejected', params: {'target': target});
-            },
-            child: const Text('거부', style: TextStyle(color: Colors.red)),
+    navigator
+        .push(DialogRoute<void>(
+          context: navigator.context,
+          barrierDismissible: false,
+          builder: (dialogContext) => AlertDialog(
+            title: const Text('수신 통화'),
+            content: Text('$target 님으로부터 통화가 왔습니다.'),
+            actions: [
+              TextButton(
+                onPressed: () async {
+                  if (dialogContext.mounted) Navigator.of(dialogContext).pop();
+                  await sipProvider.reject();
+                  AppLogger.instance
+                      .ui('INCOMING', 'rejected', params: {'target': target});
+                },
+                child: const Text('거부', style: TextStyle(color: Colors.red)),
+              ),
+              FilledButton(
+                onPressed: () async {
+                  if (dialogContext.mounted) Navigator.of(dialogContext).pop();
+                  final rootCtx = _rootNavigatorKey.currentContext;
+                  final mediaProvider = rootCtx == null
+                      ? null
+                      : Provider.of<MediaProvider>(rootCtx, listen: false);
+                  if (mediaProvider != null && !mediaProvider.hasLocalStream) {
+                    await mediaProvider.getLocalMedia();
+                  }
+                  final ok = await sipProvider.accept(
+                    mediaStream: mediaProvider?.localStream,
+                  );
+                  AppLogger.instance.ui('INCOMING', 'accepted',
+                      params: {'target': target, 'ok': ok});
+                  if (ok) _router.push('/call', extra: target);
+                },
+                child: const Text('수락'),
+              ),
+            ],
           ),
-          FilledButton(
-            onPressed: () async {
-              if (dialogContext.mounted) Navigator.of(dialogContext).pop();
-              final rootCtx = _rootNavigatorKey.currentContext;
-              final mediaProvider = rootCtx == null
-                  ? null
-                  : Provider.of<MediaProvider>(rootCtx, listen: false);
-              if (mediaProvider != null && !mediaProvider.hasLocalStream) {
-                await mediaProvider.getLocalMedia();
-              }
-              final ok = await sipProvider.accept(
-                mediaStream: mediaProvider?.localStream,
-              );
-              AppLogger.instance.ui('INCOMING', 'accepted',
-                  params: {'target': target, 'ok': ok});
-              if (ok) _router.push('/call', extra: target);
-            },
-            child: const Text('수락'),
-          ),
-        ],
-      ),
-    )).then((_) => _incomingDialogShowing = false);
+        ))
+        .then((_) => _incomingDialogShowing = false);
   }
 
   @override

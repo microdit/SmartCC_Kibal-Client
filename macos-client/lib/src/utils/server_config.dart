@@ -42,25 +42,28 @@ class ServerConfig {
   /// 내선별 클라이언트 키(사용자 수동 입력, ADR-006) — 비어있으면 전역키 fallback
   final String clientKey;
   final String clientExtension;
+
   /// 서버 manifest(D1): config_version, latest/min_supported, update flags 등
   final Map<String, dynamic>? manifest;
 
   static String get filePath => '${AppLogger.logDirectory}/server-config.json';
 
   /// mDNS 기본 부트스트랩 호스트(빌드 시 --dart-define=OPS_BOOTSTRAP_HOST=... 로 변경 가능)
-  static const String bootstrapHost =
-      String.fromEnvironment('OPS_BOOTSTRAP_HOST', defaultValue: 'MacPro.local');
+  static const String bootstrapHost = String.fromEnvironment(
+      'OPS_BOOTSTRAP_HOST',
+      defaultValue: 'MacPro.local');
 
   factory ServerConfig.defaults() => ServerConfig(
         sipDomain: AppConstants.defaultDomain,
         sipPort: AppConstants.defaultSipPort,
         wsServer: AppConstants.defaultWsServer,
-        opsBaseUrl: 'http://${AppConstants.defaultDomain}:${AppConstants.opsPort}',
+        opsBaseUrl:
+            'http://${AppConstants.defaultDomain}:${AppConstants.opsPort}',
         clientLogUrl: AppConstants.opsLogUrl(AppConstants.defaultDomain),
         publicHost: bootstrapHost,
       );
 
-  Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson({bool includeSecrets = false}) => {
         'sipDomain': sipDomain,
         'sipPort': sipPort,
         'wsServer': wsServer,
@@ -68,15 +71,18 @@ class ServerConfig {
         'clientLogUrl': clientLogUrl,
         'publicHost': publicHost,
         'updatedAt': updatedAt,
-        'clientKey': clientKey,
-        'clientExtension': clientExtension,
+        // 보안: Ops 클라이언트 키/인증내선은 기본적으로 평문 설정파일에 저장하지 않음(보안 저장소 사용)
+        if (includeSecrets) 'clientKey': clientKey,
+        if (includeSecrets) 'clientExtension': clientExtension,
         'manifest': manifest,
       };
 
   static ServerConfig? _fromJson(Map<String, dynamic> j, String source) {
     final domain = (j['sipDomain'] ?? j['sip_domain']) as String?;
     final ws = (j['wsServer'] ?? j['ws_server']) as String?;
-    if (domain == null || domain.isEmpty || ws == null || ws.isEmpty) return null;
+    if (domain == null || domain.isEmpty || ws == null || ws.isEmpty) {
+      return null;
+    }
     final ops = (j['opsBaseUrl'] ?? j['ops_base_url']) as String? ??
         'http://$domain:${AppConstants.opsPort}';
     final man = j['manifest'];
@@ -93,7 +99,9 @@ class ServerConfig {
       source: source,
       clientKey: (j['clientKey'] as String?) ?? '',
       clientExtension: (j['clientExtension'] as String?) ?? '',
-      manifest: man is Map<String, dynamic> ? man : (man is Map ? Map<String, dynamic>.from(man) : null),
+      manifest: man is Map<String, dynamic>
+          ? man
+          : (man is Map ? Map<String, dynamic>.from(man) : null),
     );
   }
 
@@ -111,7 +119,8 @@ class ServerConfig {
 
   void save() {
     try {
-      File(filePath).writeAsStringSync(jsonEncode(toJson()));
+      File(filePath)
+          .writeAsStringSync(jsonEncode(toJson(includeSecrets: false)));
     } catch (e) {
       AppLogger.instance.w('서버 설정 저장 실패: $e');
     }
@@ -122,10 +131,35 @@ class ServerConfig {
 
   String? get configVersion => manifest?['config_version'] as String?;
   String? get latestVersion => manifest?['latest_version'] as String?;
-  String? get minSupportedVersion => manifest?['min_supported_version'] as String?;
+  String? get minSupportedVersion =>
+      manifest?['min_supported_version'] as String?;
   bool get updateRequired => manifest?['update_required'] == true;
   bool get updateRecommended => manifest?['update_recommended'] == true;
   String get releaseNotes => (manifest?['release_notes'] as String?) ?? '';
+
+  /// DEV 보안통신 전환 지원: http<->https, ws<->wss 베이스 전환 헬퍼(명시 설정 우선)
+  ServerConfig withScheme({required bool secure}) {
+    String toSecureHttp(String u) =>
+        u.startsWith('http://') ? 'https://${u.substring(7)}' : u;
+    String toPlainHttp(String u) =>
+        u.startsWith('https://') ? 'http://${u.substring(8)}' : u;
+    String toSecureWs(String u) =>
+        u.startsWith('ws://') ? 'wss://${u.substring(5)}' : u;
+    String toPlainWs(String u) =>
+        u.startsWith('wss://') ? 'ws://${u.substring(6)}' : u;
+    if (secure) {
+      return copyWith(
+        opsBaseUrl: toSecureHttp(opsBaseUrl),
+        clientLogUrl: toSecureHttp(clientLogUrl),
+        wsServer: toSecureWs(wsServer),
+      );
+    }
+    return copyWith(
+      opsBaseUrl: toPlainHttp(opsBaseUrl),
+      clientLogUrl: toPlainHttp(clientLogUrl),
+      wsServer: toPlainWs(wsServer),
+    );
+  }
 
   ServerConfig copyWith({
     String? sipDomain,
@@ -139,7 +173,8 @@ class ServerConfig {
     String? clientKey,
     String? clientExtension,
     Map<String, dynamic>? manifest,
-  }) => ServerConfig(
+  }) =>
+      ServerConfig(
         sipDomain: sipDomain ?? this.sipDomain,
         sipPort: sipPort ?? this.sipPort,
         wsServer: wsServer ?? this.wsServer,
@@ -168,6 +203,10 @@ class ServerConfigService {
   ServerConfig _current = ServerConfig.load();
   ServerConfig get current => _current;
 
+  void setCurrent(ServerConfig cfg) {
+    _current = cfg;
+  }
+
   /// 탐색 후보 OPS 주소(순서대로 시도)
   List<String> candidates({String? hintDomain}) {
     final c = <String>[
@@ -180,16 +219,25 @@ class ServerConfigService {
       'http://${AppConstants.defaultDomain}:${AppConstants.opsPort}',
     ];
     final seen = <String>{};
-    return [for (final u in c) if (seen.add(u)) u];
+    return [
+      for (final u in c)
+        if (seen.add(u)) u
+    ];
   }
 
   /// OPS에 접속해 최신 설정을 받는다. 성공 시 저장 후 반환, 모두 실패 시 null.
-  Future<ServerConfig?> refresh({String? hintDomain, String? clientKey, String? extension}) async {
-    final key = clientKey ?? (_current.clientKey.trim().isNotEmpty ? _current.clientKey.trim() : AppConstants.opsClientKey);
+  Future<ServerConfig?> refresh(
+      {String? hintDomain, String? clientKey, String? extension}) async {
+    final key = clientKey ??
+        (_current.clientKey.trim().isNotEmpty
+            ? _current.clientKey.trim()
+            : AppConstants.opsClientKey);
     for (final base in candidates(hintDomain: hintDomain)) {
-      final cfg = await _fetch(base, key, extension: extension ?? _current.clientExtension);
+      final cfg = await _fetch(base, key,
+          extension: extension ?? _current.clientExtension);
       if (cfg != null) {
-        final changed = !cfg.sameAddressAs(_current) || cfg.configVersion != _current.configVersion;
+        final changed = !cfg.sameAddressAs(_current) ||
+            cfg.configVersion != _current.configVersion;
         _current = cfg;
         cfg.save();
         AppLogger.instance.i('서버 설정 갱신 via=$base '
@@ -210,14 +258,21 @@ class ServerConfigService {
     _current.save();
   }
 
-  Future<ServerConfig?> _fetch(String base, String key, {String? extension}) async {
+  Future<ServerConfig?> _fetch(String base, String key,
+      {String? extension}) async {
     final client = HttpClient()..connectionTimeout = perCandidateTimeout;
     try {
+      client.badCertificateCallback =
+          (cert, host, port) => true; // DEV self-signed
       final req = await client
           .getUrl(Uri.parse('$base/api/client/config'))
           .timeout(perCandidateTimeout);
       final useExt = (extension ?? _current.clientExtension).trim();
-      final useKey = key.isNotEmpty ? key : (_current.clientKey.trim().isNotEmpty ? _current.clientKey.trim() : AppConstants.opsClientKey);
+      final useKey = key.isNotEmpty
+          ? key
+          : (_current.clientKey.trim().isNotEmpty
+              ? _current.clientKey.trim()
+              : AppConstants.opsClientKey);
       if (useKey.isNotEmpty) req.headers.add('X-Client-Key', useKey);
       if (useExt.isNotEmpty && _current.clientKey.trim().isNotEmpty) {
         req.headers.add('X-Client-Extension', useExt);

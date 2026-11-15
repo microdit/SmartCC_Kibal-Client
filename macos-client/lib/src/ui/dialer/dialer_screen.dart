@@ -12,7 +12,7 @@ import '../../utils/ops_directory.dart';
 import '../../utils/server_config.dart';
 
 /// 다이얼러 화면
-/// 
+///
 /// SIP 등록 후 통화할 상대방 번호를 입력하는 화면입니다.
 /// 숫자 키패드를 사용하여 대상 번호를 입력하고 통화를 시작합니다.
 class DialerScreen extends StatefulWidget {
@@ -67,14 +67,9 @@ class _DialerScreenState extends State<DialerScreen> {
   @override
   Widget build(BuildContext context) {
     final sipProvider = Provider.of<SipProvider>(context);
-    
-    // 수신 통화 상태 확인
-    if (sipProvider.hasIncomingCall) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (mounted) context.push('/incoming');
-      });
-    }
-    
+
+    // 수신 통화는 app.dart 전역 다이얼로그로 처리 (별도 /incoming 라우트 없음)
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -86,7 +81,7 @@ class _DialerScreenState extends State<DialerScreen> {
         actions: [
           // SIP 상태 표시
           _buildStatusIndicator(sipProvider),
-          
+
           // 설정 메뉴
           PopupMenuButton<String>(
             icon: const Icon(Icons.more_vert),
@@ -122,19 +117,19 @@ class _DialerScreenState extends State<DialerScreen> {
           children: [
             // 등록 상태 및 정보
             _buildStatusSection(sipProvider),
-            
+
             // 구분선
             const Divider(height: 1),
-            
+
             // 번호 입력 필드
             _buildInputField(sipProvider),
-            
+
             // 다이얼 패드
             _buildDialPad(),
-            
+
             // 통화 버튼
             _buildCallButton(sipProvider),
-            
+
             // 통화 기록 (선택 사항 - 현재 미구현)
             // _buildCallHistory(),
           ],
@@ -146,9 +141,11 @@ class _DialerScreenState extends State<DialerScreen> {
   //--------------------------------------------------------------------------
   // Status Indicator
   //--------------------------------------------------------------------------
-  
+
   Widget _buildStatusIndicator(SipProvider sipProvider) {
-    final connecting = sipProvider.isLoading || (!sipProvider.isRegistered && sipProvider.sipState == SipClientState.connecting);
+    final connecting = sipProvider.isLoading ||
+        (!sipProvider.isRegistered &&
+            sipProvider.sipState == SipClientState.connecting);
     return Container(
       margin: const EdgeInsets.only(right: AppConstants.spacingMd),
       padding: const EdgeInsets.symmetric(
@@ -197,13 +194,17 @@ class _DialerScreenState extends State<DialerScreen> {
   //--------------------------------------------------------------------------
   // Status Section
   //--------------------------------------------------------------------------
-  
+
   Widget _buildStatusSection(SipProvider sipProvider) {
     final username = sipProvider.config?.username;
     final display = sipProvider.config?.displayName;
-    final connecting = sipProvider.isLoading || (!sipProvider.isRegistered && sipProvider.sipState == SipClientState.connecting);
+    final connecting = sipProvider.isLoading ||
+        (!sipProvider.isRegistered &&
+            sipProvider.sipState == SipClientState.connecting);
     final avatar = (username != null && username.isNotEmpty)
-        ? (username.length >= 4 ? username.substring(username.length - 4) : username)
+        ? (username.length >= 4
+            ? username.substring(username.length - 4)
+            : username)
         : '--';
     return Container(
       padding: const EdgeInsets.all(AppConstants.spacingMd),
@@ -223,7 +224,7 @@ class _DialerScreenState extends State<DialerScreen> {
             ),
           ),
           const SizedBox(width: AppConstants.spacingMd),
-          
+
           // 정보
           Expanded(
             child: Column(
@@ -261,7 +262,7 @@ class _DialerScreenState extends State<DialerScreen> {
   //--------------------------------------------------------------------------
   // Status Color
   //--------------------------------------------------------------------------
-  
+
   Color _getStatusColor(SipProvider sipProvider) {
     if (sipProvider.isRegistered) {
       return Colors.green;
@@ -273,7 +274,7 @@ class _DialerScreenState extends State<DialerScreen> {
   //--------------------------------------------------------------------------
   // Input Field
   //--------------------------------------------------------------------------
-  
+
   Widget _buildInputField(SipProvider sipProvider) {
     return Padding(
       padding: const EdgeInsets.all(AppConstants.spacingMd),
@@ -323,16 +324,23 @@ class _DialerScreenState extends State<DialerScreen> {
               children: [
                 const Text(
                   '빠른 연결',
-                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Colors.grey),
+                  style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.grey),
                 ),
                 const Spacer(),
                 IconButton(
                   icon: _refreshingServer
                       ? const SizedBox(
-                          width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2))
+                          width: 16,
+                          height: 16,
+                          child: CircularProgressIndicator(strokeWidth: 2))
                       : const Icon(Icons.sync, size: 18),
                   tooltip: '서버 설정·연락처·회의실 갱신',
-                  onPressed: _refreshingServer ? null : () => _loadDirectory(refreshServerConfig: true),
+                  onPressed: _refreshingServer
+                      ? null
+                      : () => _loadDirectory(refreshServerConfig: true),
                 ),
               ],
             ),
@@ -349,7 +357,10 @@ class _DialerScreenState extends State<DialerScreen> {
     if (!_directoryLoaded) {
       return const Padding(
         padding: EdgeInsets.symmetric(vertical: 8),
-        child: SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2)),
+        child: SizedBox(
+            height: 20,
+            width: 20,
+            child: CircularProgressIndicator(strokeWidth: 2)),
       );
     }
     final children = <Widget>[];
@@ -388,8 +399,9 @@ class _DialerScreenState extends State<DialerScreen> {
   //--------------------------------------------------------------------------
   // Quick Dial Button
   //--------------------------------------------------------------------------
-  
-  Widget _buildQuickDialButton(String number, {bool isConference = false, String? tooltip}) {
+
+  Widget _buildQuickDialButton(String number,
+      {bool isConference = false, String? tooltip}) {
     final btn = OutlinedButton(
       onPressed: () => _quickDial(number),
       style: OutlinedButton.styleFrom(
@@ -402,8 +414,7 @@ class _DialerScreenState extends State<DialerScreen> {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          if (isConference)
-            const Icon(Icons.groups_outlined, size: 16),
+          if (isConference) const Icon(Icons.groups_outlined, size: 16),
           if (isConference) const SizedBox(width: AppConstants.spacingXs),
           Text(
             number,
@@ -424,7 +435,7 @@ class _DialerScreenState extends State<DialerScreen> {
   //--------------------------------------------------------------------------
   // Dial Pad
   //--------------------------------------------------------------------------
-  
+
   Widget _buildDialPad() {
     return Expanded(
       child: Container(
@@ -521,19 +532,18 @@ class _DialerScreenState extends State<DialerScreen> {
 
   Future<void> _handleCall(SipProvider sipProvider) async {
     final target = _targetController.text.trim();
-    AppLogger.instance.ui('DIALER', 'callPressed',
-        params: {'target': target});
+    AppLogger.instance.ui('DIALER', 'callPressed', params: {'target': target});
 
     if (target.isEmpty) {
       _showErrorDialog(context, '대상 번호를 입력하세요');
       return;
     }
-    
+
     if (!Formatters.isValidSipUsername(target)) {
       _showErrorDialog(context, '유효한 번호가 아닙니다');
       return;
     }
-    
+
     final mediaProvider = Provider.of<MediaProvider>(context, listen: false);
     if (!mediaProvider.hasLocalStream) {
       await mediaProvider.getLocalMedia();
@@ -543,7 +553,7 @@ class _DialerScreenState extends State<DialerScreen> {
       target,
       mediaStream: mediaProvider.localStream,
     );
-    
+
     if (!mounted) return;
 
     AppLogger.instance.evt('DIALER', 'callResult',
@@ -575,7 +585,8 @@ class _DialerScreenState extends State<DialerScreen> {
         child: ElevatedButton.icon(
           onPressed: hasTarget ? () => _handleCall(sipProvider) : null,
           icon: const Icon(Icons.call),
-          label: const Text('통화', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
+          label: const Text('통화',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.green,
             foregroundColor: Colors.white,
@@ -593,7 +604,9 @@ class _DialerScreenState extends State<DialerScreen> {
         title: const Text('오류'),
         content: Text(message),
         actions: [
-          TextButton(onPressed: () => Navigator.of(ctx).pop(), child: const Text('확인')),
+          TextButton(
+              onPressed: () => Navigator.of(ctx).pop(),
+              child: const Text('확인')),
         ],
       ),
     );
@@ -603,12 +616,10 @@ class _DialerScreenState extends State<DialerScreen> {
     switch (value) {
       case 'unregister':
         sipProvider.unregister();
-        if (mounted) context.go('/login');
+        if (mounted) context.go('/');
         break;
       case 'settings':
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('설정 화면은 준비 중입니다')),
-        );
+        context.push('/settings');
         break;
     }
   }

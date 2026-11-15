@@ -6,19 +6,28 @@ import 'constants.dart';
 import 'server_config.dart';
 
 class OpsContact {
-  OpsContact({required this.extension, required this.displayName, this.sortOrder, this.sipPassword});
+  OpsContact(
+      {required this.extension,
+      required this.displayName,
+      this.sortOrder,
+      this.sipPassword});
   final String extension;
   final String displayName;
   final int? sortOrder;
   // Ops 웹에서 설정/수정한 SIP 비밀번호(인증된 /api/client/contacts 응답, 바로 접속 동기화용)
   final String? sipPassword;
 
-  String get label =>
-      displayName.isNotEmpty && displayName != extension ? '$extension $displayName' : extension;
+  String get label => displayName.isNotEmpty && displayName != extension
+      ? '$extension $displayName'
+      : extension;
 }
 
 class OpsRoom {
-  OpsRoom({required this.room, required this.name, required this.mode, this.sortOrder});
+  OpsRoom(
+      {required this.room,
+      required this.name,
+      required this.mode,
+      this.sortOrder});
   final String room;
   final String name;
   final String mode;
@@ -34,7 +43,7 @@ class OpsDirectory {
 
   static Future<OpsDirectory> fetch() async {
     final base = ServerConfigService.instance.current.opsBaseUrl;
-    final key = AppConstants.opsClientKey;
+    const key = AppConstants.opsClientKey;
     try {
       final results = await Future.wait([
         _get('$base/api/client/contacts', key),
@@ -52,7 +61,8 @@ class OpsDirectory {
             extension: ext,
             displayName: (e['display_name'] ?? '').toString(),
             sortOrder: (e['speed_dial_order'] as num?)?.toInt(),
-            sipPassword: (e['sip_password'] is String && (e['sip_password'] as String).isNotEmpty)
+            sipPassword: (e['sip_password'] is String &&
+                    (e['sip_password'] as String).isNotEmpty)
                 ? e['sip_password'] as String
                 : null,
           ));
@@ -72,7 +82,8 @@ class OpsDirectory {
           ));
         }
       }
-      AppLogger.instance.i('OPS directory: contacts=${contacts.length} rooms=${rooms.length} base=$base');
+      AppLogger.instance.i(
+          'OPS directory: contacts=${contacts.length} rooms=${rooms.length} base=$base');
       return OpsDirectory(contacts: contacts, rooms: rooms);
     } catch (e) {
       AppLogger.instance.w('OPS directory fetch failed: $e');
@@ -83,12 +94,15 @@ class OpsDirectory {
   static Future<Map<String, dynamic>?> _get(String url, String key) async {
     final client = HttpClient()..connectionTimeout = _timeout;
     try {
+      // DEV: self-signed 허용(보안통신 전환 검증용). 운영 배포 시 인증서 신뢰 기반으로 제한 필요.
+      client.badCertificateCallback = (cert, host, port) => true;
       final req = await client.getUrl(Uri.parse(url)).timeout(_timeout);
       final cfg = ServerConfigService.instance.current;
-      final useKey = cfg.clientKey.trim().isNotEmpty ? cfg.clientKey.trim() : key;
+      final useKey =
+          cfg.clientKey.trim().isNotEmpty ? cfg.clientKey.trim() : key;
       final useExt = cfg.clientExtension.trim();
       if (useKey.isNotEmpty) req.headers.add('X-Client-Key', useKey);
-      if (useExt.isNotEmpty && cfg.clientKey.trim().isNotEmpty) {
+      if (useExt.isNotEmpty && useKey.isNotEmpty) {
         req.headers.add('X-Client-Extension', useExt);
       }
       final res = await req.close().timeout(_timeout);
@@ -98,7 +112,8 @@ class OpsDirectory {
       if (json['ok'] != true) return null;
       final data = json['data'];
       return data is Map<String, dynamic> ? data : null;
-    } catch (_) {
+    } catch (e) {
+      AppLogger.instance.w('OPS directory get failed: $url (${e.runtimeType})');
       return null;
     } finally {
       client.close(force: true);
