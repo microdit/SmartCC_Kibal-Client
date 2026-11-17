@@ -1,9 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../../providers/media_provider.dart';
 import '../../providers/sip_provider.dart';
+import '../../sip/sip_client.dart';
 import '../../sip/sip_config.dart';
 import '../../utils/app_logger.dart';
 import '../../utils/client_auth_state.dart';
@@ -26,24 +29,59 @@ class _AddressBookScreenState extends State<AddressBookScreen>
   String? _syncError;
   ClientAuthState _auth = ClientAuthState.empty();
   DateTime? _lastSync;
+  bool _sipRegistering = false;
+  String? _sipError;
+  Timer? _reconnectTimer;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      Provider.of<SipProvider>(context, listen: false).addListener(_onSipChanged);
+    });
     _bootstrap();
   }
 
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
+    _reconnectTimer?.cancel();
+    try {
+      Provider.of<SipProvider>(context, listen: false).removeListener(_onSipChanged);
+    } catch (_) {}
     super.dispose();
+  }
+
+  /// SIP 등록이 끊기면 자동 재등록(리스닝 상태 유지).
+  void _onSipChanged() {
+    if (!mounted || !_auth.isVerified || _sipRegistering) return;
+    final sip = Provider.of<SipProvider>(context, listen: false);
+    if (sip.isRegistered) {
+      if (_sipError != null) setState(() => _sipError = null);
+      return;
+    }
+    if (sip.sipState == SipClientState.disconnected ||
+        sip.sipState == SipClientState.error ||
+        sip.sipState == SipClientState.unregistered) {
+      _reconnectTimer?.cancel();
+      // 연속 quickConnect/UA 교체 시 이전 세션 이벤트와 경합하지 않도록 짧게 지연.
+      _reconnectTimer = Timer(const Duration(milliseconds: 1200), () {
+        if (!mounted) return;
+        final current = Provider.of<SipProvider>(context, listen: false);
+        if (current.isRegistered) return;
+        AppLogger.instance.w('SIP 등록 해제 감지 → 자동 재등록 시도');
+        _autoRegisterSip(notify: false);
+      });
+    }
   }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
       _refresh(silent: true);
+      _autoRegisterSip(notify: false);
     }
   }
 
@@ -51,6 +89,7 @@ class _AddressBookScreenState extends State<AddressBookScreen>
     _auth = await ClientAuthStore.instance().load();
     await _refresh();
     if (mounted) setState(() => _loading = false);
+    await _autoRegisterSip(notify: false);
   }
 
   Future<void> _refresh({bool silent = false}) async {
@@ -91,6 +130,71 @@ class _AddressBookScreenState extends State<AddressBookScreen>
 
   bool get _canCall => _auth.isVerified;
 
+  /// 앱 시작/재개 시 인증 내선으로 SIP 자동 등록을 유지한다.
+  /// 실패하면 상태바와 스낵바로 알린다.
+  Future<bool> _autoRegisterSip({bool notify = true}) async {
+    final sip = Provider.of<SipProvider>(context, listen: false);
+    if (sip.isRegistered) return true;
+    if (!_auth.isVerified || _auth.authExtension.isEmpty) {
+      if (notify && mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text('SIP 자동 등록: 인증 내선이 없습니다. 설정에서 인증하세요.')));
+      }
+      return false;
+    }
+    final ext = _auth.authExtension;
+    OpsContact? bound;
+    for (final c in _directory.contacts) {
+      if (c.extension == ext) {
+        bound = c;
+        break;
+      }
+    }
+    final password = bound?.sipPassword;
+    if (password == null || password.isEmpty) {
+      setState(() => _sipError = '$ext SIP 비밀번호를 동기화하지 못했습니다.');
+      if (notify && mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text('SIP 자동 등록 실패: $ext 비밀번호 미동기화')));
+      }
+      AppLogger.instance.w('SIP auto-register failed: $ext password missing');
+      return false;
+    }
+    setState(() {
+      _sipRegistering = true;
+      _sipError = null;
+    });
+    final cfgBase = ServerConfigService.instance.current;
+    final sipConfig = SipConfig.webrtc(
+      username: ext,
+      password: password,
+      domain: cfgBase.sipDomain,
+      port: cfgBase.sipPort,
+      displayName: bound!.displayName.isNotEmpty ? bound.displayName : ext,
+      wsServer: cfgBase.wsServer,
+      iceServers: AppConstants.prdIceServers,
+    );
+    sip.updateConfig(sipConfig);
+    AppLogger.instance.ui('ADDRESSBOOK', 'autoRegister', params: {'ext': ext});
+    final ok = await sip.connect();
+    if (mounted) {
+      setState(() {
+        _sipRegistering = false;
+        _sipError = ok && sip.isRegistered ? null : 'SIP 등록 실패: ${sip.error ?? "등록되지 않음"}';
+      });
+    }
+    AppLogger.instance.evt('ADDRESSBOOK', 'autoRegisterResult',
+        state: (ok && sip.isRegistered) ? 'registered' : 'failed',
+        details: {'ext': ext, 'error': sip.error});
+    if (notify && mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text((ok && sip.isRegistered)
+              ? 'SIP 등록됨 · $ext'
+              : 'SIP 등록 실패: ${sip.error ?? "재시도 필요"}\n아이콘을 눌러 다시 시도하세요.')));
+    }
+    return ok && sip.isRegistered;
+  }
+
   Future<void> _quickConnect(OpsContact c) async {
     if (!_canCall) {
       _goSettings('일반 통화는 인증된 상태에서만 가능합니다.');
@@ -121,6 +225,7 @@ class _AddressBookScreenState extends State<AddressBookScreen>
         details: {'ext': c.extension, 'error': sip.error});
     if (!mounted) return;
     if (ok && sip.isRegistered) {
+      setState(() => _sipError = null);
       final media = Provider.of<MediaProvider>(context, listen: false);
       await media.getLocalMedia();
       if (!mounted) return;
@@ -208,10 +313,24 @@ class _AddressBookScreenState extends State<AddressBookScreen>
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
     final verified = _auth.isVerified;
+    final sip = Provider.of<SipProvider>(context);
     return Scaffold(
       appBar: AppBar(
         title: const Text('주소록'),
         actions: [
+          IconButton(
+              tooltip: sip.isRegistered
+                  ? 'SIP 연결됨 · 누르면 재등록'
+                  : 'SIP 연결 안됨 · 누르면 등록 시도',
+              icon: _sipRegistering
+                  ? const SizedBox(
+                      width: 18,
+                      height: 18,
+                      child: CircularProgressIndicator(strokeWidth: 2))
+                  : Icon(
+                      sip.isRegistered ? Icons.phone_enabled : Icons.phone_disabled,
+                      color: sip.isRegistered ? Colors.green : Colors.red),
+              onPressed: _sipRegistering ? null : () => _autoRegisterSip()),
           IconButton(
               tooltip: '네트워크 점검(테스트)',
               icon: const Icon(Icons.network_check),
@@ -258,23 +377,42 @@ class _AddressBookScreenState extends State<AddressBookScreen>
 
   Widget _buildStatusBar(bool verified) {
     final sip = Provider.of<SipProvider>(context);
+    final sipOk = verified && sip.isRegistered;
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-      color: verified
-          ? Colors.green.withValues(alpha: 0.08)
-          : Colors.orange.withValues(alpha: 0.08),
+      color: _sipError != null
+          ? Colors.red.withValues(alpha: 0.09)
+          : (verified
+              ? Colors.green.withValues(alpha: 0.08)
+              : Colors.orange.withValues(alpha: 0.08)),
       child: Row(children: [
         Icon(verified ? Icons.verified_user : Icons.lock_outline,
-            size: 18, color: verified ? Colors.green : Colors.orange),
+            size: 18,
+            color: _sipError != null
+                ? Colors.red
+                : (verified ? Colors.green : Colors.orange)),
         const SizedBox(width: 8),
         Expanded(
-            child: Text(
-          verified
-              ? '인증됨 · ${_auth.authExtension} · SIP ${sip.isRegistered ? "등록됨" : "미등록"}${_lastSync != null ? " · 동기화 ${TimeOfDay.fromDateTime(_lastSync!).format(context)}" : ""}'
-              : '미인증: 주소록/일반통화는 인증 후 사용 (설정에서 키 검증)',
-          style: const TextStyle(fontSize: 12),
-        )),
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    _sipError ??
+                        (verified
+                            ? '인증됨 · ${_auth.authExtension} · SIP ${sip.isRegistered ? "연결됨(리스닝)" : "연결 안됨"}${_lastSync != null ? " · 동기화 ${TimeOfDay.fromDateTime(_lastSync!).format(context)}" : ""}'
+                            : '미인증: 주소록/일반통화는 인증 후 사용 (설정에서 키 검증)'),
+                    style: TextStyle(
+                        fontSize: 12,
+                        color: _sipError != null ? Colors.red[700] : null),
+                  ),
+                  if (_sipError != null)
+                    const Text('상단 전화 아이콘을 눌러 다시 등록하세요.',
+                        style: TextStyle(fontSize: 11, color: Colors.red)),
+                ])),
+        if (verified)
+          Icon(sipOk ? Icons.phone_enabled : Icons.phone_disabled,
+              size: 16, color: sipOk ? Colors.green : Colors.red),
       ]),
     );
   }

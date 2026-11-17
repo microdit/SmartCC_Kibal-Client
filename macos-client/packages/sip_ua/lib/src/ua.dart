@@ -313,9 +313,6 @@ class UA extends EventManager {
     // Close registrator.
     _registrator.close();
 
-    // If there are session wait a bit so CANCEL/BYE can be sent and their responses received.
-    int num_sessions = _sessions.length;
-
     // Run  _terminate_ on every Session.
     _sessions.keys.toList().forEach((String? key) {
       if (_sessions.containsKey(key)) {
@@ -355,16 +352,17 @@ class UA extends EventManager {
 
     _status = UAStatus.userClosed;
 
-    int num_transactions = _transactions.countTransactions();
-    if (num_transactions == 0 && num_sessions == 0) {
-      _socketTransport!.disconnect();
-    } else {
-      _closeTimer = setTimeout(() {
-        logger.i('Closing connection');
-        _closeTimer = null;
-        _socketTransport!.disconnect();
-      }, 2000);
+    // Kibal patch (2026-11-17): do not defer socket close with a 2s timer.
+    // When a new UA is created immediately after stop() (e.g. quick-connect
+    // switching extensions), the deferred timer closes the shared transport
+    // of the newly registered UA -> "close by local" right after registration.
+    // Sessions/subscriptions have already been terminated above, so closing
+    // the transport immediately is safe here.
+    if (_closeTimer != null) {
+      clearTimeout(_closeTimer);
+      _closeTimer = null;
     }
+    _socketTransport!.disconnect();
   }
 
   /**
