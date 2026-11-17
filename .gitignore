@@ -24,6 +24,9 @@ pubspec.lock
 *.swp
 *.swo
 
+# backup files
+_백업_/
+
 # OS
 .DS_Store
 Thumbs.db
@@ -52,3 +55,6 @@ docs/_작업이력/log/*.md
 
 # OpenCode session artifacts
 session-ses_*.md
+
+# diag bot runtime media cache (Y4M/WAV generated from test-media)
+web/.tmp/

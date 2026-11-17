@@ -1,5 +1,8 @@
-import { spawn } from "node:child_process";
+import { spawn, spawnSync } from "node:child_process";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import path from "node:path";
 import process from "node:process";
+import { fileURLToPath } from "node:url";
 import { chromium } from "playwright";
 
 // 6700 network-test always-on diagnostic bot.
@@ -14,8 +17,14 @@ const ext = process.env.DIAG_EXT ?? "7001";
 const room = process.env.DIAG_ROOM ?? "6700";
 const previewPort = Number(process.env.PREVIEW_PORT ?? "4188");
 const appUrl = `http://127.0.0.1:${previewPort}/`;
-const videoFile = process.env.DIAG_VIDEO_FILE;
-const audioFile = process.env.DIAG_AUDIO_FILE ?? "";
+// 7001 봇 송출 콘텐츠: 원본 wiki/.../테스트영상_04_화사.mov →
+// 배포용 파생 mp4(web/test-media)를 Client와 함께 배포하고, 실행 시
+// ffmpeg로 Y4M(I420)/WAV를 생성해 Chrome 가상카메라/마이크에 주입한다.
+const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+const MEDIA_SRC = path.join(ROOT, "test-media", "테스트영상_04_화사_webrtc_720p30_60s.mp4");
+const CACHE_DIR = path.join(ROOT, ".tmp", "diag-media");
+const VIDEO_FILE = path.join(CACHE_DIR, "kibal_diag_feed_640x360.y4m");
+const AUDIO_FILE = path.join(CACHE_DIR, "kibal_diag_feed_48k.wav");
 const password = process.env[`SIP_PASSWORD_${ext}`];
 const retryMs = Number(process.env.DIAG_RETRY_MS ?? "5000");
 const holdCheckMs = Number(process.env.DIAG_HOLD_CHECK_MS ?? "3000");
@@ -27,9 +36,36 @@ if (!password) {
   console.error(`SIP_PASSWORD_${ext} is required (pass via env, do not commit)`);
   process.exit(2);
 }
-if (!videoFile) {
-  console.error("DIAG_VIDEO_FILE is required for the always-on sender");
+if (!existsSync(MEDIA_SRC)) {
+  console.error(`media source missing: ${MEDIA_SRC}`);
   process.exit(2);
+}
+
+// execSync ffmpeg to build the Chrome-compatible fake capture files once.
+function ensureMedia() {
+  mkdirSync(CACHE_DIR, { recursive: true });
+  if (!existsSync(VIDEO_FILE)) {
+    console.log(`[${new Date().toISOString()}] generating Y4M from ${path.basename(MEDIA_SRC)} ...`);
+    const r = spawnSync("ffmpeg", [
+      "-y", "-i", MEDIA_SRC,
+      "-vf", "scale=640:360", "-r", "30", "-pix_fmt", "yuv420p",
+      "-f", "yuv4mpegpipe", VIDEO_FILE,
+    ], { encoding: "utf8" });
+    if (r.status !== 0) throw new Error(`ffmpeg Y4M failed: ${r.stderr?.slice(-300)}`);
+    // Chrome requires C420 (I420) header, ffmpeg emits C420jpeg.
+    const buf = readFileSync(VIDEO_FILE);
+    const nl = buf.indexOf(0x0a);
+    const header = Buffer.from("YUV4MPEG2 W640 H360 F30:1 Ip A1:1 C420\n");
+    writeFileSync(VIDEO_FILE, Buffer.concat([header, buf.subarray(nl + 1)]));
+  }
+  if (!existsSync(AUDIO_FILE)) {
+    const r = spawnSync("ffmpeg", [
+      "-y", "-i", MEDIA_SRC, "-vn", "-ar", "48000", "-ac", "1",
+      "-c:a", "pcm_s16le", AUDIO_FILE,
+    ], { encoding: "utf8" });
+    if (r.status !== 0) throw new Error(`ffmpeg WAV failed: ${r.stderr?.slice(-300)}`);
+  }
+  return { video: VIDEO_FILE, audio: AUDIO_FILE };
 }
 
 const browserArgs = [
@@ -37,9 +73,7 @@ const browserArgs = [
   "--use-fake-device-for-media-stream",
   "--autoplay-policy=no-user-gesture-required",
   "--disable-features=WebRtcHideLocalIpsWithMdns",
-  `--use-file-for-fake-video-capture=${videoFile}`,
 ];
-if (audioFile) browserArgs.push(`--use-file-for-fake-audio-capture=${audioFile}`);
 
 const preview = spawn("python3", ["-m", "http.server", String(previewPort), "--bind", "127.0.0.1", "--directory", "dist"], {
   cwd: process.cwd(),
@@ -131,8 +165,15 @@ async function runOnce(browser) {
 }
 
 async function main() {
+  const media = ensureMedia();
+  console.log(`[${new Date().toISOString()}] diag media: ${media.video}`);
+  const args = [
+    ...browserArgs,
+    `--use-file-for-fake-video-capture=${media.video}`,
+    `--use-file-for-fake-audio-capture=${media.audio}`,
+  ];
   await waitForServer(appUrl);
-  const browser = await chromium.launch({ channel: "chrome", headless: true, args: browserArgs });
+  const browser = await chromium.launch({ channel: "chrome", headless: true, args });
   for (;;) {
     try {
       await runOnce(browser);
