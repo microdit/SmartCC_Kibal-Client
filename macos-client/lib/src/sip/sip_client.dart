@@ -310,7 +310,15 @@ class KibalSipClient implements SipUaHelperListener {
       }
 
       if (_currentCall != null) {
-        throw Exception('이미 통화 중임');
+        // 이전 세션이 남아 있으면(화면 전환 중 재입장 등) 먼저 종료하고 진행.
+        // 그대로 두면 Asterisk ConfBridge에 좀비 채널이 남아 SFU video m-line이
+        // 꼬이고 ICE가 Checking에서 멈춘다.
+        AppLogger.instance.w('SIP call: 이전 세션 잔존 → 정리 후 재발신');
+        try {
+          _currentCall!.hangup();
+          await Future<void>.delayed(const Duration(milliseconds: 350));
+        } catch (_) {}
+        _cleanupSession();
       }
 
       // 카메라가 없는 환경에서는 음성 통화로 자동 대체
@@ -450,6 +458,12 @@ class KibalSipClient implements SipUaHelperListener {
 
       call.hangup();
       AppLogger.instance.i('SIP hangup (local)');
+      // BYE가 Asterisk에 전달되어 ConfBridge 채널이 정리될 때까지 짧게 대기.
+      // 즉시 _cleanupSession() 후 재입장하면 이전 채널이 브리지에 좀비로 남아
+      // SFU가 자기 자신을 video source로 물어 영상이 Checking에서 멈춘다.
+      try {
+        await Future<void>.delayed(const Duration(milliseconds: 350));
+      } catch (_) {}
       _cleanupSession();
 
       _emitEvent(const SipEvent(
