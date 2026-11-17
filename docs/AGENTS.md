@@ -103,6 +103,15 @@
 - **W3 배포준비**: 릴리스 DMG `~/Downloads/macos_client_v0.0.24+24_w2.dmg`(37M, sha256 `4c5caa3d…c63a`) 생성, 현황 [[wiki/08_Experiments/20261114_W3_실기재검증_배포준비_v1.0]].
 - **전제/차단**: NAS(dev/prd) 미접속→origin 기준. W3 실기(다단말·1201, 활성통화 종료 후) 필요. 서버 H1은 승인/AMI 필요.
 
+## 현재 진행 (2026-11-17) — v0.0.29 릴리스 파이프라인 수정 · 3-way 동기화
+- **v0.0.29 릴리스 완료**: `release_macos.sh --no-bump`이 step 4 `flutter analyze` info 1건으로 중단(`login_screen.dart:474` `${min}` → `$min` 수정, analyze No issues found) → **v0.0.29 (build 29) 발행 완료** (DMG `macos_client_v0.0.29.dmg`, sha256 `15a745f7…`, Info.plist 0.0.29, adhoc 서명). 직접 빌드(`build_macos.sh release`)도 성공.
+- **3-way 동기화 복구**: NAS(nas2:4949) 접속 가능 확인(2026-11-11 대역·2026-11-09 경로 이슈와 상이). dev/prd push 거절(원격 v0.0.30 커밋) → 병합(`551491ac`) → push OK → github도 거절(`c34d99fe`, dev/prd 커밋과 동일 내용·트리 동일) → 병합(`63855561`) → **github/dev/prd 모두 0/0 in sync**, working tree clean.
+- **v0.0.30 병합**: 회의실 지정번호 자동입장(`/conference` extra 전달, SIP 등록 시 자동 `_join`, 미등록 시 주소록 유지+안내), pubspec 0.0.30+30.
+- **문서**: [[docs/보고서/20261117_버그원인분석보고서_v1.0]], [[docs/보고서/20261117_버그수정완료보고서_v1.0]], [[wiki/06_Reports/20261117_macos_릴리스_파이프라인_버그분석_v1.0]], [[wiki/07_Logs/작업로그_20261117]]
+- **벡터DB 재색인**: `venv_client/bin/python scripts/index_wiki.py --reindex` → **117 files, 1113 chunks** (collection `kibal_client_wiki`).
+- **Git**: `./scripts/git-sync.sh --auto --no-deploy` → `fd86abf1`, `7ae1fb99`, `63855561`. PRD 배포는 여전히 미수행(`--no-deploy`).
+- **잔여**: v0.0.30 회의실 자동입장 실기 검증, NAS 경로(2026-11-09/11 이전) 문서 정합성 후속.
+
 ## 이전 진행 (2026-11-13 02:00, 요약) — F1/F2/G3 구현·v0.0.24
 - F1 `_pendingCallTarget`, F2 A4 롤백, G3 `enable_events=yes` 반영(v0.0.24 build 24, sha256 `c8c6e4a7…`). ADR-008/D1·ADR-009/F2 실기 확인, G3 부분검증. 잔여: P0 크래시, H1/H5/F1/H6 재검증. 상세: [[wiki/06_Reports/20261113_F1F2G3_구현완료보고서_v1.0]], [[docs/보고서/20261113_후속작업계획서_v2.0]], [[wiki/07_Logs/작업로그_20261113]]
 
