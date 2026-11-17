@@ -1,0 +1,40 @@
+다른 측에서 테스트할 때 (2026-11-17 갱신)
+
+[서버 리포 — SmartCC_Kibal]
+# 서버에는 origin이 존재
+git fetch origin
+git checkout docs/req-training-ppt-20261116
+git reset --hard origin/docs/req-training-ppt-20261116
+
+[클라이언트 리포 — SmartCC_Kibal-Client]
+# 주의: 클라이언트에는 origin 리모트가 없습니다 (github / dev / prd 만 존재)
+git fetch --all --prune
+git checkout feature/addressbook-auth-secure-dev
+git reset --hard github/feature/addressbook-auth-secure-dev
+# origin/feature/... 를 쓰면 실패합니다 → github/feature/... 사용
+
+[리모트 현황]
+- github = source of truth (git@github.com:microdit/SmartCC_Kibal-Client.git)
+- dev/prd = NAS(nas2:4949), 현재 github 과 동일 HEAD
+- 전체 브랜치 최신 커밋: dfe4ec40 (2026-11-17 17:03 +0900)
+  "docs(client): 테스트 로그/문서 정리 및 Info.plist v0.0.36 반영 (민감정보 마스킹)"
+  → feature/addressbook-auth-secure-dev (local) + github/dev/prd 동일 커밋 (in sync)
+
+[고정 정보]
+- DMG: macos-client/build/macos/Build/Products/Release/macos_client_v0.0.36.dmg
+- 진단봇: 서버에서 상시 실행 중 (04화사 전체 1080p 송출)
+
+[동기화 스크립트]
+- ./scripts/git-pull.sh --interactive
+    전체 브랜치 목록 + 선택, 작업트리 더티 시 자동 stash 후 checkout → pull
+- ./scripts/git-push.sh --interactive
+    전체 브랜치 최신 커밋/날짜 표시 + (LATEST) 표시, 브랜치/remote 대화형 선택 → push
+    --dry-run 옵션으로 실제 push 없이 탐지/선택만 확인 가능
+- ./scripts/git-sync.sh "커밋 메시지" --no-deploy
+    커밋 + github/dev/prd 3-way push
+
+[stash 복구]
+- git stash pop   (자동 stash 메시지: git-pull.sh / git-push.sh auto-stash ...)
+
+[상세 안내서]
+- wiki/03_Guides/20261117_Git동기화_사용설명서_v1.0.md

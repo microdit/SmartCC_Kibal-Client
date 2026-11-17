@@ -111,16 +111,39 @@ git status --short
 echo
 
 echo "[3/5] Switching to branch: $BRANCH..."
-if git rev-parse --verify "$BRANCH" >/dev/null 2>&1; then
-    git checkout "$BRANCH" 2>/dev/null || {
-        echo "  WARN: checkout failed (local changes?). Aborting."
-        echo "  Try: git stash then re-run"
+
+# @>-- 2026-11-17 microdit: remote-tracking 선택(github/foo) → 로컬 브랜치명/remote 분리
+PULL_REMOTE="github"
+TARGET="$BRANCH"
+if [[ "$BRANCH" == */* ]]; then
+    PREFIX="${BRANCH%%/*}"
+    if git remote | grep -qx "$PREFIX"; then
+        PULL_REMOTE="$PREFIX"
+        TARGET="${BRANCH#*/}"
+    fi
+fi
+
+# @>-- 2026-11-17 microdit: 로컬 변경 자동 stash (더티 워크트리 checkout 실패 방지)
+STASHED=false
+if [ -n "$(git status --porcelain)" ]; then
+    STASH_MSG="git-pull.sh auto-stash $(date '+%Y%m%d_%H%M%S')"
+    echo "  로컬 변경 감지 → stash 보존: $STASH_MSG"
+    if git stash push -u -m "$STASH_MSG"; then
+        STASHED=true
+    else
+        echo "  WARN: stash 실패 — checkout 계속 시도"
+    fi
+fi
+
+if git show-ref --verify --quiet "refs/heads/$TARGET"; then
+    git checkout "$TARGET" || {
+        echo "  ERROR: checkout 실패 ($TARGET). Aborting."
         exit 1
     }
 else
-    echo "  Not found locally. Creating from remote..."
-    git checkout -b "$BRANCH" "origin/$BRANCH" 2>/dev/null || {
-        echo "  ERROR: Cannot switch to $BRANCH"
+    echo "  로컬 브랜치 없음 → $PULL_REMOTE/$TARGET 에서 생성"
+    git checkout -b "$TARGET" "$PULL_REMOTE/$TARGET" || {
+        echo "  ERROR: Cannot create branch $TARGET from $PULL_REMOTE/$TARGET"
         exit 1
     }
 fi
@@ -128,8 +151,8 @@ echo
 
 RC=0
 
-echo "[4/5] Pulling from origin/$BRANCH..."
-git pull origin "$BRANCH" || { echo "  WARN: pull had issues"; RC=1; }
+echo "[4/5] Pulling from $PULL_REMOTE/$TARGET..."
+git pull "$PULL_REMOTE" "$TARGET" || { echo "  WARN: pull had issues"; RC=1; }
 echo
 
 echo "[5/5] Sync Status Report"
@@ -140,9 +163,9 @@ echo "  Latest commits:"
 git --no-pager log --oneline -5 2>/dev/null || echo "  (none)"
 echo
 echo "  Branch status:"
-# @>-- 2026-10-29: SmartCC_Kibal remotes (github, prd, dev) 확인
-for remote in origin prd dev; do
-    counts=$(git rev-list --left-right --count "$remote/$BRANCH...HEAD" 2>/dev/null || true)
+# @>-- 2026-11-17: 설정된 모든 remote 기준으로 상태 확인 (origin 하드코딩 제거)
+for remote in $(git remote); do
+    counts=$(git rev-list --left-right --count "$remote/$TARGET...HEAD" 2>/dev/null || true)
     if [ -n "$counts" ]; then
         behind=$(echo "$counts" | cut -f1)
         ahead=$(echo "$counts" | cut -f2)
@@ -150,12 +173,15 @@ for remote in origin prd dev; do
     fi
 done
 echo "-----------------------------------------------"
+if [ "$STASHED" = true ]; then
+    echo "  STASH: 로컬 변경 보존됨 → 복구: git stash pop"
+fi
 if [ $RC -eq 0 ]; then echo "  RESULT: Pull OK"
 else echo "  RESULT: Issues detected"
 fi
 echo
 echo "  NAS deploy (if needed):"
-echo "    ssh nas2 \"cd /var/services/homes/atom/SmartCC_Kibal-Client && git pull origin $BRANCH\""
+echo "    ssh nas2 \"cd /var/services/homes/atom/SmartCC_Kibal-Client && git pull $PULL_REMOTE $TARGET\""
 echo
 
 exit $RC
