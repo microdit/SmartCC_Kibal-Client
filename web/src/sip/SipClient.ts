@@ -25,7 +25,8 @@ export interface LocalMediaState {
 
 const mediaConstraints: MediaStreamConstraints = {
   audio: true,
-  video: { width: { ideal: 1280 }, height: { ideal: 720 } }
+  // 04화사 원본(1080p) 콘텐츠를 최대 화질로 송출하도록 1080p 이상 허용.
+  video: { width: { ideal: 1920 }, height: { ideal: 1080 } }
 };
 
 const CONNECT_TIMEOUT_MS = 15000;

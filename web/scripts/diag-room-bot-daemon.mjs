@@ -21,9 +21,11 @@ const appUrl = `http://127.0.0.1:${previewPort}/`;
 // 배포용 파생 mp4(web/test-media)를 Client와 함께 배포하고, 실행 시
 // ffmpeg로 Y4M(I420)/WAV를 생성해 Chrome 가상카메라/마이크에 주입한다.
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const MEDIA_SRC = path.join(ROOT, "test-media", "테스트영상_04_화사_webrtc_720p30_60s.mp4");
+// 원본 04화사.mov(1080p/23.6Mbps) → 1080p High 8Mbps 파생 mp4를 배포해 사용.
+// GitHub 대용량 파일 제한(GH001)으로 원본 MOV는 커밋하지 않고 gitignore.
+const MEDIA_SRC = path.join(ROOT, "test-media", "테스트영상_04_화사_webrtc_1080p30_60s.mp4");
 const CACHE_DIR = path.join(ROOT, ".tmp", "diag-media");
-const VIDEO_FILE = path.join(CACHE_DIR, "kibal_diag_feed_640x360.y4m");
+const VIDEO_FILE = path.join(CACHE_DIR, "kibal_diag_feed_1920x1080.y4m");
 const AUDIO_FILE = path.join(CACHE_DIR, "kibal_diag_feed_48k.wav");
 const password = process.env[`SIP_PASSWORD_${ext}`];
 const retryMs = Number(process.env.DIAG_RETRY_MS ?? "5000");
@@ -47,20 +49,20 @@ function ensureMedia() {
   if (!existsSync(VIDEO_FILE)) {
     console.log(`[${new Date().toISOString()}] generating Y4M from ${path.basename(MEDIA_SRC)} ...`);
     const r = spawnSync("ffmpeg", [
-      "-y", "-i", MEDIA_SRC,
-      "-vf", "scale=640:360", "-r", "30", "-pix_fmt", "yuv420p",
+      "-y", "-i", MEDIA_SRC, "-t", "10",
+      "-vf", "scale=1920:1080", "-r", "30", "-pix_fmt", "yuv420p",
       "-f", "yuv4mpegpipe", VIDEO_FILE,
     ], { encoding: "utf8" });
     if (r.status !== 0) throw new Error(`ffmpeg Y4M failed: ${r.stderr?.slice(-300)}`);
     // Chrome requires C420 (I420) header, ffmpeg emits C420jpeg.
     const buf = readFileSync(VIDEO_FILE);
     const nl = buf.indexOf(0x0a);
-    const header = Buffer.from("YUV4MPEG2 W640 H360 F30:1 Ip A1:1 C420\n");
+    const header = Buffer.from("YUV4MPEG2 W1920 H1080 F30:1 Ip A1:1 C420\n");
     writeFileSync(VIDEO_FILE, Buffer.concat([header, buf.subarray(nl + 1)]));
   }
   if (!existsSync(AUDIO_FILE)) {
     const r = spawnSync("ffmpeg", [
-      "-y", "-i", MEDIA_SRC, "-vn", "-ar", "48000", "-ac", "1",
+      "-y", "-i", MEDIA_SRC, "-t", "10", "-vn", "-ar", "48000", "-ac", "1",
       "-c:a", "pcm_s16le", AUDIO_FILE,
     ], { encoding: "utf8" });
     if (r.status !== 0) throw new Error(`ffmpeg WAV failed: ${r.stderr?.slice(-300)}`);

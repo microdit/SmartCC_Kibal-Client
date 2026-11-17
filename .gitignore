@@ -58,3 +58,6 @@ session-ses_*.md
 
 # diag bot runtime media cache (Y4M/WAV generated from test-media)
 web/.tmp/
+
+# 원본 대용량 MOV는 커밋 제외 (1080p 파생 mp4만 배포)
+web/test-media/*.mov
