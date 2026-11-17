@@ -61,3 +61,8 @@ web/.tmp/
 
 # 원본 대용량 MOV는 커밋 제외 (1080p 파생 mp4만 배포)
 web/test-media/*.mov
+
+# macOS DMG 빌드 산출물 (프로젝트 루트 — build_dmg.sh)
+macos_client_*.dmg
+macos_client_*.dmg.sha256
+macos_client_*_debug.app
