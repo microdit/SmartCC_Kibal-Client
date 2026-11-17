@@ -14,19 +14,22 @@ import '../common/fullscreen_stage.dart';
 ///
 /// 회의실 번호(기본 6000)로 참가하고, 로컬/원격(브리지 믹스) 영상을 표시합니다.
 class ConferenceView extends StatefulWidget {
-  const ConferenceView({super.key, this.autoClose = false});
+  const ConferenceView({super.key, this.autoClose = false, this.initialRoom});
 
   /// 다이얼러에서 회의실 번호로 push된 화면이면 true → 통화 종료 시 자동 닫힘.
   /// (회의 탭에 상주하는 인스턴스는 false)
   final bool autoClose;
+
+  /// 호출부(주소록/다이얼러/네트워크점검)가 지정한 회의실 번호.
+  /// 지정 시 입력란에 표시되고 SIP 등록 상태면 자동 참가한다.
+  final String? initialRoom;
 
   @override
   State<ConferenceView> createState() => _ConferenceViewState();
 }
 
 class _ConferenceViewState extends State<ConferenceView> {
-  final TextEditingController _roomController =
-      TextEditingController(text: AppConstants.conferenceRoom);
+  final TextEditingController _roomController = TextEditingController();
 
   /// 선택된 원격 카드 인덱스(0..N-1). -1 = 내 영상 크게 보기.
   int _selectedRemote = 0;
@@ -47,12 +50,38 @@ class _ConferenceViewState extends State<ConferenceView> {
   @override
   void initState() {
     super.initState();
+    final room = widget.initialRoom?.trim() ?? '';
+    _roomController.text = room.isNotEmpty ? room : AppConstants.conferenceRoom;
     _sipRef = context.read<SipProvider>();
     _mediaRef = context.read<MediaProvider>();
     _sipRef.addListener(_handleSipChange);
     _participants.addListener(_onParticipants);
     _participants.onResyncNeeded = _autoResync;
-    WidgetsBinding.instance.addPostFrameCallback((_) => _syncPolling());
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _syncPolling();
+      if (room.isNotEmpty) _autoJoinIfReady(room);
+    });
+  }
+
+  /// 지정된 회의실 번호로 SIP 등록 상태에서 자동 참가한다.
+  /// 미등록이면 자동 참가하지 않고 화면의 수동 [회의 참가] 버튼을 유지한다.
+  Future<void> _autoJoinIfReady(String room) async {
+    if (!mounted) return;
+    if (!RegExp(r'^\d{3,6}$').hasMatch(room)) {
+      AppLogger.instance.w('CONFERENCE autoJoin skipped: invalid room=$room');
+      return;
+    }
+    if (!_sipRef.isRegistered) {
+      AppLogger.instance.w('CONFERENCE autoJoin skipped: SIP not registered room=$room');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text('전화연결 안되어 있음 — SIP 등록 후 회의실에 입장하세요.')));
+      }
+      return;
+    }
+    if (_sipRef.isInCall || _joining) return;
+    AppLogger.instance.ui('CONFERENCE', 'autoJoin', params: {'room': room});
+    await _join();
   }
 
   final ConferenceParticipantService _participants = ConferenceParticipantService.instance;

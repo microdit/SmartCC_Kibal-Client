@@ -40,7 +40,10 @@ final _router = GoRouter(
     ),
     GoRoute(
       path: '/conference',
-      builder: (context, state) => const ConferenceView(autoClose: true),
+      builder: (context, state) => ConferenceView(
+        autoClose: true,
+        initialRoom: state.extra as String?,
+      ),
     ),
     GoRoute(
       path: '/mediaTest',

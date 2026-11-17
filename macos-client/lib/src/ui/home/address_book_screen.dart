@@ -296,12 +296,11 @@ class _AddressBookScreenState extends State<AddressBookScreen>
   void _dialTest(String target) {
     if (!Provider.of<SipProvider>(context, listen: false).isRegistered) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content:
-              Text('테스트 통화는 SIP 등록 후 사용하세요. 주소록에서 계정으로 연결하거나 설정에서 등록하세요.')));
+          content: Text('전화연결 안되어 있음 — SIP 등록 후 이용하세요.')));
       return;
     }
     if (AppConstants.isConferenceRoom(target)) {
-      context.push('/conference');
+      context.push('/conference', extra: target);
     } else {
       context.push('/call', extra: target);
     }
@@ -480,10 +479,10 @@ class _AddressBookScreenState extends State<AddressBookScreen>
                 final sip = Provider.of<SipProvider>(context, listen: false);
                 if (!sip.isRegistered) {
                   ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                      content: Text('먼저 연락처로 SIP 등록 후 회의실에 입장하세요.')));
+                      content: Text('전화연결 안되어 있음 — SIP 등록 후 회의실에 입장하세요.')));
                   return;
                 }
-                context.push('/conference');
+                context.push('/conference', extra: r.room);
               },
             ),
         ]));
