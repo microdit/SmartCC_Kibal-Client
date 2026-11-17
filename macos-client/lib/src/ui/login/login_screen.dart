@@ -471,7 +471,7 @@ class _LoginScreenState extends State<LoginScreen> {
       final min = cfg.minSupportedVersion ?? '0.0.0';
       final belowMin = min.isNotEmpty && _isVersionBelow(AppConstants.appVersion, min);
       if (cfg.updateRequired || belowMin) {
-        notice = '업데이트 필요(접속 제한): 현재 ${AppConstants.appVersion} / 최신 ${latest ?? "-"} / 최소지원 ${min}';
+        notice = '업데이트 필요(접속 제한): 현재 ${AppConstants.appVersion} / 최신 ${latest ?? "-"} / 최소지원 $min';
         blocked = true;
       } else if (cfg.updateRecommended) {
         notice = '업데이트 권장: 현재 ${AppConstants.appVersion} / 최신 ${latest ?? "-"}';
