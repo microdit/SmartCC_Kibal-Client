@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -6,6 +8,7 @@ import '../../providers/sip_provider.dart';
 import '../../providers/media_provider.dart';
 import '../../sip/sip_client.dart';
 import '../../utils/app_logger.dart';
+import '../../utils/call_log_store.dart';
 import '../../utils/constants.dart';
 import '../../utils/formatters.dart';
 import '../../utils/ops_directory.dart';
@@ -29,6 +32,8 @@ class _DialerScreenState extends State<DialerScreen> {
   OpsDirectory _directory = const OpsDirectory();
   bool _directoryLoaded = false;
   bool _refreshingServer = false;
+  List<CallLogEntry> _callLogs = const [];
+  bool _showCallLog = false;
 
   @override
   void initState() {
@@ -36,6 +41,13 @@ class _DialerScreenState extends State<DialerScreen> {
     _targetController.clear();
     _targetController.addListener(_onTargetChanged);
     _loadDirectory();
+    _loadCallLogs();
+  }
+
+  Future<void> _loadCallLogs() async {
+    final logs = await CallLogStore.instance.load();
+    if (!mounted) return;
+    setState(() => _callLogs = logs);
   }
 
   void _onTargetChanged() {
@@ -73,6 +85,11 @@ class _DialerScreenState extends State<DialerScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        leading: IconButton(
+          tooltip: '주소록으로',
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => context.go('/'),
+        ),
         title: const Text('Kibal'),
         centerTitle: false,
         elevation: 0,
@@ -112,27 +129,61 @@ class _DialerScreenState extends State<DialerScreen> {
         ],
       ),
       body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            // 등록 상태 및 정보
-            _buildStatusSection(sipProvider),
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final w = constraints.maxWidth;
+            final h = constraints.maxHeight;
+            // 반응형: 좁은 화면(폰/폴드)과 넓은 화면(TV/모니터)에 따라
+            // 여백·폰트·카드 폭을 조절한다.
+            final compact = w < 420;
+            final wide = w >= 900;
+            final landscapeShort = h < 520; // 가로형/폴드 펼침 상태
+            final padH = compact ? 8.0 : (wide ? 28.0 : 16.0);
+            final keyFont = landscapeShort
+                ? (compact ? 18.0 : 22.0)
+                : (wide ? 30.0 : 24.0);
+            final maxFieldWidth = wide ? 520.0 : double.infinity;
 
-            // 구분선
-            const Divider(height: 1),
+            return Center(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(maxWidth: wide ? 720 : w),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    // 등록 상태 및 정보 (짧은 화면에서는 최소화)
+                    if (!landscapeShort) _buildStatusSection(sipProvider),
+                    const Divider(height: 1),
 
-            // 번호 입력 필드
-            _buildInputField(sipProvider),
+                    // 번호 입력 필드
+                    SizedBox(
+                      width: maxFieldWidth,
+                      child: _buildInputField(sipProvider),
+                    ),
 
-            // 다이얼 패드
-            _buildDialPad(),
+                    // 다이얼 패드: 남은 공간을 차지하며 Call Log 확장에 비례해 줄어든다.
+                    Expanded(
+                      child: _buildDialPad(
+                        horizontalPadding: padH,
+                        fontSize: keyFont,
+                        compact: compact,
+                      ),
+                    ),
 
-            // 통화 버튼
-            _buildCallButton(sipProvider),
+                    // 통화 버튼
+                    _buildCallButton(sipProvider),
 
-            // 통화 기록 (선택 사항 - 현재 미구현)
-            // _buildCallHistory(),
-          ],
+                    // 통화 기록 확장/접기 토글
+                    _buildCallLogToggle(),
+                    if (_showCallLog)
+                      SizedBox(
+                        height: (h * (landscapeShort ? 0.38 : 0.32)).clamp(120.0, 320.0),
+                        child: _buildCallHistory(),
+                      ),
+                  ],
+                ),
+              ),
+            );
+          },
         ),
       ),
     );
@@ -436,36 +487,50 @@ class _DialerScreenState extends State<DialerScreen> {
   // Dial Pad
   //--------------------------------------------------------------------------
 
-  Widget _buildDialPad() {
-    return Expanded(
-      child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: AppConstants.spacingMd),
-        child: GridView.count(
-          crossAxisCount: 3,
-          childAspectRatio: 1.2,
-          crossAxisSpacing: AppConstants.spacingSm,
-          mainAxisSpacing: AppConstants.spacingSm,
-          physics: const NeverScrollableScrollPhysics(),
-          children: [
-            _buildDialButton('1'),
-            _buildDialButton('2', letters: 'ABC'),
-            _buildDialButton('3', letters: 'DEF'),
-            _buildDialButton('4', letters: 'GHI'),
-            _buildDialButton('5', letters: 'JKL'),
-            _buildDialButton('6', letters: 'MNO'),
-            _buildDialButton('7', letters: 'PQRS'),
-            _buildDialButton('8', letters: 'TUV'),
-            _buildDialButton('9', letters: 'WXYZ'),
-            _buildDialButton('*'),
-            _buildDialButton('0', letters: '+'),
-            _buildDialButton('#'),
-          ],
-        ),
-      ),
+  Widget _buildDialPad({
+    required double horizontalPadding,
+    required double fontSize,
+    required bool compact,
+  }) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        // 주어진 높이 안에서 4행이 모두 들어가도록 childAspectRatio를 계산.
+        const cols = 3;
+        const rows = 4;
+        const spacing = AppConstants.spacingSm;
+        final cellW = (constraints.maxWidth - spacing * (cols - 1)) / cols;
+        final cellH = (constraints.maxHeight - spacing * (rows - 1)) / rows;
+        final ratio = cellH > 0 ? (cellW / cellH) : 1.2;
+        return Container(
+          margin: EdgeInsets.symmetric(horizontal: horizontalPadding),
+          child: GridView.count(
+            crossAxisCount: cols,
+            childAspectRatio: ratio.clamp(0.8, 2.2),
+            crossAxisSpacing: spacing,
+            mainAxisSpacing: spacing,
+            physics: const NeverScrollableScrollPhysics(),
+            children: [
+              _buildDialButton('1', fontSize: fontSize, compact: compact),
+              _buildDialButton('2', letters: 'ABC', fontSize: fontSize, compact: compact),
+              _buildDialButton('3', letters: 'DEF', fontSize: fontSize, compact: compact),
+              _buildDialButton('4', letters: 'GHI', fontSize: fontSize, compact: compact),
+              _buildDialButton('5', letters: 'JKL', fontSize: fontSize, compact: compact),
+              _buildDialButton('6', letters: 'MNO', fontSize: fontSize, compact: compact),
+              _buildDialButton('7', letters: 'PQRS', fontSize: fontSize, compact: compact),
+              _buildDialButton('8', letters: 'TUV', fontSize: fontSize, compact: compact),
+              _buildDialButton('9', letters: 'WXYZ', fontSize: fontSize, compact: compact),
+              _buildDialButton('*', fontSize: fontSize, compact: compact),
+              _buildDialButton('0', letters: '+', fontSize: fontSize, compact: compact),
+              _buildDialButton('#', fontSize: fontSize, compact: compact),
+            ],
+          ),
+        );
+      },
     );
   }
 
-  Widget _buildDialButton(String number, {String? letters}) {
+  Widget _buildDialButton(String number,
+      {String? letters, required double fontSize, required bool compact}) {
     return ElevatedButton(
       onPressed: () => _handleDialInput(number),
       style: ElevatedButton.styleFrom(
@@ -476,8 +541,8 @@ class _DialerScreenState extends State<DialerScreen> {
           borderRadius: BorderRadius.circular(AppConstants.borderRadiusMd),
         ),
         elevation: 0,
-        textStyle: const TextStyle(
-          fontSize: 24,
+        textStyle: TextStyle(
+          fontSize: fontSize,
           fontWeight: FontWeight.bold,
         ),
       ),
@@ -488,8 +553,8 @@ class _DialerScreenState extends State<DialerScreen> {
           if (letters != null)
             Text(
               letters,
-              style: const TextStyle(
-                fontSize: 10,
+              style: TextStyle(
+                fontSize: compact ? 8 : 10,
                 color: Colors.grey,
               ),
             ),
@@ -561,6 +626,8 @@ class _DialerScreenState extends State<DialerScreen> {
         details: {'target': target, 'error': sipProvider.error});
 
     if (success) {
+      unawaited(CallLogStore.instance.add(target));
+      _loadCallLogs();
       if (AppConstants.isConferenceRoom(target)) {
         context.push('/conference', extra: target);
       } else {
@@ -622,5 +689,82 @@ class _DialerScreenState extends State<DialerScreen> {
         context.push('/settings');
         break;
     }
+  }
+
+  //--------------------------------------------------------------------------
+  // Call Log (확장/접기 + 재다이얼)
+  //--------------------------------------------------------------------------
+
+  Widget _buildCallLogToggle() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: AppConstants.spacingMd),
+      child: InkWell(
+        onTap: () => setState(() => _showCallLog = !_showCallLog),
+        borderRadius: BorderRadius.circular(AppConstants.borderRadiusSm),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 6),
+          child: Row(
+            children: [
+              Icon(
+                _showCallLog ? Icons.expand_more : Icons.expand_less,
+                size: 18,
+                color: Colors.grey[700],
+              ),
+              const SizedBox(width: 6),
+              Text(
+                '통화 기록 (${_callLogs.length})',
+                style: TextStyle(fontSize: 13, color: Colors.grey[700]),
+              ),
+              const Spacer(),
+              if (_callLogs.isNotEmpty)
+                TextButton(
+                  onPressed: () => setState(() => _showCallLog = !_showCallLog),
+                  child: Text(_showCallLog ? '접기' : '보기',
+                      style: const TextStyle(fontSize: 12)),
+                ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCallHistory() {
+    if (_callLogs.isEmpty) {
+      return const Center(
+          child: Text('통화 기록이 없습니다.',
+              style: TextStyle(color: Colors.grey, fontSize: 13)));
+    }
+    return ListView.separated(
+      physics: const AlwaysScrollableScrollPhysics(),
+      itemCount: _callLogs.length,
+      separatorBuilder: (_, __) => const Divider(height: 1),
+      itemBuilder: (context, i) {
+        final log = _callLogs[i];
+        final time = '${log.at.hour.toString().padLeft(2, '0')}:'
+            '${log.at.minute.toString().padLeft(2, '0')}';
+        return ListTile(
+          dense: true,
+          leading: Icon(
+            log.direction == 'incoming' ? Icons.call_received : Icons.call_made,
+            size: 18,
+            color: log.direction == 'incoming' ? Colors.blue : Colors.green,
+          ),
+          title: Text(log.number,
+              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+          subtitle: Text('$time · ${log.direction}',
+              style: const TextStyle(fontSize: 11, color: Colors.grey)),
+          trailing: const Icon(Icons.call, size: 18, color: Colors.green),
+          onTap: () {
+            // 재다이얼: 번호를 채우고 즉시 발신
+            _targetController.text = log.number;
+            _targetController.selection = TextSelection.fromPosition(
+                TextPosition(offset: log.number.length));
+            final sip = Provider.of<SipProvider>(context, listen: false);
+            _handleCall(sip);
+          },
+        );
+      },
+    );
   }
 }
