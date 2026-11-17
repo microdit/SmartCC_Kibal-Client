@@ -562,9 +562,9 @@ class _DialerScreenState extends State<DialerScreen> {
 
     if (success) {
       if (AppConstants.isConferenceRoom(target)) {
-        context.push('/conference');
+        context.push('/conference', extra: target);
       } else {
-        context.push('/call');
+        context.push('/call', extra: target);
       }
     } else {
       _showErrorDialog(context, sipProvider.error ?? '통화 연결에 실패했습니다');
