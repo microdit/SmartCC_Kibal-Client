@@ -70,6 +70,12 @@ push_remote() {
     if [[ "$url" == ssh://* ]]; then
         host=$(echo "$url" | sed -E 's#ssh://([^@]*@)?([^:/]+).*#\2#')
         port=$(echo "$url" | sed -nE 's#ssh://([^@]*@)?[^:/]+:([0-9]+)/.*#\2#p'); port=${port:-22}
+        # @>-- 2026-11-17 microdit: SSH alias(~/.ssh/config) 해석 — nc는 alias를 DNS로 찾아 오탐
+        cfg=$(ssh -G "$host" 2>/dev/null || true)
+        resolved_host=$(echo "$cfg" | awk '$1=="hostname"{print $2; exit}')
+        resolved_port=$(echo "$cfg" | awk '$1=="port"{print $2; exit}')
+        [ -n "$resolved_host" ] && host="$resolved_host"
+        [ -n "$resolved_port" ] && port="$resolved_port"
         if ! nc -z -G 3 "$host" "$port" >/dev/null 2>&1; then
             echo "    SKIP: $remote 접근 경로 없음($host:$port) — 현재 네트워크 대역에서 NAS 미도달"
             return 1
