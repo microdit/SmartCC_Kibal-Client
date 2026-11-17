@@ -26,9 +26,14 @@ class ConferenceParticipant {
   final bool hasVideo;
   final bool isSelf;
 
-  /// 카드 라벨: "표시이름 (내선)" — 표시 이름이 내선과 같으면 내선만
-  String get label =>
-      displayName.isEmpty || displayName == extension ? extension : '$displayName ($extension)';
+  /// 카드 라벨: "표시이름 (내선)" — 표시 이름이 내선과 같으면 내선만.
+  /// 7001 진단봇은 "AI봇(7001)"으로 고정 표기.
+  String get label {
+    if (extension == '7001') return 'AI봇(7001)';
+    return displayName.isEmpty || displayName == extension
+        ? extension
+        : '$displayName ($extension)';
+  }
 
   static ConferenceParticipant? fromJson(Map<String, dynamic> j) {
     final ch = j['channel'] as String?;

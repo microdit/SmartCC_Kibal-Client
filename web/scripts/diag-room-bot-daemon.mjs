@@ -19,6 +19,9 @@ const audioFile = process.env.DIAG_AUDIO_FILE ?? "";
 const password = process.env[`SIP_PASSWORD_${ext}`];
 const retryMs = Number(process.env.DIAG_RETRY_MS ?? "5000");
 const holdCheckMs = Number(process.env.DIAG_HOLD_CHECK_MS ?? "3000");
+const displayName = process.env.DIAG_DISPLAY_NAME ?? "AI봇";
+const opsBase = process.env.OPS_BASE ?? `http://${domain}:8091`;
+const opsKey = process.env.OPS_CLIENT_KEY ?? "dev-kibal-clients-2026";
 
 if (!password) {
   console.error(`SIP_PASSWORD_${ext} is required (pass via env, do not commit)`);
@@ -72,6 +75,22 @@ async function runOnce(browser) {
     }
     const pill = await page.locator(".pill").innerText().catch(() => "");
     if (!/등록됨/.test(pill)) throw new Error(`registration failed: ${pill}`);
+
+    // OPS 참가자 카드에 "AI봇(7001)"으로 표시되도록 표시 이름 보고
+    try {
+      const res = await fetch(`${opsBase}/api/client/profile`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-Client-Key": opsKey,
+          "X-Client-Extension": ext,
+        },
+        body: JSON.stringify({ extension: ext, display_name: displayName, host: "diag-bot" }),
+      });
+      console.log(`[${new Date().toISOString()}] profile report ${ext}=${displayName}: HTTP ${res.status}`);
+    } catch (e) {
+      console.error(`profile report failed: ${e.message}`);
+    }
 
     await page.locator('input[placeholder="내선 또는 6000"]').fill(room);
     await page.getByRole("button", { name: "호출", exact: true }).click();
