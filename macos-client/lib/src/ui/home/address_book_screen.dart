@@ -78,6 +78,24 @@ class _AddressBookScreenState extends State<AddressBookScreen>
   void _onSipChanged() {
     if (!mounted || !_auth.isVerified) return;
     final sip = Provider.of<SipProvider>(context, listen: false);
+
+    // 네트워크 전환으로 RTP가 20초간 끊기면 SIP transport가 아직 connected여도
+    // 강제 재등록(re-init)을 트리거해 복구 시간을 단축한다.
+    if (sip.mediaStalled && sip.isInCall && !sip.isConnecting) {
+      final target = sip.currentCallTarget;
+      if (target != null && target.isNotEmpty &&
+          _callTargetBeforeNetworkLoss == null) {
+        _callTargetBeforeNetworkLoss = target;
+      }
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text('네트워크가 끊어졌습니다. 전화를 다시 연결합니다…')));
+      }
+      AppLogger.instance.w('Media stall recovery: force SIP re-init');
+      sip.connect();
+      return;
+    }
+
     if (sip.isRegistered) {
       if (_sipError != null) setState(() => _sipError = null);
       return;

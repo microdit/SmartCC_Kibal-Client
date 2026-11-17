@@ -812,6 +812,9 @@ class KibalSipClient implements SipUaHelperListener {
   final Map<String, DateTime> _videoTrackLastGrowth = {};
   final Map<String, DateTime> _videoTrackFirstSeen = {};
   int _summaryAudioBase = 0;
+  int _stallTotalBase = 0;
+  int _stallTicks = 0;
+  bool _mediaStallNotified = false;
   int _summaryVideoBase = 0;
   int _probeTicks = 0;
   int _summaryFramesBase = 0;
@@ -832,6 +835,9 @@ class KibalSipClient implements SipUaHelperListener {
     _summaryAudioBase = 0;
     _summaryVideoBase = 0;
     _summaryFramesBase = 0;
+    _stallTotalBase = 0;
+    _stallTicks = 0;
+    _mediaStallNotified = false;
     _probeTicks = 0;
     _statsTimer = Timer.periodic(const Duration(seconds: 5), (_) async {
       final pc = call.peerConnection;
@@ -903,6 +909,28 @@ class KibalSipClient implements SipUaHelperListener {
         AppLogger.instance.d('SIP stats inbound '
             'audioBytes=$audioBytes audioPackets=$audioPackets '
             'videoBytes=$videoBytes');
+
+        // 미디어 스톨 감지: 네트워크 전환 시 SIP transport는 TCP 타임아웃까지
+        // 연결로 남지만 RTP는 즉시 끊긴다. 5초 tick × 4 = 20초 연속 무수신이면
+        // 상위(Provider/UI)에 알려 재연결·재입장을 유도한다.
+        final total = audioBytes + videoBytes;
+        if (total > _stallTotalBase) {
+          _stallTicks = 0;
+          _stallTotalBase = total;
+          if (_mediaStallNotified) {
+            _mediaStallNotified = false;
+            _emitEvent(const SipEvent(type: SipEventType.call,
+                data: {'action': 'mediaRecovered'}));
+          }
+        } else {
+          _stallTicks++;
+          if (_stallTicks >= 4 && !_mediaStallNotified) {
+            _mediaStallNotified = true;
+            AppLogger.instance.w('SIP media stalled (${_stallTicks * 5}s no RTP) → network recovery');
+            _emitEvent(const SipEvent(type: SipEventType.call,
+                data: {'action': 'mediaStall'}));
+          }
+        }
 
         // 유효 영상 트랙: 최근 15초 내 수신 증가 또는 막 등장한 트랙(유예)
         if (identified > 0) {

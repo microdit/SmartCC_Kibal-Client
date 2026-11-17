@@ -52,6 +52,10 @@ class SipProvider with ChangeNotifier {
 
   /// 연결 시도 중 여부
   bool get isConnecting => _connectInFlight != null;
+
+  /// 통화 중 RTP 수신이 끊긴 상태(네트워크 전환 의심)
+  bool _mediaStalled = false;
+  bool get mediaStalled => _mediaStalled;
   
   /// 로딩 상태
   bool _isLoading = false;
@@ -170,6 +174,7 @@ class SipProvider with ChangeNotifier {
         _retryAttempt = 0;
         _networkRetryTimer?.cancel();
         _networkRetryTimer = null;
+        _mediaStalled = false;
         onReconnected?.call();
       } else {
         _scheduleNetworkRetry();
@@ -460,6 +465,15 @@ class SipProvider with ChangeNotifier {
           final action = data['action'] as String?;
           
           switch (action) {
+            case 'mediaStall':
+              _mediaStalled = true;
+              AppLogger.instance.w('SIP mediaStalled 이벤트 수신 → 네트워크 복구 절차 트리거');
+              notifyListeners();
+              break;
+            case 'mediaRecovered':
+              _mediaStalled = false;
+              notifyListeners();
+              break;
             case 'incoming':
               _hasIncomingCall = true;
               _isCallEstablished = false;

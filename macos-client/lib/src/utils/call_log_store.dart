@@ -54,16 +54,16 @@ class CallLogStore {
   Future<List<CallLogEntry>> load() async {
     try {
       final f = _filePath;
-      if (!f.existsSync()) return const [];
+      if (!f.existsSync()) return <CallLogEntry>[];
       final decoded = jsonDecode(await f.readAsString());
-      if (decoded is! List) return const [];
+      if (decoded is! List) return <CallLogEntry>[];
       return decoded
           .whereType<Map<String, dynamic>>()
           .map(CallLogEntry.fromJson)
           .toList();
     } catch (e) {
       AppLogger.instance.w('CallLog load failed: $e');
-      return const [];
+      return <CallLogEntry>[];
     }
   }
 
