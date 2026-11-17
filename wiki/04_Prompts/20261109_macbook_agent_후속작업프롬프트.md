@@ -45,7 +45,7 @@ cd macos-client
 
 # 1) REGISTER
 flutter run -d macos --debug -t tool/register_probe.dart \
-  --dart-define=SIP_USERNAME=1102 --dart-define=SIP_PASSWORD=1102pass
+  --dart-define=SIP_USERNAME=1102 --dart-define=SIP_PASSWORD=<redacted>
 # 기대: >>> RESULT: REGISTER_OK
 
 # 2) 1:1 통화 (1102→1103, 자동 수신)
@@ -61,7 +61,7 @@ flutter run -d macos --debug -t tool/conference_probe.dart
 
 ## 4. 수동 UI 시나리오 (필수)
 
-1. 로그인: 내선 `1102` / `1102pass`, 서버 `192.168.11.39`, WS `ws://192.168.11.39:8088/ws` → **등록됨** 표시 확인
+1. 로그인: 내선 `1102` / `<redacted>`, 서버 `192.168.11.39`, WS `ws://192.168.11.39:8088/ws` → **등록됨** 표시 확인
 2. 다이얼러에서 `1101`(웹 클라이언트) 또는 `1103`으로 발신 → **상대방 영상이 메인 화면에 표시**, 내 영상 PIP 확인
 3. 음소거/카메라 끄기 토글 동작 확인, 종료 버튼으로 다이얼러 복귀
 4. 반대로 **다른 클라이언트가 1102로 전화** → 수신 다이얼로그 → 수락 시 영상 통화 연결, 거부 시 정상 종료
@@ -70,7 +70,7 @@ flutter run -d macos --debug -t tool/conference_probe.dart
 상대방이 필요하면 웹 클라이언트를 사용하세요:
 ```bash
 cd web && npm run dev   # http://localhost:5173 (웹은 localhost라 HTTPS 없이 카메라 사용 가능)
-# 내선 1101 / 1101pass 로 로그인
+# 내선 1101 / <redacted> 로 로그인
 ```
 
 ## 5. 남은 작업과 수행 방법

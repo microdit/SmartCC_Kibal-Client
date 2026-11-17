@@ -20,8 +20,8 @@
 - **영향도**: 등록이 영구적으로 적용되지 않아 지속적인 재등록 시도 필요
 
 ### 1.2.2 Bug 2: Status Code 401 (1102)
-- **원인**: Docker 환경 변수 `SIP_PASSWORD_1102`가 여전히 **MD5 해시** 값(`3ab8f8012caee1cbab300ded5840ea6d`) 보유
-- Asterix는 plain text(`1102pass`)를 expecting하지만, client가 MD5 해시 전송하여 인증 실패
+- **원인**: Docker 환경 변수 `SIP_PASSWORD_1102`가 여전히 **MD5 해시** 값(`<redacted-hex32>`) 보유
+- Asterix는 plain text(`<redacted>`)를 expecting하지만, client가 MD5 해시 전송하여 인증 실패
 - **부가 원인**: 1102 로그에 `192.168.11.2`로 연결 기록되지만 서버는 `192.168.11.39`에 있음 (네트워크 불일치)
 - **영향도**: 인증 지속 실패, 등록 영구 불가능
 
@@ -45,15 +45,15 @@
   VITE_SIP_WS_PORT=8088
   VITE_SIP_WS_SERVER=ws://192.168.11.39:8088/ws
   VITE_SIP_USERNAME=1101
-  VITE_SIP_PASSWORD=1101pass
+  VITE_SIP_PASSWORD=<redacted>
   VITE_SIP_DISPLAY_NAME=Kibal Web
   ```
 - **효과**: Web Client가 올바른 SIP 설정으로 로드됨
 
 #### Fix 2: Asterisk running config 수정 (완료)
 - **대상**: `/run/asterisk/pjsip.conf` (running container)
-- **변경사항**: MD5 해시 → plain text 비밀번호(`1101pass`~`1104pass`) 변경
-- **확인**: `grep '1101pass' /run/asterisk/pjsip.conf` → `1101pass` 확인됨
+- **변경사항**: MD5 해시 → plain text 비밀번호(`<redacted>`~`<redacted>`) 변경
+- **확인**: `grep '<redacted>' /run/asterisk/pjsip.conf` → `<redacted>` 확인됨
 - **한계**: 컨테이너 재시작 시 초기화됨 (template 파일 permanent 수정 필요)
 
 #### Fix 3: Workaround (일시적)
@@ -64,14 +64,14 @@
 
 #### Fix 4: Template File Permanent 수정 (보류)
 - **대상**: `/opt/kibal/config/pjsip.conf.template`
-- **변경사항**: `${SIP_PASSWORD_1101}` → `1101pass`, `${SIP_PASSWORD_1102}` → `1102pass`, `${SIP_PASSWORD_1103}` → `1103pass`, `${SIP_PASSWORD_1104}` → `1104pass`
+- **변경사항**: `${SIP_PASSWORD_1101}` → `<redacted>`, `${SIP_PASSWORD_1102}` → `<redacted>`, `${SIP_PASSWORD_1103}` → `<redacted>`, `${SIP_PASSWORD_1104}` → `<redacted>`
 - **방법**: Python 스크립트 파일 생성 후 실행 (shell escaping 이슈로 보류)
 - **필요성**: 컨테이너 재시작 후 설정 유지 보장
 
 #### Fix 5: Docker env vars permanent 고정 (보류)
 - **대상**: `SIP_PASSWORD_1101`~`SIP_PASSWORD_1104`
-- **현재 값**: MD5 해시 값 (`21b570670b1eec59ad5b90b76ee3a03b` 등)
-- **변경 필요**: `1101pass`~`1104pass`로 permanent 변경
+- **현재 값**: MD5 해시 값 (`<redacted-hex32>` 등)
+- **변경 필요**: `<redacted>`~`<redacted>`로 permanent 변경
 - **방법**: 
   - `docker commit`으로 컨테이너 상태 저장 후 재시작
   - 또는 `/usr/local/bin/kibal-entrypoint` 스크립트 수정
@@ -91,7 +91,7 @@
    - 서버 도메인: `192.168.11.39`
    - WebSocket: `ws://192.168.11.39:8088/ws`
    - 내선: `1101`
-   - 비밀번호: `1101pass`
+   - 비밀번호: `<redacted>`
 3. "등록" 버튼 클릭
 4. 기대 결과: "등록됨" 표시 ✅
 

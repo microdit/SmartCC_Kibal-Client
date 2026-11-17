@@ -1,0 +1,52 @@
+[2026-11-17T13:31:55.370028] INFO [usr=- host=- ip=-] AppLogger 초기화 완료 file=/Users/microdit/Library/Containers/com.microdit.macosClient/Data/Library/Application Support/com.microdit.macosClient/logs/app.log identity=usr=- host=- ip=- mode=release
+[2026-11-17T13:31:55.371624] INFO [usr=- host=- ip=-] 원격 로그 업로더 시작 session=mwk742cq-1yabjj2 mode=INFO + 이벤트 url=http://192.168.11.5:8091/api/client-logs
+[2026-11-17T13:31:55.424171] WARN [usr=- host=- ip=-] 서버 설정 갱신 실패: OPS 응답 없음 (후보 http://192.168.11.5:8091, http://MacPro.local:8091)
+[2026-11-17T13:31:55.437025] INFO [usr=- host=- ip=-] OPS directory: contacts=5 rooms=3 base=http://192.168.11.5:8091
+[2026-11-17T13:31:55.437132] INFO [usr=- host=- ip=-] AddressBook synced contacts=5 rooms=3
+[2026-11-17T13:31:55.437241] EVENT UI ADDRESSBOOK action=autoRegister params=ext=1101
+[2026-11-17T13:31:55.437285] INFO [usr=- host=- ip=-] SIP state -> connecting
+[2026-11-17T13:31:55.440091] INFO (동일 로그 2회 반복 스킵 요약)
+[2026-11-17T13:31:55.440163] EVENT SIP op=init target=- state=- params=ws=ws://192.168.11.5:8088/ws domain=192.168.11.5 port=5060 transport=ws
+[2026-11-17T13:31:55.446580] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connected
+[2026-11-17T13:31:55.491150] INFO (동일 로그 2회 반복 스킵 요약)
+[2026-11-17T13:31:55.491226] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> registered
+[2026-11-17T13:31:55.491937] EVENT ADDRESSBOOK event=autoRegisterResult state=registered ext=1101 error=-
+[2026-11-17T13:32:01.856936] EVENT UI CONFERENCE action=autoJoin params=room=6700
+[2026-11-17T13:32:01.857029] EVENT UI CONFERENCE action=joinPressed params=room=6700 registered=true
+[2026-11-17T13:32:01.857077] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] CONFERENCE: 로컬 미디어 없음 → getLocalMedia() 선행
+[2026-11-17T13:32:02.335867] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] MEDIA device resolve camera=기본 mic=기본 speaker=기본
+[2026-11-17T13:32:03.869847] EVENT MEDIA event=localStreamReady state=video=0 audio=1 frontCamera=true audioMuted=false
+[2026-11-17T13:32:03.870005] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP call -> 6700 voiceOnly=true hasLocalStream=true
+[2026-11-17T13:32:03.892556] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP remote-track recovery armed id=u9ktu2q999qx08275162stf3azkpqg
+[2026-11-17T13:32:03.892656] EVENT SIP op=callInitiation target=6700 state=initiated params=direction=outgoing id=u9ktu2q999qx08275162stf3azkpqg
+[2026-11-17T13:32:03.892767] EVENT SIP op=callProgress target=6700 state=CONNECTING params=id=u9ktu2q999qx08275162stf3azkpqg
+[2026-11-17T13:32:03.948986] WARN [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] 서버 설정 갱신 실패: OPS 응답 없음 (후보 http://192.168.11.5:8091, http://MacPro.local:8091)
+[2026-11-17T13:32:03.962456] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] OPS directory: contacts=5 rooms=3 base=http://192.168.11.5:8091
+[2026-11-17T13:32:03.962567] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] AddressBook synced contacts=5 rooms=3
+[2026-11-17T13:32:03.993821] EVENT SIP op=mediaStream target=6700 state=local params=video=0 audio=1 id=u9ktu2q999qx08275162stf3azkpqg
+[2026-11-17T13:32:04.458699] EVENT SIP op=callEstablished target=6700 state=ACCEPTED params=id=u9ktu2q999qx08275162stf3azkpqg
+[2026-11-17T13:32:04.458938] EVENT SIP op=callEstablished target=6700 state=CONFIRMED params=id=u9ktu2q999qx08275162stf3azkpqg
+[2026-11-17T13:32:04.558709] EVENT SIP op=mediaStream target=6700 state=remote params=video=1 audio=1 id=u9ktu2q999qx08275162stf3azkpqg
+[2026-11-17T13:32:04.558895] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote session u9ktu2q999qx08275162stf3azkpqg handled: streams=1 event(video=1 audio=1) session(video=1 audio=1)
+[2026-11-17T13:32:04.559004] EVENT MEDIA event=remoteStreamAdded state=video=1 audio=1 sessionId=u9ktu2q999qx08275162stf3azkpqg sessionStreams=1 sessionVideo=1 sessionAudio=1
+[2026-11-17T13:32:06.423091] EVENT SIP op=mediaStream target=6700 state=remote params=video=1 audio=1 id=u9ktu2q999qx08275162stf3azkpqg
+[2026-11-17T13:32:06.423213] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote session u9ktu2q999qx08275162stf3azkpqg handled: streams=1 event(video=1 audio=1) session(video=1 audio=1)
+[2026-11-17T13:32:06.423314] EVENT MEDIA event=remoteStreamAdded state=video=1 audio=1 sessionId=u9ktu2q999qx08275162stf3azkpqg sessionStreams=1 sessionVideo=1 sessionAudio=1
+[2026-11-17T13:32:06.431978] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=346b5ceb-7175-4ac4-a0c1-f82b03fe726d
+[2026-11-17T13:32:09.101787] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] CONFERENCE participants room=6700 n=1 [이재명 대통령 (1101):A*]
+[2026-11-17T13:32:09.463779] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=22169 audioPackets=225 videoBytes=0
+[2026-11-17T13:32:14.464773] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=22919 audioPackets=475 videoBytes=0
+[2026-11-17T13:32:19.465531] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=23660 audioPackets=722 videoBytes=0
+[2026-11-17T13:32:24.465083] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=24410 audioPackets=972 videoBytes=0
+[2026-11-17T13:32:29.465373] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=25160 audioPackets=1222 videoBytes=0
+[2026-11-17T13:32:34.464916] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=25907 audioPackets=1471 videoBytes=0
+[2026-11-17T13:32:34.465077] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP media summary 30s audioKB=25 videoKB=0 videoTracks=0/0 audioLost=0 ice=RTCIceConnectionStateCompleted
+[2026-11-17T13:32:34.465114] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP video summary 30s in=-@-fps decodedFrames+0 keyframes=0 freeze=0 pli=0 nack=0 vLost=0 | out=-@-fps target=0kbps limit=-
+[2026-11-17T13:32:39.465729] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=26657 audioPackets=1721 videoBytes=0
+[2026-11-17T13:32:44.465317] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=27407 audioPackets=1971 videoBytes=0
+[2026-11-17T13:32:49.465182] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=28157 audioPackets=2221 videoBytes=0
+[2026-11-17T13:32:54.466034] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=28907 audioPackets=2471 videoBytes=0
+[2026-11-17T13:32:59.465257] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=29651 audioPackets=2719 videoBytes=0
+[2026-11-17T13:33:01.301027] WARN [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] 서버 설정 갱신 실패: OPS 응답 없음 (후보 http://192.168.11.5:8091, http://MacPro.local:8091)
+[2026-11-17T13:33:01.317499] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] OPS directory: contacts=5 rooms=3 base=http://192.168.11.5:8091
+[2026-11-17T13:33:01.317629] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] AddressBook synced contacts=5 rooms=3

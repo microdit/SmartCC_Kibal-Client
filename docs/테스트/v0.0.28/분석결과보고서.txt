@@ -1,0 +1,22 @@
+
+
+ SmartCC_Kibal-Client/wiki/08_Experiments/20261114_v0.0.28_6100_교차분석_v1.0.md 작성: 시나리오1(1201/1102/1101 중복 스냅샷, 서버 1201 채널 2중·1103 audio-0 only 관측, 1103 실로그 부재)·시나리오2(1103 재입장 후 videoTracks=0/1·active=0 inactive=1·decoded 정지/영상수신 준비중, 1102 중복, 1102_2앱죽는다.txt SIGABRT IncomingVideoStreamQueue toI420→CheckValidDimensions로 W2 후가드 한계) 교차분석·후속 정리.
+- wiki/07_Logs/작업로그_20261114.md:9절, docs/_작업이력/2026-11-14.md 갱신 후 c303a90 커밋·origin/feature/macOS-version 푸시 완료(b4efe3e..c303a90).
+- 제외: 기존 미추적/무관 변경 docs/테스트/v0.0.28/*, docs/테스트/v0.0.24/* 미포함. 제약: 시나리오1 1103 실로그·서버 동시채집 부재, 크래시 시각(18:30:59)↔1102로그_02 구간 불일치로 H5/G5 정리·W2 toI420 선가드 보강·재수집(W3) 필요.
+
+
+
+--------------------
+
+
+ Thought: Analyzing SIP registration issue · 14.4s
+- 1104 등록 401 원인(명확): Asterisk SIP 인증 비밀번호는 deploy/dev/.env의 SIP_PASSWORD_****=<redacted>인데, Ops 연락처에 저장한 값(1234)은 Ops 디렉터리/메모용이며 SIP 인증과 별개라 401(Unauthorized) 발생. 서버가 1234를 받도록 하려면 deploy/dev/.env(및 실행 env)의 SIP_PASSWORD_1104 변경 후 Asterisk 재생성/적용 필요.
+- 클라이언트 수정: macos-client/lib/src/utils/constants.dart — DEV 빠른연결에 1104: <redacted> 추가. 이제 로그인 화면 빠른연결 1104 선택 시 올바른 SIP 비밀번호가 자동 입력됨(1104SIP등록오류.txt는 수동 입력 흐름으로 401). 변경 반영은 재빌드/재배포 후 유효.
+- 크래시 수정(병행 반영): macos-client/packages/flutter_webrtc/common/darwin/Classes/FlutterRTCVideoRenderer.m — toI420 호출 전 frame/frame.buffer nil 및 frame.width/height, [frame.buffer width/height] > 0 선검증·즉시 drop 추가(renderFrame, copyI420ToCVPixelBuffer). CheckValidDimensions 내부 fatal 경로 차단 보강(W2 후속). buffer가 비0 치수를 잘못 보고하는 등 다른 비정상 케이스·재입장/H5 중복 유발 조건은 실기 재검증 필요.
+- 상태: 코드만 수정됨(미커밋). 기존 미추적 docs/테스트/v0.0.24/*, docs/테스트/v0.0.28/* 및 무관 변경 docs/테스트/v0.0.24/충돌수정방안.txt은 건드리지 않음. 커밋/푸시·릴리스 빌드는 요청 시 진행.
+
+
+
+-------------------------
+
+

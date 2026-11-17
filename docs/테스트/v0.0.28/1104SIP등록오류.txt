@@ -1,0 +1,87 @@
+1103 번 iMac 에서 1104 SIP 등록 시도. 비밀번호 1234 는 콘솔 운영 OPS 연락처에서 1104번 등록해뒀음. 그런데 오류 발생함.
+SIP 등록실패 Code 401.
+
+[2026-11-14T20:06:47.869960] INFO [usr=- host=- ip=-] AppLogger 초기화 완료 file=/Users/microdit/Library/Containers/com.microdit.macosClient/Data/Library/Application Support/com.microdit.macosClient/logs/app.log identity=usr=- host=- ip=- mode=release
+[2026-11-14T20:06:47.870580] INFO [usr=- host=- ip=-] 원격 로그 업로더 시작 session=mwgawblq-137k2z1 mode=INFO + 이벤트 url=http://192.168.0.3:8091/api/client-logs
+[2026-11-14T20:06:47.899891] EVENT UI LOGIN action=serverConfigRefresh params=auto=true
+[2026-11-14T20:06:48.092364] INFO [usr=- host=- ip=-] 서버 설정 갱신 via=http://192.168.0.3:8091 domain=192.168.0.3 ws=ws://192.168.0.3:8088/ws changed=false
+[2026-11-14T20:06:48.093785] INFO [usr=- host=- ip=-] OPS directory: contacts=5 rooms=2 base=http://192.168.0.3:8091
+[2026-11-14T20:06:56.420820] INFO (동일 로그 2회 반복 스킵 요약)
+[2026-11-14T20:06:56.420912] EVENT UI LOGIN action=quickConnectFilled params=extension=1102
+[2026-11-14T20:07:03.810796] EVENT UI LOGIN action=quickConnectFilled params=extension=1102
+[2026-11-14T20:07:04.586128] EVENT UI LOGIN action=quickConnectFilled params=extension=1103
+[2026-11-14T20:07:05.656708] EVENT UI LOGIN action=loginPressed params=username=1103 domain=192.168.0.3 port=5060 transport=ws wsServer=ws://192.168.0.3:8088/ws
+[2026-11-14T20:07:05.656812] INFO [usr=- host=- ip=-] SIP state -> connecting
+[2026-11-14T20:07:05.658216] INFO (동일 로그 2회 반복 스킵 요약)
+[2026-11-14T20:07:05.658278] EVENT SIP op=init target=- state=- params=ws=ws://192.168.0.3:8088/ws domain=192.168.0.3 port=5060 transport=ws
+[2026-11-14T20:07:05.675862] INFO [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP state -> connected
+[2026-11-14T20:07:05.684642] INFO (동일 로그 2회 반복 스킵 요약)
+[2026-11-14T20:07:05.684711] INFO [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP state -> registered
+[2026-11-14T20:07:05.685390] EVENT LOGIN event=loginResult state=registered username=1103 error=-
+[2026-11-14T20:07:05.760947] INFO [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] MEDIA device resolve camera=기본 mic=기본 speaker=기본
+[2026-11-14T20:07:05.766203] EVENT MEDIA event=localStreamReady state=video=1 audio=1 frontCamera=true audioMuted=false
+[2026-11-14T20:07:08.917426] EVENT UI LOGIN action=quickConnectFilled params=extension=1104
+[2026-11-14T20:07:10.581613] EVENT UI LOGIN action=logoutPressed
+[2026-11-14T20:07:10.583004] EVENT MEDIA event=disposeAllMedia state=-
+[2026-11-14T20:07:10.583198] INFO [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP state -> idle
+[2026-11-14T20:07:10.588035] INFO [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP state -> unregistered
+[2026-11-14T20:07:12.585549] INFO [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP transport disconnected (cause: Code: [0], Cause: disconnect, Reason: close by local)
+[2026-11-14T20:07:12.585657] INFO [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP state -> disconnected
+[2026-11-14T20:07:17.996905] EVENT UI LOGIN action=quickConnectFilled params=extension=1102
+[2026-11-14T20:07:19.334373] EVENT UI LOGIN action=loginPressed params=username=1102 domain=192.168.0.3 port=5060 transport=ws wsServer=ws://192.168.0.3:8088/ws
+[2026-11-14T20:07:19.334456] INFO [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP state -> connecting
+[2026-11-14T20:07:19.335097] INFO (동일 로그 2회 반복 스킵 요약)
+[2026-11-14T20:07:19.335146] EVENT SIP op=init target=- state=- params=ws=ws://192.168.0.3:8088/ws domain=192.168.0.3 port=5060 transport=ws
+[2026-11-14T20:07:19.340625] INFO [usr=1102@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP state -> connected
+[2026-11-14T20:07:19.348867] INFO (동일 로그 2회 반복 스킵 요약)
+[2026-11-14T20:07:19.348936] INFO [usr=1102@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP state -> registered
+[2026-11-14T20:07:19.349034] EVENT LOGIN event=loginResult state=registered username=1102 error=-
+[2026-11-14T20:07:19.353827] INFO [usr=1102@192.168.0.3 host=AtomOppa ip=192.168.0.7] MEDIA device resolve camera=기본 mic=기본 speaker=기본
+[2026-11-14T20:07:19.355547] EVENT MEDIA event=localStreamReady state=video=1 audio=1 frontCamera=true audioMuted=false
+[2026-11-14T20:07:21.741875] EVENT UI LOGIN action=logoutPressed
+[2026-11-14T20:07:21.743132] EVENT MEDIA event=disposeAllMedia state=-
+[2026-11-14T20:07:21.743392] INFO [usr=1102@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP state -> idle
+[2026-11-14T20:07:21.751849] INFO [usr=1102@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP state -> unregistered
+[2026-11-14T20:07:23.408435] EVENT UI LOGIN action=quickConnectFilled params=extension=1104
+[2026-11-14T20:07:23.745558] INFO [usr=1102@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP transport disconnected (cause: Code: [0], Cause: disconnect, Reason: close by local)
+[2026-11-14T20:07:23.745662] INFO [usr=1102@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP state -> disconnected
+[2026-11-14T20:07:24.363069] EVENT UI LOGIN action=quickConnectFilled params=extension=1103
+[2026-11-14T20:07:25.499735] EVENT UI LOGIN action=loginPressed params=username=1103 domain=192.168.0.3 port=5060 transport=ws wsServer=ws://192.168.0.3:8088/ws
+[2026-11-14T20:07:25.499834] INFO [usr=1102@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP state -> connecting
+[2026-11-14T20:07:25.500709] INFO (동일 로그 2회 반복 스킵 요약)
+[2026-11-14T20:07:25.500773] EVENT SIP op=init target=- state=- params=ws=ws://192.168.0.3:8088/ws domain=192.168.0.3 port=5060 transport=ws
+[2026-11-14T20:07:25.506705] INFO [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP state -> connected
+[2026-11-14T20:07:25.512415] INFO (동일 로그 2회 반복 스킵 요약)
+[2026-11-14T20:07:25.512478] INFO [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP state -> registered
+[2026-11-14T20:07:25.513237] EVENT LOGIN event=loginResult state=registered username=1103 error=-
+[2026-11-14T20:07:25.514426] INFO [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] MEDIA device resolve camera=기본 mic=기본 speaker=기본
+[2026-11-14T20:07:25.521387] EVENT MEDIA event=localStreamReady state=video=1 audio=1 frontCamera=true audioMuted=false
+[2026-11-14T20:07:30.000698] EVENT UI LOGIN action=logoutPressed
+[2026-11-14T20:07:30.001997] EVENT MEDIA event=disposeAllMedia state=-
+[2026-11-14T20:07:30.002278] INFO [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP state -> idle
+[2026-11-14T20:07:30.007268] INFO [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP state -> unregistered
+[2026-11-14T20:07:30.954444] EVENT UI LOGIN action=quickConnectFilled params=extension=1104
+[2026-11-14T20:07:32.004462] INFO [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP transport disconnected (cause: Code: [0], Cause: disconnect, Reason: close by local)
+[2026-11-14T20:07:32.004583] INFO [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP state -> disconnected
+[2026-11-14T20:07:38.525928] EVENT UI LOGIN action=loginPressed params=username=1104 domain=192.168.0.3 port=5060 transport=ws wsServer=ws://192.168.0.3:8088/ws
+[2026-11-14T20:07:38.526027] INFO [usr=1103@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP state -> connecting
+[2026-11-14T20:07:38.526822] INFO (동일 로그 2회 반복 스킵 요약)
+[2026-11-14T20:07:38.526883] EVENT SIP op=init target=- state=- params=ws=ws://192.168.0.3:8088/ws domain=192.168.0.3 port=5060 transport=ws
+[2026-11-14T20:07:38.531823] INFO [usr=1104@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP state -> connected
+[2026-11-14T20:07:38.542055] INFO (동일 로그 2회 반복 스킵 요약)
+[2026-11-14T20:07:38.542113] INFO [usr=1104@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP state -> error
+[2026-11-14T20:07:38.542147] ERROR [usr=1104@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP SIP 등록 실패: Code: [401], Cause: Authentication Error, Reason: Unauthorized
+[2026-11-14T20:07:38.542207] ERROR [usr=1104@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP SIP 등록 시간 초과 또는 실패
+[2026-11-14T20:07:38.542248] EVENT LOGIN event=loginResult state=registered username=1104 error=SIP 등록 시간 초과 또는 실패
+[2026-11-14T20:07:40.630574] EVENT UI LOGIN action=loginPressed params=username=1104 domain=192.168.0.3 port=5060 transport=ws wsServer=ws://192.168.0.3:8088/ws
+[2026-11-14T20:07:40.630688] INFO [usr=1104@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP state -> connecting
+[2026-11-14T20:07:40.630763] INFO [usr=1104@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP transport disconnected (cause: Code: [0], Cause: disconnect, Reason: close by local)
+[2026-11-14T20:07:40.630802] INFO [usr=1104@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP state -> disconnected
+[2026-11-14T20:07:40.631341] INFO [usr=1104@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP state -> connecting
+[2026-11-14T20:07:40.631640] EVENT SIP op=init target=- state=- params=ws=ws://192.168.0.3:8088/ws domain=192.168.0.3 port=5060 transport=ws
+[2026-11-14T20:07:55.631680] INFO [usr=1104@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP state -> error
+[2026-11-14T20:07:55.631777] ERROR [usr=1104@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP SIP 전송 연결 시간 초과
+[2026-11-14T20:07:55.631946] EVENT LOGIN event=loginResult state=failed username=1104 error=SIP 전송 연결 시간 초과
+[2026-11-14T20:07:55.642782] INFO [usr=1104@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP state -> connected
+[2026-11-14T20:07:55.664921] INFO [usr=1104@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP state -> error
+[2026-11-14T20:07:55.664979] ERROR [usr=1104@192.168.0.3 host=AtomOppa ip=192.168.0.7] SIP SIP 등록 실패: Code: [401], Cause: Authentication Error, Reason: Unauthorized

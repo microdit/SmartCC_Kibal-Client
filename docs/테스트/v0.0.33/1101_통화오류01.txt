@@ -1,0 +1,344 @@
+전화 연결 이상 동작. SIP 등록 되어 있으나 통화 연결 안됨. 1:1 통화 시도후 이상해짐. 회의실 입장도 이후 오류 발생.
+
+[2026-11-17T16:04:05.618056] INFO [usr=- host=- ip=-] AppLogger 초기화 완료 file=/Users/microdit/Library/Containers/com.microdit.macosClient/Data/Library/Application Support/com.microdit.macosClient/logs/app.log identity=usr=- host=- ip=- mode=release
+[2026-11-17T16:04:05.619899] INFO [usr=- host=- ip=-] 원격 로그 업로더 시작 session=mwkcjraq-n3pfb8 mode=INFO + 이벤트 url=http://192.168.11.5:8091/api/client-logs
+[2026-11-17T16:04:05.856804] WARN [usr=- host=- ip=-] 서버 설정 갱신 실패: OPS 응답 없음 (후보 http://192.168.11.5:8091, http://MacPro.local:8091)
+[2026-11-17T16:04:05.872106] INFO [usr=- host=- ip=-] OPS directory: contacts=5 rooms=3 base=http://192.168.11.5:8091
+[2026-11-17T16:04:05.872208] INFO [usr=- host=- ip=-] AddressBook synced contacts=5 rooms=3
+[2026-11-17T16:04:05.872307] EVENT UI ADDRESSBOOK action=autoRegister params=ext=1101
+[2026-11-17T16:04:05.872364] INFO [usr=- host=- ip=-] SIP state -> connecting
+[2026-11-17T16:04:05.875286] INFO (동일 로그 2회 반복 스킵 요약)
+[2026-11-17T16:04:05.875441] EVENT SIP op=init target=- state=- params=ws=ws://192.168.11.5:8088/ws domain=192.168.11.5 port=5060 transport=ws
+[2026-11-17T16:04:05.896132] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connected
+[2026-11-17T16:04:05.936926] INFO (동일 로그 2회 반복 스킵 요약)
+[2026-11-17T16:04:05.937021] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> registered
+[2026-11-17T16:04:05.937937] EVENT ADDRESSBOOK event=autoRegisterResult state=registered ext=1101 error=-
+[2026-11-17T16:04:06.661994] WARN [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] 서버 설정 갱신 실패: OPS 응답 없음 (후보 http://192.168.11.5:8091, http://MacPro.local:8091)
+[2026-11-17T16:04:06.673972] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] OPS directory: contacts=5 rooms=3 base=http://192.168.11.5:8091
+[2026-11-17T16:04:06.674070] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] AddressBook synced contacts=5 rooms=3
+[2026-11-17T16:04:08.873376] WARN [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] 서버 설정 갱신 실패: OPS 응답 없음 (후보 http://192.168.11.5:8091, http://MacPro.local:8091)
+[2026-11-17T16:04:08.883790] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] OPS directory: contacts=5 rooms=3 base=http://192.168.11.5:8091
+[2026-11-17T16:04:08.883888] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] AddressBook synced contacts=5 rooms=3
+[2026-11-17T16:04:14.579095] EVENT UI ADDRESSBOOK action=quickConnect params=ext=1102
+[2026-11-17T16:04:14.579204] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connecting
+[2026-11-17T16:04:14.579483] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> unregistered
+[2026-11-17T16:04:14.579544] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transport disconnected (cause: Code: [0], Cause: disconnect, Reason: close by local)
+[2026-11-17T16:04:14.579573] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> disconnected
+[2026-11-17T16:04:14.580089] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connecting
+[2026-11-17T16:04:14.580443] EVENT SIP op=init target=- state=- params=ws=ws://192.168.11.5:8088/ws domain=192.168.11.5 port=5060 transport=ws
+[2026-11-17T16:04:29.580530] INFO [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> error
+[2026-11-17T16:04:29.580656] ERROR [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] SIP SIP 전송 연결 시간 초과
+[2026-11-17T16:04:29.580701] WARN [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] SIP 연결 실패 → 2s 후 재시도 (시도 1)
+[2026-11-17T16:04:29.580745] EVENT ADDRESSBOOK event=quickConnectResult state=failed ext=1102 error=SIP 전송 연결 시간 초과
+[2026-11-17T16:04:29.612889] INFO [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transport disconnected (cause: Code: [500], Cause: error, Reason: HttpException: Connection closed before full header was received, uri = http://192.168.11.5:8088/ws)
+[2026-11-17T16:04:29.613024] INFO [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> disconnected
+[2026-11-17T16:04:31.582034] INFO [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connecting
+[2026-11-17T16:04:31.582171] INFO [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transport disconnected (cause: Code: [0], Cause: disconnect, Reason: close by local)
+[2026-11-17T16:04:31.582209] INFO [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> disconnected
+[2026-11-17T16:04:31.582860] INFO [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connecting
+[2026-11-17T16:04:31.583122] EVENT SIP op=init target=- state=- params=ws=ws://192.168.11.5:8088/ws domain=192.168.11.5 port=5060 transport=ws
+[2026-11-17T16:04:46.583201] INFO [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> error
+[2026-11-17T16:04:46.583315] ERROR [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] SIP SIP 전송 연결 시간 초과
+[2026-11-17T16:04:46.583355] WARN [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] SIP 연결 실패 → 4s 후 재시도 (시도 2)
+[2026-11-17T16:04:46.620214] INFO [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transport disconnected (cause: Code: [500], Cause: error, Reason: HttpException: Connection closed before full header was received, uri = http://192.168.11.5:8088/ws)
+[2026-11-17T16:04:46.620308] INFO [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> disconnected
+[2026-11-17T16:04:48.621787] INFO [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connecting
+[2026-11-17T16:04:48.621949] INFO [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transport disconnected (cause: Code: [0], Cause: error, Reason: Client send disconnect)
+[2026-11-17T16:04:48.621991] INFO [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> disconnected
+[2026-11-17T16:04:48.627087] INFO [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connected
+[2026-11-17T16:04:48.632447] INFO [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> registered
+[2026-11-17T16:06:03.146084] EVENT UI CONFERENCE action=autoJoin params=room=6100
+[2026-11-17T16:06:03.146202] EVENT UI CONFERENCE action=joinPressed params=room=6100 registered=true
+[2026-11-17T16:06:03.146249] DEBUG [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] CONFERENCE: 로컬 미디어 없음 → getLocalMedia() 선행
+[2026-11-17T16:06:03.563235] INFO [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] MEDIA device resolve camera=기본 mic=기본 speaker=기본
+[2026-11-17T16:06:03.565010] WARN [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] MEDIA localStream null (사용 불가: 권한/장치 확인)
+[2026-11-17T16:06:03.567491] INFO [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] SIP call -> 6100 voiceOnly=true hasLocalStream=false
+[2026-11-17T16:06:03.577751] DEBUG [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] SIP remote-track recovery armed id=79o51n47yr82rstfrkva4986k7l83b
+[2026-11-17T16:06:03.577985] EVENT SIP op=callInitiation target=6100 state=initiated params=direction=outgoing id=79o51n47yr82rstfrkva4986k7l83b
+[2026-11-17T16:06:03.588989] EVENT SIP op=callTerminated target=6100 state=FAILED params=id=79o51n47yr82rstfrkva4986k7l83b cause=Code: [500], Cause: User Denied Media Access, Reason: User Denied Media Access
+[2026-11-17T16:06:03.589094] EVENT UI CONFERENCE action=autoCloseOnCallEnd
+[2026-11-17T16:06:03.589237] ERROR [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] UnhandledError: Unable to getUserMedia: NotAllowedError
+[2026-11-17T16:06:03.589300] ERROR [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] at #0 MediaDeviceNative.getUserMedia (package:flutter_webrtc/src/native/mediadevices_impl.dart:49)
+<asynchronous suspension>
+#1 RTCSession._sendInitialRequest (package:sip_ua/src/rtc_session.dart:2544)
+<asynchronous suspension>
+#2 RTCSession.connect (package:sip_ua/src/rtc_session.dart:364)
+<asynchronous suspension>
+
+[2026-11-17T16:06:05.477813] EVENT UI CONFERENCE action=autoJoin params=room=6100
+[2026-11-17T16:06:05.477925] EVENT UI CONFERENCE action=joinPressed params=room=6100 registered=true
+[2026-11-17T16:06:05.477953] DEBUG [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] CONFERENCE: 로컬 미디어 없음 → getLocalMedia() 선행
+[2026-11-17T16:06:05.479950] INFO [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] MEDIA device resolve camera=기본 mic=기본 speaker=기본
+[2026-11-17T16:06:05.480801] WARN [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] MEDIA localStream null (사용 불가: 권한/장치 확인)
+[2026-11-17T16:06:05.482441] INFO [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] SIP call -> 6100 voiceOnly=true hasLocalStream=false
+[2026-11-17T16:06:05.487762] DEBUG [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] SIP remote-track recovery armed id=79o519jqe8063s77v2f0wcgx3b2fs3
+[2026-11-17T16:06:05.487819] EVENT SIP op=callInitiation target=6100 state=initiated params=direction=outgoing id=79o519jqe8063s77v2f0wcgx3b2fs3
+[2026-11-17T16:06:05.488836] EVENT SIP op=callTerminated target=6100 state=FAILED params=id=79o519jqe8063s77v2f0wcgx3b2fs3 cause=Code: [500], Cause: User Denied Media Access, Reason: User Denied Media Access
+[2026-11-17T16:06:05.488907] EVENT UI CONFERENCE action=autoCloseOnCallEnd
+[2026-11-17T16:06:05.489027] ERROR [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] UnhandledError: Unable to getUserMedia: NotAllowedError
+[2026-11-17T16:06:05.489076] ERROR [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] at #0 MediaDeviceNative.getUserMedia (package:flutter_webrtc/src/native/mediadevices_impl.dart:49)
+<asynchronous suspension>
+#1 RTCSession._sendInitialRequest (package:sip_ua/src/rtc_session.dart:2544)
+<asynchronous suspension>
+#2 RTCSession.connect (package:sip_ua/src/rtc_session.dart:364)
+<asynchronous suspension>
+
+[2026-11-17T16:06:07.311083] EVENT UI CONFERENCE action=autoJoin params=room=6100
+[2026-11-17T16:06:07.311188] EVENT UI CONFERENCE action=joinPressed params=room=6100 registered=true
+[2026-11-17T16:06:07.311268] DEBUG [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] CONFERENCE: 로컬 미디어 없음 → getLocalMedia() 선행
+[2026-11-17T16:06:07.313030] INFO [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] MEDIA device resolve camera=기본 mic=기본 speaker=기본
+[2026-11-17T16:06:07.313778] WARN [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] MEDIA localStream null (사용 불가: 권한/장치 확인)
+[2026-11-17T16:06:07.315521] INFO [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] SIP call -> 6100 voiceOnly=true hasLocalStream=false
+[2026-11-17T16:06:07.321209] DEBUG [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] SIP remote-track recovery armed id=79o5190e8948v3oov90429u88x86h7
+[2026-11-17T16:06:07.321267] EVENT SIP op=callInitiation target=6100 state=initiated params=direction=outgoing id=79o5190e8948v3oov90429u88x86h7
+[2026-11-17T16:06:07.322188] EVENT SIP op=callTerminated target=6100 state=FAILED params=id=79o5190e8948v3oov90429u88x86h7 cause=Code: [500], Cause: User Denied Media Access, Reason: User Denied Media Access
+[2026-11-17T16:06:07.322281] EVENT UI CONFERENCE action=autoCloseOnCallEnd
+[2026-11-17T16:06:07.322399] ERROR [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] UnhandledError: Unable to getUserMedia: NotAllowedError
+[2026-11-17T16:06:07.322448] ERROR [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] at #0 MediaDeviceNative.getUserMedia (package:flutter_webrtc/src/native/mediadevices_impl.dart:49)
+<asynchronous suspension>
+#1 RTCSession._sendInitialRequest (package:sip_ua/src/rtc_session.dart:2544)
+<asynchronous suspension>
+#2 RTCSession.connect (package:sip_ua/src/rtc_session.dart:364)
+<asynchronous suspension>
+
+[2026-11-17T16:06:09.961016] EVENT UI CONFERENCE action=autoJoin params=room=6100
+[2026-11-17T16:06:09.961124] EVENT UI CONFERENCE action=joinPressed params=room=6100 registered=true
+[2026-11-17T16:06:09.961153] DEBUG [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] CONFERENCE: 로컬 미디어 없음 → getLocalMedia() 선행
+[2026-11-17T16:06:09.964566] INFO [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] MEDIA device resolve camera=기본 mic=기본 speaker=기본
+[2026-11-17T16:06:09.965300] WARN [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] MEDIA localStream null (사용 불가: 권한/장치 확인)
+[2026-11-17T16:06:09.967220] INFO [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] SIP call -> 6100 voiceOnly=true hasLocalStream=false
+[2026-11-17T16:06:09.972586] DEBUG [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] SIP remote-track recovery armed id=79o5150973l7012323937947264632
+[2026-11-17T16:06:09.972659] EVENT SIP op=callInitiation target=6100 state=initiated params=direction=outgoing id=79o5150973l7012323937947264632
+[2026-11-17T16:06:09.974460] EVENT SIP op=callTerminated target=6100 state=FAILED params=id=79o5150973l7012323937947264632 cause=Code: [500], Cause: User Denied Media Access, Reason: User Denied Media Access
+[2026-11-17T16:06:09.974549] EVENT UI CONFERENCE action=autoCloseOnCallEnd
+[2026-11-17T16:06:09.974678] ERROR [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] UnhandledError: Unable to getUserMedia: NotAllowedError
+[2026-11-17T16:06:09.974730] ERROR [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] at #0 MediaDeviceNative.getUserMedia (package:flutter_webrtc/src/native/mediadevices_impl.dart:49)
+<asynchronous suspension>
+#1 RTCSession._sendInitialRequest (package:sip_ua/src/rtc_session.dart:2544)
+<asynchronous suspension>
+#2 RTCSession.connect (package:sip_ua/src/rtc_session.dart:364)
+<asynchronous suspension>
+
+[2026-11-17T16:06:11.111226] EVENT UI CONFERENCE action=autoJoin params=room=6100
+[2026-11-17T16:06:11.111321] EVENT UI CONFERENCE action=joinPressed params=room=6100 registered=true
+[2026-11-17T16:06:11.111351] DEBUG [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] CONFERENCE: 로컬 미디어 없음 → getLocalMedia() 선행
+[2026-11-17T16:06:11.113410] INFO [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] MEDIA device resolve camera=기본 mic=기본 speaker=기본
+[2026-11-17T16:06:11.114127] WARN [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] MEDIA localStream null (사용 불가: 권한/장치 확인)
+[2026-11-17T16:06:11.115781] INFO [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] SIP call -> 6100 voiceOnly=true hasLocalStream=false
+[2026-11-17T16:06:11.121892] DEBUG [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] SIP remote-track recovery armed id=79o5121u5isa773tbgzza9990gy8oy
+[2026-11-17T16:06:11.121969] EVENT SIP op=callInitiation target=6100 state=initiated params=direction=outgoing id=79o5121u5isa773tbgzza9990gy8oy
+[2026-11-17T16:06:11.123331] EVENT SIP op=callTerminated target=6100 state=FAILED params=id=79o5121u5isa773tbgzza9990gy8oy cause=Code: [500], Cause: User Denied Media Access, Reason: User Denied Media Access
+[2026-11-17T16:06:11.123416] EVENT UI CONFERENCE action=autoCloseOnCallEnd
+[2026-11-17T16:06:11.123582] ERROR [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] UnhandledError: Unable to getUserMedia: NotAllowedError
+[2026-11-17T16:06:11.123660] ERROR [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] at #0 MediaDeviceNative.getUserMedia (package:flutter_webrtc/src/native/mediadevices_impl.dart:49)
+<asynchronous suspension>
+#1 RTCSession._sendInitialRequest (package:sip_ua/src/rtc_session.dart:2544)
+<asynchronous suspension>
+#2 RTCSession.connect (package:sip_ua/src/rtc_session.dart:364)
+<asynchronous suspension>
+
+[2026-11-17T16:06:12.344106] EVENT UI CONFERENCE action=autoJoin params=room=6100
+[2026-11-17T16:06:12.344226] EVENT UI CONFERENCE action=joinPressed params=room=6100 registered=true
+[2026-11-17T16:06:12.344258] DEBUG [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] CONFERENCE: 로컬 미디어 없음 → getLocalMedia() 선행
+[2026-11-17T16:06:12.346058] INFO [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] MEDIA device resolve camera=기본 mic=기본 speaker=기본
+[2026-11-17T16:06:12.346731] WARN [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] MEDIA localStream null (사용 불가: 권한/장치 확인)
+[2026-11-17T16:06:12.348336] INFO [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] SIP call -> 6100 voiceOnly=true hasLocalStream=false
+[2026-11-17T16:06:12.354476] DEBUG [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] SIP remote-track recovery armed id=79o51oba63zg7w7m567l1ny5879x9c
+[2026-11-17T16:06:12.354536] EVENT SIP op=callInitiation target=6100 state=initiated params=direction=outgoing id=79o51oba63zg7w7m567l1ny5879x9c
+[2026-11-17T16:06:12.355857] EVENT SIP op=callTerminated target=6100 state=FAILED params=id=79o51oba63zg7w7m567l1ny5879x9c cause=Code: [500], Cause: User Denied Media Access, Reason: User Denied Media Access
+[2026-11-17T16:06:12.355934] EVENT UI CONFERENCE action=autoCloseOnCallEnd
+[2026-11-17T16:06:12.356054] ERROR [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] UnhandledError: Unable to getUserMedia: NotAllowedError
+[2026-11-17T16:06:12.356102] ERROR [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] at #0 MediaDeviceNative.getUserMedia (package:flutter_webrtc/src/native/mediadevices_impl.dart:49)
+<asynchronous suspension>
+#1 RTCSession._sendInitialRequest (package:sip_ua/src/rtc_session.dart:2544)
+<asynchronous suspension>
+#2 RTCSession.connect (package:sip_ua/src/rtc_session.dart:364)
+<asynchronous suspension>
+
+[2026-11-17T16:06:14.344185] EVENT UI CONFERENCE action=autoJoin params=room=6100
+[2026-11-17T16:06:14.344281] EVENT UI CONFERENCE action=joinPressed params=room=6100 registered=true
+[2026-11-17T16:06:14.344312] DEBUG [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] CONFERENCE: 로컬 미디어 없음 → getLocalMedia() 선행
+[2026-11-17T16:06:14.345932] INFO [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] MEDIA device resolve camera=기본 mic=기본 speaker=기본
+[2026-11-17T16:06:14.346718] WARN [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] MEDIA localStream null (사용 불가: 권한/장치 확인)
+[2026-11-17T16:06:14.348431] INFO [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] SIP call -> 6100 voiceOnly=true hasLocalStream=false
+[2026-11-17T16:06:14.354413] DEBUG [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] SIP remote-track recovery armed id=79o51moblrmaysct0vcbk9a731wkul
+[2026-11-17T16:06:14.354469] EVENT SIP op=callInitiation target=6100 state=initiated params=direction=outgoing id=79o51moblrmaysct0vcbk9a731wkul
+[2026-11-17T16:06:14.355522] EVENT SIP op=callTerminated target=6100 state=FAILED params=id=79o51moblrmaysct0vcbk9a731wkul cause=Code: [500], Cause: User Denied Media Access, Reason: User Denied Media Access
+[2026-11-17T16:06:14.355604] EVENT UI CONFERENCE action=autoCloseOnCallEnd
+[2026-11-17T16:06:14.355727] ERROR [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] UnhandledError: Unable to getUserMedia: NotAllowedError
+[2026-11-17T16:06:14.355775] ERROR [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] at #0 MediaDeviceNative.getUserMedia (package:flutter_webrtc/src/native/mediadevices_impl.dart:49)
+<asynchronous suspension>
+#1 RTCSession._sendInitialRequest (package:sip_ua/src/rtc_session.dart:2544)
+<asynchronous suspension>
+#2 RTCSession.connect (package:sip_ua/src/rtc_session.dart:364)
+<asynchronous suspension>
+
+[2026-11-17T16:06:21.160402] EVENT UI CONFERENCE action=autoJoin params=room=6100
+[2026-11-17T16:06:21.160530] EVENT UI CONFERENCE action=joinPressed params=room=6100 registered=true
+[2026-11-17T16:06:21.160563] DEBUG [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] CONFERENCE: 로컬 미디어 없음 → getLocalMedia() 선행
+[2026-11-17T16:06:21.162447] INFO [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] MEDIA device resolve camera=기본 mic=기본 speaker=기본
+[2026-11-17T16:06:21.163220] WARN [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] MEDIA localStream null (사용 불가: 권한/장치 확인)
+[2026-11-17T16:06:21.165004] INFO [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] SIP call -> 6100 voiceOnly=true hasLocalStream=false
+[2026-11-17T16:06:21.170022] DEBUG [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] SIP remote-track recovery armed id=79o51am8w5ybwx3r43ygl4aaesn978
+[2026-11-17T16:06:21.170111] EVENT SIP op=callInitiation target=6100 state=initiated params=direction=outgoing id=79o51am8w5ybwx3r43ygl4aaesn978
+[2026-11-17T16:06:21.171166] EVENT SIP op=callTerminated target=6100 state=FAILED params=id=79o51am8w5ybwx3r43ygl4aaesn978 cause=Code: [500], Cause: User Denied Media Access, Reason: User Denied Media Access
+[2026-11-17T16:06:21.171237] EVENT UI CONFERENCE action=autoCloseOnCallEnd
+[2026-11-17T16:06:21.171355] ERROR [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] UnhandledError: Unable to getUserMedia: NotAllowedError
+[2026-11-17T16:06:21.171405] ERROR [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] at #0 MediaDeviceNative.getUserMedia (package:flutter_webrtc/src/native/mediadevices_impl.dart:49)
+<asynchronous suspension>
+#1 RTCSession._sendInitialRequest (package:sip_ua/src/rtc_session.dart:2544)
+<asynchronous suspension>
+#2 RTCSession.connect (package:sip_ua/src/rtc_session.dart:364)
+<asynchronous suspension>
+
+[2026-11-17T16:06:23.243599] EVENT UI CONFERENCE action=autoJoin params=room=6000
+[2026-11-17T16:06:23.243703] EVENT UI CONFERENCE action=joinPressed params=room=6000 registered=true
+[2026-11-17T16:06:23.243730] DEBUG [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] CONFERENCE: 로컬 미디어 없음 → getLocalMedia() 선행
+[2026-11-17T16:06:23.247097] INFO [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] MEDIA device resolve camera=기본 mic=기본 speaker=기본
+[2026-11-17T16:06:23.247806] WARN [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] MEDIA localStream null (사용 불가: 권한/장치 확인)
+[2026-11-17T16:06:23.249731] INFO [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] SIP call -> 6000 voiceOnly=true hasLocalStream=false
+[2026-11-17T16:06:23.256057] DEBUG [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] SIP remote-track recovery armed id=79o51s6804d89m3g7duy3vdv5u3gcc
+[2026-11-17T16:06:23.256125] EVENT SIP op=callInitiation target=6000 state=initiated params=direction=outgoing id=79o51s6804d89m3g7duy3vdv5u3gcc
+[2026-11-17T16:06:23.257138] EVENT SIP op=callTerminated target=6000 state=FAILED params=id=79o51s6804d89m3g7duy3vdv5u3gcc cause=Code: [500], Cause: User Denied Media Access, Reason: User Denied Media Access
+[2026-11-17T16:06:23.257216] EVENT UI CONFERENCE action=autoCloseOnCallEnd
+[2026-11-17T16:06:23.257337] ERROR [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] UnhandledError: Unable to getUserMedia: NotAllowedError
+[2026-11-17T16:06:23.257387] ERROR [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] at #0 MediaDeviceNative.getUserMedia (package:flutter_webrtc/src/native/mediadevices_impl.dart:49)
+<asynchronous suspension>
+#1 RTCSession._sendInitialRequest (package:sip_ua/src/rtc_session.dart:2544)
+<asynchronous suspension>
+#2 RTCSession.connect (package:sip_ua/src/rtc_session.dart:364)
+<asynchronous suspension>
+
+[2026-11-17T16:06:24.626859] EVENT UI CONFERENCE action=autoJoin params=room=6100
+[2026-11-17T16:06:24.626994] EVENT UI CONFERENCE action=joinPressed params=room=6100 registered=true
+[2026-11-17T16:06:24.627030] DEBUG [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] CONFERENCE: 로컬 미디어 없음 → getLocalMedia() 선행
+[2026-11-17T16:06:24.628750] INFO [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] MEDIA device resolve camera=기본 mic=기본 speaker=기본
+[2026-11-17T16:06:24.629421] WARN [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] MEDIA localStream null (사용 불가: 권한/장치 확인)
+[2026-11-17T16:06:24.631157] INFO [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] SIP call -> 6100 voiceOnly=true hasLocalStream=false
+[2026-11-17T16:06:24.638288] DEBUG [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] SIP remote-track recovery armed id=79o511091y25679t6i21567u5205r2
+[2026-11-17T16:06:24.638356] EVENT SIP op=callInitiation target=6100 state=initiated params=direction=outgoing id=79o511091y25679t6i21567u5205r2
+[2026-11-17T16:06:24.675817] EVENT SIP op=callTerminated target=6100 state=FAILED params=id=79o511091y25679t6i21567u5205r2 cause=Code: [500], Cause: User Denied Media Access, Reason: User Denied Media Access
+[2026-11-17T16:06:24.675957] EVENT UI CONFERENCE action=autoCloseOnCallEnd
+[2026-11-17T16:06:24.676080] ERROR [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] UnhandledError: Unable to getUserMedia: NotAllowedError
+[2026-11-17T16:06:24.676130] ERROR [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] at #0 MediaDeviceNative.getUserMedia (package:flutter_webrtc/src/native/mediadevices_impl.dart:49)
+<asynchronous suspension>
+#1 RTCSession._sendInitialRequest (package:sip_ua/src/rtc_session.dart:2544)
+<asynchronous suspension>
+#2 RTCSession.connect (package:sip_ua/src/rtc_session.dart:364)
+<asynchronous suspension>
+
+[2026-11-17T16:06:25.360273] EVENT UI CONFERENCE action=autoJoin params=room=6700
+[2026-11-17T16:06:25.360381] EVENT UI CONFERENCE action=joinPressed params=room=6700 registered=true
+[2026-11-17T16:06:25.360411] DEBUG [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] CONFERENCE: 로컬 미디어 없음 → getLocalMedia() 선행
+[2026-11-17T16:06:25.366771] INFO [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] MEDIA device resolve camera=기본 mic=기본 speaker=기본
+[2026-11-17T16:06:25.367811] WARN [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] MEDIA localStream null (사용 불가: 권한/장치 확인)
+[2026-11-17T16:06:25.369956] INFO [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] SIP call -> 6700 voiceOnly=true hasLocalStream=false
+[2026-11-17T16:06:25.377994] DEBUG [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] SIP remote-track recovery armed id=79o518w7813326414119iwcgvpoihb
+[2026-11-17T16:06:25.378077] EVENT SIP op=callInitiation target=6700 state=initiated params=direction=outgoing id=79o518w7813326414119iwcgvpoihb
+[2026-11-17T16:06:25.388392] EVENT SIP op=callTerminated target=6700 state=FAILED params=id=79o518w7813326414119iwcgvpoihb cause=Code: [500], Cause: User Denied Media Access, Reason: User Denied Media Access
+[2026-11-17T16:06:25.388530] EVENT UI CONFERENCE action=autoCloseOnCallEnd
+[2026-11-17T16:06:25.388682] ERROR [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] UnhandledError: Unable to getUserMedia: NotAllowedError
+[2026-11-17T16:06:25.388771] ERROR [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] at #0 MediaDeviceNative.getUserMedia (package:flutter_webrtc/src/native/mediadevices_impl.dart:49)
+<asynchronous suspension>
+#1 RTCSession._sendInitialRequest (package:sip_ua/src/rtc_session.dart:2544)
+<asynchronous suspension>
+#2 RTCSession.connect (package:sip_ua/src/rtc_session.dart:364)
+<asynchronous suspension>
+
+[2026-11-17T16:06:26.043837] EVENT UI CONFERENCE action=autoJoin params=room=6100
+[2026-11-17T16:06:26.043972] EVENT UI CONFERENCE action=joinPressed params=room=6100 registered=true
+[2026-11-17T16:06:26.044027] DEBUG [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] CONFERENCE: 로컬 미디어 없음 → getLocalMedia() 선행
+[2026-11-17T16:06:26.048789] INFO [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] MEDIA device resolve camera=기본 mic=기본 speaker=기본
+[2026-11-17T16:06:26.049963] WARN [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] MEDIA localStream null (사용 불가: 권한/장치 확인)
+[2026-11-17T16:06:26.052273] INFO [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] SIP call -> 6100 voiceOnly=true hasLocalStream=false
+[2026-11-17T16:06:26.061574] DEBUG [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] SIP remote-track recovery armed id=79o51710366d9m337618j2y4474910
+[2026-11-17T16:06:26.061646] EVENT SIP op=callInitiation target=6100 state=initiated params=direction=outgoing id=79o51710366d9m337618j2y4474910
+[2026-11-17T16:06:26.068542] EVENT SIP op=callTerminated target=6100 state=FAILED params=id=79o51710366d9m337618j2y4474910 cause=Code: [500], Cause: User Denied Media Access, Reason: User Denied Media Access
+[2026-11-17T16:06:26.068750] EVENT UI CONFERENCE action=autoCloseOnCallEnd
+[2026-11-17T16:06:26.068901] ERROR [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] UnhandledError: Unable to getUserMedia: NotAllowedError
+[2026-11-17T16:06:26.068990] ERROR [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] at #0 MediaDeviceNative.getUserMedia (package:flutter_webrtc/src/native/mediadevices_impl.dart:49)
+<asynchronous suspension>
+#1 RTCSession._sendInitialRequest (package:sip_ua/src/rtc_session.dart:2544)
+<asynchronous suspension>
+#2 RTCSession.connect (package:sip_ua/src/rtc_session.dart:364)
+<asynchronous suspension>
+
+[2026-11-17T16:06:26.660465] EVENT UI CONFERENCE action=autoJoin params=room=6000
+[2026-11-17T16:06:26.660636] EVENT UI CONFERENCE action=joinPressed params=room=6000 registered=true
+[2026-11-17T16:06:26.660741] DEBUG [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] CONFERENCE: 로컬 미디어 없음 → getLocalMedia() 선행
+[2026-11-17T16:06:26.662734] INFO [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] MEDIA device resolve camera=기본 mic=기본 speaker=기본
+[2026-11-17T16:06:26.663735] WARN [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] MEDIA localStream null (사용 불가: 권한/장치 확인)
+[2026-11-17T16:06:26.666016] INFO [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] SIP call -> 6000 voiceOnly=true hasLocalStream=false
+[2026-11-17T16:06:26.672851] DEBUG [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] SIP remote-track recovery armed id=79o51141su067645817u2ju545q871
+[2026-11-17T16:06:26.672953] EVENT SIP op=callInitiation target=6000 state=initiated params=direction=outgoing id=79o51141su067645817u2ju545q871
+[2026-11-17T16:06:26.674308] EVENT SIP op=callTerminated target=6000 state=FAILED params=id=79o51141su067645817u2ju545q871 cause=Code: [500], Cause: User Denied Media Access, Reason: User Denied Media Access
+[2026-11-17T16:06:26.674412] EVENT UI CONFERENCE action=autoCloseOnCallEnd
+[2026-11-17T16:06:26.674571] ERROR [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] UnhandledError: Unable to getUserMedia: NotAllowedError
+[2026-11-17T16:06:26.674644] ERROR [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] at #0 MediaDeviceNative.getUserMedia (package:flutter_webrtc/src/native/mediadevices_impl.dart:49)
+<asynchronous suspension>
+#1 RTCSession._sendInitialRequest (package:sip_ua/src/rtc_session.dart:2544)
+<asynchronous suspension>
+#2 RTCSession.connect (package:sip_ua/src/rtc_session.dart:364)
+<asynchronous suspension>
+
+[2026-11-17T16:06:28.771581] EVENT UI ADDRESSBOOK action=quickConnect params=ext=1103
+[2026-11-17T16:06:28.771689] INFO [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connecting
+[2026-11-17T16:06:28.771925] INFO [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> unregistered
+[2026-11-17T16:06:28.771976] INFO [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transport disconnected (cause: Code: [0], Cause: disconnect, Reason: close by local)
+[2026-11-17T16:06:28.772004] INFO [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> disconnected
+[2026-11-17T16:06:28.772453] INFO [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connecting
+[2026-11-17T16:06:28.772770] EVENT SIP op=init target=- state=- params=ws=ws://192.168.11.5:8088/ws domain=192.168.11.5 port=5060 transport=ws
+[2026-11-17T16:06:43.772821] INFO [usr=1103@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> error
+[2026-11-17T16:06:43.772953] ERROR [usr=1103@192.168.11.5 host=MacPro ip=192.168.11.5] SIP SIP 전송 연결 시간 초과
+[2026-11-17T16:06:43.773001] WARN [usr=1103@192.168.11.5 host=MacPro ip=192.168.11.5] SIP 연결 실패 → 8s 후 재시도 (시도 3)
+[2026-11-17T16:06:43.773044] EVENT ADDRESSBOOK event=quickConnectResult state=failed ext=1103 error=SIP 전송 연결 시간 초과
+[2026-11-17T16:06:43.786555] EVENT UI ADDRESSBOOK action=quickConnect params=ext=1102
+[2026-11-17T16:06:43.786651] INFO [usr=1103@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connecting
+[2026-11-17T16:06:43.786697] INFO [usr=1103@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transport disconnected (cause: Code: [0], Cause: disconnect, Reason: close by local)
+[2026-11-17T16:06:43.786738] INFO [usr=1103@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> disconnected
+[2026-11-17T16:06:43.787138] INFO [usr=1103@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connecting
+[2026-11-17T16:06:43.787374] EVENT SIP op=init target=- state=- params=ws=ws://192.168.11.5:8088/ws domain=192.168.11.5 port=5060 transport=ws
+[2026-11-17T16:06:58.787419] INFO [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> error
+[2026-11-17T16:06:58.787557] ERROR [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] SIP SIP 전송 연결 시간 초과
+[2026-11-17T16:06:58.787613] EVENT ADDRESSBOOK event=quickConnectResult state=failed ext=1102 error=SIP 전송 연결 시간 초과
+[2026-11-17T16:06:58.800275] EVENT UI ADDRESSBOOK action=autoRegister params=ext=1101
+[2026-11-17T16:06:58.800410] INFO [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connecting
+[2026-11-17T16:06:58.800469] INFO [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transport disconnected (cause: Code: [0], Cause: disconnect, Reason: close by local)
+[2026-11-17T16:06:58.800496] INFO [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> disconnected
+[2026-11-17T16:06:58.800961] INFO [usr=1102@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connecting
+[2026-11-17T16:06:58.802228] EVENT SIP op=init target=- state=- params=ws=ws://192.168.11.5:8088/ws domain=192.168.11.5 port=5060 transport=ws
+[2026-11-17T16:07:13.802298] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> error
+[2026-11-17T16:07:13.802398] ERROR [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP SIP 전송 연결 시간 초과
+[2026-11-17T16:07:13.802449] EVENT ADDRESSBOOK event=autoRegisterResult state=failed ext=1101 error=SIP 전송 연결 시간 초과
+[2026-11-17T16:07:13.803278] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connecting
+[2026-11-17T16:07:13.803352] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transport disconnected (cause: Code: [0], Cause: disconnect, Reason: close by local)
+[2026-11-17T16:07:13.803381] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> disconnected
+[2026-11-17T16:07:13.803794] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connecting
+[2026-11-17T16:07:13.803997] EVENT SIP op=init target=- state=- params=ws=ws://192.168.11.5:8088/ws domain=192.168.11.5 port=5060 transport=ws
+[2026-11-17T16:07:28.804042] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> error
+[2026-11-17T16:07:28.804168] ERROR [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP SIP 전송 연결 시간 초과
+[2026-11-17T16:07:28.804211] WARN [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP 연결 실패 → 16s 후 재시도 (시도 4)
+[2026-11-17T16:07:28.806197] EVENT UI ADDRESSBOOK action=autoRegister params=ext=1101
+[2026-11-17T16:07:28.806286] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connecting
+[2026-11-17T16:07:28.806328] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transport disconnected (cause: Code: [0], Cause: disconnect, Reason: close by local)
+[2026-11-17T16:07:28.806352] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> disconnected
+[2026-11-17T16:07:28.806754] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connecting
+[2026-11-17T16:07:28.857069] EVENT SIP op=init target=- state=- params=ws=ws://192.168.11.5:8088/ws domain=192.168.11.5 port=5060 transport=ws
+[2026-11-17T16:07:43.857172] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> error
+[2026-11-17T16:07:43.857376] ERROR [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP SIP 전송 연결 시간 초과
+[2026-11-17T16:07:43.857436] EVENT ADDRESSBOOK event=autoRegisterResult state=failed ext=1101 error=SIP 전송 연결 시간 초과
+[2026-11-17T16:07:43.890057] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transport disconnected (cause: Code: [500], Cause: error, Reason: HttpException: Connection closed before full header was received, uri = http://192.168.11.5:8088/ws)
+[2026-11-17T16:07:43.890210] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> disconnected
+[2026-11-17T16:07:43.912051] WARN [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] 서버 설정 갱신 실패: OPS 응답 없음 (후보 http://192.168.11.5:8091, http://MacPro.local:8091)
+[2026-11-17T16:07:43.924866] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] OPS directory: contacts=5 rooms=3 base=http://192.168.11.5:8091
+[2026-11-17T16:07:43.924958] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] AddressBook synced contacts=5 rooms=3
+[2026-11-17T16:07:44.804567] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connecting
+[2026-11-17T16:07:44.804670] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transport disconnected (cause: Code: [0], Cause: disconnect, Reason: close by local)
+[2026-11-17T16:07:44.804711] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> disconnected
+[2026-11-17T16:07:44.805233] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connecting
+[2026-11-17T16:07:44.805479] EVENT SIP op=init target=- state=- params=ws=ws://192.168.11.5:8088/ws domain=192.168.11.5 port=5060 transport=ws
+[2026-11-17T16:07:59.805526] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> error
+[2026-11-17T16:07:59.805660] ERROR [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP SIP 전송 연결 시간 초과
+[2026-11-17T16:07:59.805705] WARN [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP 연결 실패 → 30s 후 재시도 (시도 5)
+[2026-11-17T16:07:59.831635] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connected
+[2026-11-17T16:07:59.838368] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> registered

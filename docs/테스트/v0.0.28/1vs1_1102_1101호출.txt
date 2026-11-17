@@ -1,0 +1,275 @@
+
+1102 에서 1101 호출 1:1 통화시 오류.
+1101은 영상카메라 없는 음성만 가능한 Mac Pro이다. 1102는 Macbook Pro 이다. 영상,음성 모두 지원된다.
+6000, 6100 회의실은 정상 동작되었다.
+
+원인 (수신측 1101 클라이언트 오류 → 착신 처리 실패)
+- 1vs1_1102_1101호출.txt (1101 로그): 1102→1101 INVITE는 SIP 수신됨
+- 21:32:24.601 op=callInitiation ... direction=incoming id=30019314... → UI INCOMING action=dialogShown target=1102 → state=PROGRESS
+- 직후 GoException: no routes for location: /incoming (파일 상단 표기). 수신 UI 라우트(/incoming) 미등록으로 착신 화면 전환/처리 실패 → 1101이 응답(수락/거절)하지 못함.
+- 1102 로그: 발신 정상 진행 후 무응답 종료
+- 21:32:25.954 SIP call -> 1101 voiceOnly=false hasLocalStream=true/CONNECTING → PROGRESS → 60초 후 21:33:26.489 callTerminated state=FAILED cause=Code:[603], Cause: Rejected, Reason: Decline (id x6ziga308m731j128682gzy6mej3xz)
+- Asterisk(docker logs, 해당 시각): 1101@from-internal Dial PJSIP/1102-00000005 → PJSIP/1101,60,tT 후 Hangup/exit non-zero (다이얼 타임아웃·종료 경로와 일치). SIP 시그널링/다이얼플랜은 정상 동작.
+결론
+- 1:1 실패의 직접 원인은 1101(macOS, 오디오 전용) 앱의 수신 라우팅 오류 GoException: no routes for location: /incoming로 착신 처리 불가 → 응답 없음/실패 종료(603 Decline 관측). 6000/6100 회의실 정상(양측 A/V 참여 확인)인 점과도 부합. (참고: 1102는 voiceOnly=false로 발신, 1101은 영상 미지원 단말이나 본 건은 라우트 예외 이전 단계에서 이미 중단됨)
+조치 방향 (클라이언트, SmartCC_Kibal-Client)
+- GoRouter에 /incoming 경로 등록 또는 수신 화면 네비게이션을 존재하는 경로/다이얼로그 방식으로 정정하고, 수신 이벤트(direction=incoming) → UI 전환 실패 시 예외 처리/폴백 추가 후 1101↔1102 1:1(음성/영상 협상 포함) 재검증 필요.
+
+
+[1101로그]
+
+1102 > 1101 호출 1:1 
+arams=id=fanyu483778899o6rr85qvmpehgfey
+[2026-11-15T21:32:05.051994] EVENT SIP op=callEstablished target=6100 state=CONFIRMED params=id=fanyu483778899o6rr85qvmpehgfey
+[2026-11-15T21:32:05.151530] EVENT SIP op=mediaStream target=6100 state=remote params=video=1 audio=1 id=fanyu483778899o6rr85qvmpehgfey
+[2026-11-15T21:32:05.151641] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] remote session fanyu483778899o6rr85qvmpehgfey handled: streams=1 event(video=1 audio=1) session(video=1 audio=1)
+[2026-11-15T21:32:05.151703] EVENT MEDIA event=remoteStreamAdded state=video=1 audio=1 sessionId=fanyu483778899o6rr85qvmpehgfey sessionStreams=1 sessionVideo=1 sessionAudio=1
+[2026-11-15T21:32:06.502895] EVENT SIP op=mediaStream target=6100 state=remote params=video=1 audio=1 id=fanyu483778899o6rr85qvmpehgfey
+[2026-11-15T21:32:06.503043] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] remote session fanyu483778899o6rr85qvmpehgfey handled: streams=1 event(video=1 audio=1) session(video=1 audio=1)
+[2026-11-15T21:32:06.503118] EVENT MEDIA event=remoteStreamAdded state=video=1 audio=1 sessionId=fanyu483778899o6rr85qvmpehgfey sessionStreams=1 sessionVideo=1 sessionAudio=1
+[2026-11-15T21:32:06.533322] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] remote video tile 등록(전용) track=807c4223-a0ba-4d35-853f-5974f2243586
+[2026-11-15T21:32:09.863559] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] CONFERENCE participants room=6100 n=2 [<redacted> (1102):V,<redacted> (1101):A*]
+[2026-11-15T21:32:10.054914] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=13819 audioPackets=225 videoBytes=207866
+[2026-11-15T21:32:11.364454] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] VIDEO resync reason=auto:join localKick=false remoteTiles=1
+[2026-11-15T21:32:11.467082] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] remote video tile 등록(전용) track=807c4223-a0ba-4d35-853f-5974f2243586
+[2026-11-15T21:32:15.054194] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=42475 audioPackets=475 videoBytes=723408
+[2026-11-15T21:32:16.058595] EVENT UI CONFERENCE action=leavePressed params=room=6100
+[2026-11-15T21:32:16.058859] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP hangup (local)
+[2026-11-15T21:32:16.058961] EVENT UI CONFERENCE action=autoCloseOnCallEnd
+[2026-11-15T21:32:16.059211] EVENT SIP op=callTerminated target=6100 state=ENDED params=id=fanyu483778899o6rr85qvmpehgfey cause=Code: [200], Cause: Terminated, Reason: Terminated by local
+[2026-11-15T21:32:24.601336] EVENT SIP op=callInitiation target=1102 state=initiated params=direction=incoming id=30019314-8021-4e51-82e6-bbe33824c08c27d2fcc7-1ccd-4c61-baae-9453744c98f0
+[2026-11-15T21:32:24.601464] EVENT UI INCOMING action=dialogShown params=target=1102
+[2026-11-15T21:32:24.601633] EVENT SIP op=callProgress target=1102 state=PROGRESS params=id=30019314-8021-4e51-82e6-bbe33824c08c27d2fcc7-1ccd-4c61-baae-9453744c98f0
+
+에러 발생.
+GoException: no routes for location: /incoming
+
+
+[1102 로그]
+
+[2026-11-15T21:24:19.240139] INFO [usr=- host=- ip=-] AppLogger 초기화 완료 file=/Users/microdit/Library/Containers/com.microdit.macosClient/Data/Library/Application Support/com.microdit.macosClient/logs/app.log identity=usr=- host=- ip=- mode=release
+[2026-11-15T21:24:19.242971] INFO [usr=- host=- ip=-] 원격 로그 업로더 시작 session=mwht3vah-1awsobq mode=INFO + 이벤트 url=http://192.168.0.3:8091/api/client-logs
+[2026-11-15T21:24:19.408040] EVENT UI LOGIN action=serverConfigRefresh params=auto=true
+[2026-11-15T21:24:20.074010] INFO [usr=- host=- ip=-] OPS directory: contacts=5 rooms=2 base=http://192.168.0.3:8091
+[2026-11-15T21:24:20.074729] INFO [usr=- host=- ip=-] 서버 설정 갱신 via=http://192.168.0.3:8091 domain=192.168.0.3 ws=ws://192.168.0.3:8088/ws changed=true ver=c5:2026-11-14T15:58:10+00:00|r2:2026-11-13T03:52:55+00:00
+[2026-11-15T21:24:20.123045] INFO [usr=- host=- ip=-] OPS directory: contacts=5 rooms=2 base=http://192.168.0.3:8091
+[2026-11-15T21:24:27.093871] EVENT UI LOGIN action=quickConnectFilled params=extension=1102 source=ops
+[2026-11-15T21:25:14.359525] EVENT UI LOGIN action=loginPressed params=username=1102 domain=192.168.0.3 port=5060 transport=ws wsServer=ws://192.168.0.3:8088/ws
+[2026-11-15T21:25:14.359830] INFO [usr=- host=- ip=-] SIP state -> connecting
+[2026-11-15T21:25:14.365011] INFO (동일 로그 2회 반복 스킵 요약)
+[2026-11-15T21:25:14.365146] EVENT SIP op=init target=- state=- params=ws=ws://192.168.0.3:8088/ws domain=192.168.0.3 port=5060 transport=ws
+[2026-11-15T21:25:14.370296] INFO [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP state -> connected
+[2026-11-15T21:25:14.387126] INFO (동일 로그 2회 반복 스킵 요약)
+[2026-11-15T21:25:14.387225] INFO [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP state -> registered
+[2026-11-15T21:25:14.388372] EVENT LOGIN event=loginResult state=registered username=1102 error=-
+[2026-11-15T21:25:14.568205] INFO [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] MEDIA device resolve camera=기본 mic=기본 speaker=기본
+[2026-11-15T21:25:18.721657] EVENT MEDIA event=localStreamReady state=video=1 audio=1 frontCamera=true audioMuted=false
+[2026-11-15T21:25:20.120372] INFO [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] OPS directory: contacts=5 rooms=2 base=http://192.168.0.3:8091
+[2026-11-15T21:25:28.618102] EVENT UI DIALER action=callPressed params=target=6000
+[2026-11-15T21:25:28.618406] INFO [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP call -> 6000 voiceOnly=false hasLocalStream=true
+[2026-11-15T21:25:28.619299] EVENT DIALER event=callResult state=pushed target=6000 error=-
+[2026-11-15T21:25:28.650469] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP remote-track recovery armed id=x6zig09168e83068qva82133znj286
+[2026-11-15T21:25:28.650581] EVENT SIP op=callInitiation target=6000 state=initiated params=direction=outgoing id=x6zig09168e83068qva82133znj286
+[2026-11-15T21:25:28.650666] EVENT SIP op=callProgress target=6000 state=CONNECTING params=id=x6zig09168e83068qva82133znj286
+[2026-11-15T21:25:28.752530] EVENT SIP op=mediaStream target=6000 state=local params=video=1 audio=1 id=x6zig09168e83068qva82133znj286
+[2026-11-15T21:25:28.899584] INFO [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] CONFERENCE participants room=6000 n=1 [<redacted> (1101):A]
+[2026-11-15T21:25:29.228643] EVENT SIP op=callEstablished target=6000 state=ACCEPTED params=id=x6zig09168e83068qva82133znj286
+[2026-11-15T21:25:29.228902] EVENT SIP op=callEstablished target=6000 state=CONFIRMED params=id=x6zig09168e83068qva82133znj286
+[2026-11-15T21:25:29.328996] EVENT SIP op=mediaStream target=6000 state=remote params=video=1 audio=1 id=x6zig09168e83068qva82133znj286
+[2026-11-15T21:25:29.329196] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] remote session x6zig09168e83068qva82133znj286 handled: streams=1 event(video=1 audio=1) session(video=1 audio=1)
+[2026-11-15T21:25:29.329355] EVENT MEDIA event=remoteStreamAdded state=video=1 audio=1 sessionId=x6zig09168e83068qva82133znj286 sessionStreams=1 sessionVideo=1 sessionAudio=1
+[2026-11-15T21:25:31.446380] EVENT SIP op=mediaStream target=6000 state=remote params=video=1 audio=1 id=x6zig09168e83068qva82133znj286
+[2026-11-15T21:25:31.446537] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] remote session x6zig09168e83068qva82133znj286 handled: streams=1 event(video=1 audio=1) session(video=1 audio=1)
+[2026-11-15T21:25:31.446634] EVENT MEDIA event=remoteStreamAdded state=video=1 audio=1 sessionId=x6zig09168e83068qva82133znj286 sessionStreams=1 sessionVideo=1 sessionAudio=1
+[2026-11-15T21:25:31.478237] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] remote video tile 등록(전용) track=5e15bb40-5a82-4182-b0e6-c0b1bb3b1910
+[2026-11-15T21:25:31.497719] INFO [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP re-INVITE 수신 hasAudio=true hasVideo=true -> 자동 수락
+[2026-11-15T21:25:31.497986] INFO [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP re-INVITE 응답 전송 accepted=true recvOnlyVideo=false
+[2026-11-15T21:25:31.623127] EVENT SIP op=mediaStream target=6000 state=remote params=video=2 audio=1 id=x6zig09168e83068qva82133znj286
+[2026-11-15T21:25:31.623455] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] remote session x6zig09168e83068qva82133znj286 handled: streams=2 event(video=2 audio=1) session(video=3 audio=2)
+[2026-11-15T21:25:31.623641] EVENT MEDIA event=remoteStreamAdded state=video=2 audio=1 sessionId=x6zig09168e83068qva82133znj286 sessionStreams=2 sessionVideo=3 sessionAudio=2
+[2026-11-15T21:25:31.624901] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] remote video tile 등록(전용) track=acf8a33d-0387-4269-a35b-e48f57826b09
+[2026-11-15T21:25:32.010338] INFO [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP transceivers 0:audio:SendRecv/SendRecv 1:video:SendRecv/SendRecv 2:video:RecvOnly/RecvOnly
+[2026-11-15T21:25:33.981328] INFO [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] CONFERENCE participants room=6000 n=2 [<redacted> (1101):A,<redacted> (1102):V*]
+[2026-11-15T21:25:34.234818] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP stats inbound audioBytes=12112 audioPackets=226 videoBytes=0
+[2026-11-15T21:25:35.483013] INFO [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] VIDEO resync reason=auto:join localKick=true remoteTiles=2
+[2026-11-15T21:25:35.890592] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] remote video tile 등록(전용) track=5e15bb40-5a82-4182-b0e6-c0b1bb3b1910
+[2026-11-15T21:25:35.891498] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] remote video tile 등록(전용) track=acf8a33d-0387-4269-a35b-e48f57826b09
+[2026-11-15T21:25:39.233334] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP stats inbound audioBytes=26862 audioPackets=476 videoBytes=0
+[2026-11-15T21:25:44.232562] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP stats inbound audioBytes=41612 audioPackets=726 videoBytes=0
+[2026-11-15T21:25:49.231838] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP stats inbound audioBytes=56362 audioPackets=976 videoBytes=0
+[2026-11-15T21:25:54.232651] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP stats inbound audioBytes=71112 audioPackets=1226 videoBytes=0
+[2026-11-15T21:25:59.231865] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP stats inbound audioBytes=85862 audioPackets=1476 videoBytes=0
+[2026-11-15T21:25:59.237977] INFO [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP media summary 30s audioKB=84 videoKB=0 videoTracks=0/0 audioLost=0 ice=RTCIceConnectionStateCompleted
+[2026-11-15T21:25:59.238110] INFO [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP video summary 30s in=-@-fps decodedFrames+0 keyframes=0 freeze=0 pli=0 nack=0 vLost=0 | out=640x360@31fps target=1362kbps limit=bandwidth
+[2026-11-15T21:26:04.230696] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP stats inbound audioBytes=100612 audioPackets=1726 videoBytes=0
+[2026-11-15T21:26:09.230579] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP stats inbound audioBytes=115362 audioPackets=1976 videoBytes=0
+[2026-11-15T21:26:14.230798] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP stats inbound audioBytes=130112 audioPackets=2226 videoBytes=0
+[2026-11-15T21:26:19.230411] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP stats inbound audioBytes=144862 audioPackets=2476 videoBytes=0
+[2026-11-15T21:26:24.230397] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP stats inbound audioBytes=159612 audioPackets=2726 videoBytes=0
+[2026-11-15T21:26:29.230291] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP stats inbound audioBytes=174362 audioPackets=2976 videoBytes=0
+[2026-11-15T21:26:29.230420] INFO [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP media summary 30s audioKB=86 videoKB=0 videoTracks=0/0 audioLost=0 ice=RTCIceConnectionStateCompleted
+[2026-11-15T21:26:29.230475] INFO [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP video summary 30s in=-@-fps decodedFrames+0 keyframes=0 freeze=0 pli=0 nack=0 vLost=0 | out=1280x720@31fps target=2500kbps limit=none
+[2026-11-15T21:26:34.229901] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP stats inbound audioBytes=189112 audioPackets=3226 videoBytes=0
+[2026-11-15T21:26:39.230328] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP stats inbound audioBytes=203862 audioPackets=3476 videoBytes=0
+[2026-11-15T21:26:44.230131] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP stats inbound audioBytes=218612 audioPackets=3726 videoBytes=0
+[2026-11-15T21:26:49.229407] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP stats inbound audioBytes=233362 audioPackets=3976 videoBytes=0
+[2026-11-15T21:26:54.229485] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP stats inbound audioBytes=248112 audioPackets=4226 videoBytes=0
+[2026-11-15T21:26:59.229627] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP stats inbound audioBytes=262862 audioPackets=4476 videoBytes=0
+[2026-11-15T21:26:59.229786] INFO [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP media summary 30s audioKB=86 videoKB=0 videoTracks=0/0 audioLost=0 ice=RTCIceConnectionStateCompleted
+[2026-11-15T21:26:59.229881] INFO [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP video summary 30s in=-@-fps decodedFrames+0 keyframes=0 freeze=0 pli=0 nack=0 vLost=0 | out=1280x720@30fps target=2495kbps limit=none
+[2026-11-15T21:27:04.229698] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP stats inbound audioBytes=277612 audioPackets=4726 videoBytes=0
+[2026-11-15T21:27:09.228881] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP stats inbound audioBytes=292362 audioPackets=4976 videoBytes=0
+[2026-11-15T21:27:14.228244] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP stats inbound audioBytes=307112 audioPackets=5226 videoBytes=0
+[2026-11-15T21:27:19.227826] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP stats inbound audioBytes=321744 audioPackets=5474 videoBytes=0
+[2026-11-15T21:27:24.227412] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP stats inbound audioBytes=336494 audioPackets=5724 videoBytes=0
+[2026-11-15T21:27:29.227081] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP stats inbound audioBytes=351244 audioPackets=5974 videoBytes=0
+[2026-11-15T21:27:29.227216] INFO [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP media summary 30s audioKB=86 videoKB=0 videoTracks=0/0 audioLost=0 ice=RTCIceConnectionStateCompleted
+[2026-11-15T21:27:29.227264] INFO [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP video summary 30s in=-@-fps decodedFrames+0 keyframes=0 freeze=0 pli=0 nack=0 vLost=0 | out=1280x720@31fps target=2486kbps limit=none
+[2026-11-15T21:27:34.227223] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP stats inbound audioBytes=365994 audioPackets=6224 videoBytes=0
+[2026-11-15T21:27:39.227129] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP stats inbound audioBytes=380626 audioPackets=6472 videoBytes=0
+[2026-11-15T21:27:44.227326] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP stats inbound audioBytes=395317 audioPackets=6721 videoBytes=0
+[2026-11-15T21:27:49.226634] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP stats inbound audioBytes=410067 audioPackets=6971 videoBytes=0
+[2026-11-15T21:27:54.227552] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP stats inbound audioBytes=424758 audioPackets=7220 videoBytes=0
+[2026-11-15T21:27:59.226869] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP stats inbound audioBytes=439449 audioPackets=7469 videoBytes=0
+[2026-11-15T21:27:59.227022] INFO [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP media summary 30s audioKB=86 videoKB=0 videoTracks=0/0 audioLost=0 ice=RTCIceConnectionStateCompleted
+[2026-11-15T21:27:59.227099] INFO [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP video summary 30s in=-@-fps decodedFrames+0 keyframes=0 freeze=0 pli=0 nack=0 vLost=0 | out=1280x720@31fps target=2495kbps limit=none
+[2026-11-15T21:28:04.226836] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP stats inbound audioBytes=454199 audioPackets=7719 videoBytes=0
+[2026-11-15T21:28:09.225915] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP stats inbound audioBytes=468539 audioPackets=7962 videoBytes=0
+[2026-11-15T21:28:14.225382] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP stats inbound audioBytes=483119 audioPackets=8209 videoBytes=0
+[2026-11-15T21:28:19.225677] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP stats inbound audioBytes=497869 audioPackets=8459 videoBytes=0
+[2026-11-15T21:28:24.224538] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP stats inbound audioBytes=512560 audioPackets=8708 videoBytes=0
+[2026-11-15T21:28:29.224270] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP stats inbound audioBytes=527310 audioPackets=8958 videoBytes=0
+[2026-11-15T21:28:29.224401] INFO [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP media summary 30s audioKB=86 videoKB=0 videoTracks=0/0 audioLost=0 ice=RTCIceConnectionStateCompleted
+[2026-11-15T21:28:29.224461] INFO [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP video summary 30s in=-@-fps decodedFrames+0 keyframes=0 freeze=0 pli=0 nack=0 vLost=0 | out=1280x720@30fps target=2500kbps limit=none
+[2026-11-15T21:28:34.224190] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP stats inbound audioBytes=542001 audioPackets=9207 videoBytes=0
+[2026-11-15T21:28:39.224108] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP stats inbound audioBytes=556751 audioPackets=9457 videoBytes=0
+[2026-11-15T21:28:44.223800] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP stats inbound audioBytes=571501 audioPackets=9707 videoBytes=0
+[2026-11-15T21:28:49.224141] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP stats inbound audioBytes=586251 audioPackets=9957 videoBytes=0
+[2026-11-15T21:28:54.223185] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP stats inbound audioBytes=601001 audioPackets=10207 videoBytes=0
+[2026-11-15T21:28:59.222584] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP stats inbound audioBytes=615751 audioPackets=10457 videoBytes=0
+[2026-11-15T21:28:59.222712] INFO [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP media summary 30s audioKB=86 videoKB=0 videoTracks=0/0 audioLost=0 ice=RTCIceConnectionStateCompleted
+[2026-11-15T21:28:59.222766] INFO [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP video summary 30s in=-@-fps decodedFrames+0 keyframes=0 freeze=0 pli=0 nack=0 vLost=0 | out=1280x720@31fps target=2498kbps limit=none
+[2026-11-15T21:29:04.222742] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP stats inbound audioBytes=630501 audioPackets=10707 videoBytes=0
+[2026-11-15T21:29:08.105388] EVENT UI VIDEO action=fullscreenEnter params=screen=conference label=나 · <redacted> (1102)
+[2026-11-15T21:29:09.229239] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP stats inbound audioBytes=645251 audioPackets=10957 videoBytes=0
+[2026-11-15T21:29:14.224919] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP stats inbound audioBytes=660001 audioPackets=11207 videoBytes=0
+[2026-11-15T21:29:19.226037] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP stats inbound audioBytes=674751 audioPackets=11457 videoBytes=0
+[2026-11-15T21:29:24.225949] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP stats inbound audioBytes=689501 audioPackets=11707 videoBytes=0
+[2026-11-15T21:29:29.223686] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP stats inbound audioBytes=704251 audioPackets=11957 videoBytes=0
+[2026-11-15T21:29:29.223978] INFO [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP media summary 30s audioKB=86 videoKB=0 videoTracks=0/0 audioLost=0 ice=RTCIceConnectionStateCompleted
+[2026-11-15T21:29:29.224053] INFO [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP video summary 30s in=-@-fps decodedFrames+0 keyframes=0 freeze=0 pli=0 nack=0 vLost=0 | out=1280x720@29fps target=2454kbps limit=none
+[2026-11-15T21:29:34.223395] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP stats inbound audioBytes=719001 audioPackets=12207 videoBytes=0
+[2026-11-15T21:29:39.224641] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP stats inbound audioBytes=733751 audioPackets=12457 videoBytes=0
+[2026-11-15T21:29:44.223409] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP stats inbound audioBytes=748442 audioPackets=12706 videoBytes=0
+[2026-11-15T21:29:49.223534] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP stats inbound audioBytes=763192 audioPackets=12956 videoBytes=0
+[2026-11-15T21:29:54.221148] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP stats inbound audioBytes=777886 audioPackets=13205 videoBytes=0
+[2026-11-15T21:29:59.223091] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP stats inbound audioBytes=792636 audioPackets=13455 videoBytes=0
+[2026-11-15T21:29:59.223397] INFO [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP media summary 30s audioKB=86 videoKB=0 videoTracks=0/0 audioLost=0 ice=RTCIceConnectionStateCompleted
+[2026-11-15T21:29:59.223470] INFO [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP video summary 30s in=-@-fps decodedFrames+0 keyframes=0 freeze=0 pli=0 nack=0 vLost=0 | out=1280x720@30fps target=2500kbps limit=none
+[2026-11-15T21:30:04.223133] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP stats inbound audioBytes=807327 audioPackets=13704 videoBytes=0
+[2026-11-15T21:30:09.221067] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP stats inbound audioBytes=822018 audioPackets=13953 videoBytes=0
+[2026-11-15T21:30:14.221579] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP stats inbound audioBytes=836650 audioPackets=14201 videoBytes=0
+[2026-11-15T21:30:19.221140] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP stats inbound audioBytes=851282 audioPackets=14449 videoBytes=0
+[2026-11-15T21:30:23.581499] EVENT UI VIDEO action=fullscreenExit params=screen=conference label=나 · <redacted> (1102)
+[2026-11-15T21:30:23.581764] EVENT UI CONFERENCE action=leavePressed params=room=6000
+[2026-11-15T21:30:23.582047] INFO [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP hangup (local)
+[2026-11-15T21:30:23.582172] EVENT UI CONFERENCE action=autoCloseOnCallEnd
+[2026-11-15T21:30:23.582625] EVENT SIP op=callTerminated target=6000 state=ENDED params=id=x6zig09168e83068qva82133znj286 cause=Code: [200], Cause: Terminated, Reason: Terminated by local
+[2026-11-15T21:30:26.757848] EVENT UI DIALER action=callPressed params=target=6000
+[2026-11-15T21:30:26.758110] INFO [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP call -> 6000 voiceOnly=false hasLocalStream=true
+[2026-11-15T21:30:26.759057] EVENT DIALER event=callResult state=pushed target=6000 error=-
+[2026-11-15T21:30:26.765074] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP remote-track recovery armed id=x6ziglbltv5pb3d7toh50cg8aa1823
+[2026-11-15T21:30:26.765231] EVENT SIP op=callInitiation target=6000 state=initiated params=direction=outgoing id=x6ziglbltv5pb3d7toh50cg8aa1823
+[2026-11-15T21:30:26.765328] EVENT SIP op=callProgress target=6000 state=CONNECTING params=id=x6ziglbltv5pb3d7toh50cg8aa1823
+[2026-11-15T21:30:26.867320] EVENT SIP op=mediaStream target=6000 state=local params=video=1 audio=1 id=x6ziglbltv5pb3d7toh50cg8aa1823
+[2026-11-15T21:30:27.092126] INFO [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] CONFERENCE participants room=6000 n=1 [<redacted> (1101):A]
+[2026-11-15T21:30:27.300257] EVENT SIP op=callEstablished target=6000 state=ACCEPTED params=id=x6ziglbltv5pb3d7toh50cg8aa1823
+[2026-11-15T21:30:27.300509] EVENT SIP op=callEstablished target=6000 state=CONFIRMED params=id=x6ziglbltv5pb3d7toh50cg8aa1823
+[2026-11-15T21:30:27.402004] EVENT SIP op=mediaStream target=6000 state=remote params=video=1 audio=1 id=x6ziglbltv5pb3d7toh50cg8aa1823
+[2026-11-15T21:30:27.402151] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] remote session x6ziglbltv5pb3d7toh50cg8aa1823 handled: streams=1 event(video=1 audio=1) session(video=1 audio=1)
+[2026-11-15T21:30:27.402241] EVENT MEDIA event=remoteStreamAdded state=video=1 audio=1 sessionId=x6ziglbltv5pb3d7toh50cg8aa1823 sessionStreams=1 sessionVideo=1 sessionAudio=1
+[2026-11-15T21:30:27.402301] EVENT SIP op=mediaStream target=6000 state=remote params=video=1 audio=1 id=x6ziglbltv5pb3d7toh50cg8aa1823
+[2026-11-15T21:30:27.402366] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] remote session x6ziglbltv5pb3d7toh50cg8aa1823 handled: streams=1 event(video=1 audio=1) session(video=1 audio=1)
+[2026-11-15T21:30:27.402428] EVENT MEDIA event=remoteStreamAdded state=video=1 audio=1 sessionId=x6ziglbltv5pb3d7toh50cg8aa1823 sessionStreams=1 sessionVideo=1 sessionAudio=1
+[2026-11-15T21:30:27.403619] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] remote video tile 등록(전용) track=01a31eee-37cd-466e-9336-0f9f053aab32
+[2026-11-15T21:30:29.283047] EVENT SIP op=mediaStream target=6000 state=remote params=video=2 audio=1 id=x6ziglbltv5pb3d7toh50cg8aa1823
+[2026-11-15T21:30:29.283277] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] remote session x6ziglbltv5pb3d7toh50cg8aa1823 handled: streams=2 event(video=2 audio=1) session(video=3 audio=2)
+[2026-11-15T21:30:29.283374] EVENT MEDIA event=remoteStreamAdded state=video=2 audio=1 sessionId=x6ziglbltv5pb3d7toh50cg8aa1823 sessionStreams=2 sessionVideo=3 sessionAudio=2
+[2026-11-15T21:30:29.284345] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] remote video tile 등록(전용) track=5340c9ef-d20f-4a0b-98a3-11565ff20d46
+[2026-11-15T21:30:29.688562] INFO [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP re-INVITE 수신 hasAudio=true hasVideo=true -> 자동 수락
+[2026-11-15T21:30:29.688844] INFO [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP re-INVITE 응답 전송 accepted=true recvOnlyVideo=false
+[2026-11-15T21:30:30.199668] INFO [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP transceivers 0:audio:SendRecv/SendRecv 1:video:SendRecv/SendRecv 2:video:RecvOnly/RecvOnly
+[2026-11-15T21:30:32.112810] INFO [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] CONFERENCE participants room=6000 n=2 [<redacted> (1101):A,<redacted> (1102):V*]
+[2026-11-15T21:30:32.305237] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP stats inbound audioBytes=11696 audioPackets=224 videoBytes=0
+[2026-11-15T21:30:33.615767] INFO [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] VIDEO resync reason=auto:join localKick=true remoteTiles=2
+[2026-11-15T21:30:34.022794] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] remote video tile 등록(전용) track=01a31eee-37cd-466e-9336-0f9f053aab32
+[2026-11-15T21:30:34.023577] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] remote video tile 등록(전용) track=5340c9ef-d20f-4a0b-98a3-11565ff20d46
+[2026-11-15T21:30:37.305244] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP stats inbound audioBytes=26387 audioPackets=473 videoBytes=0
+[2026-11-15T21:30:42.304685] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP stats inbound audioBytes=41206 audioPackets=723 videoBytes=0
+[2026-11-15T21:30:47.304019] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP stats inbound audioBytes=55897 audioPackets=972 videoBytes=0
+[2026-11-15T21:30:52.305171] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP stats inbound audioBytes=70647 audioPackets=1222 videoBytes=0
+[2026-11-15T21:30:57.303967] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP stats inbound audioBytes=85282 audioPackets=1471 videoBytes=0
+[2026-11-15T21:30:57.304132] INFO [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP media summary 30s audioKB=83 videoKB=0 videoTracks=0/0 audioLost=0 ice=RTCIceConnectionStateConnected
+[2026-11-15T21:30:57.304198] INFO [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP video summary 30s in=-@-fps decodedFrames+0 keyframes=0 freeze=0 pli=0 nack=0 vLost=0 | out=640x360@30fps target=285kbps limit=bandwidth
+[2026-11-15T21:31:02.303669] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP stats inbound audioBytes=99973 audioPackets=1720 videoBytes=0
+[2026-11-15T21:31:07.303926] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP stats inbound audioBytes=114605 audioPackets=1968 videoBytes=0
+[2026-11-15T21:31:12.304880] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP stats inbound audioBytes=129355 audioPackets=2218 videoBytes=0
+[2026-11-15T21:31:17.303061] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP stats inbound audioBytes=144115 audioPackets=2467 videoBytes=0
+[2026-11-15T21:31:22.302907] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP stats inbound audioBytes=158865 audioPackets=2717 videoBytes=0
+[2026-11-15T21:31:27.302972] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP stats inbound audioBytes=173684 audioPackets=2967 videoBytes=0
+[2026-11-15T21:31:27.303134] INFO [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP media summary 30s audioKB=86 videoKB=0 videoTracks=0/0 audioLost=0 ice=RTCIceConnectionStateCompleted
+[2026-11-15T21:31:27.303223] INFO [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP video summary 30s in=-@-fps decodedFrames+0 keyframes=0 freeze=0 pli=0 nack=0 vLost=0 | out=640x360@30fps target=437kbps limit=bandwidth
+[2026-11-15T21:31:32.303796] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP stats inbound audioBytes=188375 audioPackets=3216 videoBytes=0
+[2026-11-15T21:31:37.302661] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP stats inbound audioBytes=203125 audioPackets=3466 videoBytes=0
+[2026-11-15T21:31:42.300954] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP stats inbound audioBytes=217875 audioPackets=3716 videoBytes=0
+[2026-11-15T21:31:47.301957] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP stats inbound audioBytes=232566 audioPackets=3965 videoBytes=0
+[2026-11-15T21:31:50.073816] EVENT UI CONFERENCE action=leavePressed params=room=6000
+[2026-11-15T21:31:50.074162] INFO [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP hangup (local)
+[2026-11-15T21:31:50.074254] EVENT UI CONFERENCE action=autoCloseOnCallEnd
+[2026-11-15T21:31:50.074496] EVENT SIP op=callTerminated target=6000 state=ENDED params=id=x6ziglbltv5pb3d7toh50cg8aa1823 cause=Code: [200], Cause: Terminated, Reason: Terminated by local
+[2026-11-15T21:31:53.455089] EVENT UI DIALER action=callPressed params=target=6100
+[2026-11-15T21:31:53.455297] INFO [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP call -> 6100 voiceOnly=false hasLocalStream=true
+[2026-11-15T21:31:53.455867] EVENT DIALER event=callResult state=pushed target=6100 error=-
+[2026-11-15T21:31:53.460269] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP remote-track recovery armed id=x6zig46356pq356e12wjyyfmuf30w2
+[2026-11-15T21:31:53.460399] EVENT SIP op=callInitiation target=6100 state=initiated params=direction=outgoing id=x6zig46356pq356e12wjyyfmuf30w2
+[2026-11-15T21:31:53.460484] EVENT SIP op=callProgress target=6100 state=CONNECTING params=id=x6zig46356pq356e12wjyyfmuf30w2
+[2026-11-15T21:31:53.463356] INFO [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP codec policy target=6100 type=offer video=h264Only
+[2026-11-15T21:31:53.562504] EVENT SIP op=mediaStream target=6100 state=local params=video=1 audio=1 id=x6zig46356pq356e12wjyyfmuf30w2
+[2026-11-15T21:31:53.996916] EVENT SIP op=callEstablished target=6100 state=ACCEPTED params=id=x6zig46356pq356e12wjyyfmuf30w2
+[2026-11-15T21:31:53.997262] EVENT SIP op=callEstablished target=6100 state=CONFIRMED params=id=x6zig46356pq356e12wjyyfmuf30w2
+[2026-11-15T21:31:54.100484] EVENT SIP op=mediaStream target=6100 state=remote params=video=1 audio=1 id=x6zig46356pq356e12wjyyfmuf30w2
+[2026-11-15T21:31:54.100620] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] remote session x6zig46356pq356e12wjyyfmuf30w2 handled: streams=1 event(video=1 audio=1) session(video=1 audio=1)
+[2026-11-15T21:31:54.100726] EVENT MEDIA event=remoteStreamAdded state=video=1 audio=1 sessionId=x6zig46356pq356e12wjyyfmuf30w2 sessionStreams=1 sessionVideo=1 sessionAudio=1
+[2026-11-15T21:31:54.100790] EVENT SIP op=mediaStream target=6100 state=remote params=video=1 audio=1 id=x6zig46356pq356e12wjyyfmuf30w2
+[2026-11-15T21:31:54.100850] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] remote session x6zig46356pq356e12wjyyfmuf30w2 handled: streams=1 event(video=1 audio=1) session(video=1 audio=1)
+[2026-11-15T21:31:54.100939] EVENT MEDIA event=remoteStreamAdded state=video=1 audio=1 sessionId=x6zig46356pq356e12wjyyfmuf30w2 sessionStreams=1 sessionVideo=1 sessionAudio=1
+[2026-11-15T21:31:55.901163] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] remote video tile 등록(전용) track=2def141c-a25b-4e83-8ab3-cdf7e20afb54
+[2026-11-15T21:31:58.729569] INFO [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] CONFERENCE participants room=6100 n=1 [<redacted> (1102):V*]
+[2026-11-15T21:31:59.002519] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP stats inbound audioBytes=22163 audioPackets=223 videoBytes=31904
+[2026-11-15T21:32:04.001030] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP stats inbound audioBytes=22913 audioPackets=473 videoBytes=217896
+[2026-11-15T21:32:08.809295] INFO [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] CONFERENCE participants room=6100 n=2 [<redacted> (1102):V*,<redacted> (1101):A]
+[2026-11-15T21:32:09.000636] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP stats inbound audioBytes=29643 audioPackets=723 videoBytes=492477
+[2026-11-15T21:32:10.312210] INFO [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] VIDEO resync reason=auto:join localKick=true remoteTiles=1
+[2026-11-15T21:32:10.718450] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] remote video tile 등록(전용) track=2def141c-a25b-4e83-8ab3-cdf7e20afb54
+[2026-11-15T21:32:14.000994] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP stats inbound audioBytes=55954 audioPackets=973 videoBytes=845762
+[2026-11-15T21:32:18.727371] INFO [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] CONFERENCE participants room=6100 n=1 [<redacted> (1102):V*]
+[2026-11-15T21:32:19.000372] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP stats inbound audioBytes=84137 audioPackets=1223 videoBytes=1458025
+[2026-11-15T21:32:20.228579] INFO [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] VIDEO resync reason=auto:leave localKick=true remoteTiles=1
+[2026-11-15T21:32:20.633883] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] remote video tile 등록(전용) track=2def141c-a25b-4e83-8ab3-cdf7e20afb54
+[2026-11-15T21:32:21.470233] EVENT UI CONFERENCE action=leavePressed params=room=6100
+[2026-11-15T21:32:21.470563] INFO [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP hangup (local)
+[2026-11-15T21:32:21.470675] EVENT UI CONFERENCE action=autoCloseOnCallEnd
+[2026-11-15T21:32:21.470906] EVENT SIP op=callTerminated target=6100 state=ENDED params=id=x6zig46356pq356e12wjyyfmuf30w2 cause=Code: [200], Cause: Terminated, Reason: Terminated by local
+[2026-11-15T21:32:25.953862] EVENT UI DIALER action=callPressed params=target=1101
+[2026-11-15T21:32:25.954083] INFO [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP call -> 1101 voiceOnly=false hasLocalStream=true
+[2026-11-15T21:32:25.954608] EVENT DIALER event=callResult state=pushed target=1101 error=-
+[2026-11-15T21:32:25.959012] DEBUG [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] SIP remote-track recovery armed id=x6ziga308m731j128682gzy6mej3xz
+[2026-11-15T21:32:25.959143] EVENT SIP op=callInitiation target=1101 state=initiated params=direction=outgoing id=x6ziga308m731j128682gzy6mej3xz
+[2026-11-15T21:32:25.959218] EVENT SIP op=callProgress target=1101 state=CONNECTING params=id=x6ziga308m731j128682gzy6mej3xz
+[2026-11-15T21:32:26.061490] EVENT SIP op=mediaStream target=1101 state=local params=video=1 audio=1 id=x6ziga308m731j128682gzy6mej3xz
+[2026-11-15T21:32:26.488960] EVENT SIP op=callProgress target=1101 state=PROGRESS params=id=x6ziga308m731j128682gzy6mej3xz
+[2026-11-15T21:33:26.487997] EVENT SIP op=callProgress target=1101 state=PROGRESS params=id=x6ziga308m731j128682gzy6mej3xz
+[2026-11-15T21:33:26.489741] EVENT SIP op=callTerminated target=1101 state=FAILED params=id=x6ziga308m731j128682gzy6mej3xz cause=Code: [603], Cause: Rejected, Reason: Decline
+[2026-11-15T21:33:26.489835] EVENT UI CALL action=remoteEndedDetected params=target=-
+[2026-11-15T21:33:26.492799] EVENT MEDIA event=localStreamReleased state=-
+[2026-11-15T21:33:37.098742] INFO [usr=1102@192.168.0.3 host=atomui-MacBookPro.local ip=192.168.0.11] OPS directory: contacts=5 rooms=2 base=http://192.168.0.3:8091

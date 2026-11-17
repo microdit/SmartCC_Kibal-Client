@@ -57,3 +57,28 @@ P2	과거 Flutter NPE 로그 잔존	1102 수집 로그에 13:04~13:05 FlutterErr
 
 
 
+ 1) P0 크래시 완화(앱) + 원인 확인: flutter_webrtc 1.6.3 .../FlutterRTCVideoRenderer.m:204(renderFrame:→copyI420ToCVPixelBuffer→toI420)에 0-dim/무효 프레임 가드 없음 → 수신 invalid 프레임 시 CheckValidDimensions SIGABRT(1102/1103 공통). 앱 레벨 완화로 macos-client/lib/src/media/media_manager.dart 원격 영상 타일 동기화/정리 시 muted 트랙 제외·비활성/빈 스트림 정리 강화. 근본 해결은 플러그인(네이티브 렌더러) 패치/업데이트 검증 필요(배포 산출물 변경·실기 재현 확인 필요).
+- 2) 서버 로그/상태 점검: /var/log/asterisk/full 교차검증 결과 1102(UTC 01:21:57)/1103(01:26:53) 크래시 시각 전후 ConfBridge leave/BYE/코덱 오류 없음. 1103은 01:26:51 WS abrupt+contact shutdown 발생, PJSIP/1103-0000000c는 11/12 join 후 11/13 01:44:31 shutdown까지 잔존→01:45:46 bridge leave(stale/H5 단서). /var/log/asterisk/messages(NOTICE~ERROR) 01:45:46 이후 미append였으나 logger reload로 02:18:27 append 복구 확인(재발 원인 미확정). Manager(AMI): No로 H1(ConfbridgeSetSingleVideoSrc) 미착수, confbridge kick CLI는 존재.
+- 3) H5 중복 입장 완화(앱): macos-client/lib/src/ui/conference/conference_screen.dart _join()에 _joining/isInCall 가드 및 참가 버튼 비활성화(“참가 중/통화 중”) 추가로 중복 call() 완화. 서버 stale 채널 정리는 실기/운영 절차 필요.
+- Wiki/이력 기록: SmartCC_Kibal-Client/wiki/07_Logs/작업로그_20261113.md(§3), SmartCC_Kibal-Client/docs/_작업이력/2026-11-13.md, SmartCC_Kibal/wiki/07_Logs/작업로그_20261113.md(§3), SmartCC_Kibal/docs/_작업이력/2026-11-13.md 갱신.
+- 제약/미수행: NAS(dev/prd) 미접속·미배포, 커밋/origin push 미수행, 실기 재검증(F1/H5·G5/H6/P0 재현)·플러그인 포크/업그레이드·H1(AMI 활성화/설계 승인) 미진행. 원하시면 변경사항 커밋+origin push부터 진행할까요?
+
+
+
+- Client (SmartCC_Kibal-Client, feature/macOS-version): 991139f 커밋·origin push 완료  
+- fix(macos): P0 원격 영상 트랙 완화·H5 중복 참가 방지 및 실기 교차검증 기록
+- 코드: macos-client/lib/src/media/media_manager.dart(P0 완화: muted/비활성 원격 영상 트랙 제외·정리 강화), macos-client/lib/src/ui/conference/conference_screen.dart(H5: _joining/isInCall 중복 참가 가드·버튼 비활성화)
+- 문서/자료: wiki/06_Reports/20261113_v0.0.24_앱크래시_교차검증보고서_v1.0.md, docs/테스트/v0.0.24/*, wiki/07_Logs/작업로그_20261113.md, docs/_작업이력/2026-11-13.md, docs/AGENTS.md
+- Server (SmartCC_Kibal, 운영콘솔OPS): 433ce89 커밋·origin push 완료  
+- docs: v0.0.24 실기 로그 교차검증 및 logger/messages 복구 기록
+- 문서: wiki/07_Logs/작업로그_20261113.md, docs/_작업이력/2026-11-13.md, docs/AGENTS.md
+남은 사항(이번 세션에서 진행 불가/승인·실기 필요)
+- P0 근본 대응: flutter_webrtc 1.6.3 네이티브 FlutterRTCVideoRenderer의 0-dim 프레임 가드 부재로 앱 완화만 적용됨 → 플러그인 패치/포크 또는 업데이트 검증·빌드·크래시 재현 테스트 필요.
+- H5/G5: 클라 중복 참가 가드 적용됨, 서버 stale 채널(1103-0000000c 사례) 정리/재발 방지는 실기 재현 및 운영 절차(필요 시 confbridge kick) 확인 필요.
+- H1/H6/F1/실기: AMI 비활성(ConfbridgeSetSingleVideoSrc 불가, 설정·연동·재생성 승인 필요), 1201 1:1 코덱/BYE(F1/H6)·회의 시나리오 실기 재검증 필요.
+- NAS(dev/prd): 정책/접속 상태상 미푸시(별도 지시 시).
+
+- 버전: 아직 v0.0.24+24입니다 (macos-client/pubspec.yaml 기준, 버전 올림/릴리스 태그 없음). 방금 변경은 클라 991139f·서버 433ce89로 각 origin에 푸시된 커밋 상태입니다(코드 완화+문서, 미빌드/미배포).
+- 시연 적합성: 추가 개발은 중단(토큰 소진) 리스크보다 시연 안정성 리스크가 큽니다. P0(flutter_webrtc 0-dim 프레임 → SIGABRT) 근본 미해결로 크래시 재발 가능(앱 레벨 완화만), H5는 클라 중복참가 가드 추가됐으나 서버 stale 채널 가능, H1(영상 없는 발화자 시 A10 스피너)·F1/H6 미해결입니다.
+- 권장: 현재 v0.0.24+24(완화 반영 커밋) 기준으로 빌드·리허설 후 시연하고, P0 플러그인 패치/업데이트·H1(AMI 승인 필요)·H5/F1/H6 실기 검증은 시연 후 진행하는 쪽이 안전합니다. 지금 더 진행하면 중단돼도 커밋은 정리돼 있으나, 시연 직전 동작 변화/회귀 위험이 있어 비권장입니다.
+

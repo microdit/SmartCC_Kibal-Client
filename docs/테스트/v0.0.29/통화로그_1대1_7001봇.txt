@@ -1,0 +1,85 @@
+[2026-11-17T14:09:01.748188] INFO [usr=- host=- ip=-] AppLogger 초기화 완료 file=/Users/microdit/Library/Containers/com.microdit.macosClient/Data/Library/Application Support/com.microdit.macosClient/logs/app.log identity=usr=- host=- ip=- mode=release
+[2026-11-17T14:09:01.749182] INFO [usr=- host=- ip=-] 원격 로그 업로더 시작 session=mwk8fs8k-1qkzdko mode=INFO + 이벤트 url=http://192.168.11.5:8091/api/client-logs
+[2026-11-17T14:09:01.810160] WARN [usr=- host=- ip=-] 서버 설정 갱신 실패: OPS 응답 없음 (후보 http://192.168.11.5:8091, http://MacPro.local:8091)
+[2026-11-17T14:09:01.818081] INFO [usr=- host=- ip=-] OPS directory: contacts=5 rooms=3 base=http://192.168.11.5:8091
+[2026-11-17T14:09:01.818187] INFO [usr=- host=- ip=-] AddressBook synced contacts=5 rooms=3
+[2026-11-17T14:09:01.818280] EVENT UI ADDRESSBOOK action=autoRegister params=ext=1102
+[2026-11-17T14:09:01.818404] INFO [usr=- host=- ip=-] SIP state -> connecting
+[2026-11-17T14:09:01.820187] INFO (동일 로그 2회 반복 스킵 요약)
+[2026-11-17T14:09:01.820298] EVENT SIP op=init target=- state=- params=ws=ws://192.168.11.5:8088/ws domain=192.168.11.5 port=5060 transport=ws
+[2026-11-17T14:09:01.824892] INFO [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] SIP state -> connected
+[2026-11-17T14:09:01.872687] INFO (동일 로그 2회 반복 스킵 요약)
+[2026-11-17T14:09:01.872782] INFO [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] SIP state -> registered
+[2026-11-17T14:09:01.873584] EVENT ADDRESSBOOK event=autoRegisterResult state=registered ext=1102 error=-
+[2026-11-17T14:09:05.951360] INFO [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] OPS directory: contacts=5 rooms=3 base=http://192.168.11.5:8091
+[2026-11-17T14:09:18.577652] EVENT UI DIALER action=callPressed params=target=7001
+[2026-11-17T14:09:19.105104] INFO [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] MEDIA device resolve camera=기본 mic=기본 speaker=기본
+[2026-11-17T14:09:19.114014] EVENT MEDIA event=localStreamReady state=video=1 audio=1 frontCamera=true audioMuted=false
+[2026-11-17T14:09:19.114169] INFO [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] SIP call -> 7001 voiceOnly=false hasLocalStream=true
+[2026-11-17T14:09:19.114726] EVENT DIALER event=callResult state=pushed target=7001 error=-
+[2026-11-17T14:09:19.119118] DEBUG [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] SIP remote-track recovery armed id=4h1h2eaq7gyoojjgtvycx193ldxq02
+[2026-11-17T14:09:19.119203] EVENT SIP op=callInitiation target=7001 state=initiated params=direction=outgoing id=4h1h2eaq7gyoojjgtvycx193ldxq02
+[2026-11-17T14:09:19.119307] EVENT SIP op=callProgress target=7001 state=CONNECTING params=id=4h1h2eaq7gyoojjgtvycx193ldxq02
+[2026-11-17T14:09:19.221572] EVENT SIP op=mediaStream target=7001 state=local params=video=1 audio=1 id=4h1h2eaq7gyoojjgtvycx193ldxq02
+[2026-11-17T14:09:19.643687] EVENT SIP op=callTerminated target=7001 state=FAILED params=id=4h1h2eaq7gyoojjgtvycx193ldxq02 cause=Code: [404], Cause: Not Found, Reason: Not Found
+[2026-11-17T14:09:19.644334] EVENT UI CALL action=remoteEndedDetected params=target=-
+[2026-11-17T14:09:19.656402] EVENT MEDIA event=localStreamReleased state=-
+[2026-11-17T14:09:21.924691] INFO [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] OPS directory: contacts=5 rooms=3 base=http://192.168.11.5:8091
+[2026-11-17T14:09:28.556477] EVENT UI DIALER action=callPressed params=target=7001
+[2026-11-17T14:09:28.584970] INFO [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] MEDIA device resolve camera=기본 mic=기본 speaker=기본
+[2026-11-17T14:09:28.587744] EVENT MEDIA event=localStreamReady state=video=1 audio=1 frontCamera=true audioMuted=false
+[2026-11-17T14:09:28.587919] INFO [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] SIP call -> 7001 voiceOnly=false hasLocalStream=true
+[2026-11-17T14:09:28.588454] EVENT DIALER event=callResult state=pushed target=7001 error=-
+[2026-11-17T14:09:28.592734] DEBUG [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] SIP remote-track recovery armed id=4h1h25gb1z0rvq5p4mdqalreu6156y
+[2026-11-17T14:09:28.592830] EVENT SIP op=callInitiation target=7001 state=initiated params=direction=outgoing id=4h1h25gb1z0rvq5p4mdqalreu6156y
+[2026-11-17T14:09:28.592915] EVENT SIP op=callProgress target=7001 state=CONNECTING params=id=4h1h25gb1z0rvq5p4mdqalreu6156y
+[2026-11-17T14:09:28.694474] EVENT SIP op=mediaStream target=7001 state=local params=video=1 audio=1 id=4h1h25gb1z0rvq5p4mdqalreu6156y
+[2026-11-17T14:09:29.146238] EVENT SIP op=callTerminated target=7001 state=FAILED params=id=4h1h25gb1z0rvq5p4mdqalreu6156y cause=Code: [404], Cause: Not Found, Reason: Not Found
+[2026-11-17T14:09:29.146364] EVENT UI CALL action=remoteEndedDetected params=target=-
+[2026-11-17T14:09:29.148954] EVENT MEDIA event=localStreamReleased state=-
+[2026-11-17T14:09:36.912129] EVENT UI DIALER action=callPressed params=target=1111
+[2026-11-17T14:09:36.914224] INFO [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] MEDIA device resolve camera=기본 mic=기본 speaker=기본
+[2026-11-17T14:09:36.917303] EVENT MEDIA event=localStreamReady state=video=1 audio=1 frontCamera=true audioMuted=false
+[2026-11-17T14:09:36.917463] INFO [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] SIP call -> 1111 voiceOnly=false hasLocalStream=true
+[2026-11-17T14:09:36.917980] EVENT DIALER event=callResult state=pushed target=1111 error=-
+[2026-11-17T14:09:36.922789] DEBUG [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] SIP remote-track recovery armed id=4h1h2m2jzgctpeb7zn89q16ckd6091
+[2026-11-17T14:09:36.922913] EVENT SIP op=callInitiation target=1111 state=initiated params=direction=outgoing id=4h1h2m2jzgctpeb7zn89q16ckd6091
+[2026-11-17T14:09:36.923005] EVENT SIP op=callProgress target=1111 state=CONNECTING params=id=4h1h2m2jzgctpeb7zn89q16ckd6091
+[2026-11-17T14:09:37.024789] EVENT SIP op=mediaStream target=1111 state=local params=video=1 audio=1 id=4h1h2m2jzgctpeb7zn89q16ckd6091
+[2026-11-17T14:09:37.473983] EVENT SIP op=callTerminated target=1111 state=FAILED params=id=4h1h2m2jzgctpeb7zn89q16ckd6091 cause=Code: [404], Cause: Not Found, Reason: Not Found
+[2026-11-17T14:09:37.474149] EVENT UI CALL action=remoteEndedDetected params=target=-
+[2026-11-17T14:09:37.481201] EVENT MEDIA event=localStreamReleased state=-
+[2026-11-17T14:09:48.699321] EVENT UI DIALER action=callPressed params=target=6000
+[2026-11-17T14:09:48.701042] INFO [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] MEDIA device resolve camera=기본 mic=기본 speaker=기본
+[2026-11-17T14:09:48.703672] EVENT MEDIA event=localStreamReady state=video=1 audio=1 frontCamera=true audioMuted=false
+[2026-11-17T14:09:48.703839] INFO [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] SIP call -> 6000 voiceOnly=false hasLocalStream=true
+[2026-11-17T14:09:48.704345] EVENT DIALER event=callResult state=pushed target=6000 error=-
+[2026-11-17T14:09:48.708905] DEBUG [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] SIP remote-track recovery armed id=4h1h2tnkbmequmsxaibzpqpdlh3cau
+[2026-11-17T14:09:48.709050] EVENT SIP op=callInitiation target=6000 state=initiated params=direction=outgoing id=4h1h2tnkbmequmsxaibzpqpdlh3cau
+[2026-11-17T14:09:48.709162] EVENT SIP op=callProgress target=6000 state=CONNECTING params=id=4h1h2tnkbmequmsxaibzpqpdlh3cau
+[2026-11-17T14:09:48.811433] EVENT SIP op=mediaStream target=6000 state=local params=video=1 audio=1 id=4h1h2tnkbmequmsxaibzpqpdlh3cau
+[2026-11-17T14:09:49.280586] EVENT SIP op=callEstablished target=6000 state=ACCEPTED params=id=4h1h2tnkbmequmsxaibzpqpdlh3cau
+[2026-11-17T14:09:49.280813] EVENT SIP op=callEstablished target=6000 state=CONFIRMED params=id=4h1h2tnkbmequmsxaibzpqpdlh3cau
+[2026-11-17T14:09:49.382263] EVENT SIP op=mediaStream target=6000 state=remote params=video=1 audio=1 id=4h1h2tnkbmequmsxaibzpqpdlh3cau
+[2026-11-17T14:09:49.382654] DEBUG [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] remote session 4h1h2tnkbmequmsxaibzpqpdlh3cau handled: streams=1 event(video=1 audio=1) session(video=1 audio=1)
+[2026-11-17T14:09:49.382852] EVENT MEDIA event=remoteStreamAdded state=video=1 audio=1 sessionId=4h1h2tnkbmequmsxaibzpqpdlh3cau sessionStreams=1 sessionVideo=1 sessionAudio=1
+[2026-11-17T14:09:49.382924] EVENT SIP op=mediaStream target=6000 state=remote params=video=1 audio=1 id=4h1h2tnkbmequmsxaibzpqpdlh3cau
+[2026-11-17T14:09:49.382991] DEBUG [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] remote session 4h1h2tnkbmequmsxaibzpqpdlh3cau handled: streams=1 event(video=1 audio=1) session(video=1 audio=1)
+[2026-11-17T14:09:49.383054] EVENT MEDIA event=remoteStreamAdded state=video=1 audio=1 sessionId=4h1h2tnkbmequmsxaibzpqpdlh3cau sessionStreams=1 sessionVideo=1 sessionAudio=1
+[2026-11-17T14:09:49.385354] DEBUG [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] remote video tile 등록(전용) track=ec86c458-d248-4908-9c75-0b5e5d7d7b86
+[2026-11-17T14:09:53.990573] INFO [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] CONFERENCE participants room=6000 n=1 [김민석 당대표 (1102):V*]
+[2026-11-17T14:09:54.284321] DEBUG [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] SIP stats inbound audioBytes=22169 audioPackets=225 videoBytes=0
+[2026-11-17T14:09:56.040089] EVENT UI CONFERENCE action=leavePressed params=room=6000
+[2026-11-17T14:09:56.040388] INFO [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] SIP hangup (local)
+[2026-11-17T14:09:56.040489] EVENT UI CONFERENCE action=autoCloseOnCallEnd
+[2026-11-17T14:09:56.040770] EVENT SIP op=callTerminated target=6000 state=ENDED params=id=4h1h2tnkbmequmsxaibzpqpdlh3cau cause=Code: [200], Cause: Terminated, Reason: Terminated by local
+[2026-11-17T14:10:03.750470] EVENT UI DIALER action=callPressed params=target=7001
+[2026-11-17T14:10:03.750651] INFO [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] SIP call -> 7001 voiceOnly=false hasLocalStream=true
+[2026-11-17T14:10:03.751147] EVENT DIALER event=callResult state=pushed target=7001 error=-
+[2026-11-17T14:10:03.755505] DEBUG [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] SIP remote-track recovery armed id=4h1h225tfb5951u6qq76x108u0w3k9
+[2026-11-17T14:10:03.755626] EVENT SIP op=callInitiation target=7001 state=initiated params=direction=outgoing id=4h1h225tfb5951u6qq76x108u0w3k9
+[2026-11-17T14:10:03.755696] EVENT SIP op=callProgress target=7001 state=CONNECTING params=id=4h1h225tfb5951u6qq76x108u0w3k9
+[2026-11-17T14:10:03.857314] EVENT SIP op=mediaStream target=7001 state=local params=video=1 audio=1 id=4h1h225tfb5951u6qq76x108u0w3k9
+[2026-11-17T14:10:04.274315] EVENT SIP op=callTerminated target=7001 state=FAILED params=id=4h1h225tfb5951u6qq76x108u0w3k9 cause=Code: [404], Cause: Not Found, Reason: Not Found
+[2026-11-17T14:10:04.274455] EVENT UI CALL action=remoteEndedDetected params=target=-
+[2026-11-17T14:10:04.277356] EVENT MEDIA event=localStreamReleased state=-

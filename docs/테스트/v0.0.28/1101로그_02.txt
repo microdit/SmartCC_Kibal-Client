@@ -1,0 +1,359 @@
+[2026-11-14T19:03:05.430325] INFO [usr=- host=- ip=-] AppLogger 초기화 완료 file=/Users/microdit/Library/Containers/com.microdit.macosClient/Data/Library/Application Support/com.microdit.macosClient/logs/app.log identity=usr=- host=- ip=- mode=release
+[2026-11-14T19:03:05.432341] INFO [usr=- host=- ip=-] 원격 로그 업로더 시작 session=mwg8me6u-1wnp9lk mode=INFO + 이벤트 url=http://192.168.0.3:8091/api/client-logs
+[2026-11-14T19:03:05.489272] EVENT UI LOGIN action=serverConfigRefresh params=auto=true
+[2026-11-14T19:03:05.796023] INFO [usr=- host=- ip=-] 서버 설정 갱신 via=http://192.168.0.3:8091 domain=192.168.0.3 ws=ws://192.168.0.3:8088/ws changed=false
+[2026-11-14T19:03:05.796790] INFO [usr=- host=- ip=-] OPS directory: contacts=5 rooms=2 base=http://192.168.0.3:8091
+[2026-11-14T19:03:12.329746] INFO (동일 로그 2회 반복 스킵 요약)
+[2026-11-14T19:03:12.329850] EVENT UI LOGIN action=quickConnectFilled params=extension=1101
+[2026-11-14T19:03:13.572534] EVENT UI LOGIN action=loginPressed params=username=1101 domain=192.168.0.3 port=5060 transport=ws wsServer=ws://192.168.0.3:8088/ws
+[2026-11-14T19:03:13.572675] INFO [usr=- host=- ip=-] SIP state -> connecting
+[2026-11-14T19:03:13.575187] INFO (동일 로그 2회 반복 스킵 요약)
+[2026-11-14T19:03:13.575268] EVENT SIP op=init target=- state=- params=ws=ws://192.168.0.3:8088/ws domain=192.168.0.3 port=5060 transport=ws
+[2026-11-14T19:03:13.585091] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP state -> connected
+[2026-11-14T19:03:13.597809] INFO (동일 로그 2회 반복 스킵 요약)
+[2026-11-14T19:03:13.597890] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP state -> registered
+[2026-11-14T19:03:13.597971] EVENT LOGIN event=loginResult state=registered username=1101 error=-
+[2026-11-14T19:03:13.680447] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] MEDIA device resolve camera=기본 mic=기본 speaker=기본
+[2026-11-14T19:03:13.682195] EVENT MEDIA event=localStreamReady state=video=0 audio=1 frontCamera=true audioMuted=false
+[2026-11-14T19:03:15.502112] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] OPS directory: contacts=5 rooms=2 base=http://192.168.0.3:8091
+[2026-11-14T19:03:18.389744] EVENT UI DIALER action=callPressed params=target=6100
+[2026-11-14T19:03:18.389926] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP call -> 6100 voiceOnly=true hasLocalStream=true
+[2026-11-14T19:03:18.390438] EVENT DIALER event=callResult state=pushed target=6100 error=-
+[2026-11-14T19:03:18.399603] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP remote-track recovery armed id=m032venuozyiioseneuio1rsbebzq1
+[2026-11-14T19:03:18.399685] EVENT SIP op=callInitiation target=6100 state=initiated params=direction=outgoing id=m032venuozyiioseneuio1rsbebzq1
+[2026-11-14T19:03:18.399760] EVENT SIP op=callProgress target=6100 state=CONNECTING params=id=m032venuozyiioseneuio1rsbebzq1
+[2026-11-14T19:03:18.404954] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP codec policy target=6100 type=offer video=h264Only
+[2026-11-14T19:03:18.500580] EVENT SIP op=mediaStream target=6100 state=local params=video=0 audio=1 id=m032venuozyiioseneuio1rsbebzq1
+[2026-11-14T19:03:18.696369] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] CONFERENCE participants room=6100 n=2 [1102:V,1103:V]
+[2026-11-14T19:03:18.945155] EVENT SIP op=callEstablished target=6100 state=ACCEPTED params=id=m032venuozyiioseneuio1rsbebzq1
+[2026-11-14T19:03:18.945416] EVENT SIP op=callEstablished target=6100 state=CONFIRMED params=id=m032venuozyiioseneuio1rsbebzq1
+[2026-11-14T19:03:19.045806] EVENT SIP op=mediaStream target=6100 state=remote params=video=1 audio=1 id=m032venuozyiioseneuio1rsbebzq1
+[2026-11-14T19:03:19.045989] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] remote session m032venuozyiioseneuio1rsbebzq1 handled: streams=1 event(video=1 audio=1) session(video=1 audio=1)
+[2026-11-14T19:03:19.046096] EVENT MEDIA event=remoteStreamAdded state=video=1 audio=1 sessionId=m032venuozyiioseneuio1rsbebzq1 sessionStreams=1 sessionVideo=1 sessionAudio=1
+[2026-11-14T19:03:20.802340] EVENT SIP op=mediaStream target=6100 state=remote params=video=1 audio=1 id=m032venuozyiioseneuio1rsbebzq1
+[2026-11-14T19:03:20.802478] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] remote session m032venuozyiioseneuio1rsbebzq1 handled: streams=1 event(video=1 audio=1) session(video=1 audio=1)
+[2026-11-14T19:03:20.802532] EVENT MEDIA event=remoteStreamAdded state=video=1 audio=1 sessionId=m032venuozyiioseneuio1rsbebzq1 sessionStreams=1 sessionVideo=1 sessionAudio=1
+[2026-11-14T19:03:20.811309] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] remote video tile 등록(전용) track=b19d6c91-6721-4adb-8260-db9d7ca1930d
+[2026-11-14T19:03:23.799215] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] CONFERENCE participants room=6100 n=3 [1102:V,1103:V,1101:A*]
+[2026-11-14T19:03:23.949422] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=29003 audioPackets=225 videoBytes=969906
+[2026-11-14T19:03:25.300793] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] VIDEO resync reason=auto:join localKick=false remoteTiles=1
+[2026-11-14T19:03:25.403349] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] remote video tile 등록(전용) track=b19d6c91-6721-4adb-8260-db9d7ca1930d
+[2026-11-14T19:03:28.948594] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=60028 audioPackets=475 videoBytes=2207424
+[2026-11-14T19:03:33.948196] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=90750 audioPackets=725 videoBytes=3749635
+[2026-11-14T19:03:38.948343] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=122940 audioPackets=975 videoBytes=5304843
+[2026-11-14T19:03:43.948569] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=155029 audioPackets=1225 videoBytes=6847086
+[2026-11-14T19:03:48.947631] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=187122 audioPackets=1475 videoBytes=8059065
+[2026-11-14T19:03:48.947825] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP media summary 30s audioKB=183 videoKB=7870 videoTracks=1/1 audioLost=0 ice=RTCIceConnectionStateCompleted
+[2026-11-14T19:03:48.947869] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP video summary 30s in=1280x720@-fps decodedFrames+645 keyframes=7 freeze=3 pli=2 nack=2 vLost=434 | out=-@-fps target=0kbps limit=-
+[2026-11-14T19:03:53.947413] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=219330 audioPackets=1725 videoBytes=9596912
+[2026-11-14T19:03:58.947353] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=251295 audioPackets=1975 videoBytes=11140518
+[2026-11-14T19:04:03.947234] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=283377 audioPackets=2225 videoBytes=12430877
+[2026-11-14T19:04:08.949267] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=315449 audioPackets=2475 videoBytes=13966760
+[2026-11-14T19:04:13.949554] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=346922 audioPackets=2725 videoBytes=15508875
+[2026-11-14T19:04:18.948486] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=375379 audioPackets=2975 videoBytes=17051222
+[2026-11-14T19:04:18.948729] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP media summary 30s audioKB=184 videoKB=8781 videoTracks=1/1 audioLost=0 ice=RTCIceConnectionStateCompleted
+[2026-11-14T19:04:18.948774] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP video summary 30s in=1280x720@30fps decodedFrames+931 keyframes=9 freeze=5 pli=2 nack=2 vLost=434 | out=-@-fps target=0kbps limit=-
+[2026-11-14T19:04:23.948472] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=406069 audioPackets=3225 videoBytes=18451486
+[2026-11-14T19:04:28.947786] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=436406 audioPackets=3475 videoBytes=20003363
+[2026-11-14T19:04:33.947719] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=466405 audioPackets=3725 videoBytes=21536747
+[2026-11-14T19:04:38.947959] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=496496 audioPackets=3975 videoBytes=22867068
+[2026-11-14T19:04:43.947244] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=526371 audioPackets=4225 videoBytes=23772949
+[2026-11-14T19:04:48.947114] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=557643 audioPackets=4475 videoBytes=25047192
+[2026-11-14T19:04:48.947273] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP media summary 30s audioKB=178 videoKB=7809 videoTracks=1/1 audioLost=0 ice=RTCIceConnectionStateCompleted
+[2026-11-14T19:04:48.947318] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP video summary 30s in=1280x720@30fps decodedFrames+774 keyframes=13 freeze=8 pli=3 nack=2 vLost=434 | out=-@-fps target=0kbps limit=-
+[2026-11-14T19:04:53.947417] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=588699 audioPackets=4725 videoBytes=26412473
+[2026-11-14T19:04:58.946680] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=619374 audioPackets=4975 videoBytes=27520707
+[2026-11-14T19:05:03.947440] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=648635 audioPackets=5225 videoBytes=28797785
+[2026-11-14T19:05:08.946832] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=678351 audioPackets=5475 videoBytes=30037037
+[2026-11-14T19:05:13.947168] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=708973 audioPackets=5725 videoBytes=31268219
+[2026-11-14T19:05:18.947437] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=739063 audioPackets=5968 videoBytes=32360803
+[2026-11-14T19:05:18.947608] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP media summary 30s audioKB=177 videoKB=7142 videoTracks=1/1 audioLost=0 ice=RTCIceConnectionStateCompleted
+[2026-11-14T19:05:18.947655] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP video summary 30s in=1280x720@30fps decodedFrames+810 keyframes=16 freeze=12 pli=4 nack=2 vLost=434 | out=-@-fps target=0kbps limit=-
+[2026-11-14T19:05:23.946476] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=770349 audioPackets=6218 videoBytes=33458694
+[2026-11-14T19:05:28.946239] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=802126 audioPackets=6468 videoBytes=34544164
+[2026-11-14T19:05:33.946591] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=834234 audioPackets=6718 videoBytes=35881348
+[2026-11-14T19:05:38.946546] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=866323 audioPackets=6968 videoBytes=37104858
+[2026-11-14T19:05:43.946352] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=898418 audioPackets=7218 videoBytes=38378579
+[2026-11-14T19:05:48.947045] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=930611 audioPackets=7468 videoBytes=39717785
+[2026-11-14T19:05:48.947191] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP media summary 30s audioKB=187 videoKB=7185 videoTracks=1/1 audioLost=0 ice=RTCIceConnectionStateCompleted
+[2026-11-14T19:05:48.947232] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP video summary 30s in=1280x720@-fps decodedFrames+688 keyframes=21 freeze=15 pli=4 nack=2 vLost=434 | out=-@-fps target=0kbps limit=-
+[2026-11-14T19:05:53.946808] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=962638 audioPackets=7718 videoBytes=41014023
+[2026-11-14T19:05:58.946415] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=994674 audioPackets=7968 videoBytes=42575580
+[2026-11-14T19:06:03.946263] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=1026765 audioPackets=8218 videoBytes=44135930
+[2026-11-14T19:06:08.946431] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=1058977 audioPackets=8468 videoBytes=45504414
+[2026-11-14T19:06:13.945842] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=1091071 audioPackets=8718 videoBytes=46841618
+[2026-11-14T19:06:18.946261] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=1123038 audioPackets=8968 videoBytes=48023213
+[2026-11-14T19:06:18.946425] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP media summary 30s audioKB=188 videoKB=8111 videoTracks=1/1 audioLost=0 ice=RTCIceConnectionStateCompleted
+[2026-11-14T19:06:18.946478] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP video summary 30s in=1280x720@-fps decodedFrames+752 keyframes=27 freeze=19 pli=5 nack=2 vLost=434 | out=-@-fps target=0kbps limit=-
+[2026-11-14T19:06:23.946167] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=1155098 audioPackets=9218 videoBytes=49366201
+[2026-11-14T19:06:28.946882] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=1187224 audioPackets=9468 videoBytes=50906745
+[2026-11-14T19:06:33.946304] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=1219217 audioPackets=9718 videoBytes=51989449
+[2026-11-14T19:06:38.945892] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=1251255 audioPackets=9968 videoBytes=52993574
+[2026-11-14T19:06:43.946352] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=1283439 audioPackets=10218 videoBytes=54156206
+[2026-11-14T19:06:48.947032] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=1315557 audioPackets=10468 videoBytes=55393857
+[2026-11-14T19:06:48.947168] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP media summary 30s audioKB=188 videoKB=7198 videoTracks=1/1 audioLost=0 ice=RTCIceConnectionStateCompleted
+[2026-11-14T19:06:48.947217] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP video summary 30s in=1280x720@30fps decodedFrames+727 keyframes=33 freeze=23 pli=6 nack=2 vLost=434 | out=-@-fps target=0kbps limit=-
+[2026-11-14T19:06:53.946318] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=1347630 audioPackets=10718 videoBytes=56714787
+[2026-11-14T19:06:58.946483] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=1379562 audioPackets=10968 videoBytes=58081894
+[2026-11-14T19:07:03.945980] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=1411612 audioPackets=11218 videoBytes=59043292
+[2026-11-14T19:07:08.945685] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=1443622 audioPackets=11468 videoBytes=60008241
+[2026-11-14T19:07:13.946905] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=1475794 audioPackets=11718 videoBytes=60798760
+[2026-11-14T19:07:18.946122] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=1507714 audioPackets=11968 videoBytes=61591007
+[2026-11-14T19:07:18.946252] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP media summary 30s audioKB=188 videoKB=6052 videoTracks=1/1 audioLost=0 ice=RTCIceConnectionStateCompleted
+[2026-11-14T19:07:18.946292] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP video summary 30s in=1280x720@30fps decodedFrames+900 keyframes=36 freeze=25 pli=6 nack=2 vLost=434 | out=-@-fps target=0kbps limit=-
+[2026-11-14T19:07:23.945408] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=1539768 audioPackets=12218 videoBytes=62751424
+[2026-11-14T19:07:28.945746] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=1571818 audioPackets=12468 videoBytes=64052331
+[2026-11-14T19:07:33.945292] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=1603957 audioPackets=12718 videoBytes=65605792
+[2026-11-14T19:07:38.945863] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=1635944 audioPackets=12968 videoBytes=67141520
+[2026-11-14T19:07:43.945168] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=1668021 audioPackets=13218 videoBytes=68655395
+[2026-11-14T19:07:48.945695] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=1700080 audioPackets=13468 videoBytes=70201372
+[2026-11-14T19:07:48.945814] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP media summary 30s audioKB=188 videoKB=8409 videoTracks=1/1 audioLost=0 ice=RTCIceConnectionStateCompleted
+[2026-11-14T19:07:48.945851] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP video summary 30s in=1280x720@30fps decodedFrames+888 keyframes=38 freeze=26 pli=6 nack=2 vLost=434 | out=-@-fps target=0kbps limit=-
+[2026-11-14T19:07:53.945586] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=1732159 audioPackets=13718 videoBytes=71743659
+[2026-11-14T19:07:58.946068] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=1764378 audioPackets=13968 videoBytes=73158474
+[2026-11-14T19:08:03.945726] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=1796319 audioPackets=14218 videoBytes=74545063
+[2026-11-14T19:08:08.945660] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=1828541 audioPackets=14468 videoBytes=75836279
+[2026-11-14T19:08:13.945102] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=1860508 audioPackets=14718 videoBytes=77090047
+[2026-11-14T19:08:18.945112] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=1892691 audioPackets=14968 videoBytes=78365531
+[2026-11-14T19:08:18.945287] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP media summary 30s audioKB=188 videoKB=7973 videoTracks=1/1 audioLost=0 ice=RTCIceConnectionStateCompleted
+[2026-11-14T19:08:18.945352] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP video summary 30s in=1280x720@30fps decodedFrames+755 keyframes=42 freeze=30 pli=6 nack=2 vLost=434 | out=-@-fps target=0kbps limit=-
+[2026-11-14T19:08:23.945683] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=1924814 audioPackets=15218 videoBytes=79910706
+[2026-11-14T19:08:28.945186] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=1956735 audioPackets=15468 videoBytes=81451833
+[2026-11-14T19:08:33.945210] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=1988811 audioPackets=15718 videoBytes=82992921
+[2026-11-14T19:08:38.944772] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=2020855 audioPackets=15968 videoBytes=84491650
+[2026-11-14T19:08:43.944575] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=2052927 audioPackets=16218 videoBytes=86000071
+[2026-11-14T19:08:48.945320] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=2084963 audioPackets=16468 videoBytes=87038874
+[2026-11-14T19:08:48.945462] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP media summary 30s audioKB=188 videoKB=8470 videoTracks=1/1 audioLost=0 ice=RTCIceConnectionStateCompleted
+[2026-11-14T19:08:48.945501] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP video summary 30s in=1280x720@30fps decodedFrames+778 keyframes=46 freeze=33 pli=6 nack=2 vLost=434 | out=-@-fps target=0kbps limit=-
+[2026-11-14T19:08:53.945919] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=2117143 audioPackets=16718 videoBytes=88001440
+[2026-11-14T19:08:58.944508] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=2148871 audioPackets=16966 videoBytes=88991751
+[2026-11-14T19:09:03.944446] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=2181081 audioPackets=17216 videoBytes=90174340
+[2026-11-14T19:09:08.944813] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=2212391 audioPackets=17466 videoBytes=91344920
+[2026-11-14T19:09:13.945244] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=2243598 audioPackets=17716 videoBytes=92719591
+[2026-11-14T19:09:18.945676] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=2274383 audioPackets=17966 videoBytes=94039085
+[2026-11-14T19:09:18.945861] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP media summary 30s audioKB=185 videoKB=6836 videoTracks=1/1 audioLost=0 ice=RTCIceConnectionStateCompleted
+[2026-11-14T19:09:18.945950] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP video summary 30s in=1280x720@30fps decodedFrames+718 keyframes=51 freeze=38 pli=7 nack=2 vLost=434 | out=-@-fps target=0kbps limit=-
+[2026-11-14T19:09:23.944956] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=2304552 audioPackets=18216 videoBytes=95587256
+[2026-11-14T19:09:28.944378] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=2334627 audioPackets=18466 videoBytes=96654912
+[2026-11-14T19:09:33.945372] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=2364989 audioPackets=18716 videoBytes=97455082
+[2026-11-14T19:09:38.943954] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=2393750 audioPackets=18966 videoBytes=98256558
+[2026-11-14T19:09:43.944617] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=2423572 audioPackets=19216 videoBytes=99515681
+[2026-11-14T19:09:48.944829] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=2453949 audioPackets=19466 videoBytes=100603506
+[2026-11-14T19:09:48.944964] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP media summary 30s audioKB=175 videoKB=6411 videoTracks=1/1 audioLost=0 ice=RTCIceConnectionStateCompleted
+[2026-11-14T19:09:48.945006] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP video summary 30s in=1280x720@30fps decodedFrames+809 keyframes=59 freeze=41 pli=7 nack=2 vLost=434 | out=-@-fps target=0kbps limit=-
+[2026-11-14T19:09:53.944041] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=2484967 audioPackets=19716 videoBytes=101595543
+[2026-11-14T19:09:58.944479] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=2516874 audioPackets=19966 videoBytes=102261652
+[2026-11-14T19:10:03.944343] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=2547650 audioPackets=20216 videoBytes=103184271
+[2026-11-14T19:10:08.943867] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=2578890 audioPackets=20466 videoBytes=104301815
+[2026-11-14T19:10:13.944586] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=2610084 audioPackets=20716 videoBytes=105002610
+[2026-11-14T19:10:18.944404] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=2641067 audioPackets=20966 videoBytes=105726905
+[2026-11-14T19:10:18.944540] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP media summary 30s audioKB=183 videoKB=5003 videoTracks=1/1 audioLost=0 ice=RTCIceConnectionStateCompleted
+[2026-11-14T19:10:18.944582] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP video summary 30s in=1280x720@30fps decodedFrames+617 keyframes=66 freeze=46 pli=9 nack=2 vLost=434 | out=-@-fps target=0kbps limit=-
+[2026-11-14T19:10:23.944238] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=2671325 audioPackets=21216 videoBytes=106519156
+[2026-11-14T19:10:28.944328] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=2702941 audioPackets=21466 videoBytes=107379323
+[2026-11-14T19:10:33.944198] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=2734131 audioPackets=21716 videoBytes=108273515
+[2026-11-14T19:10:38.943975] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=2765605 audioPackets=21966 videoBytes=109112984
+[2026-11-14T19:10:43.943621] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=2796119 audioPackets=22216 videoBytes=109568676
+[2026-11-14T19:10:48.943747] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=2827936 audioPackets=22466 videoBytes=110074460
+[2026-11-14T19:10:48.943874] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP media summary 30s audioKB=182 videoKB=4246 videoTracks=1/1 audioLost=0 ice=RTCIceConnectionStateCompleted
+[2026-11-14T19:10:48.943912] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP video summary 30s in=1280x720@30fps decodedFrames+403 keyframes=75 freeze=52 pli=12 nack=2 vLost=434 | out=-@-fps target=0kbps limit=-
+[2026-11-14T19:10:53.944234] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=2859735 audioPackets=22716 videoBytes=110834383
+[2026-11-14T19:10:58.943628] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=2891844 audioPackets=22966 videoBytes=111630937
+[2026-11-14T19:11:03.943908] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=2923273 audioPackets=23216 videoBytes=112748498
+[2026-11-14T19:11:08.943946] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=2954026 audioPackets=23466 videoBytes=113850435
+[2026-11-14T19:11:13.943784] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=2983844 audioPackets=23716 videoBytes=115002380
+[2026-11-14T19:11:18.944613] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=3014452 audioPackets=23966 videoBytes=116242979
+[2026-11-14T19:11:18.944756] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP media summary 30s audioKB=182 videoKB=6024 videoTracks=1/1 audioLost=0 ice=RTCIceConnectionStateCompleted
+[2026-11-14T19:11:18.944801] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP video summary 30s in=1280x720@946fps decodedFrames+850 keyframes=82 freeze=55 pli=12 nack=2 vLost=434 | out=-@-fps target=0kbps limit=-
+[2026-11-14T19:11:23.943440] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=3045732 audioPackets=24216 videoBytes=117531990
+[2026-11-14T19:11:28.943108] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=3076216 audioPackets=24466 videoBytes=118168688
+[2026-11-14T19:11:33.943672] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=3107083 audioPackets=24716 videoBytes=119308828
+[2026-11-14T19:11:38.942909] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=3139185 audioPackets=24966 videoBytes=120536739
+[2026-11-14T19:11:43.943153] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=3171156 audioPackets=25216 videoBytes=121360882
+[2026-11-14T19:11:48.943883] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=3203259 audioPackets=25466 videoBytes=121942590
+[2026-11-14T19:11:48.944005] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP media summary 30s audioKB=184 videoKB=5566 videoTracks=1/1 audioLost=0 ice=RTCIceConnectionStateCompleted
+[2026-11-14T19:11:48.944042] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP video summary 30s in=1280x720@30fps decodedFrames+741 keyframes=89 freeze=59 pli=13 nack=2 vLost=434 | out=-@-fps target=0kbps limit=-
+[2026-11-14T19:11:53.943814] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=3235386 audioPackets=25716 videoBytes=123461777
+[2026-11-14T19:11:58.943196] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=3267444 audioPackets=25966 videoBytes=124998591
+[2026-11-14T19:12:03.943046] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=3299646 audioPackets=26216 videoBytes=126534311
+[2026-11-14T19:12:08.942766] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=3331611 audioPackets=26466 videoBytes=128009154
+[2026-11-14T19:12:13.943515] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=3363680 audioPackets=26716 videoBytes=129569273
+[2026-11-14T19:12:18.943433] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=3395860 audioPackets=26966 videoBytes=130636110
+[2026-11-14T19:12:18.943570] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP media summary 30s audioKB=188 videoKB=8490 videoTracks=1/1 audioLost=0 ice=RTCIceConnectionStateCompleted
+[2026-11-14T19:12:18.943617] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP video summary 30s in=1280x720@30fps decodedFrames+810 keyframes=92 freeze=61 pli=14 nack=2 vLost=434 | out=-@-fps target=0kbps limit=-
+[2026-11-14T19:12:23.886576] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] CONFERENCE participants room=6100 n=4 [1102:V,1103:V,1101:A*,1201:V]
+[2026-11-14T19:12:23.943552] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=3427828 audioPackets=27216 videoBytes=131355340
+[2026-11-14T19:12:25.386983] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] VIDEO resync reason=auto:join localKick=false remoteTiles=1
+[2026-11-14T19:12:25.494952] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] remote video tile 등록(전용) track=b19d6c91-6721-4adb-8260-db9d7ca1930d
+[2026-11-14T19:12:28.943038] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=3459888 audioPackets=27466 videoBytes=132250445
+[2026-11-14T19:12:33.942540] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=3491933 audioPackets=27716 videoBytes=133490583
+[2026-11-14T19:12:38.943152] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=3524014 audioPackets=27966 videoBytes=134973406
+[2026-11-14T19:12:43.943061] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=3556091 audioPackets=28216 videoBytes=136511333
+[2026-11-14T19:12:48.942444] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=3588257 audioPackets=28466 videoBytes=138003796
+[2026-11-14T19:12:48.942623] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP media summary 30s audioKB=188 videoKB=7195 videoTracks=1/1 audioLost=0 ice=RTCIceConnectionStateCompleted
+[2026-11-14T19:12:48.942665] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP video summary 30s in=1280x720@30fps decodedFrames+580 keyframes=101 freeze=66 pli=16 nack=2 vLost=434 | out=-@-fps target=0kbps limit=-
+[2026-11-14T19:12:53.943511] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=3620354 audioPackets=28716 videoBytes=139251597
+[2026-11-14T19:12:58.943618] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=3652295 audioPackets=28966 videoBytes=140887096
+[2026-11-14T19:13:03.942782] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=3684356 audioPackets=29216 videoBytes=142426786
+[2026-11-14T19:13:08.942099] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=3716400 audioPackets=29466 videoBytes=143905292
+[2026-11-14T19:13:13.942452] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=3748586 audioPackets=29716 videoBytes=145459827
+[2026-11-14T19:13:18.943590] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=3780671 audioPackets=29966 videoBytes=146588554
+[2026-11-14T19:13:18.943743] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP media summary 30s audioKB=188 videoKB=8384 videoTracks=1/1 audioLost=0 ice=RTCIceConnectionStateCompleted
+[2026-11-14T19:13:18.943779] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP video summary 30s in=1280x720@30fps decodedFrames+560 keyframes=113 freeze=72 pli=17 nack=2 vLost=434 | out=-@-fps target=0kbps limit=-
+[2026-11-14T19:13:23.942050] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=3812764 audioPackets=30216 videoBytes=148093435
+[2026-11-14T19:13:28.942017] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=3844798 audioPackets=30466 videoBytes=149620462
+[2026-11-14T19:13:33.941759] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=3876750 audioPackets=30716 videoBytes=150933431
+[2026-11-14T19:13:38.942427] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=3908814 audioPackets=30966 videoBytes=152387410
+[2026-11-14T19:13:43.943844] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=3940870 audioPackets=31216 videoBytes=153887094
+[2026-11-14T19:13:48.942186] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=3972976 audioPackets=31466 videoBytes=155423241
+[2026-11-14T19:13:48.942339] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP media summary 30s audioKB=188 videoKB=8628 videoTracks=1/1 audioLost=0 ice=RTCIceConnectionStateCompleted
+[2026-11-14T19:13:48.942380] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP video summary 30s in=1280x720@30fps decodedFrames+794 keyframes=118 freeze=75 pli=18 nack=2 vLost=434 | out=-@-fps target=0kbps limit=-
+[2026-11-14T19:13:53.942019] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=4005148 audioPackets=31716 videoBytes=156913269
+[2026-11-14T19:13:58.941704] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=4037089 audioPackets=31966 videoBytes=158438760
+[2026-11-14T19:14:03.942474] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=4069140 audioPackets=32216 videoBytes=159983192
+[2026-11-14T19:14:08.941657] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=4101333 audioPackets=32466 videoBytes=161510628
+[2026-11-14T19:14:13.941519] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=4133330 audioPackets=32716 videoBytes=163037411
+[2026-11-14T19:14:18.941475] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=4165385 audioPackets=32966 videoBytes=164584066
+[2026-11-14T19:14:18.941614] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP media summary 30s audioKB=188 videoKB=8946 videoTracks=1/1 audioLost=0 ice=RTCIceConnectionStateCompleted
+[2026-11-14T19:14:18.941656] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP video summary 30s in=1280x720@30fps decodedFrames+717 keyframes=121 freeze=77 pli=20 nack=2 vLost=434 | out=-@-fps target=0kbps limit=-
+[2026-11-14T19:14:23.941818] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=4197555 audioPackets=33216 videoBytes=166119805
+[2026-11-14T19:14:28.942241] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=4229674 audioPackets=33466 videoBytes=167650460
+[2026-11-14T19:14:33.941620] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=4261669 audioPackets=33716 videoBytes=169203521
+[2026-11-14T19:14:38.941574] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=4293844 audioPackets=33966 videoBytes=170747171
+[2026-11-14T19:14:43.941124] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=4325931 audioPackets=34216 videoBytes=172290847
+[2026-11-14T19:14:48.941294] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=4357896 audioPackets=34466 videoBytes=173835048
+[2026-11-14T19:14:48.941441] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP media summary 30s audioKB=188 videoKB=9034 videoTracks=1/1 audioLost=0 ice=RTCIceConnectionStateCompleted
+[2026-11-14T19:14:48.941480] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP video summary 30s in=1280x720@30fps decodedFrames+900 keyframes=121 freeze=77 pli=20 nack=2 vLost=434 | out=-@-fps target=0kbps limit=-
+[2026-11-14T19:14:53.942241] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=4390045 audioPackets=34716 videoBytes=175356041
+[2026-11-14T19:14:58.941209] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=4421990 audioPackets=34966 videoBytes=176802235
+[2026-11-14T19:15:03.942003] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=4454078 audioPackets=35216 videoBytes=178287391
+[2026-11-14T19:15:08.942020] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=4486081 audioPackets=35466 videoBytes=179815536
+[2026-11-14T19:15:13.941670] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=4518172 audioPackets=35716 videoBytes=181175377
+[2026-11-14T19:15:18.941187] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=4550252 audioPackets=35966 videoBytes=182529035
+[2026-11-14T19:15:18.941352] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP media summary 30s audioKB=188 videoKB=8490 videoTracks=1/1 audioLost=0 ice=RTCIceConnectionStateCompleted
+[2026-11-14T19:15:18.941399] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP video summary 30s in=1280x720@-fps decodedFrames+587 keyframes=129 freeze=80 pli=21 nack=2 vLost=434 | out=-@-fps target=0kbps limit=-
+[2026-11-14T19:15:23.942178] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=4582284 audioPackets=36216 videoBytes=184072194
+[2026-11-14T19:15:28.940952] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=4614474 audioPackets=36466 videoBytes=185535924
+[2026-11-14T19:15:33.940827] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=4646409 audioPackets=36716 videoBytes=186826254
+[2026-11-14T19:15:38.941027] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=4678560 audioPackets=36966 videoBytes=188296846
+[2026-11-14T19:15:43.940698] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=4710547 audioPackets=37216 videoBytes=189501826
+[2026-11-14T19:15:48.940769] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=4742668 audioPackets=37466 videoBytes=189981360
+[2026-11-14T19:15:48.940919] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP media summary 30s audioKB=188 videoKB=7278 videoTracks=1/1 audioLost=0 ice=RTCIceConnectionStateCompleted
+[2026-11-14T19:15:48.940960] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP video summary 30s in=1280x720@30fps decodedFrames+851 keyframes=130 freeze=82 pli=22 nack=2 vLost=434 | out=-@-fps target=0kbps limit=-
+[2026-11-14T19:15:53.941335] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=4774780 audioPackets=37716 videoBytes=191387892
+[2026-11-14T19:15:58.940731] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=4806725 audioPackets=37966 videoBytes=192879344
+[2026-11-14T19:16:03.940996] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=4838829 audioPackets=38216 videoBytes=194026323
+[2026-11-14T19:16:08.941201] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=4870993 audioPackets=38466 videoBytes=195322534
+[2026-11-14T19:16:13.941087] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=4902978 audioPackets=38716 videoBytes=196849864
+[2026-11-14T19:16:18.940898] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=4935137 audioPackets=38966 videoBytes=198382012
+[2026-11-14T19:16:18.941041] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP media summary 30s audioKB=188 videoKB=8204 videoTracks=1/1 audioLost=0 ice=RTCIceConnectionStateCompleted
+[2026-11-14T19:16:18.941080] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP video summary 30s in=1280x720@30fps decodedFrames+755 keyframes=135 freeze=85 pli=23 nack=2 vLost=434 | out=-@-fps target=0kbps limit=-
+[2026-11-14T19:16:23.940878] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=4967104 audioPackets=39216 videoBytes=199921601
+[2026-11-14T19:16:28.941596] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=4999161 audioPackets=39466 videoBytes=201443878
+[2026-11-14T19:16:33.941890] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=5031222 audioPackets=39716 videoBytes=202959799
+[2026-11-14T19:16:38.941482] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=5063417 audioPackets=39966 videoBytes=204472406
+[2026-11-14T19:16:43.940369] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=5095435 audioPackets=40216 videoBytes=206016016
+[2026-11-14T19:16:48.941096] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=5127553 audioPackets=40466 videoBytes=207566924
+[2026-11-14T19:16:48.941257] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP media summary 30s audioKB=188 videoKB=8970 videoTracks=1/1 audioLost=0 ice=RTCIceConnectionStateCompleted
+[2026-11-14T19:16:48.941298] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP video summary 30s in=1280x720@30fps decodedFrames+900 keyframes=135 freeze=85 pli=23 nack=2 vLost=434 | out=-@-fps target=0kbps limit=-
+[2026-11-14T19:16:53.940694] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=5159500 audioPackets=40716 videoBytes=209098350
+[2026-11-14T19:16:58.940778] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=5191652 audioPackets=40966 videoBytes=210638788
+[2026-11-14T19:17:03.940390] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=5223458 audioPackets=41215 videoBytes=212178933
+[2026-11-14T19:17:08.939847] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=5255515 audioPackets=41465 videoBytes=213720181
+[2026-11-14T19:17:13.940579] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=5287678 audioPackets=41715 videoBytes=215258308
+[2026-11-14T19:17:18.940290] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=5319665 audioPackets=41965 videoBytes=216302142
+[2026-11-14T19:17:18.940420] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP media summary 30s audioKB=188 videoKB=8530 videoTracks=1/1 audioLost=0 ice=RTCIceConnectionStateCompleted
+[2026-11-14T19:17:18.940476] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP video summary 30s in=1280x720@30fps decodedFrames+899 keyframes=136 freeze=85 pli=23 nack=2 vLost=434 | out=-@-fps target=0kbps limit=-
+[2026-11-14T19:17:23.939660] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=5351682 audioPackets=42215 videoBytes=217595932
+[2026-11-14T19:17:24.011361] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] CONFERENCE participants room=6100 n=3 [1102:V,1101:A*,1201:V]
+[2026-11-14T19:17:25.513389] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] VIDEO resync reason=auto:leave localKick=false remoteTiles=1
+[2026-11-14T19:17:25.614712] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] remote video tile 등록(전용) track=b19d6c91-6721-4adb-8260-db9d7ca1930d
+[2026-11-14T19:17:28.940248] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=5383725 audioPackets=42465 videoBytes=218240978
+[2026-11-14T19:17:29.185409] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] CONFERENCE participants room=6100 n=4 [1102:V,1101:A*,1201:V,1103:V]
+[2026-11-14T19:17:30.686108] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] VIDEO resync reason=auto:join localKick=false remoteTiles=1
+[2026-11-14T19:17:30.788516] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] remote video tile 등록(전용) track=b19d6c91-6721-4adb-8260-db9d7ca1930d
+[2026-11-14T19:17:33.939596] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=5415894 audioPackets=42715 videoBytes=218405094
+[2026-11-14T19:17:38.940246] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=5447830 audioPackets=42965 videoBytes=218648626
+[2026-11-14T19:17:43.940654] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=5479862 audioPackets=43215 videoBytes=218889472
+[2026-11-14T19:17:48.939531] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=5511875 audioPackets=43465 videoBytes=219486423
+[2026-11-14T19:17:48.939654] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP media summary 30s audioKB=188 videoKB=3110 videoTracks=1/1 audioLost=0 ice=RTCIceConnectionStateCompleted
+[2026-11-14T19:17:48.939690] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP video summary 30s in=960x540@30fps decodedFrames+880 keyframes=143 freeze=86 pli=23 nack=2 vLost=434 | out=-@-fps target=0kbps limit=-
+[2026-11-14T19:17:53.939742] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=5544062 audioPackets=43715 videoBytes=220154261
+[2026-11-14T19:17:58.940126] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=5576145 audioPackets=43965 videoBytes=220505172
+[2026-11-14T19:17:59.226994] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] CONFERENCE participants room=6100 n=5 [1102:V,1101:A*,1201:V,1103:V,1102:V]
+[2026-11-14T19:18:00.728191] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] VIDEO resync reason=auto:join localKick=false remoteTiles=1
+[2026-11-14T19:18:00.831895] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] remote video tile 등록(전용) track=b19d6c91-6721-4adb-8260-db9d7ca1930d
+[2026-11-14T19:18:03.939988] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=5608207 audioPackets=44215 videoBytes=220699789
+[2026-11-14T19:18:08.940568] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=5640311 audioPackets=44465 videoBytes=221625299
+[2026-11-14T19:18:13.941566] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=5672225 audioPackets=44715 videoBytes=222544135
+[2026-11-14T19:18:18.939613] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=5704282 audioPackets=44965 videoBytes=223713253
+[2026-11-14T19:18:18.939768] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP media summary 30s audioKB=188 videoKB=4128 videoTracks=1/1 audioLost=0 ice=RTCIceConnectionStateCompleted
+[2026-11-14T19:18:18.939846] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP video summary 30s in=1280x720@30fps decodedFrames+884 keyframes=149 freeze=86 pli=23 nack=2 vLost=434 | out=-@-fps target=0kbps limit=-
+[2026-11-14T19:18:23.939288] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=5736325 audioPackets=45215 videoBytes=224713867
+[2026-11-14T19:18:28.940429] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=5768567 audioPackets=45465 videoBytes=225736962
+[2026-11-14T19:18:33.939607] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=5800668 audioPackets=45715 videoBytes=226549532
+[2026-11-14T19:18:38.938928] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=5832709 audioPackets=45965 videoBytes=227463020
+[2026-11-14T19:18:39.067538] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] CONFERENCE participants room=6100 n=4 [1101:A*,1201:V,1103:V,1102:V]
+[2026-11-14T19:18:40.569514] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] VIDEO resync reason=auto:leave localKick=false remoteTiles=1
+[2026-11-14T19:18:40.672084] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] remote video tile 등록(전용) track=b19d6c91-6721-4adb-8260-db9d7ca1930d
+[2026-11-14T19:18:43.939648] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=5864855 audioPackets=46215 videoBytes=228360041
+[2026-11-14T19:18:47.023624] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=5896956 audioPackets=46465 videoBytes=229843419
+[2026-11-14T19:18:47.023752] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP media summary 30s audioKB=188 videoKB=5986 videoTracks=1/1 audioLost=0 ice=RTCIceConnectionStateCompleted
+[2026-11-14T19:18:47.023786] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP video summary 30s in=1280x720@30fps decodedFrames+895 keyframes=155 freeze=86 pli=23 nack=2 vLost=434 | out=-@-fps target=0kbps limit=-
+[2026-11-14T19:18:52.023390] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=5928891 audioPackets=46715 videoBytes=231399927
+[2026-11-14T19:18:57.022947] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=5961099 audioPackets=46965 videoBytes=232602301
+[2026-11-14T19:19:02.023608] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=5993174 audioPackets=47215 videoBytes=233578549
+[2026-11-14T19:19:07.023294] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=6025279 audioPackets=47465 videoBytes=234438000
+[2026-11-14T19:19:12.023495] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=6057380 audioPackets=47715 videoBytes=235543478
+[2026-11-14T19:19:17.023222] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=6089372 audioPackets=47965 videoBytes=236710713
+[2026-11-14T19:19:17.023351] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP media summary 30s audioKB=188 videoKB=6706 videoTracks=1/1 audioLost=0 ice=RTCIceConnectionStateCompleted
+[2026-11-14T19:19:17.023386] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP video summary 30s in=1280x720@30fps decodedFrames+900 keyframes=157 freeze=86 pli=23 nack=2 vLost=434 | out=-@-fps target=0kbps limit=-
+[2026-11-14T19:19:22.023510] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=6121368 audioPackets=48215 videoBytes=237450915
+[2026-11-14T19:19:27.023285] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=6153389 audioPackets=48465 videoBytes=237874681
+[2026-11-14T19:19:32.023463] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=6185480 audioPackets=48715 videoBytes=239266709
+[2026-11-14T19:19:37.023179] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=6217526 audioPackets=48965 videoBytes=240817448
+
+
+
+
+[2026-11-14T19:25:29.016907] INFO [usr=- host=- ip=-] AppLogger 초기화 완료 file=/Users/microdit/Library/Containers/com.microdit.macosClient/Data/Library/Application Support/com.microdit.macosClient/logs/app.log identity=usr=- host=- ip=- mode=release
+[2026-11-14T19:25:29.017684] INFO [usr=- host=- ip=-] 원격 로그 업로더 시작 session=mwg9f6wp-6z0ii0 mode=INFO + 이벤트 url=http://192.168.0.3:8091/api/client-logs
+[2026-11-14T19:25:29.064852] EVENT UI LOGIN action=serverConfigRefresh params=auto=true
+[2026-11-14T19:25:29.381914] INFO [usr=- host=- ip=-] 서버 설정 갱신 via=http://192.168.0.3:8091 domain=192.168.0.3 ws=ws://192.168.0.3:8088/ws changed=false
+[2026-11-14T19:25:29.403335] INFO [usr=- host=- ip=-] OPS directory: contacts=5 rooms=2 base=http://192.168.0.3:8091
+[2026-11-14T19:27:58.726732] INFO (동일 로그 2회 반복 스킵 요약)
+[2026-11-14T19:27:58.726835] EVENT UI LOGIN action=quickConnectFilled params=extension=1101
+[2026-11-14T19:27:59.347232] EVENT UI LOGIN action=loginPressed params=username=1101 domain=192.168.0.3 port=5060 transport=ws wsServer=ws://192.168.0.3:8088/ws
+[2026-11-14T19:27:59.347335] INFO [usr=- host=- ip=-] SIP state -> connecting
+[2026-11-14T19:27:59.348890] INFO (동일 로그 2회 반복 스킵 요약)
+[2026-11-14T19:27:59.348955] EVENT SIP op=init target=- state=- params=ws=ws://192.168.0.3:8088/ws domain=192.168.0.3 port=5060 transport=ws
+[2026-11-14T19:27:59.354060] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP state -> connected
+[2026-11-14T19:27:59.360414] INFO (동일 로그 2회 반복 스킵 요약)
+[2026-11-14T19:27:59.360491] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP state -> registered
+[2026-11-14T19:27:59.360567] EVENT LOGIN event=loginResult state=registered username=1101 error=-
+[2026-11-14T19:27:59.450592] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] MEDIA device resolve camera=기본 mic=기본 speaker=기본
+[2026-11-14T19:27:59.452254] EVENT MEDIA event=localStreamReady state=video=0 audio=1 frontCamera=true audioMuted=false
+[2026-11-14T19:28:00.672329] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] OPS directory: contacts=5 rooms=2 base=http://192.168.0.3:8091
+[2026-11-14T19:28:03.846695] EVENT UI DIALER action=callPressed params=target=6100
+[2026-11-14T19:28:03.846858] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP call -> 6100 voiceOnly=true hasLocalStream=true
+[2026-11-14T19:28:03.847382] EVENT DIALER event=callResult state=pushed target=6100 error=-
+[2026-11-14T19:28:03.854012] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP remote-track recovery armed id=9199441csq62k16b9147775n5654j1
+[2026-11-14T19:28:03.854088] EVENT SIP op=callInitiation target=6100 state=initiated params=direction=outgoing id=9199441csq62k16b9147775n5654j1
+[2026-11-14T19:28:03.854156] EVENT SIP op=callProgress target=6100 state=CONNECTING params=id=9199441csq62k16b9147775n5654j1
+[2026-11-14T19:28:03.857404] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP codec policy target=6100 type=offer video=h264Only
+[2026-11-14T19:28:03.955683] EVENT SIP op=mediaStream target=6100 state=local params=video=0 audio=1 id=9199441csq62k16b9147775n5654j1
+[2026-11-14T19:28:04.317223] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] CONFERENCE participants room=6100 n=3 [1201:V,1103:V,1102:V]
+[2026-11-14T19:28:04.383357] EVENT SIP op=callEstablished target=6100 state=ACCEPTED params=id=9199441csq62k16b9147775n5654j1
+[2026-11-14T19:28:04.383519] EVENT SIP op=callEstablished target=6100 state=CONFIRMED params=id=9199441csq62k16b9147775n5654j1
+[2026-11-14T19:28:04.484097] EVENT SIP op=mediaStream target=6100 state=remote params=video=1 audio=1 id=9199441csq62k16b9147775n5654j1
+[2026-11-14T19:28:04.484240] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] remote session 9199441csq62k16b9147775n5654j1 handled: streams=1 event(video=1 audio=1) session(video=1 audio=1)
+[2026-11-14T19:28:04.484321] EVENT MEDIA event=remoteStreamAdded state=video=1 audio=1 sessionId=9199441csq62k16b9147775n5654j1 sessionStreams=1 sessionVideo=1 sessionAudio=1
+[2026-11-14T19:28:04.484573] EVENT SIP op=mediaStream target=6100 state=remote params=video=1 audio=1 id=9199441csq62k16b9147775n5654j1
+[2026-11-14T19:28:04.484635] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] remote session 9199441csq62k16b9147775n5654j1 handled: streams=1 event(video=1 audio=1) session(video=1 audio=1)
+[2026-11-14T19:28:04.484675] EVENT MEDIA event=remoteStreamAdded state=video=1 audio=1 sessionId=9199441csq62k16b9147775n5654j1 sessionStreams=1 sessionVideo=1 sessionAudio=1
+[2026-11-14T19:28:06.198101] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] remote video tile 등록(전용) track=76a914d4-b239-4f4d-a6d0-d7f2da4f66a4
+[2026-11-14T19:28:09.329092] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] CONFERENCE participants room=6100 n=4 [1201:V,1103:V,1102:V,1101:A*]
+[2026-11-14T19:28:09.387772] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=28968 audioPackets=225 videoBytes=272147
+[2026-11-14T19:28:10.830563] INFO [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] VIDEO resync reason=auto:join localKick=false remoteTiles=1
+[2026-11-14T19:28:10.932927] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] remote video tile 등록(전용) track=76a914d4-b239-4f4d-a6d0-d7f2da4f66a4
+[2026-11-14T19:28:14.387719] DEBUG [usr=1101@192.168.0.3 host=MacPro ip=192.168.0.3] SIP stats inbound audioBytes=60953 audioPackets=475 videoBytes=624676
