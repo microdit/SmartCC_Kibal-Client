@@ -38,6 +38,20 @@ class SipProvider with ChangeNotifier {
 
   /// 수신 무응답 자동취소 타이머 (60초)
   Timer? incomingTimeout;
+
+  /// connect() 중복 호출 방지(네트워크 전환 시 반복 init으로 transport가
+  /// 서로 닫히는 문제 방지). 진행 중이면 같은 future를 재사용한다.
+  Future<bool>? _connectInFlight;
+
+  /// 네트워크 복구 대기 백오프 타이머
+  Timer? _networkRetryTimer;
+  int _retryAttempt = 0;
+
+  /// 등록 재연결 성공 콜백(네트워크 복구 후 통화 재입장 등에 사용)
+  VoidCallback? onReconnected;
+
+  /// 연결 시도 중 여부
+  bool get isConnecting => _connectInFlight != null;
   
   /// 로딩 상태
   bool _isLoading = false;
@@ -120,40 +134,70 @@ class SipProvider with ChangeNotifier {
   // Connection Management
   //--------------------------------------------------------------------------
   
-  /// SIP 연결
+  /// SIP 연결 (중복 호출 방지 + 실패 시 백오프 재시도)
   Future<bool> connect() async {
+    // 이미 연결 시도가 진행 중이면 같은 future를 반환해 transport 경합 방지
+    final pending = _connectInFlight;
+    if (pending != null) return pending;
+
     if (_config == null) {
       _error = 'SIP 설정이 없습니다';
       notifyListeners();
       return false;
     }
-    
+
     if (_client == null) {
       _error = 'SIP 클라이언트가 초기화되지 않음';
       notifyListeners();
       return false;
     }
-    
+
+    final completer = Completer<bool>();
+    _connectInFlight = completer.future;
+    bool result = false;
     try {
       _isLoading = true;
       _error = null;
       notifyListeners();
-      
-      final result = await _client!.init(_config!);
-      
+
+      result = await _client!.init(_config!);
+
       if (result) {
-        await register();
+        result = await register();
       }
-      
-      _isLoading = false;
-      notifyListeners();
-      return result;
+
+      if (result) {
+        _retryAttempt = 0;
+        _networkRetryTimer?.cancel();
+        _networkRetryTimer = null;
+        onReconnected?.call();
+      } else {
+        _scheduleNetworkRetry();
+      }
     } catch (e) {
-      _isLoading = false;
       _error = 'SIP 연결 실패: $e';
+      _scheduleNetworkRetry();
+    } finally {
+      _isLoading = false;
       notifyListeners();
-      return false;
+      if (!completer.isCompleted) completer.complete(result);
+      _connectInFlight = null;
     }
+    return result;
+  }
+
+  /// 실패 시 지수 백오프(2s→4s→...→최대 30s)로 재연결을 예약한다.
+  /// 네트워크가 돌아오면 다음 시도에서 성공하며, 그 때 onReconnected가 호출된다.
+  void _scheduleNetworkRetry() {
+    if (_networkRetryTimer != null) return;
+    _retryAttempt = (_retryAttempt + 1).clamp(1, 10);
+    final seconds = (2 * (1 << (_retryAttempt - 1))).clamp(2, 30);
+    AppLogger.instance.w('SIP 연결 실패 → ${seconds}s 후 재시도 (시도 $_retryAttempt)');
+    _networkRetryTimer = Timer(Duration(seconds: seconds), () {
+      _networkRetryTimer = null;
+      if (_isRegistered) return;
+      connect();
+    });
   }
   
   /// SIP 등록
@@ -537,6 +581,8 @@ class SipProvider with ChangeNotifier {
   /// 리소스 해제
   @override
   void dispose() {
+    incomingTimeout?.cancel();
+    _networkRetryTimer?.cancel();
     _client?.dispose();
     super.dispose();
   }

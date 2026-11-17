@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -31,7 +29,9 @@ class _AddressBookScreenState extends State<AddressBookScreen>
   DateTime? _lastSync;
   bool _sipRegistering = false;
   String? _sipError;
-  Timer? _reconnectTimer;
+
+  /// 네트워크 전환으로 끊어진 회의실/통화 번호 (재연결 후 자동 재입장용)
+  String? _callTargetBeforeNetworkLoss;
 
   @override
   void initState() {
@@ -39,7 +39,10 @@ class _AddressBookScreenState extends State<AddressBookScreen>
     WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
-      Provider.of<SipProvider>(context, listen: false).addListener(_onSipChanged);
+      final sip = Provider.of<SipProvider>(context, listen: false);
+      sip.addListener(_onSipChanged);
+      // 재연결 성공 시 끊어졌던 통화를 자동 재입장
+      sip.onReconnected = _onSipReconnected;
     });
     _bootstrap();
   }
@@ -47,32 +50,50 @@ class _AddressBookScreenState extends State<AddressBookScreen>
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
-    _reconnectTimer?.cancel();
     try {
-      Provider.of<SipProvider>(context, listen: false).removeListener(_onSipChanged);
+      final sip = Provider.of<SipProvider>(context, listen: false);
+      sip.removeListener(_onSipChanged);
+      sip.onReconnected = null;
     } catch (_) {}
     super.dispose();
   }
 
-  /// SIP 등록이 끊기면 자동 재등록(리스닝 상태 유지).
+  /// SIP 등록이 복구되면 네트워크 전환으로 끊어졌던 회의실에 자동 재입장한다.
+  void _onSipReconnected() {
+    if (!mounted) return;
+    final target = _callTargetBeforeNetworkLoss;
+    if (target == null) return;
+    _callTargetBeforeNetworkLoss = null;
+    final sip = Provider.of<SipProvider>(context, listen: false);
+    if (!sip.isRegistered || sip.isInCall) return;
+    AppLogger.instance.ui('RECOVERY', 'rejoinAfterNetworkRestore', params: {'target': target});
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('네트워크 복구 · $target 통화를 다시 연결합니다.')));
+    context.push(AppConstants.isConferenceRoom(target) ? '/conference' : '/call',
+        extra: target);
+  }
+
+  /// SIP 등록 해제 감지: 끊어진 통화 번호를 기억하고 Provider의 백오프
+  /// 재연결에 맡긴다(직접 재시도하면 init 경합으로 오히려 실패).
   void _onSipChanged() {
-    if (!mounted || !_auth.isVerified || _sipRegistering) return;
+    if (!mounted || !_auth.isVerified) return;
     final sip = Provider.of<SipProvider>(context, listen: false);
     if (sip.isRegistered) {
       if (_sipError != null) setState(() => _sipError = null);
       return;
     }
+    // 통화 중 네트워크가 끊기면 재연결 후 재입장할 번호를 보관
+    final target = sip.currentCallTarget;
+    if (target != null && target.isNotEmpty &&
+        _callTargetBeforeNetworkLoss == null) {
+      _callTargetBeforeNetworkLoss = target;
+      AppLogger.instance.w('Network loss during call → remember target $target for recovery');
+    }
     if (sip.sipState == SipClientState.disconnected ||
         sip.sipState == SipClientState.error ||
         sip.sipState == SipClientState.unregistered) {
-      _reconnectTimer?.cancel();
-      // 연속 quickConnect/UA 교체 시 이전 세션 이벤트와 경합하지 않도록 짧게 지연.
-      _reconnectTimer = Timer(const Duration(milliseconds: 1200), () {
-        if (!mounted) return;
-        final current = Provider.of<SipProvider>(context, listen: false);
-        if (current.isRegistered) return;
-        AppLogger.instance.w('SIP 등록 해제 감지 → 자동 재등록 시도');
-        _autoRegisterSip(notify: false);
+      setState(() {
+        _sipError = '네트워크 변경으로 전화연결이 끊어졌습니다. 복구를 시도 중입니다…';
       });
     }
   }

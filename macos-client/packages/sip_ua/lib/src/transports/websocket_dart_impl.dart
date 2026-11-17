@@ -50,8 +50,16 @@ class SIPUAWebSocketImpl {
       await Future<void>.delayed(Duration(milliseconds: messageDelay));
       return event;
     }).listen((dynamic event) async {
-      _socket!.add(event);
-      logger.d('send: \n\n$event');
+      // 네트워크 전환 등으로 소켓이 닫힌 뒤 큐에 남은 메시지 쓰기 시
+      // "Bad state: StreamSink is closed" 예외가 발생해 앱이 크래시할 수 있음.
+      final WebSocket? socket = _socket;
+      if (socket == null) return;
+      try {
+        socket.add(event);
+        logger.d('send: \n\n$event');
+      } catch (e) {
+        logger.w('send skipped (socket closed): $e');
+      }
     });
   }
 

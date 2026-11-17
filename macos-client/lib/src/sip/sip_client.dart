@@ -130,8 +130,17 @@ class KibalSipClient implements SipUaHelperListener {
   // Connection Management
   //--------------------------------------------------------------------------
 
+  /// init() 중복 호출 방지용 in-flight future.
+  /// 네트워크 전환 시 자동 재등록이 동시에 여러 번 호출되면 서로의 UA/transport를
+  /// 정리해 오히려 등록이 실패하므로, 진행 중인 init을 재사용한다.
+  Future<bool>? _initInFlight;
+
   /// SIP 클라이언트 초기화 및 전송 연결
   Future<bool> init(SipConfig config) async {
+    final pending = _initInFlight;
+    if (pending != null) return pending;
+    final completer = Completer<bool>();
+    _initInFlight = completer.future;
     try {
       _config = config;
       _setState(SipClientState.connecting);
@@ -214,11 +223,15 @@ class KibalSipClient implements SipUaHelperListener {
         _emitError('SIP 전송 연결 시간 초과');
       }
 
+      if (!completer.isCompleted) completer.complete(connected);
       return connected;
     } catch (e) {
       _setState(SipClientState.error);
       _emitError('SIP 클라이언트 초기화 실패: $e');
+      if (!completer.isCompleted) completer.complete(false);
       return false;
+    } finally {
+      _initInFlight = null;
     }
   }
 
