@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -626,14 +624,16 @@ class _DialerScreenState extends State<DialerScreen> {
         details: {'target': target, 'error': sipProvider.error});
 
     if (success) {
-      unawaited(CallLogStore.instance.add(target));
-      _loadCallLogs();
+      await CallLogStore.instance.add(target);
+      await _loadCallLogs();
+      if (!mounted) return;
       if (AppConstants.isConferenceRoom(target)) {
         context.push('/conference', extra: target);
       } else {
         context.push('/call', extra: target);
       }
     } else {
+      if (!mounted) return;
       _showErrorDialog(context, sipProvider.error ?? '통화 연결에 실패했습니다');
     }
   }

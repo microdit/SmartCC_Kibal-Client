@@ -477,8 +477,37 @@ type SfuSessionDescriptionHandler = {
   setRemoteTrack: (track: MediaStreamTrack) => void;
 };
 
+/// 진단봇 전용: URL `?diagMedia=1`일 때 test-media의 전체 길이 mp4를
+/// video→canvas 캡처 스트림으로 SIP 발신 미디어로 사용한다.
+/// (Chrome --use-file-for-fake-video-capture는 Y4M만 지원하며 전체 1080p
+///  영상을 Y4M으로 만들면 20GB+로 비현실적이므로 브라우저에서 직접 재생)
+let diagMediaStream: MediaStream | null = null;
+async function getDiagMediaStream(): Promise<MediaStream> {
+  if (diagMediaStream) return diagMediaStream;
+  const video = document.createElement("video");
+  video.src = "/test-media/diag_hwasa_04_full.mp4";
+  video.loop = true;
+  video.muted = true;
+  video.autoplay = true;
+  video.playsInline = true;
+  video.crossOrigin = "anonymous";
+  video.style.display = "none";
+  document.body.appendChild(video);
+  await new Promise<void>((resolve, reject) => {
+    video.onloadeddata = () => resolve();
+    video.onerror = () => reject(new Error("diag media load failed"));
+  });
+  await video.play();
+  diagMediaStream = (video as HTMLVideoElement & { captureStream: () => MediaStream }).captureStream();
+  return diagMediaStream;
+}
+
 function createSfuSessionDescriptionHandlerFactory(): NonNullable<UserAgentOptions["sessionDescriptionHandlerFactory"]> {
-  const factory = Web.defaultSessionDescriptionHandlerFactory();
+  const useDiagMedia = new URLSearchParams(window.location.search).has("diagMedia");
+  const mediaStreamFactory = useDiagMedia
+    ? async () => getDiagMediaStream()
+    : undefined;
+  const factory = Web.defaultSessionDescriptionHandlerFactory(mediaStreamFactory);
   return (session, options) => {
     const handler = factory(session, options);
     const sfuHandler = handler as unknown as SfuSessionDescriptionHandler;

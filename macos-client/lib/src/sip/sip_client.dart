@@ -317,13 +317,26 @@ class KibalSipClient implements SipUaHelperListener {
       final voiceOnly = !await _canUseVideo(mediaStream);
       _receiveOnlyVideo = voiceOnly;
       _pendingCallTarget = target;
+      // 미디어 권한이 거부되면 mediaStream이 null이 되는데, 그 상태로 helper.call에
+      // 넘기면 sip_ua가 내부적으로 getUserMedia를 재호출해 NotAllowedError가
+      // 발생하고 통화가 즉시 실패한다. 빈 MediaStream을 넘겨 내부 getUserMedia
+      // 호출을 차단하고 recvonly(수신 전용)로 참여하도록 한다.
+      MediaStream? outgoing = mediaStream;
+      if (outgoing == null) {
+        try {
+          outgoing = await createLocalMediaStream('kibal-recvonly-${DateTime.now().millisecondsSinceEpoch}');
+          AppLogger.instance.w('SIP call: local media 없음 → 빈 스트림으로 recvonly 참여');
+        } catch (e) {
+          AppLogger.instance.w('SIP call: 빈 스트림 생성 실패: $e');
+        }
+      }
       AppLogger.instance.i(
-          'SIP call -> $target voiceOnly=$voiceOnly hasLocalStream=${mediaStream != null}');
+          'SIP call -> $target voiceOnly=$voiceOnly hasLocalStream=${outgoing != null}');
       // ADR-006: 카메라 없음 = 송신 없음. 영상은 recvonly로 계속 수신한다.
       final ok = await _helper.call(
         target,
         voiceOnly: voiceOnly,
-        mediaStream: mediaStream,
+        mediaStream: outgoing,
         customOptions: voiceOnly ? _receiveVideoOptions() : null,
       );
       if (!ok) {
@@ -377,9 +390,15 @@ class KibalSipClient implements SipUaHelperListener {
         MapHelper.merge(answerOptions, _receiveVideoOptions());
       }
       AppLogger.instance.i('SIP accept video=${voiceOnly ? (recvOnlyVideo ? 'recvonly' : 'none') : 'sendrecv'}');
+      MediaStream? answerStream = mediaStream;
+      if (answerStream == null) {
+        try {
+          answerStream = await createLocalMediaStream('kibal-recvonly-answer-${DateTime.now().millisecondsSinceEpoch}');
+        } catch (_) {}
+      }
       call.answer(
         answerOptions,
-        mediaStream: mediaStream,
+        mediaStream: answerStream,
       );
       _currentSession?.updateState(SipSessionState.established);
 
