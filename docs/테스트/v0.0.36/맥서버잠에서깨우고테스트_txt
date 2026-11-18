@@ -1,0 +1,134 @@
+1101 클라이언트 이상동작 로그. SIP 등록 안됨. 통화불능 상태
+
+[2026-11-18T11:49:39.018820] INFO [usr=- host=- ip=-] AppLogger 초기화 완료 file=/Users/microdit/Library/Containers/com.microdit.macosClient/Data/Library/Application Support/com.microdit.macosClient/logs/app.log identity=usr=- host=- ip=- mode=release
+[2026-11-18T11:49:39.022574] INFO [usr=- host=- ip=-] 원격 로그 업로더 시작 session=mwliwe6j-1ptz1ns mode=INFO + 이벤트 url=http://192.168.11.5:8091/api/client-logs
+[2026-11-18T11:49:39.093269] WARN [usr=- host=- ip=-] 서버 설정 갱신 실패: OPS 응답 없음 (후보 http://192.168.11.5:8091, http://MacPro.local:8091)
+[2026-11-18T11:49:39.105351] INFO [usr=- host=- ip=-] OPS directory: contacts=7 rooms=3 base=http://192.168.11.5:8091
+[2026-11-18T11:49:39.105454] INFO [usr=- host=- ip=-] AddressBook synced contacts=7 rooms=3
+[2026-11-18T11:49:39.105567] EVENT UI ADDRESSBOOK action=autoRegister params=ext=1101
+[2026-11-18T11:49:39.105621] INFO [usr=- host=- ip=-] SIP state -> connecting
+[2026-11-18T11:49:39.108313] INFO (동일 로그 2회 반복 스킵 요약)
+[2026-11-18T11:49:39.108383] EVENT SIP op=init target=- state=- params=ws=ws://192.168.11.5:8088/ws domain=192.168.11.5 port=5060 transport=ws
+[2026-11-18T11:49:39.114110] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connected
+[2026-11-18T11:49:39.152521] INFO (동일 로그 2회 반복 스킵 요약)
+[2026-11-18T11:49:39.152617] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> registered
+[2026-11-18T11:49:39.153218] EVENT ADDRESSBOOK event=autoRegisterResult state=registered ext=1101 error=-
+[2026-11-18T11:49:40.977953] WARN [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] 서버 설정 갱신 실패: OPS 응답 없음 (후보 http://192.168.11.5:8091, http://MacPro.local:8091)
+[2026-11-18T11:49:40.991370] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] OPS directory: contacts=7 rooms=3 base=http://192.168.11.5:8091
+[2026-11-18T11:49:40.991479] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] AddressBook synced contacts=7 rooms=3
+[2026-11-18T11:49:46.912205] EVENT UI ADDRESSBOOK action=quickConnect params=ext=1105
+[2026-11-18T11:49:46.912310] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connecting
+[2026-11-18T11:49:46.912602] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> unregistered
+[2026-11-18T11:49:46.912662] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transport disconnected (cause: Code: [0], Cause: disconnect, Reason: close by local)
+[2026-11-18T11:49:46.912690] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> disconnected
+[2026-11-18T11:49:46.913192] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connecting
+[2026-11-18T11:49:46.913546] EVENT SIP op=init target=- state=- params=ws=ws://192.168.11.5:8088/ws domain=192.168.11.5 port=5060 transport=ws
+[2026-11-18T11:50:01.913599] INFO [usr=1105@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> error
+[2026-11-18T11:50:01.913723] ERROR [usr=1105@192.168.11.5 host=MacPro ip=192.168.11.5] SIP SIP 전송 연결 시간 초과
+[2026-11-18T11:50:01.913765] WARN [usr=1105@192.168.11.5 host=MacPro ip=192.168.11.5] SIP 연결 실패 → 2s 후 재시도 (시도 1)
+[2026-11-18T11:50:01.913808] EVENT ADDRESSBOOK event=quickConnectResult state=failed ext=1105 error=SIP 전송 연결 시간 초과
+[2026-11-18T11:50:01.917746] INFO [usr=1105@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connected
+[2026-11-18T11:50:01.929075] INFO [usr=1105@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> error
+[2026-11-18T11:50:01.929178] ERROR [usr=1105@192.168.11.5 host=MacPro ip=192.168.11.5] SIP SIP 등록 실패: Code: [401], Cause: Authentication Error, Reason: Unauthorized
+[2026-11-18T11:50:03.916474] INFO [usr=1105@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connecting
+[2026-11-18T11:50:03.916636] INFO [usr=1105@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transport disconnected (cause: Code: [0], Cause: disconnect, Reason: close by local)
+[2026-11-18T11:50:03.916677] INFO [usr=1105@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> disconnected
+[2026-11-18T11:50:03.917220] INFO [usr=1105@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connecting
+[2026-11-18T11:50:03.917569] EVENT SIP op=init target=- state=- params=ws=ws://192.168.11.5:8088/ws domain=192.168.11.5 port=5060 transport=ws
+[2026-11-18T11:50:18.917634] INFO [usr=1105@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> error
+[2026-11-18T11:50:18.917765] ERROR [usr=1105@192.168.11.5 host=MacPro ip=192.168.11.5] SIP SIP 전송 연결 시간 초과
+[2026-11-18T11:50:18.917807] WARN [usr=1105@192.168.11.5 host=MacPro ip=192.168.11.5] SIP 연결 실패 → 4s 후 재시도 (시도 2)
+[2026-11-18T11:50:18.921045] INFO [usr=1105@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connected
+[2026-11-18T11:50:18.929681] INFO [usr=1105@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> error
+[2026-11-18T11:50:18.929774] ERROR [usr=1105@192.168.11.5 host=MacPro ip=192.168.11.5] SIP SIP 등록 실패: Code: [401], Cause: Authentication Error, Reason: Unauthorized
+[2026-11-18T11:50:22.919521] INFO [usr=1105@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connecting
+[2026-11-18T11:50:22.919646] INFO [usr=1105@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transport disconnected (cause: Code: [0], Cause: disconnect, Reason: close by local)
+[2026-11-18T11:50:22.919678] INFO [usr=1105@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> disconnected
+[2026-11-18T11:50:22.920269] INFO [usr=1105@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connecting
+[2026-11-18T11:50:22.920746] EVENT SIP op=init target=- state=- params=ws=ws://192.168.11.5:8088/ws domain=192.168.11.5 port=5060 transport=ws
+[2026-11-18T11:50:37.920814] INFO [usr=1105@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> error
+[2026-11-18T11:50:37.920947] ERROR [usr=1105@192.168.11.5 host=MacPro ip=192.168.11.5] SIP SIP 전송 연결 시간 초과
+[2026-11-18T11:50:37.920992] WARN [usr=1105@192.168.11.5 host=MacPro ip=192.168.11.5] SIP 연결 실패 → 8s 후 재시도 (시도 3)
+[2026-11-18T11:50:37.925981] INFO [usr=1105@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connected
+[2026-11-18T11:50:37.938312] INFO [usr=1105@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> error
+[2026-11-18T11:50:37.938399] ERROR [usr=1105@192.168.11.5 host=MacPro ip=192.168.11.5] SIP SIP 등록 실패: Code: [401], Cause: Authentication Error, Reason: Unauthorized
+[2026-11-18T11:50:38.009056] INFO [usr=1105@192.168.11.5 host=MacPro ip=192.168.11.5] OPS client auth verified ext=1101
+[2026-11-18T11:50:38.022951] WARN [usr=1105@192.168.11.5 host=MacPro ip=192.168.11.5] 서버 설정 갱신 실패: OPS 응답 없음 (후보 http://192.168.11.5:8091, http://MacPro.local:8091)
+[2026-11-18T11:50:38.032154] INFO [usr=1105@192.168.11.5 host=MacPro ip=192.168.11.5] OPS directory: contacts=7 rooms=3 base=http://192.168.11.5:8091
+[2026-11-18T11:50:38.032241] EVENT AUTH event=verifyResult state=verified ext=1101
+[2026-11-18T11:50:40.025183] WARN [usr=1105@192.168.11.5 host=MacPro ip=192.168.11.5] 서버 설정 갱신 실패: OPS 응답 없음 (후보 http://192.168.11.5:8091, http://MacPro.local:8091)
+[2026-11-18T11:50:40.034688] INFO [usr=1105@192.168.11.5 host=MacPro ip=192.168.11.5] OPS directory: contacts=7 rooms=3 base=http://192.168.11.5:8091
+[2026-11-18T11:50:40.034770] INFO [usr=1105@192.168.11.5 host=MacPro ip=192.168.11.5] AddressBook synced contacts=7 rooms=3
+[2026-11-18T11:50:44.029135] EVENT UI ADDRESSBOOK action=autoRegister params=ext=1101
+[2026-11-18T11:50:44.029241] INFO [usr=1105@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connecting
+[2026-11-18T11:50:44.029299] INFO [usr=1105@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transport disconnected (cause: Code: [0], Cause: disconnect, Reason: close by local)
+[2026-11-18T11:50:44.029327] INFO [usr=1105@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> disconnected
+[2026-11-18T11:50:44.029852] INFO [usr=1105@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connecting
+[2026-11-18T11:50:44.030201] EVENT SIP op=init target=- state=- params=ws=ws://192.168.11.5:8088/ws domain=192.168.11.5 port=5060 transport=ws
+[2026-11-18T11:50:59.030253] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> error
+[2026-11-18T11:50:59.030722] ERROR [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP SIP 전송 연결 시간 초과
+[2026-11-18T11:50:59.030801] EVENT ADDRESSBOOK event=autoRegisterResult state=failed ext=1101 error=SIP 전송 연결 시간 초과
+[2026-11-18T11:50:59.037523] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connecting
+[2026-11-18T11:50:59.037634] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transport disconnected (cause: Code: [0], Cause: disconnect, Reason: close by local)
+[2026-11-18T11:50:59.037664] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> disconnected
+[2026-11-18T11:50:59.038062] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connecting
+[2026-11-18T11:50:59.038316] EVENT SIP op=init target=- state=- params=ws=ws://192.168.11.5:8088/ws domain=192.168.11.5 port=5060 transport=ws
+[2026-11-18T11:51:14.038370] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> error
+[2026-11-18T11:51:14.039234] ERROR [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP SIP 전송 연결 시간 초과
+[2026-11-18T11:51:14.039292] WARN [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP 연결 실패 → 16s 후 재시도 (시도 4)
+[2026-11-18T11:51:14.046932] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connected
+[2026-11-18T11:51:14.054374] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> registered
+[2026-11-18T11:57:01.710623] WARN [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] 서버 설정 갱신 실패: OPS 응답 없음 (후보 http://192.168.11.5:8091, http://MacPro.local:8091)
+[2026-11-18T11:57:01.723472] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] OPS directory: contacts=7 rooms=3 base=http://192.168.11.5:8091
+[2026-11-18T11:57:01.723553] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] AddressBook synced contacts=7 rooms=3
+[2026-11-18T11:57:01.788920] EVENT UI ADDRESSBOOK action=quickConnect params=ext=1106
+[2026-11-18T11:57:01.789017] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connecting
+[2026-11-18T11:57:01.789174] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> unregistered
+[2026-11-18T11:57:01.789214] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transport disconnected (cause: Code: [0], Cause: disconnect, Reason: close by local)
+[2026-11-18T11:57:01.789239] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> disconnected
+[2026-11-18T11:57:01.789785] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connecting
+[2026-11-18T11:57:01.790127] EVENT SIP op=init target=- state=- params=ws=ws://192.168.11.5:8088/ws domain=192.168.11.5 port=5060 transport=ws
+[2026-11-18T11:57:16.790178] INFO [usr=1106@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> error
+[2026-11-18T11:57:16.790306] ERROR [usr=1106@192.168.11.5 host=MacPro ip=192.168.11.5] SIP SIP 전송 연결 시간 초과
+[2026-11-18T11:57:16.790349] WARN [usr=1106@192.168.11.5 host=MacPro ip=192.168.11.5] SIP 연결 실패 → 30s 후 재시도 (시도 5)
+[2026-11-18T11:57:16.790395] EVENT ADDRESSBOOK event=quickConnectResult state=failed ext=1106 error=SIP 전송 연결 시간 초과
+[2026-11-18T11:57:16.797384] INFO [usr=1106@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connected
+[2026-11-18T11:57:16.804023] INFO [usr=1106@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> error
+[2026-11-18T11:57:16.804133] ERROR [usr=1106@192.168.11.5 host=MacPro ip=192.168.11.5] SIP SIP 등록 실패: Code: [401], Cause: Authentication Error, Reason: Unauthorized
+[2026-11-18T11:57:36.057963] INFO [usr=1106@192.168.11.5 host=MacPro ip=192.168.11.5] OPS client auth verified ext=1101
+[2026-11-18T11:57:36.069026] WARN [usr=1106@192.168.11.5 host=MacPro ip=192.168.11.5] 서버 설정 갱신 실패: OPS 응답 없음 (후보 http://192.168.11.5:8091, http://MacPro.local:8091)
+[2026-11-18T11:57:36.080085] INFO [usr=1106@192.168.11.5 host=MacPro ip=192.168.11.5] OPS directory: contacts=7 rooms=3 base=http://192.168.11.5:8091
+[2026-11-18T11:57:36.080181] EVENT AUTH event=verifyResult state=verified ext=1101
+[2026-11-18T11:57:39.044370] WARN [usr=1106@192.168.11.5 host=MacPro ip=192.168.11.5] 서버 설정 갱신 실패: OPS 응답 없음 (후보 http://192.168.11.5:8091, http://MacPro.local:8091)
+[2026-11-18T11:57:39.054260] INFO [usr=1106@192.168.11.5 host=MacPro ip=192.168.11.5] OPS directory: contacts=7 rooms=3 base=http://192.168.11.5:8091
+[2026-11-18T11:57:39.054338] INFO [usr=1106@192.168.11.5 host=MacPro ip=192.168.11.5] AddressBook synced contacts=7 rooms=3
+[2026-11-18T11:57:46.791842] INFO [usr=1106@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connecting
+[2026-11-18T11:57:46.791995] INFO [usr=1106@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transport disconnected (cause: Code: [0], Cause: disconnect, Reason: close by local)
+[2026-11-18T11:57:46.792028] INFO [usr=1106@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> disconnected
+[2026-11-18T11:57:46.792574] INFO [usr=1106@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connecting
+[2026-11-18T11:57:46.792863] EVENT SIP op=init target=- state=- params=ws=ws://192.168.11.5:8088/ws domain=192.168.11.5 port=5060 transport=ws
+[2026-11-18T11:58:01.792920] INFO [usr=1106@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> error
+[2026-11-18T11:58:01.793051] ERROR [usr=1106@192.168.11.5 host=MacPro ip=192.168.11.5] SIP SIP 전송 연결 시간 초과
+[2026-11-18T11:58:01.793097] WARN [usr=1106@192.168.11.5 host=MacPro ip=192.168.11.5] SIP 연결 실패 → 30s 후 재시도 (시도 6)
+[2026-11-18T11:58:01.832340] INFO [usr=1106@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connected
+[2026-11-18T11:58:01.833072] EVENT UI ADDRESSBOOK action=autoRegister params=ext=1101
+[2026-11-18T11:58:01.833135] INFO [usr=1106@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connecting
+[2026-11-18T11:58:01.833246] INFO [usr=1106@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> error
+[2026-11-18T11:58:01.833280] ERROR [usr=1106@192.168.11.5 host=MacPro ip=192.168.11.5] SIP SIP 등록 실패: Code: [500], Cause: SIP Failure Code, Reason: Connection Error
+[2026-11-18T11:58:01.833318] INFO [usr=1106@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transport disconnected (cause: Code: [0], Cause: disconnect, Reason: close by local)
+[2026-11-18T11:58:01.833340] INFO [usr=1106@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> disconnected
+[2026-11-18T11:58:01.833732] INFO [usr=1106@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connecting
+[2026-11-18T11:58:01.833968] EVENT SIP op=init target=- state=- params=ws=ws://192.168.11.5:8088/ws domain=192.168.11.5 port=5060 transport=ws
+[2026-11-18T11:58:16.834015] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> error
+[2026-11-18T11:58:16.834152] ERROR [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP SIP 전송 연결 시간 초과
+[2026-11-18T11:58:16.834207] EVENT ADDRESSBOOK event=autoRegisterResult state=failed ext=1101 error=SIP 전송 연결 시간 초과
+[2026-11-18T11:58:16.853185] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transport disconnected (cause: Code: [500], Cause: error, Reason: HttpException: Connection closed before full header was received, uri = http://192.168.11.5:8088/ws)
+[2026-11-18T11:58:16.853279] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> disconnected
+[2026-11-18T11:58:18.855216] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connecting
+[2026-11-18T11:58:18.855369] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transport disconnected (cause: Code: [0], Cause: error, Reason: Client send disconnect)
+[2026-11-18T11:58:18.855410] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> disconnected
+[2026-11-18T11:58:18.862009] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connected
+[2026-11-18T11:58:18.867781] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> registered
+[2026-11-18T11:58:31.173454] WARN [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] 서버 설정 갱신 실패: OPS 응답 없음 (후보 http://192.168.11.5:8091, http://MacPro.local:8091)
+[2026-11-18T11:58:31.195755] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] OPS directory: contacts=7 rooms=3 base=http://192.168.11.5:8091
+[2026-11-18T11:58:31.195870] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] AddressBook synced contacts=7 rooms=3

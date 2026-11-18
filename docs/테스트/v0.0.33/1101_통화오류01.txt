@@ -1,5 +1,6 @@
 전화 연결 이상 동작. SIP 등록 되어 있으나 통화 연결 안됨. 1:1 통화 시도후 이상해짐. 회의실 입장도 이후 오류 발생.
 
+
 [2026-11-17T16:04:05.618056] INFO [usr=- host=- ip=-] AppLogger 초기화 완료 file=/Users/microdit/Library/Containers/com.microdit.macosClient/Data/Library/Application Support/com.microdit.macosClient/logs/app.log identity=usr=- host=- ip=- mode=release
 [2026-11-17T16:04:05.619899] INFO [usr=- host=- ip=-] 원격 로그 업로더 시작 session=mwkcjraq-n3pfb8 mode=INFO + 이벤트 url=http://192.168.11.5:8091/api/client-logs
 [2026-11-17T16:04:05.856804] WARN [usr=- host=- ip=-] 서버 설정 갱신 실패: OPS 응답 없음 (후보 http://192.168.11.5:8091, http://MacPro.local:8091)
