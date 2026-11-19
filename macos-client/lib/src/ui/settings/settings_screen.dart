@@ -30,6 +30,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   bool _verifying = false;
   bool _saving = false;
   String? _verifyMsg;
+  bool _lastVerifyOffline = false;
   ClientAuthState _auth = ClientAuthState.empty();
 
   @override
@@ -67,11 +68,26 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   Future<void> _saveConnection() async {
     setState(() => _saving = true);
+    final domain = _domain.text.trim();
+    final wsInput = _ws.text.trim();
+    final external = domain.contains('synology.me') || wsInput.contains('synology.me');
+    var wsServer = wsInput;
+    if (external) {
+      if (wsServer.isEmpty) {
+        wsServer = 'wss://$domain:8089/ws';
+      } else {
+        wsServer = wsServer
+            .replaceFirst('ws://', 'wss://')
+            .replaceFirst(':8088/ws', ':8089/ws');
+      }
+      _ws.text = wsServer;
+    }
     final cfg = ServerConfigService.instance.current.copyWith(
-      sipDomain: _domain.text.trim(),
+      sipDomain: domain,
       sipPort: int.tryParse(_port.text.trim()) ?? AppConstants.defaultSipPort,
-      wsServer: _ws.text.trim(),
+      wsServer: wsServer,
       opsBaseUrl: _ops.text.trim(),
+      secure: external || ServerConfigService.instance.current.secure,
       source: 'saved',
     );
     ServerConfigService.instance
@@ -98,6 +114,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     setState(() {
       _verifying = true;
       _verifyMsg = '서버 검증 중...';
+      _lastVerifyOffline = false;
     });
     await ClientAuthStore.instance().applyInput(extension: ext, clientKey: key);
     final base = _ops.text.trim().isNotEmpty
@@ -115,6 +132,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
       AppLogger.instance.evt('AUTH', 'verifyResult',
           state: 'verified', details: {'ext': ext});
     } else {
+      if (result.message == '서버 연결 실패') {
+        _lastVerifyOffline = true;
+      }
       st = await ClientAuthStore.instance().markFailed(reason: result.message);
       if (st.failCount >= ClientAuthState.maxFailCount) {
         _authKey.clear();
@@ -143,6 +163,26 @@ class _SettingsScreenState extends State<SettingsScreen> {
       _verifying = false;
       _auth = st;
     });
+  }
+
+  Future<void> _verifyOffline() async {
+    final ext = _authExt.text.trim();
+    final key = _authKey.text.trim();
+    if (ext.isEmpty || key.isEmpty) {
+      setState(() => _verifyMsg = '인증 내선과 OPS 클라이언트 키를 모두 입력하세요.');
+      return;
+    }
+    await ClientAuthStore.instance().applyInput(extension: ext, clientKey: key);
+    final st = await ClientAuthStore.instance()
+        .markLocalVerified(reason: '외부망: OPS 접근 불가, SIP 자격으로 로컬 인증');
+    if (!mounted) return;
+    setState(() {
+      _auth = st;
+      _lastVerifyOffline = false;
+      _verifyMsg = '오프라인 인증됨($ext): 주소록/설정 동기화는 제한됩니다.';
+    });
+    AppLogger.instance.evt('AUTH', 'verifyResult',
+        state: 'localVerified', details: {'ext': ext});
   }
 
   Future<void> _resetAuth() async {
@@ -230,14 +270,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
     final verified = _auth.isVerified;
-    final statusColor = verified
-        ? Colors.green
-        : (_auth.failCount > 0 ? Colors.orange : Colors.grey);
-    final statusText = verified
-        ? '인증됨 (${_auth.authExtension})'
-        : (_auth.failCount >= ClientAuthState.maxFailCount
+    final statusColor = _auth.isOfflineVerified
+        ? Colors.orange
+        : (verified
+            ? Colors.green
+            : (_auth.failCount > 0 ? Colors.orange : Colors.grey));
+    final statusText = _auth.isOfflineVerified
+        ? '오프라인 인증됨 (${_auth.authExtension})'
+        : (verified
+            ? '인증됨 (${_auth.authExtension})'
+            : (_auth.failCount >= ClientAuthState.maxFailCount
             ? '미인증 · 10회 오류 초기화됨(재인증 필요)'
-            : (_auth.failCount > 0 ? '미인증 (실패 ${_auth.failCount}/10)' : '미인증'));
+            : (_auth.failCount > 0 ? '미인증 (실패 ${_auth.failCount}/10)' : '미인증')));
 
     return Scaffold(
       appBar: AppBar(
@@ -307,6 +351,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       OutlinedButton(
                           onPressed: _resetAuth, child: const Text('인증 초기화')),
                     ]),
+                    if (_lastVerifyOffline && !verified) ...[
+                      const SizedBox(height: 8),
+                      OutlinedButton.icon(
+                        onPressed: _verifyOffline,
+                        icon: const Icon(Icons.cloud_off),
+                        label: const Text('오프라인 인증 (외부망 · 주소록 제한)'),
+                      ),
+                    ],
                     if (_verifyMsg != null) ...[
                       const SizedBox(height: 8),
                       Text(_verifyMsg!,

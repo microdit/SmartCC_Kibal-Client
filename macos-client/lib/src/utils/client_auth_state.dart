@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'app_logger.dart';
 import 'secure_store.dart';
 
-enum ClientAuthStatus { unauthenticated, verifying, verified }
+enum ClientAuthStatus { unauthenticated, verifying, verified, localVerified }
 
 class ClientAuthState {
   ClientAuthState({
@@ -24,7 +24,10 @@ class ClientAuthState {
 
   static const maxFailCount = 10;
 
-  bool get isVerified => status == ClientAuthStatus.verified;
+  bool get isVerified =>
+      status == ClientAuthStatus.verified ||
+      status == ClientAuthStatus.localVerified;
+  bool get isOfflineVerified => status == ClientAuthStatus.localVerified;
   bool get isLockedOut => failCount >= maxFailCount && !isVerified;
 
   ClientAuthState copyWith({
@@ -165,6 +168,19 @@ class ClientAuthStore {
     await _persist();
     AppLogger.instance
         .i('OPS client auth verified ext=${_state.authExtension}');
+    return _state;
+  }
+
+  Future<ClientAuthState> markLocalVerified({String? reason}) async {
+    _state = _state.copyWith(
+      status: ClientAuthStatus.localVerified,
+      failCount: 0,
+      lastVerifiedAt: DateTime.now().toUtc().toIso8601String(),
+      lastError: reason,
+    );
+    await _persist();
+    AppLogger.instance
+        .i('OPS client auth local-verified (offline) ext=${_state.authExtension}');
     return _state;
   }
 

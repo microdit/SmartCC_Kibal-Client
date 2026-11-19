@@ -144,6 +144,15 @@ class _AddressBookScreenState extends State<AddressBookScreen>
       clientKey: auth.clientKey,
       extension: auth.authExtension,
     );
+    if (auth.isOfflineVerified) {
+      if (!mounted) return;
+      setState(() {
+        _directory = const OpsDirectory();
+        _syncError = '오프라인 인증 상태입니다. 주소록 동기화는 비활성화되었습니다(다이얼패드/수신은 가능).';
+        _syncing = false;
+      });
+      return;
+    }
     if (auth.isVerified) {
       final dir = await OpsDirectory.fetch();
       if (!mounted) return;
