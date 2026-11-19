@@ -9,9 +9,10 @@
 ## 환경
 | 구분 | 경로/IP | 비고 |
 |------|---------|------|
-| DEV (SIP 서버) | `192.168.0.3` | 2026-11-12 유선 전환(구 `192.168.11.39`). Docker: `kibal-dev-asterisk`(dev), `kibal-dev-ops`(ops) |
+| DEV (SIP 서버) | `192.168.11.5` | **2026-11-19 토폴로지 정정**: Mac Pro. IPTime1 + L2 스위치 단일 대역 `192.168.11.x` (구 `192.168.0.3`/`192.168.11.39` 폐기). Docker: `kibal-dev-asterisk`(dev), `kibal-dev-ops`(ops) |
 | Client workspace | `/Users/microdit/Downloads/dev/SmartCC_Kibal-Client` | macOS |
-| 외부 접근 | OPS 8091 / SIP WS 8088 / RTP 10000-10200 | IPTime1→IPTime2 이중 포트포워딩 (가이드: `docs/보고서/20261114_외부망접근_실행계획_v1.0.md`) |
+| PRD NAS (`nas2`) | `192.168.11.3` | 2026-11-19 확인 (구 `192.168.11.2`). Git dev/prd remote, Synology DDNS+인증서(`appletreeda.synology.me`) 보유 |
+| 외부 접근 (계획) | SIP **WSS 8089/TCP** / RTP 10000-10200/UDP → `192.168.11.5` | **단일 NAT**: IPTime1에서만 포트포워딩. OPS 8091·UDP 5060 미개방. DDNS 인증서는 Synology에 이미 발급됨. 상세 [[wiki/06_Reports/20261119_외부망검토의견서_v1.0]] (구 이중 NAT 가이드 `docs/보고서/20261114_...`는 폐기) |
 | GitHub | `git@github.com:microdit/SmartCC_Kibal-Client.git` | origin |
 | Python venv | `./venv_client/` | Python 3.11 + chromadb 1.5.9 |
 | Web | `./web/` | React + TypeScript + Vite |
@@ -112,6 +113,16 @@
 - **Git**: `./scripts/git-sync.sh --auto --no-deploy` → `fd86abf1`, `7ae1fb99`, `63855561`. PRD 배포는 여전히 미수행(`--no-deploy`).
 - **잔여**: v0.0.30 회의실 자동입장 실기 검증, NAS 경로(2026-11-09/11 이전) 문서 정합성 후속.
 
+## 현재 진행 (2026-11-19) — 외부망 기술검토
+- 외부망 접근 기술검토 의견서 작성: [[wiki/06_Reports/20261119_외부망검토의견서_v1.0]]
+- **토폴로지 정정**: IPTime2 폐기 → IPTime1 + L2 스위치 단일 대역 `192.168.11.x`. Mac Pro `192.168.11.5`, NAS `nas2` `192.168.11.3`.
+- 결정: 기존 DDNS(`appletreeda.synology.me`) 재사용, OPS 8091/UDP 5060 미개방, **WSS/TLS 우선**, iPad 검토는 별도 문서. **DDNS 도메인용 인증서는 Synology에 이미 발급 존재**.
+- 포트 요청: **TCP 8089(WSS)** + **UDP 10000-10200(RTP)** 를 **IPTime1 한 곳**에서 `192.168.11.5`로 포트포워딩(8088은 내부 전용). 이중 포트포워딩 불필요.
+- 서버 주의: ws/wss 전송은 transport `external_*` 무시 → endpoint `media_address=<공인 IP>` 필요, SDP `c=`에는 DDNS 호스트명 불가.
+- 미확인: 공인 IP 동적 갱신 시 SDP `c=` 반영 방식, IPTime1 접근/테더링 실기 검증 시간, Synology 인증서 내보내기 경로.
+- 의견서 v1.2: DEV/PRD/외부 서버 환경별 대비책(프로필 기반 OPS config, 공인 IP↔SDP 분리, 인증서/포트/RTP 범위 분리, TURN/VPS fallback) 추가. PRD `MEDIA_ADDRESS=CHANGE_ME_PUBLIC_IP` placeholder는 미해소 리스크.
+- 클라이언트: 로그인 WSS hint 반영, `flutter analyze` 0 / `test` 17/17. 작업로그 [[docs/_작업이력/2026-11-19]]
+
 ## 이전 진행 (2026-11-13 02:00, 요약) — F1/F2/G3 구현·v0.0.24
 - F1 `_pendingCallTarget`, F2 A4 롤백, G3 `enable_events=yes` 반영(v0.0.24 build 24, sha256 `c8c6e4a7…`). ADR-008/D1·ADR-009/F2 실기 확인, G3 부분검증. 잔여: P0 크래시, H1/H5/F1/H6 재검증. 상세: [[wiki/06_Reports/20261113_F1F2G3_구현완료보고서_v1.0]], [[docs/보고서/20261113_후속작업계획서_v2.0]], [[wiki/07_Logs/작업로그_20261113]]
 
@@ -136,3 +147,11 @@
 - [[wiki/07_Logs/작업로그_20261114.md]] — 2026-11-14 로그
 - [[wiki/07_Logs/작업로그_20261113.md]] — 2026-11-13 로그
 - [[wiki/06_Reports/20261113_v0.0.24_앱크래시_교차검증보고서_v1.0.md]] — 1102/1103 WebRTC `CheckValidDimensions` fatal 크래시·서버 로그 공백 교차검증
+
+---
+
+## 언어 정책 (영속)
+
+- 특별한 지시가 없으면 **모든 응답·문서·로그·커밋 메시지를 한국어**로 작성한다.
+- 코드 식별자·라이브러리명·명령어·기술 용어는 원문 유지, 설명은 한국어.
+- 사용자가 다른 언어를 명시적으로 요청한 경우에만 해당 언어 사용.
