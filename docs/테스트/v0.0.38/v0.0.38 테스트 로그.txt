@@ -1,0 +1,1091 @@
+
+1102 로그이다. 6700 회의실 입장하고 영상, 음성 모두 이상하게 들린다. 끊어지고 영상 프레임도 비정상이다. 보기 어렵다.
+[2026-11-19T15:16:02.188851] INFO [usr=- host=- ip=-] AppLogger 초기화 완료 file=/Users/microdit/Library/Containers/com.microdit.macosClient/Data/Library/Application Support/com.microdit.macosClient/logs/app.log identity=usr=- host=- ip=- mode=release
+[2026-11-19T15:16:02.189845] INFO [usr=- host=- ip=-] 원격 로그 업로더 시작 session=mwn5pnrh-4xxnhh mode=INFO + 이벤트 url=http://192.168.11.5:8091/api/client-logs
+[2026-11-19T15:16:02.410335] WARN [usr=- host=- ip=-] 서버 설정 갱신 실패: OPS 응답 없음 (후보 http://192.168.11.5:8091, http://MacPro.local:8091)
+[2026-11-19T15:16:02.428620] INFO [usr=- host=- ip=-] OPS directory: contacts=7 rooms=3 base=http://192.168.11.5:8091
+[2026-11-19T15:16:02.428776] INFO [usr=- host=- ip=-] AddressBook synced contacts=7 rooms=3
+[2026-11-19T15:16:02.428892] EVENT UI ADDRESSBOOK action=autoRegister params=ext=1102
+[2026-11-19T15:16:02.428959] INFO [usr=- host=- ip=-] SIP state -> connecting
+[2026-11-19T15:16:02.430968] INFO (동일 로그 2회 반복 스킵 요약)
+[2026-11-19T15:16:02.431060] EVENT SIP op=init target=- state=- params=ws=ws://192.168.11.5:8088/ws domain=192.168.11.5 port=5060 transport=ws
+[2026-11-19T15:16:02.471678] INFO [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] SIP state -> connected
+[2026-11-19T15:16:02.523764] INFO (동일 로그 2회 반복 스킵 요약)
+[2026-11-19T15:16:02.523892] INFO [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] SIP state -> registered
+[2026-11-19T15:16:02.525042] EVENT ADDRESSBOOK event=autoRegisterResult state=registered ext=1102 error=-
+[2026-11-19T15:16:06.196395] EVENT UI CONFERENCE action=autoJoin params=room=6700
+[2026-11-19T15:16:06.196521] EVENT UI CONFERENCE action=joinPressed params=room=6700 registered=true
+[2026-11-19T15:16:06.196577] DEBUG [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] CONFERENCE: 로컬 미디어 없음 → getLocalMedia() 선행
+[2026-11-19T15:16:06.719520] INFO [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] MEDIA device resolve camera=기본 mic=기본 speaker=기본
+[2026-11-19T15:16:06.728531] EVENT MEDIA event=localStreamReady state=video=1 audio=1 frontCamera=true audioMuted=false
+[2026-11-19T15:16:06.728667] INFO [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] SIP call -> 6700 voiceOnly=false hasLocalStream=true
+[2026-11-19T15:16:06.742845] DEBUG [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] SIP remote-track recovery armed id=r194u5yx4q1j91s58f0g289790sv2b
+[2026-11-19T15:16:06.742955] EVENT SIP op=callInitiation target=6700 state=initiated params=direction=outgoing id=r194u5yx4q1j91s58f0g289790sv2b
+[2026-11-19T15:16:06.743039] EVENT SIP op=callProgress target=6700 state=CONNECTING params=id=r194u5yx4q1j91s58f0g289790sv2b
+[2026-11-19T15:16:06.845367] EVENT SIP op=mediaStream target=6700 state=local params=video=1 audio=1 id=r194u5yx4q1j91s58f0g289790sv2b
+[2026-11-19T15:16:07.173980] INFO [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] CONFERENCE participants room=6700 n=3 [김민석 당대표 (1102):V*,AI봇(7001):V,이재명 대통령 (1101):A]
+[2026-11-19T15:16:07.287258] EVENT SIP op=callEstablished target=6700 state=ACCEPTED params=id=r194u5yx4q1j91s58f0g289790sv2b
+[2026-11-19T15:16:07.287705] EVENT SIP op=callEstablished target=6700 state=CONFIRMED params=id=r194u5yx4q1j91s58f0g289790sv2b
+[2026-11-19T15:16:07.391661] EVENT SIP op=mediaStream target=6700 state=remote params=video=1 audio=1 id=r194u5yx4q1j91s58f0g289790sv2b
+[2026-11-19T15:16:07.391830] DEBUG [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] remote session r194u5yx4q1j91s58f0g289790sv2b handled: streams=1 event(video=1 audio=1) session(video=1 audio=1)
+[2026-11-19T15:16:07.391940] EVENT MEDIA event=remoteStreamAdded state=video=1 audio=1 sessionId=r194u5yx4q1j91s58f0g289790sv2b sessionStreams=1 sessionVideo=1 sessionAudio=1
+[2026-11-19T15:16:07.392003] EVENT SIP op=mediaStream target=6700 state=remote params=video=1 audio=1 id=r194u5yx4q1j91s58f0g289790sv2b
+[2026-11-19T15:16:07.392099] DEBUG [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] remote session r194u5yx4q1j91s58f0g289790sv2b handled: streams=1 event(video=1 audio=1) session(video=1 audio=1)
+[2026-11-19T15:16:07.392153] EVENT MEDIA event=remoteStreamAdded state=video=1 audio=1 sessionId=r194u5yx4q1j91s58f0g289790sv2b sessionStreams=1 sessionVideo=1 sessionAudio=1
+[2026-11-19T15:16:08.819445] DEBUG [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] remote video tile 등록(전용) track=1a433359-9743-4b3e-9f12-76c7bb25ee41
+[2026-11-19T15:16:08.950454] EVENT SIP op=mediaStream target=6700 state=remote params=video=4 audio=1 id=r194u5yx4q1j91s58f0g289790sv2b
+[2026-11-19T15:16:08.950749] DEBUG [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] remote session r194u5yx4q1j91s58f0g289790sv2b handled: streams=2 event(video=4 audio=1) session(video=5 audio=2)
+[2026-11-19T15:16:08.950845] EVENT MEDIA event=remoteStreamAdded state=video=4 audio=1 sessionId=r194u5yx4q1j91s58f0g289790sv2b sessionStreams=2 sessionVideo=5 sessionAudio=2
+[2026-11-19T15:16:08.950905] EVENT SIP op=mediaStream target=6700 state=remote params=video=4 audio=1 id=r194u5yx4q1j91s58f0g289790sv2b
+[2026-11-19T15:16:08.951015] DEBUG [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] remote session r194u5yx4q1j91s58f0g289790sv2b handled: streams=2 event(video=4 audio=1) session(video=5 audio=2)
+[2026-11-19T15:16:08.951078] EVENT MEDIA event=remoteStreamAdded state=video=4 audio=1 sessionId=r194u5yx4q1j91s58f0g289790sv2b sessionStreams=2 sessionVideo=5 sessionAudio=2
+[2026-11-19T15:16:08.951130] EVENT SIP op=mediaStream target=6700 state=remote params=video=4 audio=1 id=r194u5yx4q1j91s58f0g289790sv2b
+[2026-11-19T15:16:08.951184] DEBUG [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] remote session r194u5yx4q1j91s58f0g289790sv2b handled: streams=2 event(video=4 audio=1) session(video=5 audio=2)
+[2026-11-19T15:16:08.951244] EVENT MEDIA event=remoteStreamAdded state=video=4 audio=1 sessionId=r194u5yx4q1j91s58f0g289790sv2b sessionStreams=2 sessionVideo=5 sessionAudio=2
+[2026-11-19T15:16:08.953056] DEBUG [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] remote video tile 등록(전용) track=19a0302d-b5fd-448b-bdde-1a525f8a0465
+[2026-11-19T15:16:08.953670] DEBUG [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] remote video tile 등록(전용) track=db0d93ad-41e4-48a5-90d0-9e7816335091
+[2026-11-19T15:16:08.954245] DEBUG [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] remote video tile 등록(전용) track=1217306f-edb8-4b3c-bd34-76e5d2bec331
+[2026-11-19T15:16:09.358332] INFO [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] SIP re-INVITE 수신 hasAudio=true hasVideo=true -> 자동 수락
+[2026-11-19T15:16:09.358684] INFO [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] SIP re-INVITE 응답 전송 accepted=true recvOnlyVideo=false
+[2026-11-19T15:16:09.876022] INFO [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] SIP transceivers 0:audio:SendRecv/SendRecv 1:video:SendRecv/SendRecv 2:video:RecvOnly/RecvOnly 3:video:RecvOnly/RecvOnly 4:video:RecvOnly/RecvOnly
+[2026-11-19T15:16:12.292184] DEBUG [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] SIP stats inbound audioBytes=15869 audioPackets=125 videoBytes=498343
+[2026-11-19T15:16:12.292339] DEBUG [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] remote video tiles active=1 inactive=3
+[2026-11-19T15:16:12.405087] INFO [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] CONFERENCE participants room=6700 n=4 [김민석 당대표 (1102):V*,AI봇(7001):V,이재명 대통령 (1101):A,김민석 당대표 (1102):V*]
+[2026-11-19T15:16:13.906120] INFO [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] VIDEO resync reason=auto:join localKick=true remoteTiles=1
+[2026-11-19T15:16:14.311859] DEBUG [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] remote video tile 등록(전용) track=db0d93ad-41e4-48a5-90d0-9e7816335091
+[2026-11-19T15:16:17.291949] DEBUG [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] SIP stats inbound audioBytes=34311 audioPackets=273 videoBytes=1444747
+[2026-11-19T15:16:18.281248] EVENT UI VIDEO action=fullscreenEnter params=screen=conference label=AI봇(7001)
+[2026-11-19T15:16:22.292605] DEBUG [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] SIP stats inbound audioBytes=49690 audioPackets=399 videoBytes=2251880
+[2026-11-19T15:16:27.291242] DEBUG [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] SIP stats inbound audioBytes=66858 audioPackets=544 videoBytes=3184445
+[2026-11-19T15:16:32.293310] DEBUG [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] SIP stats inbound audioBytes=83347 audioPackets=680 videoBytes=4098179
+[2026-11-19T15:16:37.293977] DEBUG [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] SIP stats inbound audioBytes=100501 audioPackets=821 videoBytes=5002898
+[2026-11-19T15:16:37.294212] INFO [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] SIP media summary 30s audioKB=98 videoKB=4886 videoTracks=1/1 audioLost=624 ice=RTCIceConnectionStateConnected
+[2026-11-19T15:16:37.294282] INFO [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] SIP video summary 30s in=1280x720@-fps decodedFrames+59 keyframes=8 freeze=8 pli=9 nack=0 vLost=150 | out=960x540@30fps target=958kbps limit=bandwidth
+[2026-11-19T15:16:42.294077] DEBUG [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] SIP stats inbound audioBytes=117884 audioPackets=958 videoBytes=5938083
+[2026-11-19T15:16:47.291508] DEBUG [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] SIP stats inbound audioBytes=134767 audioPackets=1093 videoBytes=6768739
+[2026-11-19T15:16:52.292202] DEBUG [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] SIP stats inbound audioBytes=152413 audioPackets=1236 videoBytes=7676066
+[2026-11-19T15:16:57.293484] DEBUG [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] SIP stats inbound audioBytes=169001 audioPackets=1374 videoBytes=8584378
+[2026-11-19T15:17:02.291926] DEBUG [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] SIP stats inbound audioBytes=187556 audioPackets=1518 videoBytes=9479490
+[2026-11-19T15:17:07.290940] DEBUG [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] SIP stats inbound audioBytes=204590 audioPackets=1651 videoBytes=10341660
+[2026-11-19T15:17:07.291157] INFO [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] SIP media summary 30s audioKB=102 videoKB=5214 videoTracks=1/1 audioLost=1273 ice=RTCIceConnectionStateConnected
+[2026-11-19T15:17:07.291230] INFO [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] SIP video summary 30s in=1280x720@-fps decodedFrames+60 keyframes=16 freeze=16 pli=17 nack=0 vLost=337 | out=1280x720@31fps target=2500kbps limit=none
+[2026-11-19T15:17:12.274640] INFO [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] CONFERENCE participants room=6700 n=3 [AI봇(7001):V,이재명 대통령 (1101):A,김민석 당대표 (1102):V*]
+[2026-11-19T15:17:12.293581] DEBUG [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] SIP stats inbound audioBytes=225735 audioPackets=1814 videoBytes=11406641
+[2026-11-19T15:17:12.621895] INFO [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] SIP re-INVITE 수신 hasAudio=true hasVideo=true -> 자동 수락
+[2026-11-19T15:17:12.622157] INFO [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] SIP re-INVITE 응답 전송 accepted=true recvOnlyVideo=false
+[2026-11-19T15:17:13.137187] INFO [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] SIP transceivers 0:audio:SendRecv/SendRecv 1:video:SendRecv/SendRecv 3:video:RecvOnly/RecvOnly 4:video:RecvOnly/RecvOnly
+[2026-11-19T15:17:13.776752] INFO [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] VIDEO resync reason=auto:leave localKick=true remoteTiles=1
+[2026-11-19T15:17:14.182083] DEBUG [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] remote video tile 등록(전용) track=db0d93ad-41e4-48a5-90d0-9e7816335091
+[2026-11-19T15:17:17.292096] DEBUG [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] SIP stats inbound audioBytes=245588 audioPackets=1968 videoBytes=12378005
+[2026-11-19T15:17:22.293212] DEBUG [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] SIP stats inbound audioBytes=267765 audioPackets=2140 videoBytes=13493766
+[2026-11-19T15:17:27.290168] DEBUG [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] SIP stats inbound audioBytes=289181 audioPackets=2306 videoBytes=14538504
+[2026-11-19T15:17:32.291083] DEBUG [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] SIP stats inbound audioBytes=311020 audioPackets=2475 videoBytes=15598565
+[2026-11-19T15:17:37.290788] DEBUG [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] SIP stats inbound audioBytes=331763 audioPackets=2636 videoBytes=16635816
+[2026-11-19T15:17:37.291020] INFO [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] SIP media summary 30s audioKB=124 videoKB=6147 videoTracks=1/1 audioLost=1785 ice=RTCIceConnectionStateConnected
+[2026-11-19T15:17:37.291095] INFO [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] SIP video summary 30s in=1280x720@-fps decodedFrames+73 keyframes=24 freeze=24 pli=26 nack=0 vLost=1855 | out=1280x720@30fps target=2500kbps limit=none
+[2026-11-19T15:17:42.290395] DEBUG [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] SIP stats inbound audioBytes=352375 audioPackets=2810 videoBytes=17695804
+[2026-11-19T15:17:47.292420] DEBUG [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] SIP stats inbound audioBytes=373863 audioPackets=2976 videoBytes=18700450
+[2026-11-19T15:17:52.290438] DEBUG [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] SIP stats inbound audioBytes=394927 audioPackets=3141 videoBytes=19688734
+[2026-11-19T15:17:57.289519] DEBUG [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] SIP stats inbound audioBytes=416004 audioPackets=3305 videoBytes=20748459
+[2026-11-19T15:18:02.290606] DEBUG [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] SIP stats inbound audioBytes=437583 audioPackets=3473 videoBytes=21756511
+[2026-11-19T15:18:07.290137] DEBUG [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] SIP stats inbound audioBytes=458862 audioPackets=3639 videoBytes=22805037
+[2026-11-19T15:18:07.290391] INFO [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] SIP media summary 30s audioKB=124 videoKB=6025 videoTracks=1/1 audioLost=2272 ice=RTCIceConnectionStateConnected
+[2026-11-19T15:18:07.290460] INFO [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] SIP video summary 30s in=1280x720@4fps decodedFrames+71 keyframes=32 freeze=32 pli=34 nack=0 vLost=3164 | out=1280x720@31fps target=2475kbps limit=none
+[2026-11-19T15:18:12.290737] DEBUG [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] SIP stats inbound audioBytes=479769 audioPackets=3802 videoBytes=23776910
+[2026-11-19T15:18:17.317940] DEBUG [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] SIP stats inbound audioBytes=502344 audioPackets=3978 videoBytes=24875574
+[2026-11-19T15:18:22.290955] DEBUG [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] SIP stats inbound audioBytes=523396 audioPackets=4141 videoBytes=25870813
+[2026-11-19T15:18:27.291552] DEBUG [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] SIP stats inbound audioBytes=545660 audioPackets=4315 videoBytes=26945542
+[2026-11-19T15:18:32.290736] DEBUG [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] SIP stats inbound audioBytes=566301 audioPackets=4475 videoBytes=27931128
+[2026-11-19T15:18:37.291259] DEBUG [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] SIP stats inbound audioBytes=588316 audioPackets=4647 videoBytes=29017439
+[2026-11-19T15:18:37.291489] INFO [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] SIP media summary 30s audioKB=126 videoKB=6067 videoTracks=1/1 audioLost=2754 ice=RTCIceConnectionStateConnected
+[2026-11-19T15:18:37.291558] INFO [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] SIP video summary 30s in=1280x720@-fps decodedFrames+75 keyframes=40 freeze=40 pli=42 nack=0 vLost=4543 | out=1280x720@29fps target=2500kbps limit=none
+[2026-11-19T15:18:37.754387] INFO [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] CONFERENCE participants room=6700 n=2 [AI봇(7001):V,김민석 당대표 (1102):V*]
+[2026-11-19T15:18:39.161143] INFO [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] SIP re-INVITE 수신 hasAudio=true hasVideo=true -> 자동 수락
+[2026-11-19T15:18:39.162092] INFO [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] SIP re-INVITE 응답 전송 accepted=true recvOnlyVideo=false
+[2026-11-19T15:18:39.256504] INFO [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] VIDEO resync reason=auto:leave localKick=true remoteTiles=1
+[2026-11-19T15:18:39.258191] EVENT SIP op=mediaStream target=6700 state=remote params=video=5 audio=1 id=r194u5yx4q1j91s58f0g289790sv2b
+[2026-11-19T15:18:39.258509] DEBUG [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] remote session r194u5yx4q1j91s58f0g289790sv2b handled: streams=2 event(video=5 audio=1) session(video=9 audio=2)
+[2026-11-19T15:18:39.258643] EVENT MEDIA event=remoteStreamAdded state=video=5 audio=1 sessionId=r194u5yx4q1j91s58f0g289790sv2b sessionStreams=2 sessionVideo=9 sessionAudio=2
+[2026-11-19T15:18:39.259575] DEBUG [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] remote video tile 등록(전용) track=252bb7a0-dc1f-494b-a2a0-0560a8a7253c
+[2026-11-19T15:18:39.662900] DEBUG [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] remote video tile 등록(전용) track=db0d93ad-41e4-48a5-90d0-9e7816335091
+[2026-11-19T15:18:39.663432] DEBUG [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] remote video tile 등록(전용) track=252bb7a0-dc1f-494b-a2a0-0560a8a7253c
+[2026-11-19T15:18:39.674197] INFO [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] SIP transceivers 0:audio:SendRecv/SendRecv 1:video:SendRecv/SendRecv 3:video:RecvOnly/RecvOnly
+[2026-11-19T15:18:42.290867] DEBUG [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] SIP stats inbound audioBytes=609812 audioPackets=4813 videoBytes=30022435
+[2026-11-19T15:18:42.291394] DEBUG [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] remote video tiles active=1 inactive=4
+[2026-11-19T15:18:47.290640] DEBUG [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] SIP stats inbound audioBytes=631385 audioPackets=4981 videoBytes=31157575
+[2026-11-19T15:18:52.291184] DEBUG [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] SIP stats inbound audioBytes=653345 audioPackets=5153 videoBytes=32138616
+[2026-11-19T15:18:57.289401] DEBUG [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] SIP stats inbound audioBytes=675007 audioPackets=5321 videoBytes=33160691
+[2026-11-19T15:19:02.289556] DEBUG [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] SIP stats inbound audioBytes=696081 audioPackets=5486 videoBytes=34265312
+[2026-11-19T15:19:07.288674] DEBUG [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] SIP stats inbound audioBytes=717221 audioPackets=5651 videoBytes=35290995
+[2026-11-19T15:19:07.288882] INFO [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] SIP media summary 30s audioKB=126 videoKB=6127 videoTracks=1/1 audioLost=3238 ice=RTCIceConnectionStateConnected
+[2026-11-19T15:19:07.288973] INFO [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] SIP video summary 30s in=1280x720@-fps decodedFrames+71 keyframes=48 freeze=48 pli=50 nack=0 vLost=6208 | out=1280x720@30fps target=2497kbps limit=none
+[2026-11-19T15:19:12.291589] DEBUG [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] SIP stats inbound audioBytes=738480 audioPackets=5816 videoBytes=36368901
+[2026-11-19T15:19:17.288651] DEBUG [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] SIP stats inbound audioBytes=759367 audioPackets=5979 videoBytes=37362109
+[2026-11-19T15:19:19.131546] EVENT UI VIDEO action=fullscreenExit params=screen=conference label=AI봇(7001)
+[2026-11-19T15:19:22.289766] DEBUG [usr=1102@192.168.11.5 host=atomui-MacBookPro.local ip=192.168.11.59] SIP stats inbound audioBytes=782643 audioPackets=6160 videoBytes=38237311
+
+
+
+1101 로그이다.
+[2026-11-19T15:20:33.441432] INFO [usr=- host=- ip=-] AppLogger 초기화 완료 file=/Users/microdit/Library/Containers/com.microdit.macosClient/Data/Library/Application Support/com.microdit.macosClient/logs/app.log identity=usr=- host=- ip=- mode=release
+[2026-11-19T15:20:33.504759] INFO [usr=- host=- ip=-] 원격 로그 업로더 시작 session=mwn5vh29-or2d20 mode=INFO + 이벤트 url=http://192.168.11.5:8091/api/client-logs
+[2026-11-19T15:20:33.522664] WARN [usr=- host=- ip=-] 서버 설정 갱신 실패: OPS 응답 없음 (후보 http://192.168.11.5:8091, http://MacPro.local:8091)
+[2026-11-19T15:20:33.535687] INFO [usr=- host=- ip=-] OPS directory: contacts=7 rooms=3 base=http://192.168.11.5:8091
+[2026-11-19T15:20:33.535792] INFO [usr=- host=- ip=-] AddressBook synced contacts=7 rooms=3
+[2026-11-19T15:20:33.535904] EVENT UI ADDRESSBOOK action=autoRegister params=ext=1101
+[2026-11-19T15:20:33.535948] INFO [usr=- host=- ip=-] SIP state -> connecting
+[2026-11-19T15:20:33.538286] INFO (동일 로그 2회 반복 스킵 요약)
+[2026-11-19T15:20:33.538364] EVENT SIP op=init target=- state=- params=ws=ws://192.168.11.5:8088/ws domain=192.168.11.5 port=5060 transport=ws
+[2026-11-19T15:20:33.543257] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connected
+[2026-11-19T15:20:33.582466] INFO (동일 로그 2회 반복 스킵 요약)
+[2026-11-19T15:20:33.582561] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> registered
+[2026-11-19T15:20:33.583180] EVENT ADDRESSBOOK event=autoRegisterResult state=registered ext=1101 error=-
+[2026-11-19T15:23:41.680903] EVENT UI CONFERENCE action=autoJoin params=room=6700
+[2026-11-19T15:23:41.681029] EVENT UI CONFERENCE action=joinPressed params=room=6700 registered=true
+[2026-11-19T15:23:41.681076] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] CONFERENCE: 로컬 미디어 없음 → getLocalMedia() 선행
+[2026-11-19T15:23:42.128581] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] MEDIA device resolve camera=기본 mic=기본 speaker=기본
+[2026-11-19T15:23:43.675733] EVENT MEDIA event=localStreamReady state=video=0 audio=1 frontCamera=true audioMuted=false
+[2026-11-19T15:23:43.675864] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP call -> 6700 voiceOnly=true hasLocalStream=true
+[2026-11-19T15:23:43.699312] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP remote-track recovery armed id=uradp84885070736757700vi541bt1
+[2026-11-19T15:23:43.699390] EVENT SIP op=callInitiation target=6700 state=initiated params=direction=outgoing id=uradp84885070736757700vi541bt1
+[2026-11-19T15:23:43.699466] EVENT SIP op=callProgress target=6700 state=CONNECTING params=id=uradp84885070736757700vi541bt1
+[2026-11-19T15:23:43.746700] WARN [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] 서버 설정 갱신 실패: OPS 응답 없음 (후보 http://192.168.11.5:8091, http://MacPro.local:8091)
+[2026-11-19T15:23:43.757812] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] OPS directory: contacts=7 rooms=3 base=http://192.168.11.5:8091
+[2026-11-19T15:23:43.757914] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] AddressBook synced contacts=7 rooms=3
+[2026-11-19T15:23:43.801490] EVENT SIP op=mediaStream target=6700 state=local params=video=0 audio=1 id=uradp84885070736757700vi541bt1
+[2026-11-19T15:23:44.063175] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] CONFERENCE participants room=6700 n=2 [AI봇(7001):V,김민석 당대표 (1102):V]
+[2026-11-19T15:23:44.255987] EVENT SIP op=callEstablished target=6700 state=ACCEPTED params=id=uradp84885070736757700vi541bt1
+[2026-11-19T15:23:44.256182] EVENT SIP op=callEstablished target=6700 state=CONFIRMED params=id=uradp84885070736757700vi541bt1
+[2026-11-19T15:23:44.357074] EVENT SIP op=mediaStream target=6700 state=remote params=video=1 audio=1 id=uradp84885070736757700vi541bt1
+[2026-11-19T15:23:44.357241] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote session uradp84885070736757700vi541bt1 handled: streams=1 event(video=1 audio=1) session(video=1 audio=1)
+[2026-11-19T15:23:44.357385] EVENT MEDIA event=remoteStreamAdded state=video=1 audio=1 sessionId=uradp84885070736757700vi541bt1 sessionStreams=1 sessionVideo=1 sessionAudio=1
+[2026-11-19T15:23:44.357428] EVENT SIP op=mediaStream target=6700 state=remote params=video=1 audio=1 id=uradp84885070736757700vi541bt1
+[2026-11-19T15:23:44.357467] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote session uradp84885070736757700vi541bt1 handled: streams=1 event(video=1 audio=1) session(video=1 audio=1)
+[2026-11-19T15:23:44.357501] EVENT MEDIA event=remoteStreamAdded state=video=1 audio=1 sessionId=uradp84885070736757700vi541bt1 sessionStreams=1 sessionVideo=1 sessionAudio=1
+[2026-11-19T15:23:46.528712] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=2cb40a5e-d3ad-41c2-8ed5-24fa7db98766
+[2026-11-19T15:23:46.650443] EVENT SIP op=mediaStream target=6700 state=remote params=video=3 audio=1 id=uradp84885070736757700vi541bt1
+[2026-11-19T15:23:46.650623] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote session uradp84885070736757700vi541bt1 handled: streams=2 event(video=3 audio=1) session(video=4 audio=2)
+[2026-11-19T15:23:46.650708] EVENT MEDIA event=remoteStreamAdded state=video=3 audio=1 sessionId=uradp84885070736757700vi541bt1 sessionStreams=2 sessionVideo=4 sessionAudio=2
+[2026-11-19T15:23:46.650759] EVENT SIP op=mediaStream target=6700 state=remote params=video=3 audio=1 id=uradp84885070736757700vi541bt1
+[2026-11-19T15:23:46.650821] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote session uradp84885070736757700vi541bt1 handled: streams=2 event(video=3 audio=1) session(video=4 audio=2)
+[2026-11-19T15:23:46.650869] EVENT MEDIA event=remoteStreamAdded state=video=3 audio=1 sessionId=uradp84885070736757700vi541bt1 sessionStreams=2 sessionVideo=4 sessionAudio=2
+[2026-11-19T15:23:46.652172] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=05e44a56-3547-431b-afba-a4df927890f9
+[2026-11-19T15:23:46.652804] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=01a7ab12-5246-4b56-b3dd-836d3a9aaf2d
+[2026-11-19T15:23:47.062886] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 수신 hasAudio=true hasVideo=true -> 자동 수락
+[2026-11-19T15:23:47.063192] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 응답 전송 accepted=true recvOnlyVideo=true
+[2026-11-19T15:23:47.573476] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transceivers 0:audio:SendRecv/SendRecv 1:video:RecvOnly/RecvOnly 2:video:RecvOnly/RecvOnly 3:video:RecvOnly/RecvOnly
+[2026-11-19T15:23:49.102763] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] CONFERENCE participants room=6700 n=3 [AI봇(7001):V,김민석 당대표 (1102):V,이재명 대통령 (1101):A*]
+[2026-11-19T15:23:49.261961] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=26834 audioPackets=226 videoBytes=699739
+[2026-11-19T15:23:49.262104] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tiles active=2 inactive=1
+[2026-11-19T15:23:50.603569] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] VIDEO resync reason=auto:join localKick=false remoteTiles=2
+[2026-11-19T15:23:50.707927] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=05e44a56-3547-431b-afba-a4df927890f9
+[2026-11-19T15:23:50.708407] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=01a7ab12-5246-4b56-b3dd-836d3a9aaf2d
+[2026-11-19T15:23:54.261280] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=58889 audioPackets=476 videoBytes=2349124
+[2026-11-19T15:23:59.260851] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=91087 audioPackets=726 videoBytes=4191182
+[2026-11-19T15:24:04.260721] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=123132 audioPackets=976 videoBytes=6865332
+[2026-11-19T15:24:09.260910] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=155259 audioPackets=1226 videoBytes=10020195
+[2026-11-19T15:24:14.260508] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=187287 audioPackets=1476 videoBytes=13137872
+[2026-11-19T15:24:14.260729] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP media summary 30s audioKB=183 videoKB=12830 videoTracks=2/2 audioLost=0 ice=RTCIceConnectionStateCompleted
+[2026-11-19T15:24:14.260778] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP video summary 30s in=1280x720@30fps decodedFrames+1565 keyframes=8 freeze=25 pli=11 nack=0 vLost=1 | out=-@-fps target=0kbps limit=-
+[2026-11-19T15:24:19.259739] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=219113 audioPackets=1724 videoBytes=15285907
+[2026-11-19T15:24:24.260132] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=251226 audioPackets=1974 videoBytes=16847087
+[2026-11-19T15:24:29.259805] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=283327 audioPackets=2224 videoBytes=18403472
+[2026-11-19T15:24:34.261780] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=315480 audioPackets=2474 videoBytes=19971320
+[2026-11-19T15:24:34.261949] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tiles active=1 inactive=2
+[2026-11-19T15:24:39.259824] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=347668 audioPackets=2724 videoBytes=21541932
+[2026-11-19T15:24:44.259980] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=379712 audioPackets=2974 videoBytes=23113456
+[2026-11-19T15:24:44.260142] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP media summary 30s audioKB=188 videoKB=9742 videoTracks=1/2 audioLost=0 ice=RTCIceConnectionStateCompleted
+[2026-11-19T15:24:44.260186] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP video summary 30s in=1280x720@30fps decodedFrames+957 keyframes=10 freeze=29 pli=12 nack=0 vLost=1 | out=-@-fps target=0kbps limit=-
+[2026-11-19T15:24:49.260609] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=411783 audioPackets=3224 videoBytes=24671871
+[2026-11-19T15:24:54.259723] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=443818 audioPackets=3474 videoBytes=26233720
+[2026-11-19T15:24:59.260619] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=475886 audioPackets=3724 videoBytes=27799619
+[2026-11-19T15:25:04.259842] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=507935 audioPackets=3974 videoBytes=29364911
+[2026-11-19T15:25:09.259862] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=539979 audioPackets=4224 videoBytes=30932529
+[2026-11-19T15:25:13.383246] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 수신 hasAudio=true hasVideo=true -> 자동 수락
+[2026-11-19T15:25:13.383450] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 응답 전송 accepted=true recvOnlyVideo=true
+[2026-11-19T15:25:13.894582] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transceivers 0:audio:SendRecv/SendRecv 1:video:RecvOnly/RecvOnly 2:video:RecvOnly/RecvOnly
+[2026-11-19T15:25:14.020470] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] CONFERENCE participants room=6700 n=2 [AI봇(7001):V,이재명 대통령 (1101):A*]
+[2026-11-19T15:25:14.259130] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=572018 audioPackets=4474 videoBytes=23523726
+[2026-11-19T15:25:14.259310] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP media summary 30s audioKB=188 videoKB=401 videoTracks=1/1 audioLost=0 ice=RTCIceConnectionStateCompleted
+[2026-11-19T15:25:14.259369] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP video summary 30s in=1280x720@30fps decodedFrames+91 keyframes=9 freeze=0 pli=1 nack=0 vLost=0 | out=-@-fps target=0kbps limit=-
+[2026-11-19T15:25:15.522265] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] VIDEO resync reason=auto:leave localKick=false remoteTiles=1
+[2026-11-19T15:25:15.625631] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=05e44a56-3547-431b-afba-a4df927890f9
+[2026-11-19T15:25:19.259172] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=604041 audioPackets=4724 videoBytes=25088218
+[2026-11-19T15:25:24.259447] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=636102 audioPackets=4974 videoBytes=26655268
+[2026-11-19T15:25:29.258346] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=668179 audioPackets=5224 videoBytes=28222224
+[2026-11-19T15:25:29.258455] WARN [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP media stalled (20s no RTP) → network recovery
+[2026-11-19T15:25:29.258507] WARN [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP mediaStalled 이벤트 수신 → 네트워크 복구 절차 트리거
+[2026-11-19T15:25:29.258610] WARN [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] Media stall recovery: force SIP re-init
+[2026-11-19T15:25:29.258650] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connecting
+[2026-11-19T15:25:29.258902] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> unregistered
+[2026-11-19T15:25:29.258964] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transport disconnected (cause: Code: [0], Cause: disconnect, Reason: close by local)
+[2026-11-19T15:25:29.258991] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> disconnected
+[2026-11-19T15:25:29.259476] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connecting
+[2026-11-19T15:25:29.259735] EVENT SIP op=callTerminated target=6700 state=ENDED params=id=uradp84885070736757700vi541bt1 cause=Code: [200], Cause: Terminated, Reason: Terminated by local
+[2026-11-19T15:25:29.259807] EVENT UI CONFERENCE action=autoCloseOnCallEnd
+[2026-11-19T15:25:29.260094] EVENT SIP op=init target=- state=- params=ws=ws://192.168.11.5:8088/ws domain=192.168.11.5 port=5060 transport=ws
+[2026-11-19T15:25:44.260160] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> error
+[2026-11-19T15:25:44.260296] ERROR [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP SIP 전송 연결 시간 초과
+[2026-11-19T15:25:44.260341] WARN [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP 연결 실패 → 2s 후 재시도 (시도 1)
+[2026-11-19T15:25:44.527929] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transport disconnected (cause: Code: [500], Cause: error, Reason: HttpException: Connection closed before full header was received, uri = http://192.168.11.5:8088/ws)
+[2026-11-19T15:25:44.528024] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> disconnected
+[2026-11-19T15:25:46.261470] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connecting
+[2026-11-19T15:25:46.261615] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transport disconnected (cause: Code: [0], Cause: disconnect, Reason: close by local)
+[2026-11-19T15:25:46.261650] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> disconnected
+[2026-11-19T15:25:46.262169] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connecting
+[2026-11-19T15:25:46.262422] EVENT SIP op=init target=- state=- params=ws=ws://192.168.11.5:8088/ws domain=192.168.11.5 port=5060 transport=ws
+[2026-11-19T15:26:01.262475] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> error
+[2026-11-19T15:26:01.262612] ERROR [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP SIP 전송 연결 시간 초과
+[2026-11-19T15:26:01.262656] WARN [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP 연결 실패 → 4s 후 재시도 (시도 2)
+[2026-11-19T15:26:01.272434] EVENT UI ADDRESSBOOK action=autoRegister params=ext=1101
+[2026-11-19T15:26:01.272512] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connecting
+[2026-11-19T15:26:01.272554] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transport disconnected (cause: Code: [0], Cause: disconnect, Reason: close by local)
+[2026-11-19T15:26:01.272576] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> disconnected
+[2026-11-19T15:26:01.273003] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connecting
+[2026-11-19T15:26:01.302275] EVENT SIP op=init target=- state=- params=ws=ws://192.168.11.5:8088/ws domain=192.168.11.5 port=5060 transport=ws
+[2026-11-19T15:26:16.302360] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> error
+[2026-11-19T15:26:16.302477] ERROR [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP SIP 전송 연결 시간 초과
+[2026-11-19T15:26:16.302530] EVENT ADDRESSBOOK event=autoRegisterResult state=failed ext=1101 error=SIP 전송 연결 시간 초과
+[2026-11-19T15:26:16.303689] EVENT UI ADDRESSBOOK action=autoRegister params=ext=1101
+[2026-11-19T15:26:16.303758] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connecting
+[2026-11-19T15:26:16.303799] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transport disconnected (cause: Code: [0], Cause: disconnect, Reason: close by local)
+[2026-11-19T15:26:16.303822] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> disconnected
+[2026-11-19T15:26:16.304241] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connecting
+[2026-11-19T15:26:16.304466] EVENT SIP op=init target=- state=- params=ws=ws://192.168.11.5:8088/ws domain=192.168.11.5 port=5060 transport=ws
+[2026-11-19T15:26:31.304514] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> error
+[2026-11-19T15:26:31.304649] ERROR [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP SIP 전송 연결 시간 초과
+[2026-11-19T15:26:31.304705] EVENT ADDRESSBOOK event=autoRegisterResult state=failed ext=1101 error=SIP 전송 연결 시간 초과
+[2026-11-19T15:26:31.325402] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connecting
+[2026-11-19T15:26:31.325514] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transport disconnected (cause: Code: [0], Cause: disconnect, Reason: close by local)
+[2026-11-19T15:26:31.325546] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> disconnected
+[2026-11-19T15:26:31.325946] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connecting
+[2026-11-19T15:26:31.326159] EVENT SIP op=init target=- state=- params=ws=ws://192.168.11.5:8088/ws domain=192.168.11.5 port=5060 transport=ws
+[2026-11-19T15:26:46.326210] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> error
+[2026-11-19T15:26:46.326344] ERROR [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP SIP 전송 연결 시간 초과
+[2026-11-19T15:26:46.326388] WARN [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP 연결 실패 → 8s 후 재시도 (시도 3)
+[2026-11-19T15:26:46.329759] EVENT UI ADDRESSBOOK action=autoRegister params=ext=1101
+[2026-11-19T15:26:46.329834] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connecting
+[2026-11-19T15:26:46.329876] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transport disconnected (cause: Code: [0], Cause: disconnect, Reason: close by local)
+[2026-11-19T15:26:46.329900] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> disconnected
+[2026-11-19T15:26:46.330320] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connecting
+[2026-11-19T15:26:46.330550] EVENT SIP op=init target=- state=- params=ws=ws://192.168.11.5:8088/ws domain=192.168.11.5 port=5060 transport=ws
+[2026-11-19T15:27:01.330599] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> error
+[2026-11-19T15:27:01.330752] ERROR [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP SIP 전송 연결 시간 초과
+[2026-11-19T15:27:01.330804] EVENT ADDRESSBOOK event=autoRegisterResult state=failed ext=1101 error=SIP 전송 연결 시간 초과
+[2026-11-19T15:27:01.344671] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connecting
+[2026-11-19T15:27:01.344817] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transport disconnected (cause: Code: [0], Cause: disconnect, Reason: close by local)
+[2026-11-19T15:27:01.344874] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> disconnected
+[2026-11-19T15:27:01.345317] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connecting
+[2026-11-19T15:27:01.345539] EVENT SIP op=init target=- state=- params=ws=ws://192.168.11.5:8088/ws domain=192.168.11.5 port=5060 transport=ws
+[2026-11-19T15:27:16.345581] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> error
+[2026-11-19T15:27:16.345869] ERROR [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP SIP 전송 연결 시간 초과
+[2026-11-19T15:27:16.345974] WARN [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP 연결 실패 → 16s 후 재시도 (시도 4)
+[2026-11-19T15:27:16.380401] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transport disconnected (cause: Code: [500], Cause: error, Reason: HttpException: Connection closed before full header was received, uri = http://192.168.11.5:8088/ws)
+[2026-11-19T15:27:16.380486] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> disconnected
+[2026-11-19T15:27:16.381017] EVENT UI ADDRESSBOOK action=autoRegister params=ext=1101
+[2026-11-19T15:27:16.381094] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connecting
+[2026-11-19T15:27:16.381147] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transport disconnected (cause: Code: [0], Cause: disconnect, Reason: close by local)
+[2026-11-19T15:27:16.381171] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> disconnected
+[2026-11-19T15:27:16.381568] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connecting
+[2026-11-19T15:27:16.381806] EVENT SIP op=init target=- state=- params=ws=ws://192.168.11.5:8088/ws domain=192.168.11.5 port=5060 transport=ws
+[2026-11-19T15:27:31.381851] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> error
+[2026-11-19T15:27:31.381988] ERROR [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP SIP 전송 연결 시간 초과
+[2026-11-19T15:27:31.382055] EVENT ADDRESSBOOK event=autoRegisterResult state=failed ext=1101 error=SIP 전송 연결 시간 초과
+[2026-11-19T15:27:31.382464] EVENT UI ADDRESSBOOK action=autoRegister params=ext=1101
+[2026-11-19T15:27:31.382549] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connecting
+[2026-11-19T15:27:31.382614] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transport disconnected (cause: Code: [0], Cause: disconnect, Reason: close by local)
+[2026-11-19T15:27:31.382651] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> disconnected
+[2026-11-19T15:27:31.383263] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connecting
+[2026-11-19T15:27:31.383565] EVENT SIP op=init target=- state=- params=ws=ws://192.168.11.5:8088/ws domain=192.168.11.5 port=5060 transport=ws
+[2026-11-19T15:27:46.383621] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> error
+[2026-11-19T15:27:46.383757] ERROR [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP SIP 전송 연결 시간 초과
+[2026-11-19T15:27:46.383812] EVENT ADDRESSBOOK event=autoRegisterResult state=failed ext=1101 error=SIP 전송 연결 시간 초과
+[2026-11-19T15:27:46.397538] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connecting
+[2026-11-19T15:27:46.397662] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transport disconnected (cause: Code: [0], Cause: disconnect, Reason: close by local)
+[2026-11-19T15:27:46.397731] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> disconnected
+[2026-11-19T15:27:46.398304] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connecting
+[2026-11-19T15:27:46.398525] EVENT SIP op=init target=- state=- params=ws=ws://192.168.11.5:8088/ws domain=192.168.11.5 port=5060 transport=ws
+[2026-11-19T15:28:01.398567] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> error
+[2026-11-19T15:28:01.398697] ERROR [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP SIP 전송 연결 시간 초과
+[2026-11-19T15:28:01.398740] WARN [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP 연결 실패 → 30s 후 재시도 (시도 5)
+[2026-11-19T15:28:01.413968] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connected
+[2026-11-19T15:28:01.435354] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> registered
+[2026-11-19T15:28:01.450708] WARN [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] 서버 설정 갱신 실패: OPS 응답 없음 (후보 http://192.168.11.5:8091, http://MacPro.local:8091)
+[2026-11-19T15:28:01.462788] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] OPS directory: contacts=7 rooms=3 base=http://192.168.11.5:8091
+[2026-11-19T15:28:01.462878] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] AddressBook synced contacts=7 rooms=3
+[2026-11-19T15:31:19.464206] WARN [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] 서버 설정 갱신 실패: OPS 응답 없음 (후보 http://192.168.11.5:8091, http://MacPro.local:8091)
+[2026-11-19T15:31:19.474586] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] OPS directory: contacts=7 rooms=3 base=http://192.168.11.5:8091
+[2026-11-19T15:31:19.474701] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] AddressBook synced contacts=7 rooms=3
+
+
+
+
+1102 앱이 자주 죽는다.
+-------------------------------------
+Translated Report (Full Report Below)
+-------------------------------------
+Process:             macos_client [9527]
+Path:                /Volumes/*/macos_client.app/Contents/MacOS/macos_client
+Identifier:          com.microdit.macosClient
+Version:             0.0.38 (38)
+Code Type:           X86-64 (Native)
+Role:                Foreground
+Parent Process:      launchd [1]
+Coalition:           com.microdit.macosClient [2014]
+User ID:             502
+
+Date/Time:           2026-11-19 15:24:41.0507 +0900
+Launch Time:         2026-11-19 15:24:25.7514 +0900
+Hardware Model:      MacBookPro16,1
+OS Version:          macOS 26.7.1 (25G241)
+Release Type:        User
+Bridge OS Version:     11.0 (24P6005)
+
+Crash Reporter Key:  97C34C50-9F43-17EC-1A1D-5BD70F4B86B1
+Incident Identifier: 64F451A7-9948-466A-AB9B-21F2C2D88DDC
+
+Sleep/Wake UUID:       17973D38-1A74-4EF0-A298-0B83BD8C75F0
+
+Time Awake Since Boot: 9100 seconds
+Time Since Wake:       1578 seconds
+
+System Integrity Protection: enabled
+
+Triggered by Thread: 12, Dispatch Queue: com.apple.root.user-initiated-qos
+
+Exception Type:    EXC_BAD_ACCESS (SIGSEGV)
+Exception Subtype: UNKNOWN_0xD at 0x0000000000000000
+Exception Codes:   0x000000000000000d, 0x0000000000000000
+
+Termination Reason:  Namespace SIGNAL, Code 11, Segmentation fault: 11
+Terminating Process: exc handler [9527]
+
+
+VM Region Info: 0 is not in any region.  Bytes before following region: 4452585472
+      REGION TYPE                    START - END         [ VSIZE] PRT/MAX SHRMOD  REGION DETAIL
+      UNUSED SPACE AT START
+--->  
+      __TEXT                      109651000-10969a000    [  292K] r-x/r-x SM=COW  /Volumes/*/macos_client.app/Contents/MacOS/macos_client
+
+Thread 0::  Dispatch queue: com.apple.main-thread
+0   libobjc.A.dylib               	    0x7ff80e33dabd class_replaceMethod + 0
+1   AVFCapture                    	    0x7ff910d502f3 avc_transferMethod + 520
+2   AVFCapture                    	    0x7ff910cdf6ca AVCaptureConfigureClassForTundraPersonality + 301
+3   AVFCapture                    	    0x7ff910c90027 +[AVCaptureDevice initialize] + 278
+4   libobjc.A.dylib               	    0x7ff80e32ff6f CALLING_SOME_+initialize_METHOD + 17
+5   libobjc.A.dylib               	    0x7ff80e32fc5f initializeNonMetaClass + 552
+6   libobjc.A.dylib               	    0x7ff80e3450ee initializeAndMaybeRelock(objc_class*, objc_object*, locker_mixin<lockdebug::lock_mixin<objc_lock_base_t>>&, bool) + 247
+7   libobjc.A.dylib               	    0x7ff80e32f4ef lookUpImpOrForward + 227
+8   libobjc.A.dylib               	    0x7ff80e32ec1b _objc_msgSend_uncached + 75
+9   libobjc.A.dylib               	    0x7ff80e333c73 resolveMethod_locked(objc_object*, objc_selector*, objc_class*, int) + 311
+10  libobjc.A.dylib               	    0x7ff80e334a6a class_getInstanceMethod + 47
+11  AVFCapture                    	    0x7ff910d502c7 avc_transferMethod + 476
+12  AVFCapture                    	    0x7ff910cdfd0b avc_resolveInstanceMethod + 165
+13  libobjc.A.dylib               	    0x7ff80e333c73 resolveMethod_locked(objc_object*, objc_selector*, objc_class*, int) + 311
+14  libobjc.A.dylib               	    0x7ff80e333b28 class_respondsToSelector_inst + 160
+15  libsystem_trace.dylib         	    0x7ff80e4b01b5 _os_log_fmt_flatten_object_impl + 171
+16  libsystem_trace.dylib         	    0x7ff80e4a6151 _os_log_impl_flatten_and_send + 2932
+17  libsystem_trace.dylib         	    0x7ff80e4bad4e _os_log_send_and_compose_impl + 236
+18  AVFCapture                    	    0x7ff910c048c8 +[AVCaptureDALDevice _defaultDeviceWithDeviceType:mediaTypes:position:cameraOverrideHistoryAllowed:cameraOverrideHistorySuspendedAllowed:wombatsMustBeMagic:userPreferredCameraHistorySuspendedAllowed:invalidSpecialDeviceTypes:] + 4209
+19  AVFCapture                    	    0x7ff910c1606c +[AVCaptureDALDevice _refreshPreferredCameraProperties:] + 425
+20  libdispatch.dylib             	    0x7ff80e5db616 _dispatch_call_block_and_release + 12
+21  libdispatch.dylib             	    0x7ff80e5f18b2 _dispatch_client_callout + 6
+22  libdispatch.dylib             	    0x7ff80e60c679 _dispatch_main_queue_drain.cold.6 + 842
+23  libdispatch.dylib             	    0x7ff80e5e7dc4 _dispatch_main_queue_drain + 107
+24  libdispatch.dylib             	    0x7ff80e5e7d4b _dispatch_main_queue_callback_4CF + 31
+25  CoreFoundation                	    0x7ff80e88adf3 __CFRUNLOOP_IS_SERVICING_THE_MAIN_DISPATCH_QUEUE__ + 9
+26  CoreFoundation                	    0x7ff80e84f55c __CFRunLoopRun + 2382
+27  CoreFoundation                	    0x7ff80e917367 _CFRunLoopRunSpecificWithOptions + 496
+28  HIToolbox                     	    0x7ff81b59db8b RunCurrentEventLoopInMode + 283
+29  HIToolbox                     	    0x7ff81b5a0c4d ReceiveNextEventCommon + 599
+30  HIToolbox                     	    0x7ff81b7290ca _BlockUntilNextEventMatchingListInMode + 37
+31  AppKit                        	    0x7ff812ddaf94 _DPSBlockUntilNextEventMatchingListInMode + 172
+32  AppKit                        	    0x7ff8126d09c5 _DPSNextEvent + 800
+33  AppKit                        	    0x7ff81337ee7b -[NSApplication(NSEventRouting) _nextEventMatchingEventMask:untilDate:inMode:dequeue:] + 1265
+34  AppKit                        	    0x7ff81337e951 -[NSApplication(NSEventRouting) nextEventMatchingMask:untilDate:inMode:dequeue:] + 67
+35  AppKit                        	    0x7ff8126c185c -[NSApplication run] + 472
+36  AppKit                        	    0x7ff8126974cd NSApplicationMain + 800
+37  macos_client                  	       0x10965818c specialized static NSApplicationDelegate.main() + 24 [inlined]
+38  macos_client                  	       0x10965818c static AppDelegate.$main() + 24 (/<compiler-generated>:4) [inlined]
+39  macos_client                  	       0x10965818c main + 28
+40  dyld                          	    0x7ff80e3af1c8 start + 3240
+
+Thread 1:
+
+Thread 2:
+
+Thread 3:: com.apple.NSEventThread
+0   libsystem_kernel.dylib        	    0x7ff80e750b4e mach_msg2_trap + 10
+1   libsystem_kernel.dylib        	    0x7ff80e75ef57 mach_msg2_internal + 83
+2   libsystem_kernel.dylib        	    0x7ff80e757b66 mach_msg_overwrite + 586
+3   libsystem_kernel.dylib        	    0x7ff80e750e56 mach_msg + 19
+4   CoreFoundation                	    0x7ff80e8506bf __CFRunLoopServiceMachPort + 145
+5   CoreFoundation                	    0x7ff80e84f158 __CFRunLoopRun + 1354
+6   CoreFoundation                	    0x7ff80e917367 _CFRunLoopRunSpecificWithOptions + 496
+7   AppKit                        	    0x7ff8128226a0 _NSEventThread + 158
+8   libsystem_pthread.dylib       	    0x7ff80e794d49 _pthread_start + 115
+9   libsystem_pthread.dylib       	    0x7ff80e79082f thread_start + 15
+
+Thread 4:: io.flutter.raster
+0   libsystem_kernel.dylib        	    0x7ff80e750b4e mach_msg2_trap + 10
+1   libsystem_kernel.dylib        	    0x7ff80e75ef57 mach_msg2_internal + 83
+2   libsystem_kernel.dylib        	    0x7ff80e757b66 mach_msg_overwrite + 586
+3   libsystem_kernel.dylib        	    0x7ff80e750e56 mach_msg + 19
+4   CoreFoundation                	    0x7ff80e8506bf __CFRunLoopServiceMachPort + 145
+5   CoreFoundation                	    0x7ff80e84f158 __CFRunLoopRun + 1354
+6   CoreFoundation                	    0x7ff80e917367 _CFRunLoopRunSpecificWithOptions + 496
+7   FlutterMacOS                  	       0x10977dc9b fml::MessageLoopDarwin::Run() + 107 (message_loop_darwin.mm:51)
+8   FlutterMacOS                  	       0x1097742e0 fml::MessageLoopImpl::DoRun() + 48 (message_loop_impl.cc:94)
+9   FlutterMacOS                  	       0x10977c679 fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0::operator()() const + 125 (thread.cc:154) [inlined]
+10  FlutterMacOS                  	       0x10977c679 decltype(std::declval<fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0&>()()) std::__fl::__invoke[abi:nn210000]<fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0&>(fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0&) + 125 (invoke.h:179) [inlined]
+11  FlutterMacOS                  	       0x10977c679 void std::__fl::__invoke_void_return_wrapper<void, true>::__call[abi:nn210000]<fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0&>(fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0&) + 125 (invoke.h:251) [inlined]
+12  FlutterMacOS                  	       0x10977c679 void std::__fl::__invoke_r[abi:nn210000]<void, fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0&>(fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0&) + 125 (invoke.h:273) [inlined]
+13  FlutterMacOS                  	       0x10977c679 std::__fl::__function::__alloc_func<fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0, std::__fl::allocator<fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0>, void ()>::operator()[abi:nn210000]() + 125 (function.h:167) [inlined]
+14  FlutterMacOS                  	       0x10977c679 std::__fl::__function::__func<fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0, std::__fl::allocator<fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0>, void ()>::operator()() + 153 (function.h:319)
+15  FlutterMacOS                  	       0x10977c1c6 std::__fl::__function::__value_func<void ()>::operator()[abi:nn210000]() const + 29 (function.h:436) [inlined]
+16  FlutterMacOS                  	       0x10977c1c6 std::__fl::function<void ()>::operator()() const + 29 (function.h:995) [inlined]
+17  FlutterMacOS                  	       0x10977c1c6 fml::ThreadHandle::ThreadHandle(std::__fl::function<void ()>&&)::$_0::operator()(void*) const + 29 (thread.cc:76) [inlined]
+18  FlutterMacOS                  	       0x10977c1c6 fml::ThreadHandle::ThreadHandle(std::__fl::function<void ()>&&)::$_0::__invoke(void*) + 38 (thread.cc:73)
+19  libsystem_pthread.dylib       	    0x7ff80e794d49 _pthread_start + 115
+20  libsystem_pthread.dylib       	    0x7ff80e79082f thread_start + 15
+
+Thread 5:: io.flutter.io
+0   libsystem_kernel.dylib        	    0x7ff80e750b4e mach_msg2_trap + 10
+1   libsystem_kernel.dylib        	    0x7ff80e75ef57 mach_msg2_internal + 83
+2   libsystem_kernel.dylib        	    0x7ff80e757b66 mach_msg_overwrite + 586
+3   libsystem_kernel.dylib        	    0x7ff80e750e56 mach_msg + 19
+4   CoreFoundation                	    0x7ff80e8506bf __CFRunLoopServiceMachPort + 145
+5   CoreFoundation                	    0x7ff80e84f158 __CFRunLoopRun + 1354
+6   CoreFoundation                	    0x7ff80e917367 _CFRunLoopRunSpecificWithOptions + 496
+7   FlutterMacOS                  	       0x10977dc9b fml::MessageLoopDarwin::Run() + 107 (message_loop_darwin.mm:51)
+8   FlutterMacOS                  	       0x1097742e0 fml::MessageLoopImpl::DoRun() + 48 (message_loop_impl.cc:94)
+9   FlutterMacOS                  	       0x10977c679 fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0::operator()() const + 125 (thread.cc:154) [inlined]
+10  FlutterMacOS                  	       0x10977c679 decltype(std::declval<fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0&>()()) std::__fl::__invoke[abi:nn210000]<fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0&>(fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0&) + 125 (invoke.h:179) [inlined]
+11  FlutterMacOS                  	       0x10977c679 void std::__fl::__invoke_void_return_wrapper<void, true>::__call[abi:nn210000]<fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0&>(fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0&) + 125 (invoke.h:251) [inlined]
+12  FlutterMacOS                  	       0x10977c679 void std::__fl::__invoke_r[abi:nn210000]<void, fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0&>(fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0&) + 125 (invoke.h:273) [inlined]
+13  FlutterMacOS                  	       0x10977c679 std::__fl::__function::__alloc_func<fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0, std::__fl::allocator<fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0>, void ()>::operator()[abi:nn210000]() + 125 (function.h:167) [inlined]
+14  FlutterMacOS                  	       0x10977c679 std::__fl::__function::__func<fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0, std::__fl::allocator<fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0>, void ()>::operator()() + 153 (function.h:319)
+15  FlutterMacOS                  	       0x10977c1c6 std::__fl::__function::__value_func<void ()>::operator()[abi:nn210000]() const + 29 (function.h:436) [inlined]
+16  FlutterMacOS                  	       0x10977c1c6 std::__fl::function<void ()>::operator()() const + 29 (function.h:995) [inlined]
+17  FlutterMacOS                  	       0x10977c1c6 fml::ThreadHandle::ThreadHandle(std::__fl::function<void ()>&&)::$_0::operator()(void*) const + 29 (thread.cc:76) [inlined]
+18  FlutterMacOS                  	       0x10977c1c6 fml::ThreadHandle::ThreadHandle(std::__fl::function<void ()>&&)::$_0::__invoke(void*) + 38 (thread.cc:73)
+19  libsystem_pthread.dylib       	    0x7ff80e794d49 _pthread_start + 115
+20  libsystem_pthread.dylib       	    0x7ff80e79082f thread_start + 15
+
+Thread 6:: io.worker.1
+0   libsystem_kernel.dylib        	    0x7ff80e753712 __psynch_cvwait + 10
+1   libsystem_pthread.dylib       	    0x7ff80e7951f7 _pthread_cond_wait + 994
+2   FlutterMacOS                  	       0x10972b544 std::__fl::__libcpp_condvar_wait[abi:nn210000](_opaque_pthread_cond_t*, _opaque_pthread_mutex_t*) + 5 (pthread.h:122) [inlined]
+3   FlutterMacOS                  	       0x10972b544 std::__fl::condition_variable::wait(std::__fl::unique_lock<std::__fl::mutex>&) + 36 (condition_variable.cpp:30)
+4   FlutterMacOS                  	       0x10976f4c0 void std::__fl::condition_variable::wait<fml::ConcurrentMessageLoop::WorkerMain()::$_0>(std::__fl::unique_lock<std::__fl::mutex>&, fml::ConcurrentMessageLoop::WorkerMain()::$_0) + 26 (condition_variable.h:147) [inlined]
+5   FlutterMacOS                  	       0x10976f4c0 fml::ConcurrentMessageLoop::WorkerMain() + 112 (concurrent_message_loop.cc:75)
+6   FlutterMacOS                  	       0x10976fd8c fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0::operator()() const + 161 (concurrent_message_loop.cc:20) [inlined]
+7   FlutterMacOS                  	       0x10976fd8c decltype(std::declval<fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0>()()) std::__fl::__invoke[abi:nn210000]<fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0>(fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0&&) + 161 (invoke.h:179) [inlined]
+8   FlutterMacOS                  	       0x10976fd8c void std::__fl::__thread_execute[abi:nn210000]<std::__fl::unique_ptr<std::__fl::__thread_struct, std::__fl::default_delete<std::__fl::__thread_struct>>, fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0>(std::__fl::tuple<std::__fl::unique_ptr<std::__fl::__thread_struct, std::__fl::default_delete<std::__fl::__thread_struct>>, fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0>&, std::__fl::__tuple_indices<...>) + 161 (thread.h:200) [inlined]
+9   FlutterMacOS                  	       0x10976fd8c void* std::__fl::__thread_proxy[abi:nn210000]<std::__fl::tuple<std::__fl::unique_ptr<std::__fl::__thread_struct, std::__fl::default_delete<std::__fl::__thread_struct>>, fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0>>(void*) + 220 (thread.h:209)
+10  libsystem_pthread.dylib       	    0x7ff80e794d49 _pthread_start + 115
+11  libsystem_pthread.dylib       	    0x7ff80e79082f thread_start + 15
+
+Thread 7:: io.worker.2
+0   libsystem_kernel.dylib        	    0x7ff80e753712 __psynch_cvwait + 10
+1   libsystem_pthread.dylib       	    0x7ff80e7951f7 _pthread_cond_wait + 994
+2   FlutterMacOS                  	       0x10972b544 std::__fl::__libcpp_condvar_wait[abi:nn210000](_opaque_pthread_cond_t*, _opaque_pthread_mutex_t*) + 5 (pthread.h:122) [inlined]
+3   FlutterMacOS                  	       0x10972b544 std::__fl::condition_variable::wait(std::__fl::unique_lock<std::__fl::mutex>&) + 36 (condition_variable.cpp:30)
+4   FlutterMacOS                  	       0x10976f4c0 void std::__fl::condition_variable::wait<fml::ConcurrentMessageLoop::WorkerMain()::$_0>(std::__fl::unique_lock<std::__fl::mutex>&, fml::ConcurrentMessageLoop::WorkerMain()::$_0) + 26 (condition_variable.h:147) [inlined]
+5   FlutterMacOS                  	       0x10976f4c0 fml::ConcurrentMessageLoop::WorkerMain() + 112 (concurrent_message_loop.cc:75)
+6   FlutterMacOS                  	       0x10976fd8c fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0::operator()() const + 161 (concurrent_message_loop.cc:20) [inlined]
+7   FlutterMacOS                  	       0x10976fd8c decltype(std::declval<fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0>()()) std::__fl::__invoke[abi:nn210000]<fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0>(fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0&&) + 161 (invoke.h:179) [inlined]
+8   FlutterMacOS                  	       0x10976fd8c void std::__fl::__thread_execute[abi:nn210000]<std::__fl::unique_ptr<std::__fl::__thread_struct, std::__fl::default_delete<std::__fl::__thread_struct>>, fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0>(std::__fl::tuple<std::__fl::unique_ptr<std::__fl::__thread_struct, std::__fl::default_delete<std::__fl::__thread_struct>>, fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0>&, std::__fl::__tuple_indices<...>) + 161 (thread.h:200) [inlined]
+9   FlutterMacOS                  	       0x10976fd8c void* std::__fl::__thread_proxy[abi:nn210000]<std::__fl::tuple<std::__fl::unique_ptr<std::__fl::__thread_struct, std::__fl::default_delete<std::__fl::__thread_struct>>, fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0>>(void*) + 220 (thread.h:209)
+10  libsystem_pthread.dylib       	    0x7ff80e794d49 _pthread_start + 115
+11  libsystem_pthread.dylib       	    0x7ff80e79082f thread_start + 15
+
+Thread 8:: io.worker.3
+0   libsystem_kernel.dylib        	    0x7ff80e753712 __psynch_cvwait + 10
+1   libsystem_pthread.dylib       	    0x7ff80e7951f7 _pthread_cond_wait + 994
+2   FlutterMacOS                  	       0x10972b544 std::__fl::__libcpp_condvar_wait[abi:nn210000](_opaque_pthread_cond_t*, _opaque_pthread_mutex_t*) + 5 (pthread.h:122) [inlined]
+3   FlutterMacOS                  	       0x10972b544 std::__fl::condition_variable::wait(std::__fl::unique_lock<std::__fl::mutex>&) + 36 (condition_variable.cpp:30)
+4   FlutterMacOS                  	       0x10976f4c0 void std::__fl::condition_variable::wait<fml::ConcurrentMessageLoop::WorkerMain()::$_0>(std::__fl::unique_lock<std::__fl::mutex>&, fml::ConcurrentMessageLoop::WorkerMain()::$_0) + 26 (condition_variable.h:147) [inlined]
+5   FlutterMacOS                  	       0x10976f4c0 fml::ConcurrentMessageLoop::WorkerMain() + 112 (concurrent_message_loop.cc:75)
+6   FlutterMacOS                  	       0x10976fd8c fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0::operator()() const + 161 (concurrent_message_loop.cc:20) [inlined]
+7   FlutterMacOS                  	       0x10976fd8c decltype(std::declval<fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0>()()) std::__fl::__invoke[abi:nn210000]<fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0>(fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0&&) + 161 (invoke.h:179) [inlined]
+8   FlutterMacOS                  	       0x10976fd8c void std::__fl::__thread_execute[abi:nn210000]<std::__fl::unique_ptr<std::__fl::__thread_struct, std::__fl::default_delete<std::__fl::__thread_struct>>, fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0>(std::__fl::tuple<std::__fl::unique_ptr<std::__fl::__thread_struct, std::__fl::default_delete<std::__fl::__thread_struct>>, fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0>&, std::__fl::__tuple_indices<...>) + 161 (thread.h:200) [inlined]
+9   FlutterMacOS                  	       0x10976fd8c void* std::__fl::__thread_proxy[abi:nn210000]<std::__fl::tuple<std::__fl::unique_ptr<std::__fl::__thread_struct, std::__fl::default_delete<std::__fl::__thread_struct>>, fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0>>(void*) + 220 (thread.h:209)
+10  libsystem_pthread.dylib       	    0x7ff80e794d49 _pthread_start + 115
+11  libsystem_pthread.dylib       	    0x7ff80e79082f thread_start + 15
+
+Thread 9:: io.worker.4
+0   libsystem_kernel.dylib        	    0x7ff80e753712 __psynch_cvwait + 10
+1   libsystem_pthread.dylib       	    0x7ff80e7951f7 _pthread_cond_wait + 994
+2   FlutterMacOS                  	       0x10972b544 std::__fl::__libcpp_condvar_wait[abi:nn210000](_opaque_pthread_cond_t*, _opaque_pthread_mutex_t*) + 5 (pthread.h:122) [inlined]
+3   FlutterMacOS                  	       0x10972b544 std::__fl::condition_variable::wait(std::__fl::unique_lock<std::__fl::mutex>&) + 36 (condition_variable.cpp:30)
+4   FlutterMacOS                  	       0x10976f4c0 void std::__fl::condition_variable::wait<fml::ConcurrentMessageLoop::WorkerMain()::$_0>(std::__fl::unique_lock<std::__fl::mutex>&, fml::ConcurrentMessageLoop::WorkerMain()::$_0) + 26 (condition_variable.h:147) [inlined]
+5   FlutterMacOS                  	       0x10976f4c0 fml::ConcurrentMessageLoop::WorkerMain() + 112 (concurrent_message_loop.cc:75)
+6   FlutterMacOS                  	       0x10976fd8c fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0::operator()() const + 161 (concurrent_message_loop.cc:20) [inlined]
+7   FlutterMacOS                  	       0x10976fd8c decltype(std::declval<fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0>()()) std::__fl::__invoke[abi:nn210000]<fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0>(fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0&&) + 161 (invoke.h:179) [inlined]
+8   FlutterMacOS                  	       0x10976fd8c void std::__fl::__thread_execute[abi:nn210000]<std::__fl::unique_ptr<std::__fl::__thread_struct, std::__fl::default_delete<std::__fl::__thread_struct>>, fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0>(std::__fl::tuple<std::__fl::unique_ptr<std::__fl::__thread_struct, std::__fl::default_delete<std::__fl::__thread_struct>>, fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0>&, std::__fl::__tuple_indices<...>) + 161 (thread.h:200) [inlined]
+9   FlutterMacOS                  	       0x10976fd8c void* std::__fl::__thread_proxy[abi:nn210000]<std::__fl::tuple<std::__fl::unique_ptr<std::__fl::__thread_struct, std::__fl::default_delete<std::__fl::__thread_struct>>, fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0>>(void*) + 220 (thread.h:209)
+10  libsystem_pthread.dylib       	    0x7ff80e794d49 _pthread_start + 115
+11  libsystem_pthread.dylib       	    0x7ff80e79082f thread_start + 15
+
+Thread 10:: dart:io EventHandler
+0   libsystem_kernel.dylib        	    0x7ff80e7557ce kevent + 10
+1   FlutterMacOS                  	       0x10a0cb968 dart::bin::EventHandlerImplementation::EventHandlerEntry(unsigned long) + 312 (eventhandler_macos.cc:459)
+2   FlutterMacOS                  	       0x10a0f0738 dart::bin::ThreadStart(void*) + 88 (thread_macos.cc:65)
+3   libsystem_pthread.dylib       	    0x7ff80e794d49 _pthread_start + 115
+4   libsystem_pthread.dylib       	    0x7ff80e79082f thread_start + 15
+
+Thread 11:
+
+Thread 12 Crashed::  Dispatch queue: com.apple.root.user-initiated-qos
+0   libunwind.dylib               	    0x7ff81e7644b0 _Unwind_RaiseException + 240
+1   libc++abi.dylib               	    0x7ff80e739db4 __cxa_throw + 61
+2   libobjc.A.dylib               	    0x7ff80e33c131 objc_exception_throw + 317
+3   CoreFoundation                	    0x7ff80e96f81d -[NSObject(NSObject) doesNotRecognizeSelector:] + 342
+4   CoreFoundation                	    0x7ff80e830a5d ___forwarding___ + 1308
+5   CoreFoundation                	    0x7ff80e8304b8 _CF_forwarding_prep_0 + 120
+6   macos_client                  	       0x109668b69 __50-[FlutterWebRTCPlugin(RTCMediaStream) getSources:]_block_invoke + 348 (FlutterRTCMediaStream.m:696)
+7   libdispatch.dylib             	    0x7ff80e5db616 _dispatch_call_block_and_release + 12
+8   libdispatch.dylib             	    0x7ff80e5f18b2 _dispatch_client_callout + 6
+9   libdispatch.dylib             	    0x7ff80e60cc4b _dispatch_root_queue_drain.cold.4 + 749
+10  libdispatch.dylib             	    0x7ff80e5ea83e _dispatch_root_queue_drain + 84
+11  libdispatch.dylib             	    0x7ff80e5eace2 _dispatch_worker_thread2 + 179
+12  libsystem_pthread.dylib       	    0x7ff80e7917de _pthread_wqthread + 233
+13  libsystem_pthread.dylib       	    0x7ff80e79081b start_wqthread + 15
+
+Thread 13:
+
+Thread 14:: HIE: M_ 94519c65529baf58 2026-11-19 15:24:28.888
+0   libsystem_kernel.dylib        	    0x7ff80e750b4e mach_msg2_trap + 10
+1   libsystem_kernel.dylib        	    0x7ff80e75ef57 mach_msg2_internal + 83
+2   libsystem_kernel.dylib        	    0x7ff80e77820f thread_suspend + 83
+3   HIServices                    	    0x7ff815b42971 SOME_OTHER_THREAD_SWALLOWED_AT_LEAST_ONE_EXCEPTION + 16
+4   Foundation                    	    0x7ff80fab8bc3 __NSThread__start__ + 1014
+5   libsystem_pthread.dylib       	    0x7ff80e794d49 _pthread_start + 115
+6   libsystem_pthread.dylib       	    0x7ff80e79082f thread_start + 15
+
+Thread 15:: DartWorker
+0   libsystem_kernel.dylib        	    0x7ff80e753712 __psynch_cvwait + 10
+1   libsystem_pthread.dylib       	    0x7ff80e795229 _pthread_cond_wait + 1044
+2   FlutterMacOS                  	       0x10a162f9e dart::TimedWait(_opaque_pthread_cond_t*, _opaque_pthread_mutex_t*, long long) + 95 (synchronization_posix.cc:118) [inlined]
+3   FlutterMacOS                  	       0x10a162f9e dart::ConditionVariable::WaitMicros(dart::Mutex*, long long) + 126 (synchronization_posix.cc:147)
+4   FlutterMacOS                  	       0x10a2439e9 dart::ThreadPool::Worker::Sleep(long long) + 22 (thread_pool.h:101) [inlined]
+5   FlutterMacOS                  	       0x10a2439e9 dart::ThreadPool::WorkerLoop(dart::ThreadPool::Worker*) + 585 (thread_pool.cc:231)
+6   FlutterMacOS                  	       0x10a243b5e dart::ThreadPool::Worker::Main(unsigned long) + 126 (thread_pool.cc:367)
+7   FlutterMacOS                  	       0x10a21bd01 dart::ThreadStart(void*) + 209 (os_thread_macos.cc:94)
+8   libsystem_pthread.dylib       	    0x7ff80e794d49 _pthread_start + 115
+9   libsystem_pthread.dylib       	    0x7ff80e79082f thread_start + 15
+
+Thread 16:: DartWorker
+0   libsystem_kernel.dylib        	    0x7ff80e753712 __psynch_cvwait + 10
+1   libsystem_pthread.dylib       	    0x7ff80e795229 _pthread_cond_wait + 1044
+2   FlutterMacOS                  	       0x10a162f9e dart::TimedWait(_opaque_pthread_cond_t*, _opaque_pthread_mutex_t*, long long) + 95 (synchronization_posix.cc:118) [inlined]
+3   FlutterMacOS                  	       0x10a162f9e dart::ConditionVariable::WaitMicros(dart::Mutex*, long long) + 126 (synchronization_posix.cc:147)
+4   FlutterMacOS                  	       0x10a2439e9 dart::ThreadPool::Worker::Sleep(long long) + 22 (thread_pool.h:101) [inlined]
+5   FlutterMacOS                  	       0x10a2439e9 dart::ThreadPool::WorkerLoop(dart::ThreadPool::Worker*) + 585 (thread_pool.cc:231)
+6   FlutterMacOS                  	       0x10a243b5e dart::ThreadPool::Worker::Main(unsigned long) + 126 (thread_pool.cc:367)
+7   FlutterMacOS                  	       0x10a21bd01 dart::ThreadStart(void*) + 209 (os_thread_macos.cc:94)
+8   libsystem_pthread.dylib       	    0x7ff80e794d49 _pthread_start + 115
+9   libsystem_pthread.dylib       	    0x7ff80e79082f thread_start + 15
+
+Thread 17:: network_thread 0x0x600003e23ed0
+0   libsystem_kernel.dylib        	    0x7ff80e75788a poll + 10
+1   WebRTC                        	       0x10b7ffab4 webrtc::PhysicalSocketServer::WaitPoll(webrtc::TimeDelta, bool) + 852 (physical_socket_server.cc:1863)
+2   WebRTC                        	       0x10b7ff745 webrtc::PhysicalSocketServer::Wait(webrtc::TimeDelta, bool) + 21 (physical_socket_server.cc:1433)
+3   WebRTC                        	       0x10b802e2a webrtc::Thread::Get(int) + 378 (thread.cc:466)
+4   WebRTC                        	       0x10b80204b webrtc::Thread::ProcessMessages(int) + 155 (thread.cc:872)
+5   WebRTC                        	       0x10b803935 webrtc::Thread::PreRun(void*) + 85 (thread.cc:725)
+6   libsystem_pthread.dylib       	    0x7ff80e794d49 _pthread_start + 115
+7   libsystem_pthread.dylib       	    0x7ff80e79082f thread_start + 15
+
+Thread 18:: worker_thread 0x0x600003e04000
+0   libsystem_kernel.dylib        	    0x7ff80e753712 __psynch_cvwait + 10
+1   libsystem_pthread.dylib       	    0x7ff80e7951f7 _pthread_cond_wait + 994
+2   WebRTC                        	       0x10b6a034b webrtc::Event::Wait(webrtc::TimeDelta, webrtc::TimeDelta)::$_0::operator()(std::__Cr::optional<timespec>) const + 100 (event.cc:170) [inlined]
+3   WebRTC                        	       0x10b6a034b webrtc::Event::Wait(webrtc::TimeDelta, webrtc::TimeDelta) + 571 (event.cc:186)
+4   WebRTC                        	       0x10b806b87 webrtc::NullSocketServer::Wait(webrtc::TimeDelta, bool) + 23 (null_socket_server.cc:28)
+5   WebRTC                        	       0x10b802e2a webrtc::Thread::Get(int) + 378 (thread.cc:466)
+6   WebRTC                        	       0x10b80204b webrtc::Thread::ProcessMessages(int) + 155 (thread.cc:872)
+7   WebRTC                        	       0x10b803935 webrtc::Thread::PreRun(void*) + 85 (thread.cc:725)
+8   libsystem_pthread.dylib       	    0x7ff80e794d49 _pthread_start + 115
+9   libsystem_pthread.dylib       	    0x7ff80e79082f thread_start + 15
+
+Thread 19:: signaling_thread 0x0x600003e040f0
+0   libsystem_kernel.dylib        	    0x7ff80e753712 __psynch_cvwait + 10
+1   libsystem_pthread.dylib       	    0x7ff80e7951f7 _pthread_cond_wait + 994
+2   WebRTC                        	       0x10b6a034b webrtc::Event::Wait(webrtc::TimeDelta, webrtc::TimeDelta)::$_0::operator()(std::__Cr::optional<timespec>) const + 100 (event.cc:170) [inlined]
+3   WebRTC                        	       0x10b6a034b webrtc::Event::Wait(webrtc::TimeDelta, webrtc::TimeDelta) + 571 (event.cc:186)
+4   WebRTC                        	       0x10b806b87 webrtc::NullSocketServer::Wait(webrtc::TimeDelta, bool) + 23 (null_socket_server.cc:28)
+5   WebRTC                        	       0x10b802e2a webrtc::Thread::Get(int) + 378 (thread.cc:466)
+6   WebRTC                        	       0x10b80204b webrtc::Thread::ProcessMessages(int) + 155 (thread.cc:872)
+7   WebRTC                        	       0x10b803935 webrtc::Thread::PreRun(void*) + 85 (thread.cc:725)
+8   libsystem_pthread.dylib       	    0x7ff80e794d49 _pthread_start + 115
+9   libsystem_pthread.dylib       	    0x7ff80e79082f thread_start + 15
+
+Thread 20:: com.apple.coremedia.sharedRootQueue.47
+0   libsystem_kernel.dylib        	    0x7ff80e750ae2 semaphore_timedwait_trap + 10
+1   libdispatch.dylib             	    0x7ff80e60a187 _dispatch_sema4_timedwait + 52
+2   libdispatch.dylib             	    0x7ff80e5dce7f _dispatch_semaphore_wait_slow + 58
+3   libdispatch.dylib             	    0x7ff80e5ea76e _dispatch_worker_thread + 322
+4   libsystem_pthread.dylib       	    0x7ff80e794d49 _pthread_start + 115
+5   libsystem_pthread.dylib       	    0x7ff80e79082f thread_start + 15
+
+Thread 21:: com.apple.coremedia.sharedRootQueue.47
+0   libsystem_kernel.dylib        	    0x7ff80e750ae2 semaphore_timedwait_trap + 10
+1   libdispatch.dylib             	    0x7ff80e60a187 _dispatch_sema4_timedwait + 52
+2   libdispatch.dylib             	    0x7ff80e5dce7f _dispatch_semaphore_wait_slow + 58
+3   libdispatch.dylib             	    0x7ff80e5ea76e _dispatch_worker_thread + 322
+4   libsystem_pthread.dylib       	    0x7ff80e794d49 _pthread_start + 115
+5   libsystem_pthread.dylib       	    0x7ff80e79082f thread_start + 15
+
+Thread 22:: caulk.messenger.shared:17
+0   libsystem_kernel.dylib        	    0x7ff80e750aca semaphore_wait_trap + 10
+1   caulk                         	    0x7ff81b05cb50 caulk::semaphore::timed_wait(double) + 158
+2   caulk                         	    0x7ff81b05ca72 caulk::concurrent::details::worker_thread::run() + 30
+3   caulk                         	    0x7ff81b05c7a6 void* caulk::thread_proxy<std::__1::tuple<caulk::thread::attributes, void (caulk::concurrent::details::worker_thread::*)(), std::__1::tuple<caulk::concurrent::details::worker_thread*>>>(void*) + 41
+4   libsystem_pthread.dylib       	    0x7ff80e794d49 _pthread_start + 115
+5   libsystem_pthread.dylib       	    0x7ff80e79082f thread_start + 15
+
+Thread 23:: caulk.messenger.shared:high
+0   libsystem_kernel.dylib        	    0x7ff80e750aca semaphore_wait_trap + 10
+1   caulk                         	    0x7ff81b05cb50 caulk::semaphore::timed_wait(double) + 158
+2   caulk                         	    0x7ff81b05ca72 caulk::concurrent::details::worker_thread::run() + 30
+3   caulk                         	    0x7ff81b05c7a6 void* caulk::thread_proxy<std::__1::tuple<caulk::thread::attributes, void (caulk::concurrent::details::worker_thread::*)(), std::__1::tuple<caulk::concurrent::details::worker_thread*>>>(void*) + 41
+4   libsystem_pthread.dylib       	    0x7ff80e794d49 _pthread_start + 115
+5   libsystem_pthread.dylib       	    0x7ff80e79082f thread_start + 15
+
+Thread 24:: CVDisplayLink
+0   libsystem_kernel.dylib        	    0x7ff80e753712 __psynch_cvwait + 10
+1   libsystem_pthread.dylib       	    0x7ff80e795229 _pthread_cond_wait + 1044
+2   CoreVideo                     	    0x7ff81922d911 CVDisplayLink::waitUntil(unsigned long long) + 375
+3   CoreVideo                     	    0x7ff81922c854 CVDisplayLink::runIOThread() + 524
+4   libsystem_pthread.dylib       	    0x7ff80e794d49 _pthread_start + 115
+5   libsystem_pthread.dylib       	    0x7ff80e79082f thread_start + 15
+
+
+Thread 12 crashed with X86 Thread State (64-bit):
+  rax: 0x0020019008070c10  rbx: 0x000060000306da00  rcx: 0x000060000306da00  rdx: 0x434c4e47432b2b00
+  rdi: 0x0000000000000001  rsi: 0x0000000000000001  rbp: 0x0000700003c0d800  rsp: 0x0000700003c0cc00
+   r8: 0x0000700003c0d138   r9: 0x00000000ffffff80  r10: 0x00007ff80e6190d4  r11: 0x0000000000000f20
+  r12: 0x0000700003c0d798  r13: 0x0000000000000068  r14: 0x0000700003c0d138  r15: 0x0000000000000003
+  rip: 0x00007ff81e7644b0  rfl: 0x0000000000010202  cr2: 0x0000000000000000
+  
+Logical CPU:     0
+Error Code:      0x00000000 
+Trap Number:     13
+
+
+Binary Images:
+       0x109651000 -        0x109699fff com.microdit.macosClient (0.0.38) <ff521671-b9c8-36ba-ad2b-aecc990507fe> /Volumes/*/macos_client.app/Contents/MacOS/macos_client
+       0x10b3b3000 -        0x10c2c1fff org.webrtc.WebRTC (1.0) <4c4c4436-5555-3144-a19d-52769b5075d3> /Volumes/*/macos_client.app/Contents/Frameworks/WebRTC.framework/Versions/A/WebRTC
+       0x1096e3000 -        0x10a4dafff io.flutter.flutter-macos (1.0) <4c4c44ff-5555-3144-a1b9-33a86a4e85a1> /Volumes/*/macos_client.app/Contents/Frameworks/FlutterMacOS.framework/Versions/A/FlutterMacOS
+       0x10b393000 -        0x10b39ffff libobjc-trampolines.dylib (*) <959c3359-13f6-3847-bb1b-98a95dcd919e> /usr/lib/libobjc-trampolines.dylib
+       0x1119aa000 -        0x1121cbfff io.flutter.flutter.app (1.0) <156085f3-5755-078c-18b6-253d9a629d15> /Volumes/*/macos_client.app/Contents/Frameworks/App.framework/Versions/A/App
+       0x11e980000 -        0x11e9c2fff com.apple.cmio.DAL.VDC-4 (810.0) <8620303e-a940-3f31-97db-16681b0d7f4d> /System/Library/Frameworks/CoreMediaIO.framework/Versions/A/Resources/VDC.plugin/Contents/MacOS/VDC
+    0x7ff80e328000 -     0x7ff80e36c38b libobjc.A.dylib (*) <16fc36e8-c44e-3524-8dd6-5e3851d49f89> /usr/lib/libobjc.A.dylib
+    0x7ff910b99000 -     0x7ff910de7908 com.apple.AVFCapture (1.0) <a5add6c3-6615-3edf-ac2b-79fe0c32c06d> /System/Library/PrivateFrameworks/AVFCapture.framework/Versions/A/AVFCapture
+    0x7ff80e4a1000 -     0x7ff80e4c0749 libsystem_trace.dylib (*) <018b83c2-8629-37cf-8e44-9c1de12089bf> /usr/lib/system/libsystem_trace.dylib
+    0x7ff80e5da000 -     0x7ff80e621d91 libdispatch.dylib (*) <92776fbe-9cc6-313d-b6a1-8ffe434062ef> /usr/lib/system/libdispatch.dylib
+    0x7ff80e7d4000 -     0x7ff80ec91a04 com.apple.CoreFoundation (6.9) <9890f92f-ea67-3c8e-9375-325472896553> /System/Library/Frameworks/CoreFoundation.framework/Versions/A/CoreFoundation
+    0x7ff81b4f8000 -     0x7ff81b7d4bce com.apple.HIToolbox (2.1.1) <b0118796-1c3b-33d2-8599-a13431bef869> /System/Library/Frameworks/Carbon.framework/Versions/A/Frameworks/HIToolbox.framework/Versions/A/HIToolbox
+    0x7ff812693000 -     0x7ff813e8fb16 com.apple.AppKit (6.9) <4c9f386f-9722-37fa-8848-f14e6c8e02eb> /System/Library/Frameworks/AppKit.framework/Versions/C/AppKit
+    0x7ff80e39c000 -     0x7ff80e44884f dyld (*) <46682b15-483c-396c-8e40-b7bba8580f73> /usr/lib/dyld
+               0x0 - 0xffffffffffffffff ??? (*) <00000000-0000-0000-0000-000000000000> ???
+    0x7ff80e750000 -     0x7ff80e78e5cf libsystem_kernel.dylib (*) <5818a89c-725f-3dfd-978e-c1fc018315d3> /usr/lib/system/libsystem_kernel.dylib
+    0x7ff80e78f000 -     0x7ff80e79aebf libsystem_pthread.dylib (*) <169a2e57-79fb-3083-b61d-48bae3a00692> /usr/lib/system/libsystem_pthread.dylib
+    0x7ff81e762000 -     0x7ff81e76a567 libunwind.dylib (*) <d83e4958-8191-3c5d-b0c9-772606caf087> /usr/lib/system/libunwind.dylib
+    0x7ff80e738000 -     0x7ff80e74f5f7 libc++abi.dylib (*) <53d7fc1a-cf38-3f40-9c54-b63291e1675c> /usr/lib/libc++abi.dylib
+    0x7ff815b0f000 -     0x7ff815b7487b com.apple.HIServices (1.22) <e65ad31b-4453-3cb2-8f48-abe9f7798486> /System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/HIServices.framework/Versions/A/HIServices
+    0x7ff80fa64000 -     0x7ff810aa2f62 com.apple.Foundation (6.9) <7e3d8a67-ef75-3180-8644-691be9fe3a9f> /System/Library/Frameworks/Foundation.framework/Versions/C/Foundation
+    0x7ff81b05b000 -     0x7ff81b07f91f com.apple.audio.caulk (1.0) <1f1c8ecf-00e6-331d-8910-2b8bca62877d> /System/Library/PrivateFrameworks/caulk.framework/Versions/A/caulk
+    0x7ff81922a000 -     0x7ff81929d567 com.apple.CoreVideo (1.8) <bd6aad57-7f48-35f7-a759-22e5423266a7> /System/Library/Frameworks/CoreVideo.framework/Versions/A/CoreVideo
+
+External Modification Summary:
+  Calls made by other processes targeting this process:
+    task_for_pid: 0
+    thread_create: 0
+    thread_set_state: 0
+  Calls made by this process:
+    task_for_pid: 0
+    thread_create: 0
+    thread_set_state: 0
+  Calls made by all processes on this machine:
+    task_for_pid: 0
+    thread_create: 0
+    thread_set_state: 0
+
+VM Region Summary:
+ReadOnly portion of Libraries: Total=1.5G resident=0K(0%) swapped_out_or_unallocated=1.5G(100%)
+Writable regions: Total=772.1M written=0K(0%) resident=0K(0%) swapped_out=0K(0%) unallocated=772.1M(100%)
+
+                                VIRTUAL   REGION 
+REGION TYPE                        SIZE    COUNT (non-coalesced) 
+===========                     =======  ======= 
+Accelerate framework               128K        1 
+Activity Tracing                   256K        1 
+AttributeGraph Data               1024K        1 
+CG image                           520K        2 
+ColorSync                            4K        1 
+CoreAnimation                     4096K       56 
+CoreGraphics                        20K        3 
+CoreImage                          512K        1 
+CoreUI image data                  484K        4 
+Foundation                          44K        2 
+IOKit                             15.5M        2 
+Kernel Alloc Once                  688K        2 
+MALLOC                           727.9M      114 
+MALLOC guard page                   64K       16 
+STACK GUARD                       56.1M       25 
+Stack                             24.7M       27 
+VM_ALLOCATE                       13.1M       44 
+__CTF                               824        1 
+__DATA                            47.8M     1019 
+__DATA_CONST                     125.6M     1063 
+__DATA_DIRTY                      8859K      898 
+__FONT_DATA                        2352        1 
+__LINKEDIT                       155.4M        7 
+__OBJC_RO                         65.2M        1 
+__OBJC_RW                         2598K        1 
+__TEXT                             1.3G     1083 
+__TPRO_CONST                         16        2 
+mapped file                      327.9M       45 
+shared memory                      800K       18 
+===========                     =======  ======= 
+TOTAL                              2.9G     4441 
+
+
+-----------
+Full Report
+-----------
+
+{"app_name":"macos_client","timestamp":"2026-11-19 15:24:45.00 +0900","app_version":"0.0.38","slice_uuid":"ff521671-b9c8-36ba-ad2b-aecc990507fe","build_version":"38","platform":1,"bundleID":"com.microdit.macosClient","share_with_app_devs":0,"is_first_party":0,"bug_type":"309","os_version":"macOS 26.7.1 (25G241)","roots_installed":0,"name":"macos_client","incident_id":"64F451A7-9948-466A-AB9B-21F2C2D88DDC"}
+{
+  "uptime" : 9100,
+  "procRole" : "Foreground",
+  "version" : 2,
+  "userID" : 502,
+  "deployVersion" : 210,
+  "modelCode" : "MacBookPro16,1",
+  "coalitionID" : 2014,
+  "osVersion" : {
+    "train" : "macOS 26.7.1",
+    "build" : "25G241",
+    "releaseType" : "User"
+  },
+  "captureTime" : "2026-11-19 15:24:41.0507 +0900",
+  "codeSigningMonitor" : 0,
+  "incident" : "64F451A7-9948-466A-AB9B-21F2C2D88DDC",
+  "pid" : 9527,
+  "cpuType" : "X86-64",
+  "procLaunch" : "2026-11-19 15:24:25.7514 +0900",
+  "procStartAbsTime" : 9124747780596,
+  "procExitAbsTime" : 9140045543066,
+  "procName" : "macos_client",
+  "procPath" : "\/Volumes\/*\/macos_client.app\/Contents\/MacOS\/macos_client",
+  "bundleInfo" : {"CFBundleShortVersionString":"0.0.38","CFBundleVersion":"38","CFBundleIdentifier":"com.microdit.macosClient"},
+  "storeInfo" : {"deviceIdentifierForVendor":"4CCF464E-43D4-5ACF-A85B-8519B48E0B15","thirdParty":true},
+  "parentProc" : "launchd",
+  "parentPid" : 1,
+  "coalitionName" : "com.microdit.macosClient",
+  "crashReporterKey" : "97C34C50-9F43-17EC-1A1D-5BD70F4B86B1",
+  "lowPowerMode" : 1,
+  "appleIntelligenceStatus" : {"state":"unavailable","reasons":["deviceNotCapable"]},
+  "developerMode" : 1,
+  "codeSigningID" : "com.microdit.macosClient",
+  "codeSigningTeamID" : "",
+  "codeSigningFlags" : 570425861,
+  "codeSigningValidationCategory" : 10,
+  "codeSigningTrustLevel" : 4294967295,
+  "codeSigningAuxiliaryInfo" : 0,
+  "bootSessionUUID" : "6FDE082B-E1C0-44B0-8E66-F13EEC6DA8B6",
+  "wakeTime" : 1578,
+  "bridgeVersion" : {"build":"24P6005","train":"11.0"},
+  "sleepWakeUUID" : "17973D38-1A74-4EF0-A298-0B83BD8C75F0",
+  "sip" : "enabled",
+  "vmRegionInfo" : "0 is not in any region.  Bytes before following region: 4452585472\n      REGION TYPE                    START - END         [ VSIZE] PRT\/MAX SHRMOD  REGION DETAIL\n      UNUSED SPACE AT START\n--->  \n      __TEXT                      109651000-10969a000    [  292K] r-x\/r-x SM=COW  \/Volumes\/*\/macos_client.app\/Contents\/MacOS\/macos_client",
+  "exception" : {"codes":"0x000000000000000d, 0x0000000000000000","rawCodes":[13,0],"type":"EXC_BAD_ACCESS","signal":"SIGSEGV","subtype":"UNKNOWN_0xD at 0x0000000000000000"},
+  "termination" : {"flags":0,"code":11,"namespace":"SIGNAL","indicator":"Segmentation fault: 11","byProc":"exc handler","byPid":9527},
+  "vmregioninfo" : "0 is not in any region.  Bytes before following region: 4452585472\n      REGION TYPE                    START - END         [ VSIZE] PRT\/MAX SHRMOD  REGION DETAIL\n      UNUSED SPACE AT START\n--->  \n      __TEXT                      109651000-10969a000    [  292K] r-x\/r-x SM=COW  \/Volumes\/*\/macos_client.app\/Contents\/MacOS\/macos_client",
+  "extMods" : {"caller":{"thread_create":0,"thread_set_state":0,"task_for_pid":0},"system":{"thread_create":0,"thread_set_state":0,"task_for_pid":0},"targeted":{"thread_create":0,"thread_set_state":0,"task_for_pid":0},"warnings":0},
+  "faultingThread" : 12,
+  "threads" : [{"id":275100,"threadState":{"r13":{"value":105553131077728},"rax":{"value":140707705838753,"symbolLocation":0,"symbol":"+[AVCaptureDevice_Tundra setUpCenterStageStateOnce]"},"rflags":{"value":514},"cpu":{"value":0},"r14":{"value":140708745263616,"symbolLocation":0,"symbol":"OBJC_METACLASS_$_AVCaptureDevice"},"rsi":{"value":140703914124405,"objc-selector":"setUpCenterStageStateOnce"},"r8":{"value":2},"cr2":{"value":0},"rdx":{"value":140707705838753,"symbolLocation":0,"symbol":"+[AVCaptureDevice_Tundra setUpCenterStageStateOnce]"},"r10":{"value":140708745263536,"symbolLocation":0,"symbol":"OBJC_METACLASS_$_AVCaptureDevice_Tundra"},"r9":{"value":140707706007148,"symbolLocation":1580,"symbol":"_OBJC_$_CLASS_METHODS_AVCaptureDevice_Tundra(DeviceHistoryInternal|ServerConnection|DockKit|DynamicAspectRatio|CameraLensSmudgeDetection|AVCaptureDeviceSmartFraming)"},"r15":{"value":140708745263536,"symbolLocation":0,"symbol":"OBJC_METACLASS_$_AVCaptureDevice_Tundra"},"rbx":{"value":140703914124405,"objc-selector":"setUpCenterStageStateOnce"},"trap":{"value":222},"err":{"value":0},"r11":{"value":140371714253264},"rip":{"value":140703366896317},"rbp":{"value":140701896191408},"rsp":{"value":140701896191368},"r12":{"value":140707706579107},"rcx":{"value":140707706579107},"flavor":"x86_THREAD_STATE","rdi":{"value":140708745263616,"symbolLocation":0,"symbol":"OBJC_METACLASS_$_AVCaptureDevice"}},"queue":"com.apple.main-thread","frames":[{"imageOffset":88765,"symbol":"class_replaceMethod","symbolLocation":0,"imageIndex":6},{"imageOffset":1798899,"symbol":"avc_transferMethod","symbolLocation":520,"imageIndex":7},{"imageOffset":1337034,"symbol":"AVCaptureConfigureClassForTundraPersonality","symbolLocation":301,"imageIndex":7},{"imageOffset":1011751,"symbol":"+[AVCaptureDevice initialize]","symbolLocation":278,"imageIndex":7},{"imageOffset":32623,"symbol":"CALLING_SOME_+initialize_METHOD","symbolLocation":17,"imageIndex":6},{"imageOffset":31839,"symbol":"initializeNonMetaClass","symbolLocation":552,"imageIndex":6},{"imageOffset":119022,"symbol":"initializeAndMaybeRelock(objc_class*, objc_object*, locker_mixin<lockdebug::lock_mixin<objc_lock_base_t>>&, bool)","symbolLocation":247,"imageIndex":6},{"imageOffset":29935,"symbol":"lookUpImpOrForward","symbolLocation":227,"imageIndex":6},{"imageOffset":27675,"symbol":"_objc_msgSend_uncached","symbolLocation":75,"imageIndex":6},{"imageOffset":48243,"symbol":"resolveMethod_locked(objc_object*, objc_selector*, objc_class*, int)","symbolLocation":311,"imageIndex":6},{"imageOffset":51818,"symbol":"class_getInstanceMethod","symbolLocation":47,"imageIndex":6},{"imageOffset":1798855,"symbol":"avc_transferMethod","symbolLocation":476,"imageIndex":7},{"imageOffset":1338635,"symbol":"avc_resolveInstanceMethod","symbolLocation":165,"imageIndex":7},{"imageOffset":48243,"symbol":"resolveMethod_locked(objc_object*, objc_selector*, objc_class*, int)","symbolLocation":311,"imageIndex":6},{"imageOffset":47912,"symbol":"class_respondsToSelector_inst","symbolLocation":160,"imageIndex":6},{"imageOffset":61877,"symbol":"_os_log_fmt_flatten_object_impl","symbolLocation":171,"imageIndex":8},{"imageOffset":20817,"symbol":"_os_log_impl_flatten_and_send","symbolLocation":2932,"imageIndex":8},{"imageOffset":105806,"symbol":"_os_log_send_and_compose_impl","symbolLocation":236,"imageIndex":8},{"imageOffset":440520,"symbol":"+[AVCaptureDALDevice _defaultDeviceWithDeviceType:mediaTypes:position:cameraOverrideHistoryAllowed:cameraOverrideHistorySuspendedAllowed:wombatsMustBeMagic:userPreferredCameraHistorySuspendedAllowed:invalidSpecialDeviceTypes:]","symbolLocation":4209,"imageIndex":7},{"imageOffset":512108,"symbol":"+[AVCaptureDALDevice _refreshPreferredCameraProperties:]","symbolLocation":425,"imageIndex":7},{"imageOffset":5654,"symbol":"_dispatch_call_block_and_release","symbolLocation":12,"imageIndex":9},{"imageOffset":96434,"symbol":"_dispatch_client_callout","symbolLocation":6,"imageIndex":9},{"imageOffset":206457,"symbol":"_dispatch_main_queue_drain.cold.6","symbolLocation":842,"imageIndex":9},{"imageOffset":56772,"symbol":"_dispatch_main_queue_drain","symbolLocation":107,"imageIndex":9},{"imageOffset":56651,"symbol":"_dispatch_main_queue_callback_4CF","symbolLocation":31,"imageIndex":9},{"imageOffset":749043,"symbol":"__CFRUNLOOP_IS_SERVICING_THE_MAIN_DISPATCH_QUEUE__","symbolLocation":9,"imageIndex":10},{"imageOffset":505180,"symbol":"__CFRunLoopRun","symbolLocation":2382,"imageIndex":10},{"imageOffset":1323879,"symbol":"_CFRunLoopRunSpecificWithOptions","symbolLocation":496,"imageIndex":10},{"imageOffset":678795,"symbol":"RunCurrentEventLoopInMode","symbolLocation":283,"imageIndex":11},{"imageOffset":691277,"symbol":"ReceiveNextEventCommon","symbolLocation":599,"imageIndex":11},{"imageOffset":2298058,"symbol":"_BlockUntilNextEventMatchingListInMode","symbolLocation":37,"imageIndex":11},{"imageOffset":7634836,"symbol":"_DPSBlockUntilNextEventMatchingListInMode","symbolLocation":172,"imageIndex":12},{"imageOffset":252357,"symbol":"_DPSNextEvent","symbolLocation":800,"imageIndex":12},{"imageOffset":13549179,"symbol":"-[NSApplication(NSEventRouting) _nextEventMatchingEventMask:untilDate:inMode:dequeue:]","symbolLocation":1265,"imageIndex":12},{"imageOffset":13547857,"symbol":"-[NSApplication(NSEventRouting) nextEventMatchingMask:untilDate:inMode:dequeue:]","symbolLocation":67,"imageIndex":12},{"imageOffset":190556,"symbol":"-[NSApplication run]","symbolLocation":472,"imageIndex":12},{"imageOffset":17613,"symbol":"NSApplicationMain","symbolLocation":800,"imageIndex":12},{"imageOffset":29068,"sourceFile":"AppDelegate.swift","symbol":"specialized static NSApplicationDelegate.main()","imageIndex":0,"symbolLocation":24,"inline":true},{"symbol":"static AppDelegate.$main()","inline":true,"imageIndex":0,"imageOffset":29068,"symbolLocation":24,"sourceLine":4,"sourceFile":"\/<compiler-generated>"},{"imageOffset":29068,"sourceFile":"AppDelegate.swift","symbol":"main","symbolLocation":28,"imageIndex":0},{"imageOffset":78280,"symbol":"start","symbolLocation":3240,"imageIndex":13}]},{"id":275191,"frames":[],"threadState":{"r13":{"value":0},"rax":{"value":33554800},"rflags":{"value":512},"cpu":{"value":0},"r14":{"value":1},"rsi":{"value":6403},"r8":{"value":409604},"cr2":{"value":0},"rdx":{"value":123145352519680},"r10":{"value":0},"r9":{"value":18446744073709551615},"r15":{"value":123145353042808},"rbx":{"value":123145353043968},"trap":{"value":133},"err":{"value":33554800},"r11":{"value":582},"rip":{"value":140703371429900},"rbp":{"value":0},"rsp":{"value":123145353043968},"r12":{"value":5193733},"rcx":{"value":0},"flavor":"x86_THREAD_STATE","rdi":{"value":123145353043968}}},{"id":275193,"frames":[],"threadState":{"r13":{"value":0},"rax":{"value":33554800},"rflags":{"value":512},"cpu":{"value":0},"r14":{"value":1},"rsi":{"value":16915},"r8":{"value":409604},"cr2":{"value":0},"rdx":{"value":123145353592832},"r10":{"value":0},"r9":{"value":18446744073709551615},"r15":{"value":123145354115960},"rbx":{"value":123145354117120},"trap":{"value":133},"err":{"value":33554800},"r11":{"value":582},"rip":{"value":140703371429900},"rbp":{"value":0},"rsp":{"value":123145354117120},"r12":{"value":5193734},"rcx":{"value":0},"flavor":"x86_THREAD_STATE","rdi":{"value":123145354117120}}},{"id":275214,"name":"com.apple.NSEventThread","threadState":{"r13":{"value":21592279046},"rax":{"value":268451845},"rflags":{"value":518},"cpu":{"value":0},"r14":{"value":2},"rsi":{"value":21592279046},"r8":{"value":0},"cr2":{"value":0},"rdx":{"value":8589934592},"r10":{"value":128655745351680},"r9":{"value":128655745351680},"r15":{"value":0},"rbx":{"value":123145355186320},"trap":{"value":133},"err":{"value":16777263},"r11":{"value":518},"rip":{"value":140703371168590},"rbp":{"value":123145355186160},"rsp":{"value":123145355186056},"r12":{"value":128655745351680},"rcx":{"value":123145355186056},"flavor":"x86_THREAD_STATE","rdi":{"value":123145355186320}},"frames":[{"imageOffset":2894,"symbol":"mach_msg2_trap","symbolLocation":10,"imageIndex":15},{"imageOffset":61271,"symbol":"mach_msg2_internal","symbolLocation":83,"imageIndex":15},{"imageOffset":31590,"symbol":"mach_msg_overwrite","symbolLocation":586,"imageIndex":15},{"imageOffset":3670,"symbol":"mach_msg","symbolLocation":19,"imageIndex":15},{"imageOffset":509631,"symbol":"__CFRunLoopServiceMachPort","symbolLocation":145,"imageIndex":10},{"imageOffset":504152,"symbol":"__CFRunLoopRun","symbolLocation":1354,"imageIndex":10},{"imageOffset":1323879,"symbol":"_CFRunLoopRunSpecificWithOptions","symbolLocation":496,"imageIndex":10},{"imageOffset":1636000,"symbol":"_NSEventThread","symbolLocation":158,"imageIndex":12},{"imageOffset":23881,"symbol":"_pthread_start","symbolLocation":115,"imageIndex":16},{"imageOffset":6191,"symbol":"thread_start","symbolLocation":15,"imageIndex":16}]},{"id":275224,"name":"io.flutter.raster","threadState":{"r13":{"value":21592279046},"rax":{"value":268451845},"rflags":{"value":518},"cpu":{"value":0},"r14":{"value":2},"rsi":{"value":21592279046},"r8":{"value":0},"cr2":{"value":0},"rdx":{"value":8589934592},"r10":{"value":207820582551552},"r9":{"value":207820582551552},"r15":{"value":0},"rbx":{"value":123145358368784},"trap":{"value":133},"err":{"value":16777263},"r11":{"value":518},"rip":{"value":140703371168590},"rbp":{"value":123145358368624},"rsp":{"value":123145358368520},"r12":{"value":207820582551552},"rcx":{"value":123145358368520},"flavor":"x86_THREAD_STATE","rdi":{"value":123145358368784}},"frames":[{"imageOffset":2894,"symbol":"mach_msg2_trap","symbolLocation":10,"imageIndex":15},{"imageOffset":61271,"symbol":"mach_msg2_internal","symbolLocation":83,"imageIndex":15},{"imageOffset":31590,"symbol":"mach_msg_overwrite","symbolLocation":586,"imageIndex":15},{"imageOffset":3670,"symbol":"mach_msg","symbolLocation":19,"imageIndex":15},{"imageOffset":509631,"symbol":"__CFRunLoopServiceMachPort","symbolLocation":145,"imageIndex":10},{"imageOffset":504152,"symbol":"__CFRunLoopRun","symbolLocation":1354,"imageIndex":10},{"imageOffset":1323879,"symbol":"_CFRunLoopRunSpecificWithOptions","symbolLocation":496,"imageIndex":10},{"imageOffset":634011,"sourceLine":51,"sourceFile":"message_loop_darwin.mm","symbol":"fml::MessageLoopDarwin::Run()","imageIndex":2,"symbolLocation":107},{"imageOffset":594656,"sourceLine":94,"sourceFile":"message_loop_impl.cc","symbol":"fml::MessageLoopImpl::DoRun()","imageIndex":2,"symbolLocation":48},{"symbol":"fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0::operator()() const","inline":true,"imageIndex":2,"imageOffset":628345,"symbolLocation":125,"sourceLine":154,"sourceFile":"thread.cc"},{"symbol":"decltype(std::declval<fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0&>()()) std::__fl::__invoke[abi:nn210000]<fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0&>(fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0&)","inline":true,"imageIndex":2,"imageOffset":628345,"symbolLocation":125,"sourceLine":179,"sourceFile":"invoke.h"},{"symbol":"void std::__fl::__invoke_void_return_wrapper<void, true>::__call[abi:nn210000]<fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0&>(fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0&)","inline":true,"imageIndex":2,"imageOffset":628345,"symbolLocation":125,"sourceLine":251,"sourceFile":"invoke.h"},{"symbol":"void std::__fl::__invoke_r[abi:nn210000]<void, fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0&>(fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0&)","inline":true,"imageIndex":2,"imageOffset":628345,"symbolLocation":125,"sourceLine":273,"sourceFile":"invoke.h"},{"symbol":"std::__fl::__function::__alloc_func<fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0, std::__fl::allocator<fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0>, void ()>::operator()[abi:nn210000]()","inline":true,"imageIndex":2,"imageOffset":628345,"symbolLocation":125,"sourceLine":167,"sourceFile":"function.h"},{"imageOffset":628345,"sourceLine":319,"sourceFile":"function.h","symbol":"std::__fl::__function::__func<fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0, std::__fl::allocator<fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0>, void ()>::operator()()","imageIndex":2,"symbolLocation":153},{"symbol":"std::__fl::__function::__value_func<void ()>::operator()[abi:nn210000]() const","inline":true,"imageIndex":2,"imageOffset":627142,"symbolLocation":29,"sourceLine":436,"sourceFile":"function.h"},{"symbol":"std::__fl::function<void ()>::operator()() const","inline":true,"imageIndex":2,"imageOffset":627142,"symbolLocation":29,"sourceLine":995,"sourceFile":"function.h"},{"symbol":"fml::ThreadHandle::ThreadHandle(std::__fl::function<void ()>&&)::$_0::operator()(void*) const","inline":true,"imageIndex":2,"imageOffset":627142,"symbolLocation":29,"sourceLine":76,"sourceFile":"thread.cc"},{"imageOffset":627142,"sourceLine":73,"sourceFile":"thread.cc","symbol":"fml::ThreadHandle::ThreadHandle(std::__fl::function<void ()>&&)::$_0::__invoke(void*)","imageIndex":2,"symbolLocation":38},{"imageOffset":23881,"symbol":"_pthread_start","symbolLocation":115,"imageIndex":16},{"imageOffset":6191,"symbol":"thread_start","symbolLocation":15,"imageIndex":16}]},{"id":275225,"name":"io.flutter.io","threadState":{"r13":{"value":21592279046},"rax":{"value":268451845},"rflags":{"value":518},"cpu":{"value":0},"r14":{"value":2},"rsi":{"value":21592279046},"r8":{"value":0},"cr2":{"value":0},"rdx":{"value":8589934592},"r10":{"value":256199094173696},"r9":{"value":256199094173696},"r15":{"value":0},"rbx":{"value":123145360478224},"trap":{"value":133},"err":{"value":16777263},"r11":{"value":518},"rip":{"value":140703371168590},"rbp":{"value":123145360478064},"rsp":{"value":123145360477960},"r12":{"value":256199094173696},"rcx":{"value":123145360477960},"flavor":"x86_THREAD_STATE","rdi":{"value":123145360478224}},"frames":[{"imageOffset":2894,"symbol":"mach_msg2_trap","symbolLocation":10,"imageIndex":15},{"imageOffset":61271,"symbol":"mach_msg2_internal","symbolLocation":83,"imageIndex":15},{"imageOffset":31590,"symbol":"mach_msg_overwrite","symbolLocation":586,"imageIndex":15},{"imageOffset":3670,"symbol":"mach_msg","symbolLocation":19,"imageIndex":15},{"imageOffset":509631,"symbol":"__CFRunLoopServiceMachPort","symbolLocation":145,"imageIndex":10},{"imageOffset":504152,"symbol":"__CFRunLoopRun","symbolLocation":1354,"imageIndex":10},{"imageOffset":1323879,"symbol":"_CFRunLoopRunSpecificWithOptions","symbolLocation":496,"imageIndex":10},{"imageOffset":634011,"sourceLine":51,"sourceFile":"message_loop_darwin.mm","symbol":"fml::MessageLoopDarwin::Run()","imageIndex":2,"symbolLocation":107},{"imageOffset":594656,"sourceLine":94,"sourceFile":"message_loop_impl.cc","symbol":"fml::MessageLoopImpl::DoRun()","imageIndex":2,"symbolLocation":48},{"symbol":"fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0::operator()() const","inline":true,"imageIndex":2,"imageOffset":628345,"symbolLocation":125,"sourceLine":154,"sourceFile":"thread.cc"},{"symbol":"decltype(std::declval<fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0&>()()) std::__fl::__invoke[abi:nn210000]<fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0&>(fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0&)","inline":true,"imageIndex":2,"imageOffset":628345,"symbolLocation":125,"sourceLine":179,"sourceFile":"invoke.h"},{"symbol":"void std::__fl::__invoke_void_return_wrapper<void, true>::__call[abi:nn210000]<fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0&>(fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0&)","inline":true,"imageIndex":2,"imageOffset":628345,"symbolLocation":125,"sourceLine":251,"sourceFile":"invoke.h"},{"symbol":"void std::__fl::__invoke_r[abi:nn210000]<void, fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0&>(fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0&)","inline":true,"imageIndex":2,"imageOffset":628345,"symbolLocation":125,"sourceLine":273,"sourceFile":"invoke.h"},{"symbol":"std::__fl::__function::__alloc_func<fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0, std::__fl::allocator<fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0>, void ()>::operator()[abi:nn210000]()","inline":true,"imageIndex":2,"imageOffset":628345,"symbolLocation":125,"sourceLine":167,"sourceFile":"function.h"},{"imageOffset":628345,"sourceLine":319,"sourceFile":"function.h","symbol":"std::__fl::__function::__func<fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0, std::__fl::allocator<fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0>, void ()>::operator()()","imageIndex":2,"symbolLocation":153},{"symbol":"std::__fl::__function::__value_func<void ()>::operator()[abi:nn210000]() const","inline":true,"imageIndex":2,"imageOffset":627142,"symbolLocation":29,"sourceLine":436,"sourceFile":"function.h"},{"symbol":"std::__fl::function<void ()>::operator()() const","inline":true,"imageIndex":2,"imageOffset":627142,"symbolLocation":29,"sourceLine":995,"sourceFile":"function.h"},{"symbol":"fml::ThreadHandle::ThreadHandle(std::__fl::function<void ()>&&)::$_0::operator()(void*) const","inline":true,"imageIndex":2,"imageOffset":627142,"symbolLocation":29,"sourceLine":76,"sourceFile":"thread.cc"},{"imageOffset":627142,"sourceLine":73,"sourceFile":"thread.cc","symbol":"fml::ThreadHandle::ThreadHandle(std::__fl::function<void ()>&&)::$_0::__invoke(void*)","imageIndex":2,"symbolLocation":38},{"imageOffset":23881,"symbol":"_pthread_start","symbolLocation":115,"imageIndex":16},{"imageOffset":6191,"symbol":"thread_start","symbolLocation":15,"imageIndex":16}]},{"id":275226,"name":"io.worker.1","threadState":{"r13":{"value":4402341479680},"rax":{"value":4},"rflags":{"value":583},"cpu":{"value":0},"r14":{"value":1024},"rsi":{"value":4402341479680},"r8":{"value":0},"cr2":{"value":0},"rdx":{"value":1024},"r10":{"value":0},"r9":{"value":160},"r15":{"value":0},"rbx":{"value":123145361018880},"trap":{"value":133},"err":{"value":33554737},"r11":{"value":582},"rip":{"value":140703371179794},"rbp":{"value":123145361018464},"rsp":{"value":123145361018312},"r12":{"value":22},"rcx":{"value":123145361018312},"flavor":"x86_THREAD_STATE","rdi":{"value":140371686670568}},"frames":[{"imageOffset":14098,"symbol":"__psynch_cvwait","symbolLocation":10,"imageIndex":15},{"imageOffset":25079,"symbol":"_pthread_cond_wait","symbolLocation":994,"imageIndex":16},{"symbol":"std::__fl::__libcpp_condvar_wait[abi:nn210000](_opaque_pthread_cond_t*, _opaque_pthread_mutex_t*)","inline":true,"imageIndex":2,"imageOffset":296260,"symbolLocation":5,"sourceLine":122,"sourceFile":"pthread.h"},{"imageOffset":296260,"sourceLine":30,"sourceFile":"condition_variable.cpp","symbol":"std::__fl::condition_variable::wait(std::__fl::unique_lock<std::__fl::mutex>&)","imageIndex":2,"symbolLocation":36},{"symbol":"void std::__fl::condition_variable::wait<fml::ConcurrentMessageLoop::WorkerMain()::$_0>(std::__fl::unique_lock<std::__fl::mutex>&, fml::ConcurrentMessageLoop::WorkerMain()::$_0)","inline":true,"imageIndex":2,"imageOffset":574656,"symbolLocation":26,"sourceLine":147,"sourceFile":"condition_variable.h"},{"imageOffset":574656,"sourceLine":75,"sourceFile":"concurrent_message_loop.cc","symbol":"fml::ConcurrentMessageLoop::WorkerMain()","imageIndex":2,"symbolLocation":112},{"symbol":"fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0::operator()() const","inline":true,"imageIndex":2,"imageOffset":576908,"symbolLocation":161,"sourceLine":20,"sourceFile":"concurrent_message_loop.cc"},{"symbol":"decltype(std::declval<fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0>()()) std::__fl::__invoke[abi:nn210000]<fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0>(fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0&&)","inline":true,"imageIndex":2,"imageOffset":576908,"symbolLocation":161,"sourceLine":179,"sourceFile":"invoke.h"},{"symbol":"void std::__fl::__thread_execute[abi:nn210000]<std::__fl::unique_ptr<std::__fl::__thread_struct, std::__fl::default_delete<std::__fl::__thread_struct>>, fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0>(std::__fl::tuple<std::__fl::unique_ptr<std::__fl::__thread_struct, std::__fl::default_delete<std::__fl::__thread_struct>>, fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0>&, std::__fl::__tuple_indices<...>)","inline":true,"imageIndex":2,"imageOffset":576908,"symbolLocation":161,"sourceLine":200,"sourceFile":"thread.h"},{"imageOffset":576908,"sourceLine":209,"sourceFile":"thread.h","symbol":"void* std::__fl::__thread_proxy[abi:nn210000]<std::__fl::tuple<std::__fl::unique_ptr<std::__fl::__thread_struct, std::__fl::default_delete<std::__fl::__thread_struct>>, fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0>>(void*)","imageIndex":2,"symbolLocation":220},{"imageOffset":23881,"symbol":"_pthread_start","symbolLocation":115,"imageIndex":16},{"imageOffset":6191,"symbol":"thread_start","symbolLocation":15,"imageIndex":16}]},{"id":275227,"name":"io.worker.2","threadState":{"r13":{"value":4398046512640},"rax":{"value":4},"rflags":{"value":583},"cpu":{"value":0},"r14":{"value":1024},"rsi":{"value":4398046512640},"r8":{"value":0},"cr2":{"value":0},"rdx":{"value":1024},"r10":{"value":0},"r9":{"value":160},"r15":{"value":0},"rbx":{"value":123145361555456},"trap":{"value":133},"err":{"value":33554737},"r11":{"value":582},"rip":{"value":140703371179794},"rbp":{"value":123145361555040},"rsp":{"value":123145361554888},"r12":{"value":22},"rcx":{"value":123145361554888},"flavor":"x86_THREAD_STATE","rdi":{"value":140371686670568}},"frames":[{"imageOffset":14098,"symbol":"__psynch_cvwait","symbolLocation":10,"imageIndex":15},{"imageOffset":25079,"symbol":"_pthread_cond_wait","symbolLocation":994,"imageIndex":16},{"symbol":"std::__fl::__libcpp_condvar_wait[abi:nn210000](_opaque_pthread_cond_t*, _opaque_pthread_mutex_t*)","inline":true,"imageIndex":2,"imageOffset":296260,"symbolLocation":5,"sourceLine":122,"sourceFile":"pthread.h"},{"imageOffset":296260,"sourceLine":30,"sourceFile":"condition_variable.cpp","symbol":"std::__fl::condition_variable::wait(std::__fl::unique_lock<std::__fl::mutex>&)","imageIndex":2,"symbolLocation":36},{"symbol":"void std::__fl::condition_variable::wait<fml::ConcurrentMessageLoop::WorkerMain()::$_0>(std::__fl::unique_lock<std::__fl::mutex>&, fml::ConcurrentMessageLoop::WorkerMain()::$_0)","inline":true,"imageIndex":2,"imageOffset":574656,"symbolLocation":26,"sourceLine":147,"sourceFile":"condition_variable.h"},{"imageOffset":574656,"sourceLine":75,"sourceFile":"concurrent_message_loop.cc","symbol":"fml::ConcurrentMessageLoop::WorkerMain()","imageIndex":2,"symbolLocation":112},{"symbol":"fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0::operator()() const","inline":true,"imageIndex":2,"imageOffset":576908,"symbolLocation":161,"sourceLine":20,"sourceFile":"concurrent_message_loop.cc"},{"symbol":"decltype(std::declval<fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0>()()) std::__fl::__invoke[abi:nn210000]<fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0>(fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0&&)","inline":true,"imageIndex":2,"imageOffset":576908,"symbolLocation":161,"sourceLine":179,"sourceFile":"invoke.h"},{"symbol":"void std::__fl::__thread_execute[abi:nn210000]<std::__fl::unique_ptr<std::__fl::__thread_struct, std::__fl::default_delete<std::__fl::__thread_struct>>, fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0>(std::__fl::tuple<std::__fl::unique_ptr<std::__fl::__thread_struct, std::__fl::default_delete<std::__fl::__thread_struct>>, fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0>&, std::__fl::__tuple_indices<...>)","inline":true,"imageIndex":2,"imageOffset":576908,"symbolLocation":161,"sourceLine":200,"sourceFile":"thread.h"},{"imageOffset":576908,"sourceLine":209,"sourceFile":"thread.h","symbol":"void* std::__fl::__thread_proxy[abi:nn210000]<std::__fl::tuple<std::__fl::unique_ptr<std::__fl::__thread_struct, std::__fl::default_delete<std::__fl::__thread_struct>>, fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0>>(void*)","imageIndex":2,"symbolLocation":220},{"imageOffset":23881,"symbol":"_pthread_start","symbolLocation":115,"imageIndex":16},{"imageOffset":6191,"symbol":"thread_start","symbolLocation":15,"imageIndex":16}]},{"id":275228,"name":"io.worker.3","threadState":{"r13":{"value":4398046513152},"rax":{"value":4},"rflags":{"value":583},"cpu":{"value":0},"r14":{"value":1024},"rsi":{"value":4398046513152},"r8":{"value":0},"cr2":{"value":0},"rdx":{"value":1024},"r10":{"value":0},"r9":{"value":160},"r15":{"value":0},"rbx":{"value":123145362092032},"trap":{"value":133},"err":{"value":33554737},"r11":{"value":582},"rip":{"value":140703371179794},"rbp":{"value":123145362091616},"rsp":{"value":123145362091464},"r12":{"value":22},"rcx":{"value":123145362091464},"flavor":"x86_THREAD_STATE","rdi":{"value":140371686670568}},"frames":[{"imageOffset":14098,"symbol":"__psynch_cvwait","symbolLocation":10,"imageIndex":15},{"imageOffset":25079,"symbol":"_pthread_cond_wait","symbolLocation":994,"imageIndex":16},{"symbol":"std::__fl::__libcpp_condvar_wait[abi:nn210000](_opaque_pthread_cond_t*, _opaque_pthread_mutex_t*)","inline":true,"imageIndex":2,"imageOffset":296260,"symbolLocation":5,"sourceLine":122,"sourceFile":"pthread.h"},{"imageOffset":296260,"sourceLine":30,"sourceFile":"condition_variable.cpp","symbol":"std::__fl::condition_variable::wait(std::__fl::unique_lock<std::__fl::mutex>&)","imageIndex":2,"symbolLocation":36},{"symbol":"void std::__fl::condition_variable::wait<fml::ConcurrentMessageLoop::WorkerMain()::$_0>(std::__fl::unique_lock<std::__fl::mutex>&, fml::ConcurrentMessageLoop::WorkerMain()::$_0)","inline":true,"imageIndex":2,"imageOffset":574656,"symbolLocation":26,"sourceLine":147,"sourceFile":"condition_variable.h"},{"imageOffset":574656,"sourceLine":75,"sourceFile":"concurrent_message_loop.cc","symbol":"fml::ConcurrentMessageLoop::WorkerMain()","imageIndex":2,"symbolLocation":112},{"symbol":"fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0::operator()() const","inline":true,"imageIndex":2,"imageOffset":576908,"symbolLocation":161,"sourceLine":20,"sourceFile":"concurrent_message_loop.cc"},{"symbol":"decltype(std::declval<fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0>()()) std::__fl::__invoke[abi:nn210000]<fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0>(fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0&&)","inline":true,"imageIndex":2,"imageOffset":576908,"symbolLocation":161,"sourceLine":179,"sourceFile":"invoke.h"},{"symbol":"void std::__fl::__thread_execute[abi:nn210000]<std::__fl::unique_ptr<std::__fl::__thread_struct, std::__fl::default_delete<std::__fl::__thread_struct>>, fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0>(std::__fl::tuple<std::__fl::unique_ptr<std::__fl::__thread_struct, std::__fl::default_delete<std::__fl::__thread_struct>>, fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0>&, std::__fl::__tuple_indices<...>)","inline":true,"imageIndex":2,"imageOffset":576908,"symbolLocation":161,"sourceLine":200,"sourceFile":"thread.h"},{"imageOffset":576908,"sourceLine":209,"sourceFile":"thread.h","symbol":"void* std::__fl::__thread_proxy[abi:nn210000]<std::__fl::tuple<std::__fl::unique_ptr<std::__fl::__thread_struct, std::__fl::default_delete<std::__fl::__thread_struct>>, fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0>>(void*)","imageIndex":2,"symbolLocation":220},{"imageOffset":23881,"symbol":"_pthread_start","symbolLocation":115,"imageIndex":16},{"imageOffset":6191,"symbol":"thread_start","symbolLocation":15,"imageIndex":16}]},{"id":275229,"name":"io.worker.4","threadState":{"r13":{"value":4398046512896},"rax":{"value":260},"rflags":{"value":583},"cpu":{"value":0},"r14":{"value":1024},"rsi":{"value":4398046512896},"r8":{"value":0},"cr2":{"value":0},"rdx":{"value":1024},"r10":{"value":0},"r9":{"value":160},"r15":{"value":0},"rbx":{"value":123145362628608},"trap":{"value":133},"err":{"value":33554737},"r11":{"value":582},"rip":{"value":140703371179794},"rbp":{"value":123145362628192},"rsp":{"value":123145362628040},"r12":{"value":22},"rcx":{"value":123145362628040},"flavor":"x86_THREAD_STATE","rdi":{"value":140371686670568}},"frames":[{"imageOffset":14098,"symbol":"__psynch_cvwait","symbolLocation":10,"imageIndex":15},{"imageOffset":25079,"symbol":"_pthread_cond_wait","symbolLocation":994,"imageIndex":16},{"symbol":"std::__fl::__libcpp_condvar_wait[abi:nn210000](_opaque_pthread_cond_t*, _opaque_pthread_mutex_t*)","inline":true,"imageIndex":2,"imageOffset":296260,"symbolLocation":5,"sourceLine":122,"sourceFile":"pthread.h"},{"imageOffset":296260,"sourceLine":30,"sourceFile":"condition_variable.cpp","symbol":"std::__fl::condition_variable::wait(std::__fl::unique_lock<std::__fl::mutex>&)","imageIndex":2,"symbolLocation":36},{"symbol":"void std::__fl::condition_variable::wait<fml::ConcurrentMessageLoop::WorkerMain()::$_0>(std::__fl::unique_lock<std::__fl::mutex>&, fml::ConcurrentMessageLoop::WorkerMain()::$_0)","inline":true,"imageIndex":2,"imageOffset":574656,"symbolLocation":26,"sourceLine":147,"sourceFile":"condition_variable.h"},{"imageOffset":574656,"sourceLine":75,"sourceFile":"concurrent_message_loop.cc","symbol":"fml::ConcurrentMessageLoop::WorkerMain()","imageIndex":2,"symbolLocation":112},{"symbol":"fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0::operator()() const","inline":true,"imageIndex":2,"imageOffset":576908,"symbolLocation":161,"sourceLine":20,"sourceFile":"concurrent_message_loop.cc"},{"symbol":"decltype(std::declval<fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0>()()) std::__fl::__invoke[abi:nn210000]<fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0>(fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0&&)","inline":true,"imageIndex":2,"imageOffset":576908,"symbolLocation":161,"sourceLine":179,"sourceFile":"invoke.h"},{"symbol":"void std::__fl::__thread_execute[abi:nn210000]<std::__fl::unique_ptr<std::__fl::__thread_struct, std::__fl::default_delete<std::__fl::__thread_struct>>, fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0>(std::__fl::tuple<std::__fl::unique_ptr<std::__fl::__thread_struct, std::__fl::default_delete<std::__fl::__thread_struct>>, fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0>&, std::__fl::__tuple_indices<...>)","inline":true,"imageIndex":2,"imageOffset":576908,"symbolLocation":161,"sourceLine":200,"sourceFile":"thread.h"},{"imageOffset":576908,"sourceLine":209,"sourceFile":"thread.h","symbol":"void* std::__fl::__thread_proxy[abi:nn210000]<std::__fl::tuple<std::__fl::unique_ptr<std::__fl::__thread_struct, std::__fl::default_delete<std::__fl::__thread_struct>>, fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0>>(void*)","imageIndex":2,"symbolLocation":220},{"imageOffset":23881,"symbol":"_pthread_start","symbolLocation":115,"imageIndex":16},{"imageOffset":6191,"symbol":"thread_start","symbolLocation":15,"imageIndex":16}]},{"id":275230,"name":"dart:io EventHandler","threadState":{"r13":{"value":123145363688768},"rax":{"value":4},"rflags":{"value":583},"cpu":{"value":0},"r14":{"value":123145363687712},"rsi":{"value":0},"r8":{"value":16},"cr2":{"value":0},"rdx":{"value":0},"r10":{"value":123145363688768},"r9":{"value":123145363687712},"r15":{"value":1},"rbx":{"value":105553155235712},"trap":{"value":133},"err":{"value":33554795},"r11":{"value":582},"rip":{"value":140703371188174},"rbp":{"value":123145363689328},"rsp":{"value":123145363687704},"r12":{"value":123145363687728},"rcx":{"value":123145363687704},"flavor":"x86_THREAD_STATE","rdi":{"value":6}},"frames":[{"imageOffset":22478,"symbol":"kevent","symbolLocation":10,"imageIndex":15},{"imageOffset":10389864,"sourceLine":459,"sourceFile":"eventhandler_macos.cc","symbol":"dart::bin::EventHandlerImplementation::EventHandlerEntry(unsigned long)","imageIndex":2,"symbolLocation":312},{"imageOffset":10540856,"sourceLine":65,"sourceFile":"thread_macos.cc","symbol":"dart::bin::ThreadStart(void*)","imageIndex":2,"symbolLocation":88},{"imageOffset":23881,"symbol":"_pthread_start","symbolLocation":115,"imageIndex":16},{"imageOffset":6191,"symbol":"thread_start","symbolLocation":15,"imageIndex":16}]},{"id":275235,"frames":[],"threadState":{"r13":{"value":0},"rax":{"value":33554800},"rflags":{"value":512},"cpu":{"value":0},"r14":{"value":1},"rsi":{"value":69383},"r8":{"value":409604},"cr2":{"value":0},"rdx":{"value":123145355739136},"r10":{"value":0},"r9":{"value":18446744073709551615},"r15":{"value":123145356262264},"rbx":{"value":123145356263424},"trap":{"value":133},"err":{"value":33554800},"r11":{"value":582},"rip":{"value":140703371429900},"rbp":{"value":0},"rsp":{"value":123145356263424},"r12":{"value":5193733},"rcx":{"value":0},"flavor":"x86_THREAD_STATE","rdi":{"value":123145356263424}}},{"triggered":true,"id":275236,"instructionState":{"instructionStream":{"bytes":[0,0,76,141,101,152,65,191,3,0,0,0,15,31,64,0,72,139,133,56,249,255,255,76,137,247,49,246,255,80,64,133,192,15,132,150,0,0,0,15,136,150,0,0,0,72,139,133,56,249,255,255,76,137,247,76,137,230,255,80,72,72,131,125,160,0,116,127,72,139,69,176,72,133,192,116,195,72,139,19,191,1,0,0,0,190,1,0,0,0,72,137,217,77,137,240,255,208,131,248,8,116,169,131,248,6,117,87,72,139,133,56,249,255,255,72,141,189,56,249,255,255,190,254,255,255,255,255,80,16,137,193,132,201,116,22,72,139,133,56,249,255,255,72,141,189,56,249,255,255,190,254,255,255,255,255,80,24,72,137,67,24,72,141,189,0,244,255,255,72,141,181,56,249,255,255,72,137,218,232,248,9,0,0,65,137,199,235,6,65,191,5],"offset":96}},"threadState":{"r13":{"value":104},"rax":{"value":9008917376338960},"rflags":{"value":66050},"cpu":{"value":0},"r14":{"value":123145365279032},"rsi":{"value":1},"r8":{"value":123145365279032},"cr2":{"value":0},"rdx":{"value":4849336966747728640},"r10":{"value":140703369892052},"r9":{"value":4294967168},"r15":{"value":3},"rbx":{"value":105553167047168},"trap":{"value":13},"err":{"value":0},"r11":{"value":3872},"rip":{"value":140703639684272,"matchesCrashFrame":1},"rbp":{"value":123145365280768},"rsp":{"value":123145365277696},"r12":{"value":123145365280664},"rcx":{"value":105553167047168},"flavor":"x86_THREAD_STATE","rdi":{"value":1}},"queue":"com.apple.root.user-initiated-qos","frames":[{"imageOffset":9392,"symbol":"_Unwind_RaiseException","symbolLocation":240,"imageIndex":17},{"imageOffset":7604,"symbol":"__cxa_throw","symbolLocation":61,"imageIndex":18},{"imageOffset":82225,"symbol":"objc_exception_throw","symbolLocation":317,"imageIndex":6},{"imageOffset":1685533,"symbol":"-[NSObject(NSObject) doesNotRecognizeSelector:]","symbolLocation":342,"imageIndex":10},{"imageOffset":379485,"symbol":"___forwarding___","symbolLocation":1308,"imageIndex":10},{"imageOffset":378040,"symbol":"_CF_forwarding_prep_0","symbolLocation":120,"imageIndex":10},{"imageOffset":97129,"sourceLine":696,"sourceFile":"FlutterRTCMediaStream.m","symbol":"__50-[FlutterWebRTCPlugin(RTCMediaStream) getSources:]_block_invoke","imageIndex":0,"symbolLocation":348},{"imageOffset":5654,"symbol":"_dispatch_call_block_and_release","symbolLocation":12,"imageIndex":9},{"imageOffset":96434,"symbol":"_dispatch_client_callout","symbolLocation":6,"imageIndex":9},{"imageOffset":207947,"symbol":"_dispatch_root_queue_drain.cold.4","symbolLocation":749,"imageIndex":9},{"imageOffset":67646,"symbol":"_dispatch_root_queue_drain","symbolLocation":84,"imageIndex":9},{"imageOffset":68834,"symbol":"_dispatch_worker_thread2","symbolLocation":179,"imageIndex":9},{"imageOffset":10206,"symbol":"_pthread_wqthread","symbolLocation":233,"imageIndex":16},{"imageOffset":6171,"symbol":"start_wqthread","symbolLocation":15,"imageIndex":16}]},{"id":275237,"frames":[],"threadState":{"r13":{"value":0},"rax":{"value":33554800},"rflags":{"value":512},"cpu":{"value":0},"r14":{"value":1},"rsi":{"value":84483},"r8":{"value":409604},"cr2":{"value":0},"rdx":{"value":123145365299200},"r10":{"value":0},"r9":{"value":18446744073709551615},"r15":{"value":123145365822328},"rbx":{"value":123145365823488},"trap":{"value":133},"err":{"value":33554800},"r11":{"value":582},"rip":{"value":140703371429900},"rbp":{"value":0},"rsp":{"value":123145365823488},"r12":{"value":5193733},"rcx":{"value":0},"flavor":"x86_THREAD_STATE","rdi":{"value":123145365823488}}},{"id":275241,"name":"HIE: M_ 94519c65529baf58 2026-11-19 15:24:28.888","threadState":{"r13":{"value":8589934595},"rax":{"value":0},"rflags":{"value":518},"cpu":{"value":0},"r14":{"value":44},"rsi":{"value":8589934595},"r8":{"value":15483357102080},"cr2":{"value":0},"rdx":{"value":103079220499},"r10":{"value":321070280286739},"r9":{"value":321070280212480},"r15":{"value":15483357102080},"rbx":{"value":123145366895884},"trap":{"value":133},"err":{"value":16777263},"r11":{"value":518},"rip":{"value":140703371168590},"rbp":{"value":123145366895840},"rsp":{"value":123145366895736},"r12":{"value":321070280212480},"rcx":{"value":123145366895736},"flavor":"x86_THREAD_STATE","rdi":{"value":123145366895884}},"frames":[{"imageOffset":2894,"symbol":"mach_msg2_trap","symbolLocation":10,"imageIndex":15},{"imageOffset":61271,"symbol":"mach_msg2_internal","symbolLocation":83,"imageIndex":15},{"imageOffset":164367,"symbol":"thread_suspend","symbolLocation":83,"imageIndex":15},{"imageOffset":211313,"symbol":"SOME_OTHER_THREAD_SWALLOWED_AT_LEAST_ONE_EXCEPTION","symbolLocation":16,"imageIndex":19},{"imageOffset":347075,"symbol":"__NSThread__start__","symbolLocation":1014,"imageIndex":20},{"imageOffset":23881,"symbol":"_pthread_start","symbolLocation":115,"imageIndex":16},{"imageOffset":6191,"symbol":"thread_start","symbolLocation":15,"imageIndex":16}]},{"id":275355,"name":"DartWorker","threadState":{"r13":{"value":12098922875904},"rax":{"value":260},"rflags":{"value":663},"cpu":{"value":0},"r14":{"value":2816},"rsi":{"value":12098922875904},"r8":{"value":0},"cr2":{"value":0},"rdx":{"value":2816},"r10":{"value":0},"r9":{"value":160},"r15":{"value":0},"rbx":{"value":3072},"trap":{"value":133},"err":{"value":33554737},"r11":{"value":663},"rip":{"value":140703371179794},"rbp":{"value":123145367956112},"rsp":{"value":123145367955960},"r12":{"value":22},"rcx":{"value":123145367955960},"flavor":"x86_THREAD_STATE","rdi":{"value":105553155567952}},"frames":[{"imageOffset":14098,"symbol":"__psynch_cvwait","symbolLocation":10,"imageIndex":15},{"imageOffset":25129,"symbol":"_pthread_cond_wait","symbolLocation":1044,"imageIndex":16},{"symbol":"dart::TimedWait(_opaque_pthread_cond_t*, _opaque_pthread_mutex_t*, long long)","inline":true,"imageIndex":2,"imageOffset":11009950,"symbolLocation":95,"sourceLine":118,"sourceFile":"synchronization_posix.cc"},{"imageOffset":11009950,"sourceLine":147,"sourceFile":"synchronization_posix.cc","symbol":"dart::ConditionVariable::WaitMicros(dart::Mutex*, long long)","imageIndex":2,"symbolLocation":126},{"symbol":"dart::ThreadPool::Worker::Sleep(long long)","inline":true,"imageIndex":2,"imageOffset":11930089,"symbolLocation":22,"sourceLine":101,"sourceFile":"thread_pool.h"},{"imageOffset":11930089,"sourceLine":231,"sourceFile":"thread_pool.cc","symbol":"dart::ThreadPool::WorkerLoop(dart::ThreadPool::Worker*)","imageIndex":2,"symbolLocation":585},{"imageOffset":11930462,"sourceLine":367,"sourceFile":"thread_pool.cc","symbol":"dart::ThreadPool::Worker::Main(unsigned long)","imageIndex":2,"symbolLocation":126},{"imageOffset":11767041,"sourceLine":94,"sourceFile":"os_thread_macos.cc","symbol":"dart::ThreadStart(void*)","imageIndex":2,"symbolLocation":209},{"imageOffset":23881,"symbol":"_pthread_start","symbolLocation":115,"imageIndex":16},{"imageOffset":6191,"symbol":"thread_start","symbolLocation":15,"imageIndex":16}]},{"id":275356,"name":"DartWorker","threadState":{"r13":{"value":1103806595584},"rax":{"value":260},"rflags":{"value":663},"cpu":{"value":0},"r14":{"value":256},"rsi":{"value":1103806595584},"r8":{"value":0},"cr2":{"value":0},"rdx":{"value":256},"r10":{"value":0},"r9":{"value":160},"r15":{"value":0},"rbx":{"value":512},"trap":{"value":133},"err":{"value":33554737},"r11":{"value":663},"rip":{"value":140703371179794},"rbp":{"value":123145370077840},"rsp":{"value":123145370077688},"r12":{"value":22},"rcx":{"value":123145370077688},"flavor":"x86_THREAD_STATE","rdi":{"value":105553155569008}},"frames":[{"imageOffset":14098,"symbol":"__psynch_cvwait","symbolLocation":10,"imageIndex":15},{"imageOffset":25129,"symbol":"_pthread_cond_wait","symbolLocation":1044,"imageIndex":16},{"symbol":"dart::TimedWait(_opaque_pthread_cond_t*, _opaque_pthread_mutex_t*, long long)","inline":true,"imageIndex":2,"imageOffset":11009950,"symbolLocation":95,"sourceLine":118,"sourceFile":"synchronization_posix.cc"},{"imageOffset":11009950,"sourceLine":147,"sourceFile":"synchronization_posix.cc","symbol":"dart::ConditionVariable::WaitMicros(dart::Mutex*, long long)","imageIndex":2,"symbolLocation":126},{"symbol":"dart::ThreadPool::Worker::Sleep(long long)","inline":true,"imageIndex":2,"imageOffset":11930089,"symbolLocation":22,"sourceLine":101,"sourceFile":"thread_pool.h"},{"imageOffset":11930089,"sourceLine":231,"sourceFile":"thread_pool.cc","symbol":"dart::ThreadPool::WorkerLoop(dart::ThreadPool::Worker*)","imageIndex":2,"symbolLocation":585},{"imageOffset":11930462,"sourceLine":367,"sourceFile":"thread_pool.cc","symbol":"dart::ThreadPool::Worker::Main(unsigned long)","imageIndex":2,"symbolLocation":126},{"imageOffset":11767041,"sourceLine":94,"sourceFile":"os_thread_macos.cc","symbol":"dart::ThreadStart(void*)","imageIndex":2,"symbolLocation":209},{"imageOffset":23881,"symbol":"_pthread_start","symbolLocation":115,"imageIndex":16},{"imageOffset":6191,"symbol":"thread_start","symbolLocation":15,"imageIndex":16}]},{"id":275448,"name":"network_thread 0x0x600003e23ed0","threadState":{"r13":{"value":105553160995040},"rax":{"value":4},"rflags":{"value":515},"cpu":{"value":0},"r14":{"value":105553175085056},"rsi":{"value":1},"r8":{"value":105553175085216},"cr2":{"value":0},"rdx":{"value":4294967295},"r10":{"value":2},"r9":{"value":0},"r15":{"value":18},"rbx":{"value":1},"trap":{"value":133},"err":{"value":33554662},"r11":{"value":514},"rip":{"value":140703371196554},"rbp":{"value":123145354653264},"rsp":{"value":123145354653064},"r12":{"value":0},"rcx":{"value":123145354653064},"flavor":"x86_THREAD_STATE","rdi":{"value":105553119636960}},"frames":[{"imageOffset":30858,"symbol":"poll","symbolLocation":10,"imageIndex":15},{"imageOffset":4508340,"sourceLine":1863,"sourceFile":"physical_socket_server.cc","symbol":"webrtc::PhysicalSocketServer::WaitPoll(webrtc::TimeDelta, bool)","imageIndex":1,"symbolLocation":852},{"imageOffset":4507461,"sourceLine":1433,"sourceFile":"physical_socket_server.cc","symbol":"webrtc::PhysicalSocketServer::Wait(webrtc::TimeDelta, bool)","imageIndex":1,"symbolLocation":21},{"imageOffset":4521514,"sourceLine":466,"sourceFile":"thread.cc","symbol":"webrtc::Thread::Get(int)","imageIndex":1,"symbolLocation":378},{"imageOffset":4517963,"sourceLine":872,"sourceFile":"thread.cc","symbol":"webrtc::Thread::ProcessMessages(int)","imageIndex":1,"symbolLocation":155},{"imageOffset":4524341,"sourceLine":725,"sourceFile":"thread.cc","symbol":"webrtc::Thread::PreRun(void*)","imageIndex":1,"symbolLocation":85},{"imageOffset":23881,"symbol":"_pthread_start","symbolLocation":115,"imageIndex":16},{"imageOffset":6191,"symbol":"thread_start","symbolLocation":15,"imageIndex":16}]},{"id":275449,"name":"worker_thread 0x0x600003e04000","threadState":{"r13":{"value":6601364735744},"rax":{"value":260},"rflags":{"value":583},"cpu":{"value":0},"r14":{"value":1536},"rsi":{"value":6601364735744},"r8":{"value":0},"cr2":{"value":0},"rdx":{"value":1536},"r10":{"value":0},"r9":{"value":160},"r15":{"value":0},"rbx":{"value":123145355726848},"trap":{"value":133},"err":{"value":33554737},"r11":{"value":582},"rip":{"value":140703371179794},"rbp":{"value":123145355726320},"rsp":{"value":123145355726168},"r12":{"value":22},"rcx":{"value":123145355726168},"flavor":"x86_THREAD_STATE","rdi":{"value":105553169786944}},"frames":[{"imageOffset":14098,"symbol":"__psynch_cvwait","symbolLocation":10,"imageIndex":15},{"imageOffset":25079,"symbol":"_pthread_cond_wait","symbolLocation":994,"imageIndex":16},{"symbol":"webrtc::Event::Wait(webrtc::TimeDelta, webrtc::TimeDelta)::$_0::operator()(std::__Cr::optional<timespec>) const","inline":true,"imageIndex":1,"imageOffset":3068747,"symbolLocation":100,"sourceLine":170,"sourceFile":"event.cc"},{"imageOffset":3068747,"sourceLine":186,"sourceFile":"event.cc","symbol":"webrtc::Event::Wait(webrtc::TimeDelta, webrtc::TimeDelta)","imageIndex":1,"symbolLocation":571},{"imageOffset":4537223,"sourceLine":28,"sourceFile":"null_socket_server.cc","symbol":"webrtc::NullSocketServer::Wait(webrtc::TimeDelta, bool)","imageIndex":1,"symbolLocation":23},{"imageOffset":4521514,"sourceLine":466,"sourceFile":"thread.cc","symbol":"webrtc::Thread::Get(int)","imageIndex":1,"symbolLocation":378},{"imageOffset":4517963,"sourceLine":872,"sourceFile":"thread.cc","symbol":"webrtc::Thread::ProcessMessages(int)","imageIndex":1,"symbolLocation":155},{"imageOffset":4524341,"sourceLine":725,"sourceFile":"thread.cc","symbol":"webrtc::Thread::PreRun(void*)","imageIndex":1,"symbolLocation":85},{"imageOffset":23881,"symbol":"_pthread_start","symbolLocation":115,"imageIndex":16},{"imageOffset":6191,"symbol":"thread_start","symbolLocation":15,"imageIndex":16}]},{"id":275450,"name":"signaling_thread 0x0x600003e040f0","threadState":{"r13":{"value":2203318223616},"rax":{"value":260},"rflags":{"value":583},"cpu":{"value":0},"r14":{"value":512},"rsi":{"value":2203318223616},"r8":{"value":0},"cr2":{"value":0},"rdx":{"value":512},"r10":{"value":0},"r9":{"value":160},"r15":{"value":0},"rbx":{"value":123145364226048},"trap":{"value":133},"err":{"value":33554737},"r11":{"value":582},"rip":{"value":140703371179794},"rbp":{"value":123145364225520},"rsp":{"value":123145364225368},"r12":{"value":22},"rcx":{"value":123145364225368},"flavor":"x86_THREAD_STATE","rdi":{"value":105553169782624}},"frames":[{"imageOffset":14098,"symbol":"__psynch_cvwait","symbolLocation":10,"imageIndex":15},{"imageOffset":25079,"symbol":"_pthread_cond_wait","symbolLocation":994,"imageIndex":16},{"symbol":"webrtc::Event::Wait(webrtc::TimeDelta, webrtc::TimeDelta)::$_0::operator()(std::__Cr::optional<timespec>) const","inline":true,"imageIndex":1,"imageOffset":3068747,"symbolLocation":100,"sourceLine":170,"sourceFile":"event.cc"},{"imageOffset":3068747,"sourceLine":186,"sourceFile":"event.cc","symbol":"webrtc::Event::Wait(webrtc::TimeDelta, webrtc::TimeDelta)","imageIndex":1,"symbolLocation":571},{"imageOffset":4537223,"sourceLine":28,"sourceFile":"null_socket_server.cc","symbol":"webrtc::NullSocketServer::Wait(webrtc::TimeDelta, bool)","imageIndex":1,"symbolLocation":23},{"imageOffset":4521514,"sourceLine":466,"sourceFile":"thread.cc","symbol":"webrtc::Thread::Get(int)","imageIndex":1,"symbolLocation":378},{"imageOffset":4517963,"sourceLine":872,"sourceFile":"thread.cc","symbol":"webrtc::Thread::ProcessMessages(int)","imageIndex":1,"symbolLocation":155},{"imageOffset":4524341,"sourceLine":725,"sourceFile":"thread.cc","symbol":"webrtc::Thread::PreRun(void*)","imageIndex":1,"symbolLocation":85},{"imageOffset":23881,"symbol":"_pthread_start","symbolLocation":115,"imageIndex":16},{"imageOffset":6191,"symbol":"thread_start","symbolLocation":15,"imageIndex":16}]},{"id":275451,"name":"com.apple.coremedia.sharedRootQueue.47","threadState":{"r13":{"value":18446744071411073023},"rax":{"value":14},"rflags":{"value":514},"cpu":{"value":0},"r14":{"value":140371865191504},"rsi":{"value":4294966845028433924},"r8":{"value":5},"cr2":{"value":0},"rdx":{"value":999999895},"r10":{"value":4999999895},"r9":{"value":0},"r15":{"value":1000000000},"rbx":{"value":9144709343030},"trap":{"value":133},"err":{"value":16777254},"r11":{"value":514},"rip":{"value":140703371168482},"rbp":{"value":123145366359872},"rsp":{"value":123145366359832},"r12":{"value":0},"rcx":{"value":123145366359832},"flavor":"x86_THREAD_STATE","rdi":{"value":123979}},"frames":[{"imageOffset":2786,"symbol":"semaphore_timedwait_trap","symbolLocation":10,"imageIndex":15},{"imageOffset":196999,"symbol":"_dispatch_sema4_timedwait","symbolLocation":52,"imageIndex":9},{"imageOffset":11903,"symbol":"_dispatch_semaphore_wait_slow","symbolLocation":58,"imageIndex":9},{"imageOffset":67438,"symbol":"_dispatch_worker_thread","symbolLocation":322,"imageIndex":9},{"imageOffset":23881,"symbol":"_pthread_start","symbolLocation":115,"imageIndex":16},{"imageOffset":6191,"symbol":"thread_start","symbolLocation":15,"imageIndex":16}]},{"id":275460,"name":"com.apple.coremedia.sharedRootQueue.47","threadState":{"r13":{"value":18446744071411073023},"rax":{"value":14},"rflags":{"value":514},"cpu":{"value":0},"r14":{"value":140371865191504},"rsi":{"value":4294966746244186116},"r8":{"value":5},"cr2":{"value":0},"rdx":{"value":999999872},"r10":{"value":4999999872},"r9":{"value":127},"r15":{"value":1000000000},"rbx":{"value":9144783342208},"trap":{"value":133},"err":{"value":16777254},"r11":{"value":514},"rip":{"value":140703371168482},"rbp":{"value":123145368493888},"rsp":{"value":123145368493848},"r12":{"value":0},"rcx":{"value":123145368493848},"flavor":"x86_THREAD_STATE","rdi":{"value":123979}},"frames":[{"imageOffset":2786,"symbol":"semaphore_timedwait_trap","symbolLocation":10,"imageIndex":15},{"imageOffset":196999,"symbol":"_dispatch_sema4_timedwait","symbolLocation":52,"imageIndex":9},{"imageOffset":11903,"symbol":"_dispatch_semaphore_wait_slow","symbolLocation":58,"imageIndex":9},{"imageOffset":67438,"symbol":"_dispatch_worker_thread","symbolLocation":322,"imageIndex":9},{"imageOffset":23881,"symbol":"_pthread_start","symbolLocation":115,"imageIndex":16},{"imageOffset":6191,"symbol":"thread_start","symbolLocation":15,"imageIndex":16}]},{"id":275461,"name":"caulk.messenger.shared:17","threadState":{"r13":{"value":0},"rax":{"value":14},"rflags":{"value":515},"cpu":{"value":0},"r14":{"value":105553177097040},"rsi":{"value":105553118325952},"r8":{"value":105553118325952},"cr2":{"value":0},"rdx":{"value":10},"r10":{"value":0},"r9":{"value":25},"r15":{"value":0},"rbx":{"value":105553177096961},"trap":{"value":133},"err":{"value":16777252},"r11":{"value":515},"rip":{"value":140703371168458},"rbp":{"value":123145370615664},"rsp":{"value":123145370615624},"r12":{"value":0},"rcx":{"value":123145370615624},"flavor":"x86_THREAD_STATE","rdi":{"value":93455}},"frames":[{"imageOffset":2762,"symbol":"semaphore_wait_trap","symbolLocation":10,"imageIndex":15},{"imageOffset":6992,"symbol":"caulk::semaphore::timed_wait(double)","symbolLocation":158,"imageIndex":21},{"imageOffset":6770,"symbol":"caulk::concurrent::details::worker_thread::run()","symbolLocation":30,"imageIndex":21},{"imageOffset":6054,"symbol":"void* caulk::thread_proxy<std::__1::tuple<caulk::thread::attributes, void (caulk::concurrent::details::worker_thread::*)(), std::__1::tuple<caulk::concurrent::details::worker_thread*>>>(void*)","symbolLocation":41,"imageIndex":21},{"imageOffset":23881,"symbol":"_pthread_start","symbolLocation":115,"imageIndex":16},{"imageOffset":6191,"symbol":"thread_start","symbolLocation":15,"imageIndex":16}]},{"id":275462,"name":"caulk.messenger.shared:high","threadState":{"r13":{"value":0},"rax":{"value":14},"rflags":{"value":515},"cpu":{"value":0},"r14":{"value":105553177097664},"rsi":{"value":105553118322976},"r8":{"value":105553118322976},"cr2":{"value":0},"rdx":{"value":12},"r10":{"value":0},"r9":{"value":27},"r15":{"value":0},"rbx":{"value":105553177097473},"trap":{"value":133},"err":{"value":16777252},"r11":{"value":515},"rip":{"value":140703371168458},"rbp":{"value":123145371152240},"rsp":{"value":123145371152200},"r12":{"value":0},"rcx":{"value":123145371152200},"flavor":"x86_THREAD_STATE","rdi":{"value":123151}},"frames":[{"imageOffset":2762,"symbol":"semaphore_wait_trap","symbolLocation":10,"imageIndex":15},{"imageOffset":6992,"symbol":"caulk::semaphore::timed_wait(double)","symbolLocation":158,"imageIndex":21},{"imageOffset":6770,"symbol":"caulk::concurrent::details::worker_thread::run()","symbolLocation":30,"imageIndex":21},{"imageOffset":6054,"symbol":"void* caulk::thread_proxy<std::__1::tuple<caulk::thread::attributes, void (caulk::concurrent::details::worker_thread::*)(), std::__1::tuple<caulk::concurrent::details::worker_thread*>>>(void*)","symbolLocation":41,"imageIndex":21},{"imageOffset":23881,"symbol":"_pthread_start","symbolLocation":115,"imageIndex":16},{"imageOffset":6191,"symbol":"thread_start","symbolLocation":15,"imageIndex":16}]},{"id":275499,"name":"CVDisplayLink","threadState":{"r13":{"value":269384643835392},"rax":{"value":260},"rflags":{"value":663},"cpu":{"value":0},"r14":{"value":60416},"rsi":{"value":269384643835392},"r8":{"value":0},"cr2":{"value":0},"rdx":{"value":60416},"r10":{"value":0},"r9":{"value":65704},"r15":{"value":16486898},"rbx":{"value":62976},"trap":{"value":133},"err":{"value":33554737},"r11":{"value":663},"rip":{"value":140703371179794},"rbp":{"value":123145353580000},"rsp":{"value":123145353579848},"r12":{"value":22},"rcx":{"value":123145353579848},"flavor":"x86_THREAD_STATE","rdi":{"value":140371745141368}},"frames":[{"imageOffset":14098,"symbol":"__psynch_cvwait","symbolLocation":10,"imageIndex":15},{"imageOffset":25129,"symbol":"_pthread_cond_wait","symbolLocation":1044,"imageIndex":16},{"imageOffset":14609,"symbol":"CVDisplayLink::waitUntil(unsigned long long)","symbolLocation":375,"imageIndex":22},{"imageOffset":10324,"symbol":"CVDisplayLink::runIOThread()","symbolLocation":524,"imageIndex":22},{"imageOffset":23881,"symbol":"_pthread_start","symbolLocation":115,"imageIndex":16},{"imageOffset":6191,"symbol":"thread_start","symbolLocation":15,"imageIndex":16}]}],
+  "usedImages" : [
+  {
+    "source" : "P",
+    "arch" : "x86_64",
+    "base" : 4452585472,
+    "CFBundleShortVersionString" : "0.0.38",
+    "CFBundleIdentifier" : "com.microdit.macosClient",
+    "size" : 299008,
+    "uuid" : "ff521671-b9c8-36ba-ad2b-aecc990507fe",
+    "path" : "\/Volumes\/*\/macos_client.app\/Contents\/MacOS\/macos_client",
+    "name" : "macos_client",
+    "CFBundleVersion" : "38"
+  },
+  {
+    "source" : "P",
+    "arch" : "x86_64",
+    "base" : 4483395584,
+    "CFBundleShortVersionString" : "1.0",
+    "CFBundleIdentifier" : "org.webrtc.WebRTC",
+    "size" : 15790080,
+    "uuid" : "4c4c4436-5555-3144-a19d-52769b5075d3",
+    "path" : "\/Volumes\/*\/macos_client.app\/Contents\/Frameworks\/WebRTC.framework\/Versions\/A\/WebRTC",
+    "name" : "WebRTC",
+    "CFBundleVersion" : "1.0"
+  },
+  {
+    "source" : "P",
+    "arch" : "x86_64",
+    "base" : 4453183488,
+    "CFBundleShortVersionString" : "1.0",
+    "CFBundleIdentifier" : "io.flutter.flutter-macos",
+    "size" : 14647296,
+    "uuid" : "4c4c44ff-5555-3144-a1b9-33a86a4e85a1",
+    "path" : "\/Volumes\/*\/macos_client.app\/Contents\/Frameworks\/FlutterMacOS.framework\/Versions\/A\/FlutterMacOS",
+    "name" : "FlutterMacOS",
+    "CFBundleVersion" : "1.0"
+  },
+  {
+    "source" : "P",
+    "arch" : "x86_64h",
+    "base" : 4483264512,
+    "size" : 53248,
+    "uuid" : "959c3359-13f6-3847-bb1b-98a95dcd919e",
+    "path" : "\/usr\/lib\/libobjc-trampolines.dylib",
+    "name" : "libobjc-trampolines.dylib"
+  },
+  {
+    "source" : "P",
+    "arch" : "x86_64",
+    "base" : 4590313472,
+    "CFBundleShortVersionString" : "1.0",
+    "CFBundleIdentifier" : "io.flutter.flutter.app",
+    "size" : 8527872,
+    "uuid" : "156085f3-5755-078c-18b6-253d9a629d15",
+    "path" : "\/Volumes\/*\/macos_client.app\/Contents\/Frameworks\/App.framework\/Versions\/A\/App",
+    "name" : "App",
+    "CFBundleVersion" : "1.0"
+  },
+  {
+    "source" : "P",
+    "arch" : "x86_64",
+    "base" : 4808245248,
+    "CFBundleShortVersionString" : "810.0",
+    "CFBundleIdentifier" : "com.apple.cmio.DAL.VDC-4",
+    "size" : 274432,
+    "uuid" : "8620303e-a940-3f31-97db-16681b0d7f4d",
+    "path" : "\/System\/Library\/Frameworks\/CoreMediaIO.framework\/Versions\/A\/Resources\/VDC.plugin\/Contents\/MacOS\/VDC",
+    "name" : "VDC",
+    "CFBundleVersion" : "497.120.3"
+  },
+  {
+    "source" : "P",
+    "arch" : "x86_64h",
+    "base" : 140703366807552,
+    "size" : 279436,
+    "uuid" : "16fc36e8-c44e-3524-8dd6-5e3851d49f89",
+    "path" : "\/usr\/lib\/libobjc.A.dylib",
+    "name" : "libobjc.A.dylib"
+  },
+  {
+    "source" : "P",
+    "arch" : "x86_64",
+    "base" : 140707704180736,
+    "CFBundleShortVersionString" : "1.0",
+    "CFBundleIdentifier" : "com.apple.AVFCapture",
+    "size" : 2418953,
+    "uuid" : "a5add6c3-6615-3edf-ac2b-79fe0c32c06d",
+    "path" : "\/System\/Library\/PrivateFrameworks\/AVFCapture.framework\/Versions\/A\/AVFCapture",
+    "name" : "AVFCapture",
+    "CFBundleVersion" : "665.140.6"
+  },
+  {
+    "source" : "P",
+    "arch" : "x86_64",
+    "base" : 140703368351744,
+    "size" : 128842,
+    "uuid" : "018b83c2-8629-37cf-8e44-9c1de12089bf",
+    "path" : "\/usr\/lib\/system\/libsystem_trace.dylib",
+    "name" : "libsystem_trace.dylib"
+  },
+  {
+    "source" : "P",
+    "arch" : "x86_64",
+    "base" : 140703369633792,
+    "size" : 294290,
+    "uuid" : "92776fbe-9cc6-313d-b6a1-8ffe434062ef",
+    "path" : "\/usr\/lib\/system\/libdispatch.dylib",
+    "name" : "libdispatch.dylib"
+  },
+  {
+    "source" : "P",
+    "arch" : "x86_64h",
+    "base" : 140703371706368,
+    "CFBundleShortVersionString" : "6.9",
+    "CFBundleIdentifier" : "com.apple.CoreFoundation",
+    "size" : 4971013,
+    "uuid" : "9890f92f-ea67-3c8e-9375-325472896553",
+    "path" : "\/System\/Library\/Frameworks\/CoreFoundation.framework\/Versions\/A\/CoreFoundation",
+    "name" : "CoreFoundation",
+    "CFBundleVersion" : "5026.6.7.2"
+  },
+  {
+    "source" : "P",
+    "arch" : "x86_64",
+    "base" : 140703586811904,
+    "CFBundleShortVersionString" : "2.1.1",
+    "CFBundleIdentifier" : "com.apple.HIToolbox",
+    "size" : 3001295,
+    "uuid" : "b0118796-1c3b-33d2-8599-a13431bef869",
+    "path" : "\/System\/Library\/Frameworks\/Carbon.framework\/Versions\/A\/Frameworks\/HIToolbox.framework\/Versions\/A\/HIToolbox",
+    "name" : "HIToolbox"
+  },
+  {
+    "source" : "P",
+    "arch" : "x86_64",
+    "base" : 140703437500416,
+    "CFBundleShortVersionString" : "6.9",
+    "CFBundleIdentifier" : "com.apple.AppKit",
+    "size" : 25152279,
+    "uuid" : "4c9f386f-9722-37fa-8848-f14e6c8e02eb",
+    "path" : "\/System\/Library\/Frameworks\/AppKit.framework\/Versions\/C\/AppKit",
+    "name" : "AppKit",
+    "CFBundleVersion" : "2685.70.102"
+  },
+  {
+    "source" : "P",
+    "arch" : "x86_64",
+    "base" : 140703367282688,
+    "size" : 706640,
+    "uuid" : "46682b15-483c-396c-8e40-b7bba8580f73",
+    "path" : "\/usr\/lib\/dyld",
+    "name" : "dyld"
+  },
+  {
+    "size" : 0,
+    "source" : "A",
+    "base" : 0,
+    "uuid" : "00000000-0000-0000-0000-000000000000"
+  },
+  {
+    "source" : "P",
+    "arch" : "x86_64",
+    "base" : 140703371165696,
+    "size" : 255440,
+    "uuid" : "5818a89c-725f-3dfd-978e-c1fc018315d3",
+    "path" : "\/usr\/lib\/system\/libsystem_kernel.dylib",
+    "name" : "libsystem_kernel.dylib"
+  },
+  {
+    "source" : "P",
+    "arch" : "x86_64",
+    "base" : 140703371423744,
+    "size" : 48832,
+    "uuid" : "169a2e57-79fb-3083-b61d-48bae3a00692",
+    "path" : "\/usr\/lib\/system\/libsystem_pthread.dylib",
+    "name" : "libsystem_pthread.dylib"
+  },
+  {
+    "source" : "P",
+    "arch" : "x86_64",
+    "base" : 140703639674880,
+    "size" : 34152,
+    "uuid" : "d83e4958-8191-3c5d-b0c9-772606caf087",
+    "path" : "\/usr\/lib\/system\/libunwind.dylib",
+    "name" : "libunwind.dylib"
+  },
+  {
+    "source" : "P",
+    "arch" : "x86_64",
+    "base" : 140703371067392,
+    "size" : 95736,
+    "uuid" : "53d7fc1a-cf38-3f40-9c54-b63291e1675c",
+    "path" : "\/usr\/lib\/libc++abi.dylib",
+    "name" : "libc++abi.dylib"
+  },
+  {
+    "source" : "P",
+    "arch" : "x86_64",
+    "base" : 140703492534272,
+    "CFBundleShortVersionString" : "1.22",
+    "CFBundleIdentifier" : "com.apple.HIServices",
+    "size" : 415868,
+    "uuid" : "e65ad31b-4453-3cb2-8f48-abe9f7798486",
+    "path" : "\/System\/Library\/Frameworks\/ApplicationServices.framework\/Versions\/A\/Frameworks\/HIServices.framework\/Versions\/A\/HIServices",
+    "name" : "HIServices"
+  },
+  {
+    "source" : "P",
+    "arch" : "x86_64",
+    "base" : 140703391170560,
+    "CFBundleShortVersionString" : "6.9",
+    "CFBundleIdentifier" : "com.apple.Foundation",
+    "size" : 17035107,
+    "uuid" : "7e3d8a67-ef75-3180-8644-691be9fe3a9f",
+    "path" : "\/System\/Library\/Frameworks\/Foundation.framework\/Versions\/C\/Foundation",
+    "name" : "Foundation",
+    "CFBundleVersion" : "5026.6.7.2"
+  },
+  {
+    "source" : "P",
+    "arch" : "x86_64",
+    "base" : 140703581974528,
+    "CFBundleShortVersionString" : "1.0",
+    "CFBundleIdentifier" : "com.apple.audio.caulk",
+    "size" : 149792,
+    "uuid" : "1f1c8ecf-00e6-331d-8910-2b8bca62877d",
+    "path" : "\/System\/Library\/PrivateFrameworks\/caulk.framework\/Versions\/A\/caulk",
+    "name" : "caulk"
+  },
+  {
+    "source" : "P",
+    "arch" : "x86_64",
+    "base" : 140703550316544,
+    "CFBundleShortVersionString" : "1.8",
+    "CFBundleIdentifier" : "com.apple.CoreVideo",
+    "size" : 472424,
+    "uuid" : "bd6aad57-7f48-35f7-a759-22e5423266a7",
+    "path" : "\/System\/Library\/Frameworks\/CoreVideo.framework\/Versions\/A\/CoreVideo",
+    "name" : "CoreVideo",
+    "CFBundleVersion" : "0.0"
+  }
+],
+  "sharedCache" : {
+  "base" : 140703322628096,
+  "size" : 30064771072,
+  "uuid" : "31374756-89b4-34e8-a34f-56c5d57216a1"
+},
+  "vmSummary" : "ReadOnly portion of Libraries: Total=1.5G resident=0K(0%) swapped_out_or_unallocated=1.5G(100%)\nWritable regions: Total=772.1M written=0K(0%) resident=0K(0%) swapped_out=0K(0%) unallocated=772.1M(100%)\n\n                                VIRTUAL   REGION \nREGION TYPE                        SIZE    COUNT (non-coalesced) \n===========                     =======  ======= \nAccelerate framework               128K        1 \nActivity Tracing                   256K        1 \nAttributeGraph Data               1024K        1 \nCG image                           520K        2 \nColorSync                            4K        1 \nCoreAnimation                     4096K       56 \nCoreGraphics                        20K        3 \nCoreImage                          512K        1 \nCoreUI image data                  484K        4 \nFoundation                          44K        2 \nIOKit                             15.5M        2 \nKernel Alloc Once                  688K        2 \nMALLOC                           727.9M      114 \nMALLOC guard page                   64K       16 \nSTACK GUARD                       56.1M       25 \nStack                             24.7M       27 \nVM_ALLOCATE                       13.1M       44 \n__CTF                               824        1 \n__DATA                            47.8M     1019 \n__DATA_CONST                     125.6M     1063 \n__DATA_DIRTY                      8859K      898 \n__FONT_DATA                        2352        1 \n__LINKEDIT                       155.4M        7 \n__OBJC_RO                         65.2M        1 \n__OBJC_RW                         2598K        1 \n__TEXT                             1.3G     1083 \n__TPRO_CONST                         16        2 \nmapped file                      327.9M       45 \nshared memory                      800K       18 \n===========                     =======  ======= \nTOTAL                              2.9G     4441 \n",
+  "legacyInfo" : {
+  "threadTriggered" : {
+    "queue" : "com.apple.root.user-initiated-qos"
+  }
+},
+  "logWritingSignature" : "1009d3d6a0b3c85b15f5bce2ffa8e8b49830e6b5",
+  "roots_installed" : 0,
+  "bug_type" : "309",
+  "trmStatus" : 2105856,
+  "trialInfo" : {
+  "rollouts" : [
+    {
+      "rolloutId" : "654439cdafbf5b61207873a9",
+      "factorPackIds" : [
+
+      ],
+      "deploymentId" : 240000004
+    },
+    {
+      "rolloutId" : "648cada15dbc71671bb3aa1b",
+      "factorPackIds" : [
+        "65a81173096f6a1f1ba46525"
+      ],
+      "deploymentId" : 240000116
+    }
+  ],
+  "experiments" : [
+
+  ]
+}
+}
+
