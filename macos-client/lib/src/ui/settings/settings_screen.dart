@@ -351,7 +351,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       OutlinedButton(
                           onPressed: _resetAuth, child: const Text('인증 초기화')),
                     ]),
-                    if (_lastVerifyOffline && !verified) ...[
+                    if ((_lastVerifyOffline ||
+                            _domain.text.trim().contains('synology.me')) &&
+                        !verified) ...[
                       const SizedBox(height: 8),
                       OutlinedButton.icon(
                         onPressed: _verifyOffline,

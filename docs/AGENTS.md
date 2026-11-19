@@ -124,7 +124,8 @@
 - **전용 브랜치**: `feature/external-network-access` 생성. 작업계획서 [[wiki/01_Projects/20261119_외부망접근_작업계획서_v1.0]] (W1~W10), 로그 [[wiki/07_Logs/20261119]] 섹션 3. 포트: IPTime1 → `192.168.11.5` 8089/TCP + 10000-10200/UDP.
 - **구현 완료(코드)**: 서버 `http.conf.template`/`entrypoint.sh`(조건부 transport-wss·인증서 검사·`SDP_MEDIA_ADDRESS`), DEV/PRD compose·env, 클라이언트 `ServerConfig.secure` + OPS `secure`→withScheme 자동 https/wss. analyze 0 / test 17/17.
 - **실제 적용(2026-11-19)**: Synology DDNS 인증서(`CN=appletreeda.synology.me`, 만료 2026-12-31)를 `deploy/dev/certs/`에 배치, `.env` `TLS_ENABLE=yes`. HTTPS 8089·wss transport 확인, WSS REGISTER_OK. probe 3종 초기화 버그 수정. 6700 AI봇(7001) 재기동 후 1080p 송출 확인. 외부망 1103 인증 실패는 OPS 8091 미개방 → **오프라인 인증** + DDNS 저장 시 wss 자동전환 추가. **v0.0.38 빌드/발행**.
-- **6700 품질 수정(v1.6)**: 공인 IP를 전역 `media_address`로 써서 내부 RTP가 NAT hairpin을 통과하며 1102 프리즈/1101 media stall 발생 → `SDP_MEDIA_ADDRESS=192.168.11.5` 복구, `rtp.conf`에 `stunaddr` + `ice_host_candidates`(Docker IP→LAN, include_local_address)로 내부/공인 이중 후보 구성. 1:1·3자·6700 프로브 재검증 OK, WSS REGISTER_OK 유지. 잔여: 실제 외부 단말 미디어 검증, 인증서 갱신, PRD, TURN.
+- **6700 품질 수정(v1.6)**: 공인 IP를 전역 `media_address`로 써서 내부 RTP가 NAT hairpin을 통과하며 1102 프리즈/1101 media stall 발생 → `SDP_MEDIA_ADDRESS=192.168.11.5` 복구, `rtp.conf`에 `stunaddr` + `ice_host_candidates`(Docker IP→LAN, include_local_address)로 내부/공인 이중 후보 구성. 1:1·3자·6700 프로브 재검증 OK.
+- **v1.7 클라이언트 수정**: 클라이언트도 LAN이면 STUN을 쓰지 않아 SDP `c=`가 공인 IP가 되지 않도록 `AppConstants.iceServersFor()` 분리, 로그인 성공 시 `markLocalVerified()`로 외부 1103 로컬 인증, 설정 오프라인 인증 버튼 상시 노출. **v0.0.39 발행**(SHA256 `c4d05d88…`), analyze 0 / test 17/17. 잔여: v0.0.39 실기 재검증, 외부 단말 미디어, 인증서 갱신, PRD, TURN.
 - 클라이언트: 로그인 WSS hint 반영, `flutter analyze` 0 / `test` 17/17. 작업로그 [[docs/_작업이력/2026-11-19]]
 
 ## 이전 진행 (2026-11-13 02:00, 요약) — F1/F2/G3 구현·v0.0.24

@@ -220,7 +220,9 @@ class _AddressBookScreenState extends State<AddressBookScreen>
       port: cfgBase.sipPort,
       displayName: bound!.displayName.isNotEmpty ? bound.displayName : ext,
       wsServer: cfgBase.wsServer,
-      iceServers: AppConstants.prdIceServers,
+      iceServers: AppConstants.iceServersFor(
+        cfgBase.wsServer.isEmpty ? cfgBase.sipDomain : cfgBase.wsServer,
+      ),
     );
     sip.updateConfig(sipConfig);
     AppLogger.instance.ui('ADDRESSBOOK', 'autoRegister', params: {'ext': ext});
@@ -262,7 +264,9 @@ class _AddressBookScreenState extends State<AddressBookScreen>
       port: cfgBase.sipPort,
       displayName: c.displayName.isNotEmpty ? c.displayName : c.extension,
       wsServer: cfgBase.wsServer,
-      iceServers: AppConstants.prdIceServers,
+      iceServers: AppConstants.iceServersFor(
+        cfgBase.wsServer.isEmpty ? cfgBase.sipDomain : cfgBase.wsServer,
+      ),
     );
     sip.updateConfig(sipConfig);
     AppLogger.instance

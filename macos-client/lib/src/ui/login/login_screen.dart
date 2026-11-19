@@ -7,6 +7,7 @@ import '../../providers/media_provider.dart';
 import '../../sip/sip_config.dart';
 import '../../sip/sip_client.dart';
 import '../../utils/app_logger.dart';
+import '../../utils/client_auth_state.dart';
 import '../../utils/constants.dart';
 import '../../utils/formatters.dart';
 import '../../utils/ops_directory.dart';
@@ -830,7 +831,7 @@ class _LoginScreenState extends State<LoginScreen> {
         port: port,
         displayName: displayName,
         wsServer: wsServer,
-        iceServers: AppConstants.prdIceServers,
+        iceServers: AppConstants.iceServersFor(wsServer.isEmpty ? domain : wsServer),
       );
     } else {
       config = SipConfig.udp(
@@ -839,7 +840,7 @@ class _LoginScreenState extends State<LoginScreen> {
         domain: domain,
         port: port,
         displayName: displayName,
-        iceServers: AppConstants.prdIceServers,
+        iceServers: AppConstants.iceServersFor(domain),
       );
     }
     
@@ -856,6 +857,16 @@ class _LoginScreenState extends State<LoginScreen> {
     if (!mounted) return;
 
     if (success && sipProvider.isRegistered) {
+      final auth = await ClientAuthStore.instance().load();
+      if (!auth.isVerified || auth.authExtension != username) {
+        await ClientAuthStore.instance().applyInput(
+              extension: username,
+              clientKey: auth.clientKey.isEmpty ? 'sip-local' : auth.clientKey,
+            );
+        await ClientAuthStore.instance()
+            .markLocalVerified(reason: 'SIP 등록 성공');
+      }
+      if (!mounted) return;
       // 미디어 초기화
       final mediaProvider = Provider.of<MediaProvider>(context, listen: false);
       await mediaProvider.getLocalMedia();
