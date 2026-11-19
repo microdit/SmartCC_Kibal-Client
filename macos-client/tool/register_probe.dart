@@ -4,6 +4,8 @@ import 'dart:io';
 import 'package:flutter/widgets.dart';
 import 'package:macos_client/src/sip/sip_client.dart';
 import 'package:macos_client/src/sip/sip_config.dart';
+import 'package:macos_client/src/utils/app_logger.dart';
+import 'package:macos_client/src/utils/remote_log_forwarder.dart';
 
 /// DEV Asterisk에 대한 SIP REGISTER 스모크 테스트 진입점.
 ///
@@ -13,6 +15,8 @@ import 'package:macos_client/src/sip/sip_config.dart';
 ///   --dart-define=SIP_PASSWORD=1102pass
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await AppLogger.instance.init();
+  await RemoteLogForwarder.instance.start();
 
   const username = String.fromEnvironment('SIP_USERNAME', defaultValue: '1102');
   const password = String.fromEnvironment('SIP_PASSWORD');
