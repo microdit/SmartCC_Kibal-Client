@@ -121,6 +121,7 @@
 - 서버 주의: ws/wss 전송은 transport `external_*` 무시 → endpoint `media_address=<공인 IP>` 필요, SDP `c=`에는 DDNS 호스트명 불가.
 - 미확인: 공인 IP 동적 갱신 시 SDP `c=` 반영 방식, IPTime1 접근/테더링 실기 검증 시간, Synology 인증서 내보내기 경로.
 - 의견서 v1.2: DEV/PRD/외부 서버 환경별 대비책(프로필 기반 OPS config, 공인 IP↔SDP 분리, 인증서/포트/RTP 범위 분리, TURN/VPS fallback) 추가. PRD `MEDIA_ADDRESS=CHANGE_ME_PUBLIC_IP` placeholder는 미해소 리스크.
+- **전용 브랜치**: `feature/external-network-access` 생성. 작업계획서 [[wiki/01_Projects/20261119_외부망접근_작업계획서_v1.0]] (W1~W10), 로그 [[wiki/07_Logs/20261119]] 섹션 3. 포트: IPTime1 → `192.168.11.5` 8089/TCP + 10000-10200/UDP.
 - 클라이언트: 로그인 WSS hint 반영, `flutter analyze` 0 / `test` 17/17. 작업로그 [[docs/_작업이력/2026-11-19]]
 
 ## 이전 진행 (2026-11-13 02:00, 요약) — F1/F2/G3 구현·v0.0.24

@@ -545,7 +545,7 @@ class _LoginScreenState extends State<LoginScreen> {
           controller: _wsServerController,
           decoration: const InputDecoration(
             labelText: 'WebSocket 서버',
-            hintText: 'ws://<서버IP>:8088/ws (서버 설정 갱신으로 자동 입력)',
+            hintText: 'wss://<DDNS>:8089/ws (외부) · ws://<서버IP>:8088/ws (내부)',
             prefixIcon: Icon(Icons.web_asset_outlined),
             border: OutlineInputBorder(),
           ),
