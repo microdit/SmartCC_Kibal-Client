@@ -23,6 +23,7 @@ class ServerConfig {
     this.source = 'default',
     this.clientKey = '',
     this.clientExtension = '',
+    this.secure = false,
     this.manifest,
   });
 
@@ -42,6 +43,8 @@ class ServerConfig {
   /// 내선별 클라이언트 키(사용자 수동 입력, ADR-006) — 비어있으면 전역키 fallback
   final String clientKey;
   final String clientExtension;
+
+  final bool secure;
 
   /// 서버 manifest(D1): config_version, latest/min_supported, update flags 등
   final Map<String, dynamic>? manifest;
@@ -71,6 +74,7 @@ class ServerConfig {
         'clientLogUrl': clientLogUrl,
         'publicHost': publicHost,
         'updatedAt': updatedAt,
+        'secure': secure,
         // 보안: Ops 클라이언트 키/인증내선은 기본적으로 평문 설정파일에 저장하지 않음(보안 저장소 사용)
         if (includeSecrets) 'clientKey': clientKey,
         if (includeSecrets) 'clientExtension': clientExtension,
@@ -86,7 +90,13 @@ class ServerConfig {
     final ops = (j['opsBaseUrl'] ?? j['ops_base_url']) as String? ??
         'http://$domain:${AppConstants.opsPort}';
     final man = j['manifest'];
-    return ServerConfig(
+    final secureValue = j['secure'] ?? j['use_tls'] ?? j['tls'];
+    final secure = secureValue is bool
+        ? secureValue
+        : secureValue is String
+            ? secureValue.toLowerCase() == 'true' || secureValue == '1'
+            : secureValue == 1;
+    final cfg = ServerConfig(
       sipDomain: domain,
       sipPort: ((j['sipPort'] ?? j['sip_port']) as num?)?.toInt() ??
           AppConstants.defaultSipPort,
@@ -99,10 +109,12 @@ class ServerConfig {
       source: source,
       clientKey: (j['clientKey'] as String?) ?? '',
       clientExtension: (j['clientExtension'] as String?) ?? '',
+      secure: secure,
       manifest: man is Map<String, dynamic>
           ? man
           : (man is Map ? Map<String, dynamic>.from(man) : null),
     );
+    return secure ? cfg.withScheme(secure: true) : cfg;
   }
 
   static ServerConfig load() {
@@ -172,6 +184,7 @@ class ServerConfig {
     String? source,
     String? clientKey,
     String? clientExtension,
+    bool? secure,
     Map<String, dynamic>? manifest,
   }) =>
       ServerConfig(
@@ -185,6 +198,7 @@ class ServerConfig {
         source: source ?? this.source,
         clientKey: clientKey ?? this.clientKey,
         clientExtension: clientExtension ?? this.clientExtension,
+        secure: secure ?? this.secure,
         manifest: manifest ?? this.manifest,
       );
 

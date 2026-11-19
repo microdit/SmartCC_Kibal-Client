@@ -122,6 +122,7 @@
 - 미확인: 공인 IP 동적 갱신 시 SDP `c=` 반영 방식, IPTime1 접근/테더링 실기 검증 시간, Synology 인증서 내보내기 경로.
 - 의견서 v1.2: DEV/PRD/외부 서버 환경별 대비책(프로필 기반 OPS config, 공인 IP↔SDP 분리, 인증서/포트/RTP 범위 분리, TURN/VPS fallback) 추가. PRD `MEDIA_ADDRESS=CHANGE_ME_PUBLIC_IP` placeholder는 미해소 리스크.
 - **전용 브랜치**: `feature/external-network-access` 생성. 작업계획서 [[wiki/01_Projects/20261119_외부망접근_작업계획서_v1.0]] (W1~W10), 로그 [[wiki/07_Logs/20261119]] 섹션 3. 포트: IPTime1 → `192.168.11.5` 8089/TCP + 10000-10200/UDP.
+- **구현 완료(코드)**: 서버 `http.conf.template`/`entrypoint.sh`(조건부 transport-wss·인증서 검사·`SDP_MEDIA_ADDRESS`), DEV/PRD compose·env, 클라이언트 `ServerConfig.secure` + OPS `secure`→withScheme 자동 https/wss. 인증서 배치·공인 IP 설정·포트포워딩·컨테이너 재시작·실기 검증은 대기. analyze 0 / test 17/17.
 - 클라이언트: 로그인 WSS hint 반영, `flutter analyze` 0 / `test` 17/17. 작업로그 [[docs/_작업이력/2026-11-19]]
 
 ## 이전 진행 (2026-11-13 02:00, 요약) — F1/F2/G3 구현·v0.0.24
