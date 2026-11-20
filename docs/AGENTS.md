@@ -147,7 +147,8 @@
 - **v0.0.47~48**: 프로필 변경 시 로그 URL 연동, 프로필별 연결 테스트(OPS/WS/로그) 추가. 외부망 8091 차단은 정상이며 로그는 로컬 보관 후 재전송. 안내서 [[wiki/03_Guides/20261120_연결프로필_자동설정_사용안내_v1.0]], [[wiki/03_Guides/20261120_외부망접근_테스트절차서_v1.0]]
 - **외부관점 테스트**: [[wiki/08_Experiments/20261120_외부망접근_외부관점_테스트_v1.0]] — DDNS 8089 HTTPS/WS PASS, 8091/8088 TIMEOUT(정책 차단). webfetch egress가 공인 IP와 동일해 해외 관점은 사용자 VPN 재확인 필요.
 - **미국 VPN 로그 분석**: [[wiki/08_Experiments/20261120_미국VPN_외부망테스트_로그분석_v1.0]] — OPS 8091 차단(예상), 로그는 지연 재전송 후 서버 수신, OPS unhealthy 재시작 복구. SIP/통화 이벤트 없음 → 외부 통화 미검증.
-- **OPS hang 진단 수령 검증**: [[wiki/06_Reports/20261120_OPS8091_hang_진단보고서_MacPro전달용_v1.0]] — 외부 OPS HTTP-only 정정, git-sync push 버그 수정 확인, 내부/외부 health 200 재검증. v0.0.49 SHA256 `fc5ae6db…`.
+- **OPS hang 진단 수령 검증**: [[wiki/06_Reports/20261120_OPS8091_hang_진단보고서_MacPro전달용_v1.0]] — 외부 OPS HTTP-only 정정, git-sync push 버그 수정 확인, 내부/외부 health 200 재검증. v0.0.49 SHA256 `fc5ae6db…`
+- **자체 테스트 종합**: [[wiki/08_Experiments/20261120_에이전트_자체테스트_종합_v1.0]] — 빌드/외부관점/SIP·회의/로그/일일점검 결과 및 미수행 항목 정리..
 
 ## 이전 진행 (2026-11-13 02:00, 요약) — F1/F2/G3 구현·v0.0.24
 - F1 `_pendingCallTarget`, F2 A4 롤백, G3 `enable_events=yes` 반영(v0.0.24 build 24, sha256 `c8c6e4a7…`). ADR-008/D1·ADR-009/F2 실기 확인, G3 부분검증. 잔여: P0 크래시, H1/H5/F1/H6 재검증. 상세: [[wiki/06_Reports/20261113_F1F2G3_구현완료보고서_v1.0]], [[docs/보고서/20261113_후속작업계획서_v2.0]], [[wiki/07_Logs/작업로그_20261113]]
