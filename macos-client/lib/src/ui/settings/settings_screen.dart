@@ -39,6 +39,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
   ClientAuthState _auth = ClientAuthState.empty();
   late VideoQualitySettings _quality;
   String? _qualityMsg;
+  late ConnectionProfile _profile;
+  String? _autoMsg;
 
   @override
   void initState() {
@@ -47,8 +49,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Future<void> _load() async {
-    final cfg = ServerConfigService.instance.current;
     final auth = await ClientAuthStore.instance().load();
+    final store = ConnectionProfileStore.instance;
+    await store.load();
+    _profile = store.selected;
+    final cfg = store.configFor(_profile) ?? _profile.defaultConfig();
     _quality = VideoQualitySettings.load();
     if (!mounted) return;
     setState(() {
@@ -72,6 +77,55 @@ class _SettingsScreenState extends State<SettingsScreen> {
     _ws.dispose();
     _ops.dispose();
     super.dispose();
+  }
+
+  Future<void> _switchProfile(ConnectionProfile profile) async {
+    final base = ServerConfigService.instance.current;
+    final current = base.copyWith(
+      sipDomain: _domain.text.trim(),
+      sipPort: int.tryParse(_port.text.trim()) ?? base.sipPort,
+      wsServer: _ws.text.trim(),
+      opsBaseUrl: _ops.text.trim(),
+      source: 'profile',
+    );
+    final store = ConnectionProfileStore.instance;
+    store.save(_profile, current);
+    store.setSelected(profile);
+    final cfg = store.configFor(profile) ?? profile.defaultConfig();
+    ServerConfigService.instance.setCurrent(cfg);
+    cfg.save();
+    if (!mounted) return;
+    setState(() {
+      _profile = profile;
+      _domain.text = cfg.sipDomain;
+      _port.text = cfg.sipPort.toString();
+      _ws.text = cfg.wsServer;
+      _ops.text = cfg.opsBaseUrl;
+      _autoMsg = '${profile.label} 프로필로 전환했습니다.';
+    });
+  }
+
+  Future<void> _autoConfigure() async {
+    setState(() => _autoMsg = '서버 설정을 탐색하는 중…');
+    final cfg = await ServerConfigService.instance.probeProfile(
+      _profile,
+      clientKey: _authKey.text.trim(),
+      extension: _authExt.text.trim(),
+    );
+    if (!mounted) return;
+    if (cfg == null) {
+      setState(() => _autoMsg = '연결되는 서버가 없습니다. 수동으로 입력하세요.');
+      return;
+    }
+    ConnectionProfileStore.instance.save(_profile, cfg);
+    ConnectionProfileStore.instance.setSelected(_profile);
+    setState(() {
+      _domain.text = cfg.sipDomain;
+      _port.text = cfg.sipPort.toString();
+      _ws.text = cfg.wsServer;
+      _ops.text = cfg.opsBaseUrl;
+      _autoMsg = '서버에서 자동 설정을 받았습니다 (${cfg.source}).';
+    });
   }
 
   Future<void> _saveConnection() async {
@@ -101,7 +155,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
     ServerConfigService.instance
         .setCurrent(cfg); // ignore: invalid_use_of_visible_for_testing_member
     cfg.save();
+    ConnectionProfileStore.instance.save(_profile, cfg);
+    ConnectionProfileStore.instance.setSelected(_profile);
     AppLogger.instance.ui('SETTINGS', 'connectionSaved', params: {
+      'profile': _profile.name,
       'domain': cfg.sipDomain,
       'secureWs': cfg.wsServer.startsWith('wss'),
       'secureOps': cfg.opsBaseUrl.startsWith('https'),
@@ -413,8 +470,26 @@ class _SettingsScreenState extends State<SettingsScreen> {
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    const Text('연결 설정 (DEV)',
-                        style: TextStyle(fontWeight: FontWeight.w600)),
+                    Text('연결 설정 (${_profile.label})',
+                        style: const TextStyle(fontWeight: FontWeight.w600)),
+                    const SizedBox(height: 8),
+                    DropdownButtonFormField<ConnectionProfile>(
+                      initialValue: _profile,
+                      decoration: const InputDecoration(
+                        labelText: '연결 프로필',
+                        border: OutlineInputBorder(),
+                      ),
+                      items: [
+                        for (final p in ConnectionProfile.values)
+                          DropdownMenuItem(
+                            value: p,
+                            child: Text(p.label),
+                          ),
+                      ],
+                      onChanged: (p) {
+                        if (p != null && p != _profile) _switchProfile(p);
+                      },
+                    ),
                     const SizedBox(height: 8),
                     TextField(
                         controller: _domain,
@@ -443,9 +518,26 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     FilledButton.tonal(
                         onPressed: _saving ? null : _saveConnection,
                         child: const Text('연결 설정 저장')),
+                    const SizedBox(height: 8),
+                    OutlinedButton.icon(
+                      onPressed: _saving ? null : _autoConfigure,
+                      icon: const Icon(Icons.cloud_download_outlined, size: 18),
+                      label: const Text('서버에서 자동 설정'),
+                    ),
+                    if (_autoMsg != null) ...[
+                      const SizedBox(height: 6),
+                      Text(_autoMsg!,
+                          style: TextStyle(
+                              fontSize: 12,
+                              color: _autoMsg!.contains('실패') ||
+                                      _autoMsg!.contains('없습니다')
+                                  ? Colors.orange
+                                  : Colors.green)),
+                    ],
                     const SizedBox(height: 4),
                     const Text(
-                        '보안통신(HTTPS/WSS) 전환 시 서버 인증서·Asterisk WSS 구성이 필요합니다(DEV).',
+                        '프로필별 설정을 저장하며, 자동 설정은 연결되는 서버에만 적용됩니다. '
+                        'DEV·PRD는 내부 OPS, 외부망은 DDNS OPS를 먼저 시도합니다.',
                         style: TextStyle(fontSize: 12, color: Colors.grey)),
                   ]),
             ),

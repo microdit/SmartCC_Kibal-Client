@@ -5,6 +5,137 @@ import 'dart:io';
 import 'app_logger.dart';
 import 'constants.dart';
 
+enum ConnectionProfile { dev, prd, external }
+
+extension ConnectionProfileX on ConnectionProfile {
+  String get label {
+    switch (this) {
+      case ConnectionProfile.dev:
+        return 'DEV';
+      case ConnectionProfile.prd:
+        return 'PRD';
+      case ConnectionProfile.external:
+        return '외부망';
+    }
+  }
+
+  ServerConfig defaultConfig() {
+    switch (this) {
+      case ConnectionProfile.dev:
+        return ServerConfig(
+          sipDomain: '192.168.11.5',
+          sipPort: 5060,
+          wsServer: 'ws://192.168.11.5:8088/ws',
+          opsBaseUrl: 'http://192.168.11.5:8091',
+          clientLogUrl: AppConstants.opsLogUrl('192.168.11.5'),
+          source: 'profile',
+        );
+      case ConnectionProfile.prd:
+        return ServerConfig(
+          sipDomain: '192.168.11.3',
+          sipPort: 5060,
+          wsServer: 'ws://192.168.11.3:8088/ws',
+          opsBaseUrl: 'http://192.168.11.3:8091',
+          clientLogUrl: AppConstants.opsLogUrl('192.168.11.3'),
+          source: 'profile',
+        );
+      case ConnectionProfile.external:
+        return ServerConfig(
+          sipDomain: 'appletreeda.synology.me',
+          sipPort: 8089,
+          wsServer: 'wss://appletreeda.synology.me:8089/ws',
+          opsBaseUrl: 'https://appletreeda.synology.me:8091',
+          clientLogUrl: AppConstants.opsLogUrl('appletreeda.synology.me'),
+          secure: true,
+          source: 'profile',
+        );
+    }
+  }
+
+  List<String> get candidates {
+    switch (this) {
+      case ConnectionProfile.dev:
+        return const [
+          'http://192.168.11.5:8091',
+          'http://MacPro.local:8091',
+        ];
+      case ConnectionProfile.prd:
+        return const [
+          'http://192.168.11.3:8091',
+          'http://nas2:8091',
+        ];
+      case ConnectionProfile.external:
+        return const [
+          'https://appletreeda.synology.me:8091',
+        ];
+    }
+  }
+}
+
+class ConnectionProfileStore {
+  ConnectionProfileStore._();
+
+  static final ConnectionProfileStore instance = ConnectionProfileStore._();
+
+  static String get path =>
+      '${AppLogger.logDirectory}/connection-profiles.json';
+
+  Map<String, dynamic> _data = {};
+
+  Future<void> load() async {
+    try {
+      final file = File(path);
+      if (!file.existsSync()) {
+        _data = {};
+        return;
+      }
+      final decoded = jsonDecode(file.readAsStringSync());
+      if (decoded is Map<String, dynamic>) _data = decoded;
+    } catch (_) {
+      _data = {};
+    }
+  }
+
+  ConnectionProfile get selected {
+    final name = _data['selected'] as String?;
+    return ConnectionProfile.values.firstWhere(
+      (p) => p.name == name,
+      orElse: () => ConnectionProfile.dev,
+    );
+  }
+
+  void setSelected(ConnectionProfile profile) {
+    _data['selected'] = profile.name;
+    _save();
+  }
+
+  ServerConfig? configFor(ConnectionProfile profile) {
+    final raw = _data[profile.name];
+    if (raw is! Map<String, dynamic>) return null;
+    return ServerConfig._fromJson(raw, 'profile');
+  }
+
+  void save(ConnectionProfile profile, ServerConfig config) {
+    final map = <String, dynamic>{
+      'sipDomain': config.sipDomain,
+      'sipPort': config.sipPort,
+      'wsServer': config.wsServer,
+      'opsBaseUrl': config.opsBaseUrl,
+      'secure': config.secure,
+    };
+    _data[profile.name] = map;
+    _save();
+  }
+
+  void _save() {
+    try {
+      File(path).writeAsStringSync(jsonEncode(_data));
+    } catch (e) {
+      AppLogger.instance.w('연결 프로필 저장 실패: $e');
+    }
+  }
+}
+
 /// 서버 환경설정(SIP 도메인·WS·OPS 주소) — OPS `/api/client/config`에서 자동 갱신.
 ///
 /// 서버(Docker 호스트) IP가 유선/무선 전환 등으로 바뀌어도:
@@ -219,6 +350,32 @@ class ServerConfigService {
 
   void setCurrent(ServerConfig cfg) {
     _current = cfg;
+  }
+
+  Future<ServerConfig?> probeProfile(
+    ConnectionProfile profile, {
+    String? clientKey,
+    String? extension,
+  }) async {
+    final key = (clientKey ?? _current.clientKey).trim().isNotEmpty
+        ? (clientKey ?? _current.clientKey).trim()
+        : AppConstants.opsClientKey;
+    for (final base in profile.candidates) {
+      final cfg = await _fetch(
+        base,
+        key,
+        extension: extension ?? _current.clientExtension,
+      );
+      if (cfg != null) {
+        _current = cfg;
+        cfg.save();
+        AppLogger.instance
+            .i('연결 프로필 자동설정 성공 profile=${profile.name} via=$base');
+        return cfg;
+      }
+    }
+    AppLogger.instance.w('연결 프로필 자동설정 실패 profile=${profile.name}');
+    return null;
   }
 
   /// 탐색 후보 OPS 주소(순서대로 시도)
