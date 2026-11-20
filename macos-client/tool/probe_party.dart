@@ -17,6 +17,18 @@ class RemoteStreamSample {
   final int audioTracks;
 }
 
+Map<String, dynamic>? _probeTurn() {
+  const urls = String.fromEnvironment('TURN_URLS');
+  const username = String.fromEnvironment('TURN_USERNAME');
+  const credential = String.fromEnvironment('TURN_CREDENTIAL');
+  if (urls.isEmpty || username.isEmpty || credential.isEmpty) return null;
+  return {
+    'urls': urls.split(','),
+    'username': username,
+    'credential': credential,
+  };
+}
+
 /// SIP 프로브용 참가자 (자동 수신 포함)
 class ProbeParty {
   ProbeParty({
@@ -54,6 +66,7 @@ class ProbeParty {
       port: 8088,
       displayName: 'Kibal Probe $username',
       wsServer: wsServer,
+      turn: _probeTurn(),
     );
 
     if (!await client.init(config)) return false;

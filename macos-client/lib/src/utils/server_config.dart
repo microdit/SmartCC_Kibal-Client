@@ -158,6 +158,7 @@ class ServerConfig {
     this.clientExtension = '',
     this.secure = false,
     this.manifest,
+    this.turn,
   });
 
   final String sipDomain;
@@ -181,6 +182,8 @@ class ServerConfig {
 
   /// 서버 manifest(D1): config_version, latest/min_supported, update flags 등
   final Map<String, dynamic>? manifest;
+
+  final Map<String, dynamic>? turn;
 
   static String get filePath => '${AppLogger.logDirectory}/server-config.json';
 
@@ -319,6 +322,7 @@ class ServerConfig {
     String? clientExtension,
     bool? secure,
     Map<String, dynamic>? manifest,
+    Map<String, dynamic>? turn,
   }) =>
       ServerConfig(
         sipDomain: sipDomain ?? this.sipDomain,
@@ -333,6 +337,7 @@ class ServerConfig {
         clientExtension: clientExtension ?? this.clientExtension,
         secure: secure ?? this.secure,
         manifest: manifest ?? this.manifest,
+        turn: turn ?? this.turn,
       );
 
   @override
@@ -377,6 +382,7 @@ class ServerConfigService {
                   updatedAt: cfg.updatedAt,
                   source: cfg.source,
                   manifest: cfg.manifest,
+                  turn: cfg.turn,
                 )
             : cfg;
         _current = resolved;
@@ -470,10 +476,15 @@ class ServerConfigService {
       if (data is! Map<String, dynamic>) return null;
       final fetched = ServerConfig._fromJson(data, 'ops');
       if (fetched == null) return null;
+      final turnRaw = data['turn'];
+      final turn = turnRaw is Map<String, dynamic>
+          ? Map<String, dynamic>.from(turnRaw)
+          : null;
       // 로컬 인증 입력값 유지
       return fetched.copyWith(
         clientKey: _current.clientKey,
         clientExtension: _current.clientExtension,
+        turn: turn,
       );
     } catch (_) {
       return null;

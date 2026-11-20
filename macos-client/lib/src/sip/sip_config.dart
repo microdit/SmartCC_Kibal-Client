@@ -29,6 +29,9 @@ class SipConfig {
   
   /// STUN/TURN 서버 목록
   final List<String> iceServers;
+
+  /// TURN 자격증명 (OPS 시간제 토큰)
+  final Map<String, dynamic>? turn;
   
   /// órg를 위한 생성자 (UDP/PJSIP)
   SipConfig.udp({
@@ -38,6 +41,7 @@ class SipConfig {
     this.port = 5060,
     this.displayName,
     this.iceServers = const [],
+    this.turn,
   }) : transportType = SipTransportType.udp, wsServer = null;
   
   /// WebRTC를 위한 생성자
@@ -51,6 +55,7 @@ class SipConfig {
     this.iceServers = const [
       'stun:stun.l.google.com:19302',
     ],
+    this.turn,
   }) : transportType = SipTransportType.ws;
   
   /// 기본 생성자
@@ -63,6 +68,7 @@ class SipConfig {
     this.transportType = SipTransportType.udp,
     this.wsServer,
     this.iceServers = const [],
+    this.turn,
   });
   
   /// 시리얼화 (JSON → SipConfig)
@@ -81,6 +87,9 @@ class SipConfig {
       iceServers: (json['iceServers'] as List<dynamic>?)
           ?.map((e) => e as String)
           .toList() ?? [],
+      turn: json['turn'] is Map<String, dynamic>
+          ? Map<String, dynamic>.from(json['turn'] as Map<String, dynamic>)
+          : null,
     );
   }
   
@@ -95,6 +104,7 @@ class SipConfig {
       'transportType': transportType.name,
       'wsServer': wsServer,
       'iceServers': iceServers,
+      'turn': turn,
     };
   }
   
@@ -108,6 +118,7 @@ class SipConfig {
     SipTransportType? transportType,
     String? wsServer,
     List<String>? iceServers,
+    Map<String, dynamic>? turn,
   }) {
     return SipConfig(
       username: username ?? this.username,
@@ -118,6 +129,7 @@ class SipConfig {
       transportType: transportType ?? this.transportType,
       wsServer: wsServer ?? this.wsServer,
       iceServers: iceServers ?? this.iceServers,
+      turn: turn ?? this.turn,
     );
   }
   

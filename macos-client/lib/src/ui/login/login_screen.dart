@@ -832,6 +832,7 @@ class _LoginScreenState extends State<LoginScreen> {
         displayName: displayName,
         wsServer: wsServer,
         iceServers: AppConstants.iceServersFor(wsServer.isEmpty ? domain : wsServer),
+        turn: ServerConfigService.instance.current.turn,
       );
     } else {
       config = SipConfig.udp(
@@ -841,6 +842,7 @@ class _LoginScreenState extends State<LoginScreen> {
         port: port,
         displayName: displayName,
         iceServers: AppConstants.iceServersFor(domain),
+        turn: ServerConfigService.instance.current.turn,
       );
     }
     
