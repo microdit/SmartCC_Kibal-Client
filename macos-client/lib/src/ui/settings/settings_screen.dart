@@ -202,7 +202,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       wsServer: wsServer,
       opsBaseUrl: _ops.text.trim(),
       clientLogUrl: '${_ops.text.trim()}/api/client-logs',
-      secure: external || ServerConfigService.instance.current.secure,
+      secure: ServerConfigService.instance.current.secure,
       source: 'saved',
     );
     ServerConfigService.instance

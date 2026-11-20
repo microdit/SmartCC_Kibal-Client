@@ -91,7 +91,7 @@ OPS_URL=http://192.168.11.5:8091 ./scripts/ops_client_logs.sh list
 ### 3.1 URL 생성 로직
 
 - `AppConstants.opsLogUrl(domain)` → `http://$domain:8091/api/client-logs`
-- 외부망 프로파일: `https://appletreeda.synology.me:8091/api/client-logs` (https)
+- 외부망 프로파일: `http://appletreeda.synology.me:8091/api/client-logs` (http — OPS는 HTTP only)
 - DEV 프로파일: `http://192.168.11.5:8091/api/client-logs`
 - PRD 프로파일: `http://192.168.11.3:8091/api/client-logs`
 
@@ -130,7 +130,8 @@ void _applyLogUrl(ServerConfig cfg) {
 | 도메인 `appletreeda.synology.me` | DNS 정상 | — |
 | 외부 포트 접속 테스트 | 8089 성공, 8091 hang | OPS hang |
 
-- 사용자가 `http://` (평문)으로 입력했으나 외부 OPS는 `https://`여야 함. 포트포워딩은 동작 중.
+- 사용자가 `http://211.253.173.236:8091/...` 로 입력한 방식이 **실제로 동작하는 방식** (OPS는 HTTP only).
+- 클라이언트 외부 프로파일은 http 사용. OPS에 HTTPS를 적용하면 보안 강화 가능(서버 측 선택).
 - scheme 불일치는 부차적; 근본 원인은 OPS hang.
 
 ---
@@ -175,7 +176,8 @@ void _applyLogUrl(ServerConfig cfg) {
 ### 5.4 외부망 로그 전송 정책
 
 - 외부망에서는 OPS 8091이 개방되어 있으므로 (TCP 확인), OPS 재시작 후 외부 로그 전송 가능.
-- 클라이언트 외부 프로파일은 `https://appletreeda.synology.me:8091/api/client-logs` 사용 (https 필수).
+- 클라이언트 외부 프로파일은 `http://appletreeda.synology.me:8091/api/client-logs` 사용 (OPS HTTP only).
+- (선택) OPS에 TLS 적용 시 https로 전환 가능.
 - 사용자가 `http://` 로 입력하면 scheme 불일치로 실패. 설정 화면 "서버에서 자동 설정" 버튼으로 https URL 자동 적용 권장.
 
 ---

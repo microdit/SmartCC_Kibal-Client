@@ -146,10 +146,7 @@ class RemoteLogForwarder {
   void onLogin({required String extension, required String domain}) {
     if (extension.isNotEmpty) _extension = extension;
     if (!settings.urlOverridden) {
-      final secure = domain.contains('synology.me');
-      settings.url = secure
-          ? 'https://$domain:${AppConstants.opsPort}/api/client-logs'
-          : AppConstants.opsLogUrl(domain);
+      settings.url = AppConstants.opsLogUrl(domain);
     }
     requestFlush(immediate: true);
   }

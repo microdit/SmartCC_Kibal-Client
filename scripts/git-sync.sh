@@ -81,13 +81,17 @@ push_remote() {
             return 1
         fi
     fi
-    if GIT_SSH_COMMAND="ssh -o ConnectTimeout=5 -o BatchMode=yes" git push "$remote" "$branch" 2>/dev/null; then
+    _push_err=$(mktemp)
+    if GIT_SSH_COMMAND="ssh -o ConnectTimeout=5 -o BatchMode=yes" git push "$remote" "$branch" 2>"$_push_err"; then
         echo "    $remote: OK"
         return 0
     else
         echo "    WARN: $remote push failed (offline or misconfigured)"
+        [ -s "$_push_err" ] && sed 's/^/      /' "$_push_err" | tail -5
+        rm -f "$_push_err"
         return 1
     fi
+    rm -f "$_push_err"
 }
 
 # ── Argument parsing ──
@@ -294,7 +298,7 @@ else
 fi
 echo
 
-if [ $RC -ne 2 ]; then
+if [ "$RC" = "0" ] || [ "$RC" = "2" ]; then
     _do_push=1
     if [ "$INTERACTIVE" = "1" ] && [ -t 0 ]; then
         echo "  Target remotes: $(git remote 2>/dev/null | tr '\n' ' ')"

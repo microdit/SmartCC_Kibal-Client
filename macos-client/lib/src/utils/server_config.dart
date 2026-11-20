@@ -44,10 +44,10 @@ extension ConnectionProfileX on ConnectionProfile {
           sipDomain: 'appletreeda.synology.me',
           sipPort: 8089,
           wsServer: 'wss://appletreeda.synology.me:8089/ws',
-          opsBaseUrl: 'https://appletreeda.synology.me:8091',
+          opsBaseUrl: 'http://appletreeda.synology.me:8091',
           clientLogUrl:
-              'https://appletreeda.synology.me:${AppConstants.opsPort}/api/client-logs',
-          secure: true,
+              'http://appletreeda.synology.me:${AppConstants.opsPort}/api/client-logs',
+          secure: false,
           source: 'profile',
         );
     }
@@ -67,7 +67,7 @@ extension ConnectionProfileX on ConnectionProfile {
         ];
       case ConnectionProfile.external:
         return const [
-          'https://appletreeda.synology.me:8091',
+          'http://appletreeda.synology.me:8091',
         ];
     }
   }
@@ -247,7 +247,7 @@ class ServerConfig {
           ? man
           : (man is Map ? Map<String, dynamic>.from(man) : null),
     );
-    return secure ? cfg.withScheme(secure: true) : cfg;
+    return cfg;
   }
 
   static ServerConfig load() {
