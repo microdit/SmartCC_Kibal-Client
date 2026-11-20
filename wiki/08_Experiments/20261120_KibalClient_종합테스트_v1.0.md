@@ -9,7 +9,7 @@
 | 상태 | 테스트 완료 |
 | 작성 | MacBook(opencode) |
 | 대상 브랜치 | `feature/external-network-access` |
-| 대상 빌드 | `v0.0.49` (Info.plist 0.0.49) |
+| 대상 빌드 | `v0.0.50` (Info.plist 0.0.50, 내부IP 덮어쓰기 방지 fix 포함) |
 | 실행 환경 | 한국 IP `211.253.173.236` (VPN 해제), LAN `192.168.11.54` |
 
 ---
@@ -104,7 +104,7 @@
 | 전체화면 진단 패널 캡처 | GUI 수동 필요 |
 | `collect-test-metrics.sh` 실행 | GUI "로그보내기 → 즉시보내기" 수동 필요 |
 | US VPN DSM 접근 | 방화벽 KR-only 미해제 (US 미추가) |
-| OPS `client_log_url` 내부 IP 반환 | 서버 측 보완 필요 (외부 프로필 기본값으로 우회 가능) |
+| OPS `client_log_url` 내부 IP 반환 | ✅ 클라이언트 측 수정 (v0.0.50): probeProfile에서 external은 defaultConfig 유지, 자격증명만 복사 |
 
 ---
 
@@ -119,7 +119,7 @@
 | OPS·Asterisk 연결 (외부) | ✅ PASS |
 | DSM (한국 IP) | ✅ PASS |
 
-**종합 판정: Kibal Client v0.0.49 외부망(SIP 등록·1:1·6700 회의·OPS·Asterisk) 전체 정상 동작 확인. 빌드·테스트·정적분석 모두 통과.**
+**종합 판정: Kibal Client v0.0.50 외부망(SIP 등록·1:1·6700 회의·OPS·Asterisk) 전체 정상 동작 확인. 빌드·테스트·정적분석 모두 통과.**
 
 ---
 
