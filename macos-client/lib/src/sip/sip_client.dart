@@ -4,6 +4,7 @@ import 'package:sip_ua/sip_ua.dart';
 import '../utils/app_logger.dart';
 import '../utils/conference_participants.dart';
 import '../utils/remote_log_forwarder.dart';
+import '../utils/video_quality_settings.dart';
 import 'sdp_codec.dart';
 import 'sip_config.dart';
 import 'sip_session.dart';
@@ -577,6 +578,7 @@ class KibalSipClient implements SipUaHelperListener {
       case CallStateEnum.ACCEPTED:
       case CallStateEnum.CONFIRMED:
         _currentSession?.updateState(SipSessionState.established);
+        unawaited(applyVideoQuality());
         _startStatsProbe(call);
         call.session.onInDialogTimeoutTolerated = (count) {
           AppLogger.instance.w(
@@ -691,6 +693,8 @@ class KibalSipClient implements SipUaHelperListener {
           'recvOnlyVideo=$_receiveOnlyVideo');
       unawaited(Future<void>.delayed(
           const Duration(milliseconds: 500), _logTransceivers));
+      unawaited(Future<void>.delayed(
+          const Duration(milliseconds: 700), applyVideoQuality));
     } catch (error) {
       AppLogger.instance.e('SIP re-INVITE 수락 실패: $error');
     }
@@ -860,6 +864,42 @@ class KibalSipClient implements SipUaHelperListener {
   /// - 5초 DEBUG: 기존 `SIP stats inbound` (로컬 정밀 분석용)
   /// - 30초 INFO: `SIP media summary` (기본 업로드 모드에서도 서버 진단/하트비트)
   /// - 유효 트랙: 최근 15초 내 bytesReceived가 증가한 영상 트랙 → UI 타일 정리
+  Future<void> applyVideoQuality() async {
+    final pc = _currentCall?.peerConnection;
+    if (pc == null) return;
+    final settings = VideoQualitySettings.load();
+    for (final sender in await pc.getSenders()) {
+      if (sender.track?.kind != 'video') continue;
+      try {
+        final params = sender.parameters;
+        params.degradationPreference = settings.degradationPreference;
+        for (final encoding in params.encodings ?? const <RTCRtpEncoding>[]) {
+          encoding.maxBitrate = settings.maxBitrate;
+          encoding.maxFramerate = settings.maxFramerate;
+        }
+        await sender.setParameters(params);
+        AppLogger.instance.i(
+            '영상 품질 파라미터 적용 mode=${settings.mode.name} fps=${settings.frameRate}');
+      } catch (e) {
+        AppLogger.instance.w('영상 품질 파라미터 적용 실패: $e');
+      }
+    }
+  }
+
+  Future<void> replaceVideoTrack(MediaStreamTrack? track) async {
+    final pc = _currentCall?.peerConnection;
+    if (pc == null) return;
+    for (final sender in await pc.getSenders()) {
+      if (sender.track?.kind != 'video') continue;
+      try {
+        await sender.replaceTrack(track);
+        AppLogger.instance.i('영상 트랙 교체 완료');
+      } catch (e) {
+        AppLogger.instance.w('영상 트랙 교체 실패: $e');
+      }
+    }
+  }
+
   void _startStatsProbe(Call call) {
     _statsTimer?.cancel();
     _videoTrackBytes.clear();

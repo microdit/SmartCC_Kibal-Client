@@ -3,6 +3,7 @@ import 'dart:core';
 import 'package:flutter/material.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import '../utils/app_logger.dart';
+import '../utils/video_quality_settings.dart';
 
 /// 미디어 스트림 타입
 enum MediaStreamType {
@@ -198,10 +199,18 @@ class MediaManager {
       final audioConstraint = useAudio ? (audioDeviceId ?? true) : false;
       // macOS flutter_webrtc는 deviceId에 Map imm객체를 지원하지 않음
       // (Map을 넘기면 doesNotRecognizeSelector로 프로세스 크래시) — 문자열만 사용
+      final quality = VideoQualitySettings.load();
       final videoDeviceFilter = <String, dynamic>{
         'facingMode': useFrontCamera ? 'user' : 'environment',
-        'width': 1280,
-        'height': 720,
+        'width': quality.isAuto
+            ? 1280
+            : <String, int>{'ideal': quality.width!},
+        'height': quality.isAuto
+            ? 720
+            : <String, int>{'ideal': quality.height!},
+        'frameRate': quality.isAuto
+            ? 30
+            : <String, int>{'ideal': quality.frameRate},
       };
       if (videoDeviceId != null) {
         videoDeviceFilter['deviceId'] = videoDeviceId;

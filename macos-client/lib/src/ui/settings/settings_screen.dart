@@ -4,12 +4,16 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
+import '../../providers/media_provider.dart';
+import '../../providers/sip_provider.dart';
 import '../../utils/app_logger.dart';
 import '../../utils/client_auth_state.dart';
 import '../../utils/constants.dart';
 import '../../utils/ops_directory.dart';
 import '../../utils/server_config.dart';
+import '../../utils/video_quality_settings.dart';
 import 'remote_log_settings_dialog.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -33,6 +37,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
   String? _verifyMsg;
   bool _lastVerifyOffline = false;
   ClientAuthState _auth = ClientAuthState.empty();
+  late VideoQualitySettings _quality;
+  String? _qualityMsg;
 
   @override
   void initState() {
@@ -43,6 +49,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Future<void> _load() async {
     final cfg = ServerConfigService.instance.current;
     final auth = await ClientAuthStore.instance().load();
+    _quality = VideoQualitySettings.load();
     if (!mounted) return;
     setState(() {
       _domain.text = cfg.sipDomain;
@@ -184,6 +191,27 @@ class _SettingsScreenState extends State<SettingsScreen> {
     });
     AppLogger.instance.evt('AUTH', 'verifyResult',
         state: 'localVerified', details: {'ext': ext});
+  }
+
+  Future<void> _applyQuality({
+    required VideoQualityMode mode,
+    required int frameRate,
+  }) async {
+    final next = VideoQualitySettings(mode, frameRate: frameRate);
+    next.save();
+    final media = context.read<MediaProvider>();
+    final sip = context.read<SipProvider>();
+    final ok = await media.getLocalMedia();
+    var track = ok ? media.localStream?.getVideoTracks() : null;
+    await sip.applyVideoQuality(
+      videoTrack: (track != null && track.isNotEmpty) ? track.first : null,
+    );
+    if (!mounted) return;
+    setState(() {
+      _quality = next;
+      _qualityMsg =
+          '적용됨: ${next.label} · ${frameRate}fps${next.isAuto ? '' : ' · ${next.width}x${next.height}'}';
+    });
   }
 
   Future<void> _resetAuth() async {
@@ -446,6 +474,76 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   const SizedBox(height: 4),
                   const Text(
                     '자동보내기(5분 주기)와 즉시보내기(1회)를 함께 사용할 수 있습니다.',
+                    style: TextStyle(fontSize: 12, color: Colors.grey),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(height: 12),
+          Card(
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const Text('영상 품질 (수동 테스트)',
+                      style: TextStyle(fontWeight: FontWeight.w600)),
+                  const SizedBox(height: 8),
+                  DropdownButtonFormField<VideoQualityMode>(
+                    initialValue: _quality.mode,
+                    decoration: const InputDecoration(
+                      labelText: '해상도 모드',
+                      border: OutlineInputBorder(),
+                    ),
+                    items: [
+                      for (final m in VideoQualityMode.values)
+                        DropdownMenuItem(
+                          value: m,
+                          child: Text(VideoQualitySettings(m).label),
+                        ),
+                    ],
+                    onChanged: (m) => setState(() {
+                      _quality = _quality.copyWith(mode: m ?? _quality.mode);
+                    }),
+                  ),
+                  const SizedBox(height: 8),
+                  DropdownButtonFormField<int>(
+                    initialValue: _quality.frameRate,
+                    decoration: const InputDecoration(
+                      labelText: '프레임률',
+                      border: OutlineInputBorder(),
+                    ),
+                    items: const [
+                      DropdownMenuItem(value: 15, child: Text('15 fps')),
+                      DropdownMenuItem(value: 24, child: Text('24 fps')),
+                      DropdownMenuItem(value: 30, child: Text('30 fps')),
+                      DropdownMenuItem(value: 60, child: Text('60 fps')),
+                    ],
+                    onChanged: (v) => setState(() {
+                      _quality = _quality.copyWith(frameRate: v ?? _quality.frameRate);
+                    }),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(_quality.detail,
+                      style: const TextStyle(fontSize: 11, color: Colors.grey)),
+                  const SizedBox(height: 8),
+                  FilledButton.tonal(
+                    onPressed: () => _applyQuality(
+                      mode: _quality.mode,
+                      frameRate: _quality.frameRate,
+                    ),
+                    child: const Text('품질 적용'),
+                  ),
+                  if (_qualityMsg != null) ...[
+                    const SizedBox(height: 6),
+                    Text(_qualityMsg!,
+                        style: const TextStyle(
+                            fontSize: 12, color: Colors.green)),
+                  ],
+                  const SizedBox(height: 4),
+                  const Text(
+                    '자동 모드는 WebRTC가 최적화하며, 수동 모드는 카메라를 다시 열고 통화 중 트랙을 교체합니다.',
                     style: TextStyle(fontSize: 12, color: Colors.grey),
                   ),
                 ],

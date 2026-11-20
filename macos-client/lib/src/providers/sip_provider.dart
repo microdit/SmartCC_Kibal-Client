@@ -303,6 +303,13 @@ class SipProvider with ChangeNotifier {
     });
   }
 
+  Future<void> applyVideoQuality({MediaStreamTrack? videoTrack}) async {
+    await _client?.applyVideoQuality();
+    if (videoTrack != null) {
+      await _client?.replaceVideoTrack(videoTrack);
+    }
+  }
+
   Future<bool> call(String target, {MediaStream? mediaStream}) async {    if (_client == null) {
       _error = 'SIP 클라이언트가 초기화되지 않음';
       notifyListeners();
