@@ -392,8 +392,10 @@ class ServerConfigService {
 
   /// 탐색 후보 OPS 주소(순서대로 시도)
   List<String> candidates({String? hintDomain}) {
+    // OPS는 HTTP-only. HTTPS URL이 저장된 경우 HTTP로 정규화하여 hang 방지.
+    String toHttp(String u) => u.replaceFirst(RegExp(r'^https://', caseSensitive: false), 'http://');
     final c = <String>[
-      _current.opsBaseUrl,
+      toHttp(_current.opsBaseUrl),
       if (hintDomain != null && hintDomain.isNotEmpty)
         'http://$hintDomain:${AppConstants.opsPort}',
       if ((_current.publicHost ?? '').isNotEmpty)

@@ -196,12 +196,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
       }
       _ws.text = wsServer;
     }
+    // OPS는 HTTP-only. 외부망 프로필에서는 https 입력도 http로 정규화.
+    var opsUrl = _ops.text.trim();
+    if (external) {
+      opsUrl = opsUrl.replaceFirst(RegExp(r'^https://', caseSensitive: false), 'http://');
+    }
     final cfg = ServerConfigService.instance.current.copyWith(
       sipDomain: domain,
       sipPort: int.tryParse(_port.text.trim()) ?? AppConstants.defaultSipPort,
       wsServer: wsServer,
-      opsBaseUrl: _ops.text.trim(),
-      clientLogUrl: '${_ops.text.trim()}/api/client-logs',
+      opsBaseUrl: opsUrl,
+      clientLogUrl: '$opsUrl/api/client-logs',
       secure: ServerConfigService.instance.current.secure,
       source: 'saved',
     );
@@ -343,7 +348,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       // DEV self-signed 허용
       client.badCertificateCallback = (cert, host, port) => true;
       final req = await client
-          .getUrl(Uri.parse('$base/api/client/contacts'))
+          .getUrl(Uri.parse('$base/api/client/config'))
           .timeout(const Duration(seconds: 5));
       req.headers.add('X-Client-Key', key);
       req.headers.add('X-Client-Extension', ext);
