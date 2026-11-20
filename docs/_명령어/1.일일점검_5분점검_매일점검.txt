@@ -1,0 +1,150 @@
+
+cd ~/Downloads/dev/SmartCC_Kibal 
+./deploy/dev/update-server-ip.sh --check            # 1) 서버 IP가 그대로인지 (rc=0이면 정상)
+./scripts/fix-dev-ops.sh                            # 2) OPS 응답 확인 (health 200)
+./server/scripts/verify.sh                          # 3) Asterisk 상태 전체
+venv_kibal/bin/python scripts/verify-sip-auth.py    # 4) SIP 비밀번호 일치 (PASS)
+cd ../SmartCC_Kibal-Client
+./scripts/ops_client_logs.sh list                   # 5) 단말별 로그 수신 현황
+
+
+
+
+
+microdit@MacPro _01_작업이력_MacPROServer % cd ~/Downloads/dev/SmartCC_Kibal 
+microdit@MacPro SmartCC_Kibal % ./deploy/dev/update-server-ip.sh --check 
+기본 경로 인터페이스: en1 → 192.168.11.5
+현재 MEDIA_ADDRESS: 192.168.11.5
+변경 없음 (서버 IP 192.168.11.5)
+microdit@MacPro SmartCC_Kibal % ./scripts/fix-dev-ops.sh  
+>>> Docker 데몬 정상
+>>> DEV 스택 기동(변경 없으면 그대로 유지)
+[+] Running 3/3
+ ⠿ Container kibal-dev-docker-proxy  Running                                                0.0s
+ ⠿ Container kibal-dev-asterisk      Running                                                0.0s
+ ⠿ Container kibal-dev-ops           Running                                                0.0s
+>>> 접속 점검
+http://127.0.0.1:8091/health -> 200
+http://192.168.11.5:8091/health -> 200
+>>> 완료
+접속 주소: http://192.168.11.5:8091/
+참고: 이전에 사용하던 IP가 DHCP로 바뀌었다면 위 주소를 사용하세요.
+microdit@MacPro SmartCC_Kibal % ./server/scripts/verify.sh    
+== Container ==
+NAME                     IMAGE                                 COMMAND                  SERVICE             CREATED             STATUS                  PORTS
+kibal-dev-asterisk       smartcc-kibal-asterisk:dev            "/usr/local/bin/kiba…"   asterisk            21 hours ago        Up 21 hours (healthy)   0.0.0.0:5060->5060/udp, 0.0.0.0:10000-10200->10000-10200/udp, 5061/tcp, 0.0.0.0:8088-8089->8088-8089/tcp, 10201-20000/udp
+kibal-dev-docker-proxy   tecnativa/docker-socket-proxy:0.2.0   "docker-entrypoint.s…"   docker-proxy        2 weeks ago         Up 23 hours             2375/tcp
+kibal-dev-ops            smartcc-kibal-ops:dev                 "gunicorn -c gunicor…"   ops                 23 hours ago        Up 23 hours (healthy)   0.0.0.0:8091->8091/tcp
+
+== Asterisk version ==
+Asterisk 22.8.1 built by root @ buildkitsandbox on a x86_64 running Linux on 2026-10-30 08:44:39 UTC
+
+== PJSIP endpoints ==
+
+ Endpoint:  <Endpoint/CID.....................................>  <State.....>  <Channels.>
+    I/OAuth:  <AuthId/UserName...........................................................>
+        Aor:  <Aor............................................>  <MaxContact>
+      Contact:  <Aor/ContactUri..........................> <Hash....> <Status> <RTT(ms)..>
+  Transport:  <TransportId........>  <Type>  <cos>  <tos>  <BindAddress..................>
+   Identify:  <Identify/Endpoint.........................................................>
+        Match:  <criteria.........................>
+    Channel:  <ChannelId......................................>  <State.....>  <Time.....>
+        Exten: <DialedExten...........>  CLCID: <ConnectedLineCID.......>
+==========================================================================================
+
+ Endpoint:  1001/1001                                            Unavailable   0 of inf
+     InAuth:  1001/1001
+        Aor:  1001                                               3
+
+ Endpoint:  1002/1002                                            Unavailable   0 of inf
+     InAuth:  1002/1002
+        Aor:  1002                                               3
+
+ Endpoint:  1003/1003                                            Unavailable   0 of inf
+     InAuth:  1003/1003
+        Aor:  1003                                               3
+
+ Endpoint:  1004/1004                                            Unavailable   0 of inf
+     InAuth:  1004/1004
+        Aor:  1004                                               3
+
+ Endpoint:  1101/1101                                            Unavailable   0 of inf
+     InAuth:  1101/1101
+        Aor:  1101                                               3
+
+ Endpoint:  1102/1102                                            Not in use    0 of inf
+     InAuth:  1102/1102
+        Aor:  1102                                               3
+      Contact:  1102/sip:p16079i4@172.21.0.1:58452;transpo bca4a0c9f3 Avail         4.182
+
+ Endpoint:  1103/1103                                            Unavailable   0 of inf
+     InAuth:  1103/1103
+        Aor:  1103                                               3
+
+ Endpoint:  1104/1104                                            Unavailable   0 of inf
+     InAuth:  1104/1104
+        Aor:  1104                                               3
+
+ Endpoint:  1105/1105                                            Unavailable   0 of inf
+     InAuth:  1105/1105
+        Aor:  1105                                               3
+
+ Endpoint:  1106/1106                                            In use        1 of inf
+     InAuth:  1106/1106
+        Aor:  1106                                               3
+      Contact:  1106/sip:1159t738@172.21.0.1:38062;transpo e2b0bc1ce8 Avail         2.462
+    Channel: PJSIP/1106-00000016/ConfBridge                      Up            00:14:49   
+        Exten: 6700                      CLCID: "" <>
+
+ Endpoint:  1201/1201                                            Unavailable   0 of inf
+     InAuth:  1201/1201
+        Aor:  1201                                               1
+
+ Endpoint:  7001/7001                                            In use        2 of inf
+     InAuth:  7001/7001
+        Aor:  7001                                               1
+      Contact:  7001/sip:v9o8u4m3@172.21.0.1:50770;transpo 0b9b9cb9da Avail         3.380
+    Channel: PJSIP/7001-00000015/ConfBridge                      Up            16:35:10   
+        Exten: 6700                      CLCID: "" <>
+    Channel: PJSIP/7001-00000013/ConfBridge                      Up            20:12:57   
+        Exten: 6700                      CLCID: "" <>
+
+
+Objects found: 12
+
+
+== Conference rooms ==
+Conference Bridge Name           Users  Marked Locked Muted
+================================ ====== ====== ====== =====
+6700                                  3      0 No     No
+
+== RTP settings ==
+
+
+General Settings:
+----------------
+  Port start:      10000
+  Port end:        10200
+  Checksums:       Yes
+  DTMF Timeout:    1200
+  Strict RTP:      Yes
+  Probation:       4 frames
+  Replay Protect:  Yes
+  ICE support:     Yes
+  STUN address:    74.125.250.129:19302
+
+Verification commands completed.
+microdit@MacPro SmartCC_Kibal % venv_kibal/bin/python scripts/verify-sip-auth.py 
+WARN: SIP_PASSWORD_1201: 32자리 hex 값입니다. 의도한 plaintext 비밀번호가 맞는지 확인하세요 (사전 계산된 MD5 digest를 넣으면 Digest 인증이 실패합니다).
+PASS: 12 SIP auth objects match /Users/microdit/Downloads/dev/SmartCC_Kibal/deploy/dev/.env and container kibal-dev-asterisk; WebSocket /ws active
+microdit@MacPro SmartCC_Kibal % cd ../SmartCC_Kibal-Client
+microdit@MacPro SmartCC_Kibal-Client % ./scripts/ops_client_logs.sh list 
+1101     lines=22829  bytes=2962877  last=72724s ago mode=INFO + 이벤트 app=v0.0.39 host=MacPro
+1102     lines=12579  bytes=2088578  last=1684s ago  mode=INFO + 이벤트 app=v0.0.38 host=atomui-MacBookPro.local
+1103     lines=8600   bytes=1273714  last=72725s ago mode=INFO + 이벤트 app=dev host=MacPro
+1104     lines=707    bytes=114456   last=74015s ago mode=INFO + 이벤트 app=dev host=MacPro
+1105     lines=44     bytes=5643     last=174224s ago mode=INFO + 이벤트 app=v0.0.37 host=MacPro
+1106     lines=126    bytes=16606    last=73659s ago mode=INFO + 이벤트 app=v0.0.38 host=MacPro
+server-shutdown lines=49     bytes=4054     last=164918s ago mode=shutdown app=server-shutdown-v1.0 host=MacPro
+unknown  lines=4887   bytes=869413   last=74095s ago mode=INFO + 이벤트 app=v0.0.38 host=MacPro
+microdit@MacPro SmartCC_Kibal-Client % 
