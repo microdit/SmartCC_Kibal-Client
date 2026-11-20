@@ -152,7 +152,7 @@
 - **MacBook 검증 지시**: [[wiki/04_Prompts/20261120_MacBook_외부망_종단간검증_작업지시_v1.0]] — 외부 프로필 종단간 검증 절차(연결 테스트·SIP·통화·진단·로그·보고). SHA 대신 Info.plist 버전 기준.
 - **E2E 결과**: [[wiki/08_Experiments/20261120_외부망_종단간검증_v1.0]] — 미국 VPN에서 REGISTER/CALL/CONFERENCE OK. client_log_url 내부 IP 덮어쓰기 방지 v0.0.50 반영.
 - **TURN Staging**: [[wiki/08_Experiments/20261120_TURN_coturn_Staging검증_v1.0]] — coturn 시간제 HMAC, 강제 RELAY 1:1/3자 OK. 운영 포트 개방·인증서 갱신·공인IP 동기화는 승인 대기. v0.0.53.
-- **OPS hang 대응**: 서버 c9d4f75 — SQLite WAL·autoheal·진단 스크립트 적용, 60/60 동시요청 200. 클라이언트는 /api/client/config 인증 + HTTP 정규화(daa0a711)로 우회.
+- **OPS hang 대응**: 서버 e715384 — WAL 일원화·단일 워커·SIGUSR1 스택 덤프로 재발 구조 제거, 120/120 HTTP 200. 클라이언트는 /api/client/config 인증 + HTTP 정규화(daa0a711)로 우회.
 - **v0.0.54**: 로그 URL https→http 시작 시 강제 정규화. 23:00 1102 로그 미수신 원인(https URL) 제거.
 - **v0.0.55**: 인증 실패 시 키/내선 보존, 서버 불통은 localVerified 유지, 200 ok 검증. 주소록/인증 소실 방지..
 
