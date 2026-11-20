@@ -955,6 +955,14 @@ class KibalSipClient implements SipUaHelperListener {
             _emitEvent(const SipEvent(type: SipEventType.call,
                 data: {'action': 'mediaRecovered'}));
           }
+        } else if (total < _stallTotalBase) {
+          _stallTotalBase = total;
+          _stallTicks = 0;
+          if (_mediaStallNotified) {
+            _mediaStallNotified = false;
+            _emitEvent(const SipEvent(type: SipEventType.call,
+                data: {'action': 'mediaRecovered'}));
+          }
         } else {
           _stallTicks++;
           if (_stallTicks >= 4 && !_mediaStallNotified) {

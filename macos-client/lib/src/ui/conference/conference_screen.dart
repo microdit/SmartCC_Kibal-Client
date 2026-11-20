@@ -71,6 +71,10 @@ class _ConferenceViewState extends State<ConferenceView> {
       AppLogger.instance.w('CONFERENCE autoJoin skipped: invalid room=$room');
       return;
     }
+    if (_sipRef.isConnecting) {
+      AppLogger.instance.w('CONFERENCE autoJoin skipped: SIP connecting room=$room');
+      return;
+    }
     if (!_sipRef.isRegistered) {
       AppLogger.instance.w('CONFERENCE autoJoin skipped: SIP not registered room=$room');
       if (mounted) {
@@ -184,6 +188,15 @@ class _ConferenceViewState extends State<ConferenceView> {
     final room = _roomController.text.trim();
 
     if (room.isEmpty) return;
+    if (sipProvider.isConnecting) {
+      AppLogger.instance.ui('CONFERENCE', 'joinSkipped',
+          params: {'reason': 'sipConnecting', 'room': room});
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text('SIP 재연결 중입니다. 등록 완료 후 다시 시도하세요.')));
+      }
+      return;
+    }
     if (sipProvider.isInCall) {
       AppLogger.instance.ui('CONFERENCE', 'joinSkipped',
           params: {'reason': 'alreadyInCall', 'room': room});
