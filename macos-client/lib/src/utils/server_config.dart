@@ -45,7 +45,8 @@ extension ConnectionProfileX on ConnectionProfile {
           sipPort: 8089,
           wsServer: 'wss://appletreeda.synology.me:8089/ws',
           opsBaseUrl: 'https://appletreeda.synology.me:8091',
-          clientLogUrl: AppConstants.opsLogUrl('appletreeda.synology.me'),
+          clientLogUrl:
+              'https://appletreeda.synology.me:${AppConstants.opsPort}/api/client-logs',
           secure: true,
           source: 'profile',
         );
@@ -121,6 +122,7 @@ class ConnectionProfileStore {
       'sipPort': config.sipPort,
       'wsServer': config.wsServer,
       'opsBaseUrl': config.opsBaseUrl,
+      'clientLogUrl': config.clientLogUrl,
       'secure': config.secure,
     };
     _data[profile.name] = map;
