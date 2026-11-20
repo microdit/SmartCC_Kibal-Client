@@ -151,7 +151,8 @@
 - **자체 테스트 종합**: [[wiki/08_Experiments/20261120_에이전트_자체테스트_종합_v1.0]] — 빌드/외부관점/SIP·회의/로그/일일점검 결과 및 미수행 항목 정리.
 - **MacBook 검증 지시**: [[wiki/04_Prompts/20261120_MacBook_외부망_종단간검증_작업지시_v1.0]] — 외부 프로필 종단간 검증 절차(연결 테스트·SIP·통화·진단·로그·보고). SHA 대신 Info.plist 버전 기준.
 - **E2E 결과**: [[wiki/08_Experiments/20261120_외부망_종단간검증_v1.0]] — 미국 VPN에서 REGISTER/CALL/CONFERENCE OK. client_log_url 내부 IP 덮어쓰기 방지 v0.0.50 반영.
-- **TURN Staging**: [[wiki/08_Experiments/20261120_TURN_coturn_Staging검증_v1.0]] — coturn 시간제 HMAC, 강제 RELAY 1:1/3자 OK. 운영 포트 개방·인증서 갱신·공인IP 동기화는 승인 대기. v0.0.53..
+- **TURN Staging**: [[wiki/08_Experiments/20261120_TURN_coturn_Staging검증_v1.0]] — coturn 시간제 HMAC, 강제 RELAY 1:1/3자 OK. 운영 포트 개방·인증서 갱신·공인IP 동기화는 승인 대기. v0.0.53.
+- **OPS hang 대응**: 서버 c9d4f75 — SQLite WAL·autoheal·진단 스크립트 적용, 60/60 동시요청 200. 클라이언트는 /api/client/config 인증 + HTTP 정규화(daa0a711)로 우회..
 
 ## 이전 진행 (2026-11-13 02:00, 요약) — F1/F2/G3 구현·v0.0.24
 - F1 `_pendingCallTarget`, F2 A4 롤백, G3 `enable_events=yes` 반영(v0.0.24 build 24, sha256 `c8c6e4a7…`). ADR-008/D1·ADR-009/F2 실기 확인, G3 부분검증. 잔여: P0 크래시, H1/H5/F1/H6 재검증. 상세: [[wiki/06_Reports/20261113_F1F2G3_구현완료보고서_v1.0]], [[docs/보고서/20261113_후속작업계획서_v2.0]], [[wiki/07_Logs/작업로그_20261113]]
