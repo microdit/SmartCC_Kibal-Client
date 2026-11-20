@@ -864,6 +864,15 @@ class KibalSipClient implements SipUaHelperListener {
   /// - 5초 DEBUG: 기존 `SIP stats inbound` (로컬 정밀 분석용)
   /// - 30초 INFO: `SIP media summary` (기본 업로드 모드에서도 서버 진단/하트비트)
   /// - 유효 트랙: 최근 15초 내 bytesReceived가 증가한 영상 트랙 → UI 타일 정리
+  Future<List<Map<String, dynamic>>> collectRawStats() async {
+    final pc = _currentCall?.peerConnection;
+    if (pc == null) return const [];
+    final reports = await pc.getStats();
+    return reports
+        .map((r) => <String, dynamic>{'type': r.type, 'values': r.values})
+        .toList();
+  }
+
   Future<void> applyVideoQuality() async {
     final pc = _currentCall?.peerConnection;
     if (pc == null) return;

@@ -138,6 +138,7 @@
 - **v0.0.41**: 설정에 `로그보내기` 추가 — 자동보내기(즉시+5분 주기, `autoSend` 저장)와 즉시보내기(1회) 동시 사용 가능. `scripts/collect-test-metrics.sh`로 네트워크 전환 품질지표를 phase별 wiki 수집. 사용안내 [[wiki/03_Guides/20261120_로그보내기_및_품질지표수집_사용안내_v1.0]], SHA256 `e02eb552…`
 - **v0.0.42**: 앱 내 품질지표 GUI 추가 — OPS 로그 기반 표+그래프(fps/vLost/freeze/pli), 양호·주의·위험 진단. `CustomPaint`만 사용해 외부 의존성 없음(1 source multi OS). SHA256 `0e8aeab8…`
 - **v0.0.43**: 영상 품질 수동 설정 추가 — 320p/640p/720p/1080p/4K × 15/24/30/60fps 조합, `VideoQualitySettings` 저장, `setParameters`+트랙 교체 적용. 자동은 BALANCED 위임. SHA256 `64a528ac…`
+- **v0.0.44**: 전체화면에 전송속도 진단 버튼/오버레이 추가 — 영상·음성·네트워크 실시간/60초 평균, 외부 의존성 없음. SHA256 `056e3e90…`
 
 ## 이전 진행 (2026-11-13 02:00, 요약) — F1/F2/G3 구현·v0.0.24
 - F1 `_pendingCallTarget`, F2 A4 롤백, G3 `enable_events=yes` 반영(v0.0.24 build 24, sha256 `c8c6e4a7…`). ADR-008/D1·ADR-009/F2 실기 확인, G3 부분검증. 잔여: P0 크래시, H1/H5/F1/H6 재검증. 상세: [[wiki/06_Reports/20261113_F1F2G3_구현완료보고서_v1.0]], [[docs/보고서/20261113_후속작업계획서_v2.0]], [[wiki/07_Logs/작업로그_20261113]]

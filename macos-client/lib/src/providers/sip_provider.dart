@@ -303,6 +303,9 @@ class SipProvider with ChangeNotifier {
     });
   }
 
+  Future<List<Map<String, dynamic>>> collectLiveStats() =>
+      _client?.collectRawStats() ?? Future.value(const <Map<String, dynamic>>[]);
+
   Future<void> applyVideoQuality({MediaStreamTrack? videoTrack}) async {
     await _client?.applyVideoQuality();
     if (videoTrack != null) {
