@@ -60,6 +60,7 @@ class RemoteLogForwarder {
   Timer? _debounceTimer;
   Timer? _safetyTimer;
   Timer? _retryTimer;
+  Timer? _autoTimer;
   int _backoffSec = 0;
   bool _flushing = false;
   bool _again = false;
@@ -109,6 +110,36 @@ class RemoteLogForwarder {
     _safetyTimer = Timer.periodic(safetyInterval, (_) => requestFlush());
     AppLogger.instance.i(
         '원격 로그 업로더 시작 session=$_session mode=${settings.filter.describe()} url=${settings.url}');
+    if (settings.autoSend) {
+      _autoTimer?.cancel();
+      _autoTimer = Timer.periodic(
+        const Duration(minutes: 5),
+        (_) => unawaited(sendNow()),
+      );
+    }
+  }
+
+  void setAutoSend(bool enabled) {
+    settings.autoSend = enabled;
+    settings.save();
+    _autoTimer?.cancel();
+    _autoTimer = null;
+    if (enabled) {
+      unawaited(sendNow());
+      _autoTimer = Timer.periodic(
+        const Duration(minutes: 5),
+        (_) => unawaited(sendNow()),
+      );
+    }
+    AppLogger.instance
+        .i('원격 로그 자동전송 ${enabled ? '활성(5분 주기)' : '비활성'}');
+  }
+
+  Future<void> sendNow() async {
+    if (!_started) await start();
+    _startedAt = DateTime.now().subtract(loginGrace);
+    AppLogger.instance.i('원격 로그 즉시전송 요청');
+    requestFlush(immediate: true);
   }
 
   /// 로그인 성공 시: 내선 번호/도메인 반영
@@ -126,6 +157,14 @@ class RemoteLogForwarder {
     settings.save();
     AppLogger.instance.i(
         '원격 로그 설정 변경 mode=${settings.filter.describe()} url=${settings.url}');
+    _autoTimer?.cancel();
+    _autoTimer = null;
+    if (settings.autoSend) {
+      _autoTimer = Timer.periodic(
+        const Duration(minutes: 5),
+        (_) => unawaited(sendNow()),
+      );
+    }
     requestFlush(immediate: true);
   }
 

@@ -10,6 +10,7 @@ import '../../utils/client_auth_state.dart';
 import '../../utils/constants.dart';
 import '../../utils/ops_directory.dart';
 import '../../utils/server_config.dart';
+import 'remote_log_settings_dialog.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -419,6 +420,36 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         '보안통신(HTTPS/WSS) 전환 시 서버 인증서·Asterisk WSS 구성이 필요합니다(DEV).',
                         style: TextStyle(fontSize: 12, color: Colors.grey)),
                   ]),
+            ),
+          ),
+          const SizedBox(height: 12),
+          Card(
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const Text('로그 전송',
+                      style: TextStyle(fontWeight: FontWeight.w600)),
+                  const SizedBox(height: 8),
+                  FilledButton.tonal(
+                    onPressed: () => showLogSendDialog(context),
+                    child: const Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(Icons.cloud_upload_outlined, size: 18),
+                        SizedBox(width: 8),
+                        Text('로그보내기'),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  const Text(
+                    '자동보내기(5분 주기)와 즉시보내기(1회)를 함께 사용할 수 있습니다.',
+                    style: TextStyle(fontSize: 12, color: Colors.grey),
+                  ),
+                ],
+              ),
             ),
           ),
         ],
