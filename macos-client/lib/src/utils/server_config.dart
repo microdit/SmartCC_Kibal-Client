@@ -369,11 +369,21 @@ class ServerConfigService {
         extension: extension ?? _current.clientExtension,
       );
       if (cfg != null) {
-        _current = cfg;
-        cfg.save();
+        final resolved = profile == ConnectionProfile.external
+            ? profile.defaultConfig().copyWith(
+                  clientKey: cfg.clientKey,
+                  clientExtension: cfg.clientExtension,
+                  publicHost: cfg.publicHost,
+                  updatedAt: cfg.updatedAt,
+                  source: cfg.source,
+                  manifest: cfg.manifest,
+                )
+            : cfg;
+        _current = resolved;
+        resolved.save();
         AppLogger.instance
             .i('연결 프로필 자동설정 성공 profile=${profile.name} via=$base');
-        return cfg;
+        return resolved;
       }
     }
     AppLogger.instance.w('연결 프로필 자동설정 실패 profile=${profile.name}');
