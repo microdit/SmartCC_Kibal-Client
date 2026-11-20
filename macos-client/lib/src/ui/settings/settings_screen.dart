@@ -258,17 +258,23 @@ class _SettingsScreenState extends State<SettingsScreen> {
     } else {
       if (result.message == '서버 연결 실패') {
         _lastVerifyOffline = true;
+        final previous = await ClientAuthStore.instance().load();
+        st = previous.clientKey.isNotEmpty && previous.authExtension.isNotEmpty
+            ? await ClientAuthStore.instance().markLocalVerified(
+                reason: '서버 일시 불통 — 저장된 인증정보 유지')
+            : await ClientAuthStore.instance().markFailed(reason: result.message);
+      } else {
+        st = await ClientAuthStore.instance().markFailed(reason: result.message);
       }
-      st = await ClientAuthStore.instance().markFailed(reason: result.message);
       if (st.failCount >= ClientAuthState.maxFailCount) {
-        _authKey.clear();
-        _authExt.clear();
         _verifyMsg = st.lastError ??
-            '10회 오류로 초기화되었습니다. 서버 관리자 확인이 필요합니다(자동 폐기 아님). 다시 인증번호를 입력하세요.';
+            '인증 실패가 반복되었습니다. 저장된 키/내선은 유지되며 서버 복구 후 재검증하세요.';
+      } else if (result.message == '서버 연결 실패') {
+        _verifyMsg = '서버 일시 불통 — 저장된 인증정보로 오프라인 인증을 유지합니다.';
       } else {
         final remain = ClientAuthState.maxFailCount - st.failCount;
         _verifyMsg =
-            '검증 실패: ${result.message} (실패 ${st.failCount}/10, 남은 $remain회 · 10회 도달 시 인증정보 초기화)';
+            '검증 실패: ${result.message} (실패 ${st.failCount}/10, 남은 $remain회 — 키/내선은 유지됩니다)';
       }
       AppLogger.instance.evt('AUTH', 'verifyResult', state: 'failed', details: {
         'ext': ext,
@@ -358,8 +364,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
         try {
           final j = jsonDecode(body) as Map<String, dynamic>;
           if (j['ok'] == true) return _VerifyResult(true, 200, 'ok');
-        } catch (_) {}
-        return _VerifyResult(true, 200, 'ok');
+          return _VerifyResult(false, 401, '인증 실패(키/내선 확인 필요)');
+        } catch (_) {
+          return _VerifyResult(false, res.statusCode, '서버 응답 형식 오류');
+        }
       }
       if (res.statusCode == 401 || res.statusCode == 403) {
         return _VerifyResult(false, res.statusCode, '인증 실패(키/내선 확인 필요)');
