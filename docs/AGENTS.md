@@ -136,6 +136,7 @@
 - 봇 단일 인스턴스 보장 완료: 서버 `scripts/restart-diag-bot.sh`(`ensure|restart|status|stop`) + 데몬 PID lock/잔류 7001 채널 자동 hangup. launchd는 TCC 차단으로 제거하고 데몬 자체 복구로 확정. 사용 안내 [[wiki/03_Guides/20261120_진단봇_단일인스턴스_사용안내_v1.0]], 로그 [[wiki/07_Logs/20261120]]
 - **v0.0.40**: v0.0.39 media stall 오검출(re-INVITE 시 카운터 감소) 및 재진입 경합 수정. `sip_client.dart` 재baseline, `sip_provider.dart` 스톨 플래그 초기화, `conference_screen.dart` connecting 중 입장 차단. analyze 0/test 17/17. 보고서 [[wiki/06_Reports/20261120_v0.0.39_6700재진입실패_버그분석_v1.0]]
 - **v0.0.41**: 설정에 `로그보내기` 추가 — 자동보내기(즉시+5분 주기, `autoSend` 저장)와 즉시보내기(1회) 동시 사용 가능. `scripts/collect-test-metrics.sh`로 네트워크 전환 품질지표를 phase별 wiki 수집. 사용안내 [[wiki/03_Guides/20261120_로그보내기_및_품질지표수집_사용안내_v1.0]], SHA256 `e02eb552…`
+- **v0.0.42**: 앱 내 품질지표 GUI 추가 — OPS 로그 기반 표+그래프(fps/vLost/freeze/pli), 양호·주의·위험 진단. `CustomPaint`만 사용해 외부 의존성 없음(1 source multi OS). SHA256 `0e8aeab8…`
 
 ## 이전 진행 (2026-11-13 02:00, 요약) — F1/F2/G3 구현·v0.0.24
 - F1 `_pendingCallTarget`, F2 A4 롤백, G3 `enable_events=yes` 반영(v0.0.24 build 24, sha256 `c8c6e4a7…`). ADR-008/D1·ADR-009/F2 실기 확인, G3 부분검증. 잔여: P0 크래시, H1/H5/F1/H6 재검증. 상세: [[wiki/06_Reports/20261113_F1F2G3_구현완료보고서_v1.0]], [[docs/보고서/20261113_후속작업계획서_v2.0]], [[wiki/07_Logs/작업로그_20261113]]
