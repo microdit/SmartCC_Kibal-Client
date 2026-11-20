@@ -94,12 +94,21 @@ class RemoteLogForwarder {
   String get session => _session;
   String get extension => _extension;
 
+  static String _httpUrl(String url) =>
+      url.replaceFirst(RegExp(r'^https://', caseSensitive: false), 'http://');
+
   /// 앱 시작 시 1회. AppLogger.init() 이후 호출.
   Future<void> start() async {
     if (_started) return;
     _started = true;
     _startedAt = DateTime.now();
     settings = RemoteLogSettings.load();
+    final normalized = _httpUrl(settings.url);
+    if (normalized != settings.url) {
+      settings.url = normalized;
+      settings.save();
+      AppLogger.instance.i('원격 로그 URL HTTP로 정규화: $normalized');
+    }
 
     // 직전 실행의 미전송분(app-prev.log) 먼저 보충 전송
     await _drainPreviousSession();
@@ -153,6 +162,7 @@ class RemoteLogForwarder {
 
   /// 설정 화면에서 변경 후 저장
   void applySettings(RemoteLogSettings next) {
+    next.url = _httpUrl(next.url);
     settings = next;
     settings.save();
     AppLogger.instance.i(
