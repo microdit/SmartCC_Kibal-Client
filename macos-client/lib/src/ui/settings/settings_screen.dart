@@ -15,6 +15,8 @@ import '../../utils/ops_directory.dart';
 import '../../utils/server_config.dart';
 import '../../utils/video_quality_settings.dart';
 import 'remote_log_settings_dialog.dart';
+import '../../utils/remote_log_forwarder.dart';
+import '../../utils/remote_log_settings.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -91,10 +93,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final store = ConnectionProfileStore.instance;
     store.save(_profile, current);
     store.setSelected(profile);
-    final cfg = store.configFor(profile) ?? profile.defaultConfig();
-    ServerConfigService.instance.setCurrent(cfg);
-    cfg.save();
-    if (!mounted) return;
+  final cfg = store.configFor(profile) ?? profile.defaultConfig();
+  ServerConfigService.instance.setCurrent(cfg);
+  cfg.save();
+  // 프로파일 전환 시 로그 전송 서버도 함께 갱신(사용자 수동 지정 시 보존)
+  try {
+    final rls = RemoteLogSettings.load();
+    if (!rls.urlOverridden) {
+      rls.url = cfg.clientLogUrl;
+      rls.key = cfg.clientKey.isNotEmpty ? cfg.clientKey : rls.key;
+      RemoteLogForwarder.instance.applySettings(rls);
+    }
+  } catch (_) {}
+  if (!mounted) return;
     setState(() {
       _profile = profile;
       _domain.text = cfg.sipDomain;
@@ -119,6 +130,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
     }
     ConnectionProfileStore.instance.save(_profile, cfg);
     ConnectionProfileStore.instance.setSelected(_profile);
+    // 자동 설정 시 로그 전송 서버도 함께 갱신
+    try {
+      final rls = RemoteLogSettings.load();
+      if (!rls.urlOverridden) {
+        rls.url = cfg.clientLogUrl;
+        if (cfg.clientKey.isNotEmpty) rls.key = cfg.clientKey;
+        RemoteLogForwarder.instance.applySettings(rls);
+      }
+    } catch (_) {}
     setState(() {
       _domain.text = cfg.sipDomain;
       _port.text = cfg.sipPort.toString();
@@ -144,11 +164,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
       }
       _ws.text = wsServer;
     }
+    final opsUrl = _ops.text.trim();
+    final existingLogUrl = ServerConfigService.instance.current.clientLogUrl;
+    final logUrl = opsUrl.isNotEmpty
+        ? '$opsUrl/api/client-logs'
+        : existingLogUrl;
     final cfg = ServerConfigService.instance.current.copyWith(
       sipDomain: domain,
       sipPort: int.tryParse(_port.text.trim()) ?? AppConstants.defaultSipPort,
       wsServer: wsServer,
-      opsBaseUrl: _ops.text.trim(),
+      opsBaseUrl: opsUrl,
+      clientLogUrl: logUrl,
       secure: external || ServerConfigService.instance.current.secure,
       source: 'saved',
     );
@@ -157,6 +183,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
     cfg.save();
     ConnectionProfileStore.instance.save(_profile, cfg);
     ConnectionProfileStore.instance.setSelected(_profile);
+    // 수동 저장 시에도 로그 전송 서버 갱신(수동 지정 시 보존)
+    try {
+      final rls = RemoteLogSettings.load();
+      if (!rls.urlOverridden) {
+        rls.url = cfg.clientLogUrl;
+        RemoteLogForwarder.instance.applySettings(rls);
+      }
+    } catch (_) {}
     AppLogger.instance.ui('SETTINGS', 'connectionSaved', params: {
       'profile': _profile.name,
       'domain': cfg.sipDomain,
