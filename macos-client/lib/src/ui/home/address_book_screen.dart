@@ -235,6 +235,7 @@ class _AddressBookScreenState extends State<AddressBookScreen>
       iceServers: AppConstants.iceServersFor(
         cfgBase.wsServer.isEmpty ? cfgBase.sipDomain : cfgBase.wsServer,
       ),
+      turn: cfgBase.turn,
     );
     sip.updateConfig(sipConfig);
     AppLogger.instance.ui('ADDRESSBOOK', 'autoRegister', params: {'ext': ext});
@@ -279,6 +280,7 @@ class _AddressBookScreenState extends State<AddressBookScreen>
       iceServers: AppConstants.iceServersFor(
         cfgBase.wsServer.isEmpty ? cfgBase.sipDomain : cfgBase.wsServer,
       ),
+      turn: cfgBase.turn,
     );
     sip.updateConfig(sipConfig);
     AppLogger.instance

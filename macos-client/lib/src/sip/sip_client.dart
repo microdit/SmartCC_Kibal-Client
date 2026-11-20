@@ -137,6 +137,27 @@ class KibalSipClient implements SipUaHelperListener {
   Future<bool>? _initInFlight;
 
   /// SIP 클라이언트 초기화 및 전송 연결
+  List<Map<String, String>> _buildIceServers(SipConfig config) {
+    final ice = <Map<String, String>>[
+      for (final url in config.iceServers) {'urls': url},
+    ];
+    final turn = config.turn;
+    if (turn != null) {
+      final urls = turn['urls'];
+      final url = urls is List && urls.isNotEmpty
+          ? urls.first.toString()
+          : urls?.toString();
+      if (url != null && url.isNotEmpty) {
+        ice.add({
+          'urls': url,
+          'username': (turn['username'] ?? '').toString(),
+          'credential': (turn['credential'] ?? '').toString(),
+        });
+      }
+    }
+    return ice;
+  }
+
   Future<bool> init(SipConfig config) async {
     final pending = _initInFlight;
     if (pending != null) return pending;
@@ -156,9 +177,17 @@ class KibalSipClient implements SipUaHelperListener {
         ..register = true
         ..register_expires = 300
         ..userAgent = 'Kibal Client/1.0'
-        ..iceServers = config.iceServers
-            .map((url) => <String, String>{'urls': url})
-            .toList();
+        ..iceTransportPolicy = const bool.fromEnvironment(
+                  'FORCE_RELAY',
+                  defaultValue: false,
+                )
+            ? IceTransportPolicy.RELAY
+            : IceTransportPolicy.ALL
+        ..iceServers = _buildIceServers(config);
+
+      AppLogger.instance.i(
+          'ICE 설정 urls=${_buildIceServers(config).map((e) => e['urls']).toList()} '
+          'policy=${const bool.fromEnvironment('FORCE_RELAY', defaultValue: false) ? 'relay' : 'all'}');
 
       final transportCompleter = Completer<bool>();
       _transportCompleter = transportCompleter;
