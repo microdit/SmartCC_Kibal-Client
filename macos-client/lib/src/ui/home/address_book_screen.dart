@@ -145,12 +145,21 @@ class _AddressBookScreenState extends State<AddressBookScreen>
       extension: auth.authExtension,
     );
     if (auth.isOfflineVerified) {
+      // 오프라인 인증이라도 OPS가 부분적으로 도달 가능하면 주소록을 시도한다.
+      // (SIP 비밀번호 동기화에 필요; 실패 시 빈 목록 + 안내 메시지)
+      final dir = await OpsDirectory.fetch();
       if (!mounted) return;
       setState(() {
-        _directory = const OpsDirectory();
-        _syncError = '오프라인 인증 상태입니다. 주소록 동기화는 비활성화되었습니다(다이얼패드/수신은 가능).';
-        _syncing = false;
+        _directory = dir;
+        _lastSync = DateTime.now();
+        _syncError = (dir.contacts.isEmpty && dir.rooms.isEmpty)
+            ? '오프라인 인증 상태입니다. 주소록 동기화 실패(네트워크/OPS 확인). 다이얼패드/수신은 가능합니다.'
+            : '오프라인 인증 상태입니다. 주소록은 부분 동기화되었습니다.';
       });
+      AppLogger.instance.i(
+          'AddressBook (offline) synced contacts=${dir.contacts.length} rooms=${dir.rooms.length}');
+      if (!mounted) return;
+      setState(() => _syncing = false);
       return;
     }
     if (auth.isVerified) {
@@ -198,7 +207,10 @@ class _AddressBookScreenState extends State<AddressBookScreen>
         break;
       }
     }
-    final password = bound?.sipPassword;
+    // 오프라인/주소록 미동기화 시 DEV 빠른 계정 매핑으로 폴백 (수동 테스트용)
+    final password = (bound?.sipPassword != null && bound!.sipPassword!.isNotEmpty)
+        ? bound.sipPassword!
+        : AppConstants.devQuickAccounts[ext];
     if (password == null || password.isEmpty) {
       setState(() => _sipError = '$ext SIP 비밀번호를 동기화하지 못했습니다.');
       if (notify && mounted) {
@@ -218,7 +230,7 @@ class _AddressBookScreenState extends State<AddressBookScreen>
       password: password,
       domain: cfgBase.sipDomain,
       port: cfgBase.sipPort,
-      displayName: bound!.displayName.isNotEmpty ? bound.displayName : ext,
+      displayName: (bound != null && bound.displayName.isNotEmpty) ? bound.displayName : ext,
       wsServer: cfgBase.wsServer,
       iceServers: AppConstants.iceServersFor(
         cfgBase.wsServer.isEmpty ? cfgBase.sipDomain : cfgBase.wsServer,
