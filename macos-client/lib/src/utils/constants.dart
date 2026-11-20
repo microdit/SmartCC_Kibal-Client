@@ -238,7 +238,7 @@ class AppConstants {
   //--------------------------------------------------------------------------
   
   static const bool enableStun = true;
-  static const bool enableTurn = false; // TURN not configured yet
+  static const bool enableTurn = true; // coturn staging 완료
   static const bool enableIce = true;
   static const bool enableSfu = true;
   

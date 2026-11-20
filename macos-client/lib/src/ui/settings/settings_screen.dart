@@ -71,6 +71,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
       _auth = auth;
       _loading = false;
     });
+    AppLogger.instance.ui('SETTINGS', 'load', params: {
+      'profile': _profile.name,
+      'sipDomain': cfg.sipDomain,
+      'sipPort': cfg.sipPort,
+      'wsServer': cfg.wsServer,
+      'opsBaseUrl': cfg.opsBaseUrl,
+      'authExt': auth.authExtension,
+      'authStatus': auth.status.name,
+      'failCount': auth.failCount,
+    });
   }
 
   @override
@@ -99,6 +109,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
       clientLogUrl: '${_ops.text.trim()}/api/client-logs',
       source: 'test',
     );
+    AppLogger.instance.ui('SETTINGS', 'connectionTest', params: {
+      'profile': _profile.name,
+      'sipDomain': _domain.text.trim(),
+      'sipPort': _port.text.trim(),
+      'wsServer': _ws.text.trim(),
+      'opsBaseUrl': _ops.text.trim(),
+      'authExt': _authExt.text.trim(),
+      'authKey': _authKey.text.trim().isNotEmpty ? '***' : '',
+    });
     final results = await ConnectionTestService.instance.test(
       profile: _profile,
       config: cfg,
@@ -154,6 +173,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
       _ops.text = cfg.opsBaseUrl;
       _autoMsg = '${profile.label} 프로필로 전환했습니다.';
     });
+    AppLogger.instance.ui('SETTINGS', 'profileSwitched', params: {
+      'from': _profile.name,
+      'to': profile.name,
+      'sipDomain': cfg.sipDomain,
+      'sipPort': cfg.sipPort,
+      'wsServer': cfg.wsServer,
+      'opsBaseUrl': cfg.opsBaseUrl,
+    });
   }
 
   Future<void> _autoConfigure() async {
@@ -166,6 +193,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     if (!mounted) return;
     if (cfg == null) {
       setState(() => _autoMsg = '연결되는 서버가 없습니다. 수동으로 입력하세요.');
+      AppLogger.instance.w('SETTINGS autoConfigure failed profile=${_profile.name}');
       return;
     }
     ConnectionProfileStore.instance.save(_profile, cfg);
@@ -177,6 +205,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
       _ws.text = cfg.wsServer;
       _ops.text = cfg.opsBaseUrl;
       _autoMsg = '서버에서 자동 설정을 받았습니다 (${cfg.source}).';
+    });
+    AppLogger.instance.ui('SETTINGS', 'autoConfigure', params: {
+      'profile': _profile.name,
+      'sipDomain': cfg.sipDomain,
+      'sipPort': cfg.sipPort,
+      'wsServer': cfg.wsServer,
+      'opsBaseUrl': cfg.opsBaseUrl,
+      'source': cfg.source,
     });
   }
 
@@ -218,9 +254,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
     ConnectionProfileStore.instance.setSelected(_profile);
     AppLogger.instance.ui('SETTINGS', 'connectionSaved', params: {
       'profile': _profile.name,
-      'domain': cfg.sipDomain,
+      'sipDomain': cfg.sipDomain,
+      'sipPort': cfg.sipPort,
+      'wsServer': cfg.wsServer,
+      'opsBaseUrl': cfg.opsBaseUrl,
+      'clientLogUrl': cfg.clientLogUrl,
       'secureWs': cfg.wsServer.startsWith('wss'),
       'secureOps': cfg.opsBaseUrl.startsWith('https'),
+      'source': cfg.source,
     });
     if (!mounted) return;
     setState(() => _saving = false);
@@ -240,17 +281,24 @@ class _SettingsScreenState extends State<SettingsScreen> {
       _verifyMsg = '서버 검증 중...';
       _lastVerifyOffline = false;
     });
-    await ClientAuthStore.instance().applyInput(extension: ext, clientKey: key);
-    final base = _ops.text.trim().isNotEmpty
+    final rawBase = _ops.text.trim().isNotEmpty
         ? _ops.text.trim()
         : ServerConfigService.instance.current.opsBaseUrl;
+    // OPS는 HTTP-only. https:// 입력도 http://로 정규화.
+    final base = rawBase.replaceFirst(RegExp(r'^https://', caseSensitive: false), 'http://');
+    await ClientAuthStore.instance().applyInput(extension: ext, clientKey: key);
+    AppLogger.instance.ui('SETTINGS', 'authVerify', params: {
+      'ext': ext,
+      'key': key.isNotEmpty ? '***' : '',
+      'opsBase': base,
+    });
     final result = await _verifyAgainstServer(base, ext, key);
     ClientAuthState st;
     if (result.ok) {
       st = await ClientAuthStore.instance().markVerified();
       // 인증 성공 시 주소록/설정 즉시 갱신
-      await ServerConfigService.instance.refresh(
-          hintDomain: _domain.text.trim(), clientKey: key, extension: ext);
+      await ServerConfigService.instance.refreshSmart(
+          clientKey: key, extension: ext);
       await OpsDirectory.fetch();
       _verifyMsg = '인증됨: 서버 검증 성공 ($ext)';
       AppLogger.instance.evt('AUTH', 'verifyResult',
@@ -297,6 +345,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
       return;
     }
     await ClientAuthStore.instance().applyInput(extension: ext, clientKey: key);
+    AppLogger.instance.ui('SETTINGS', 'authVerifyOffline', params: {
+      'ext': ext,
+      'key': key.isNotEmpty ? '***' : '',
+    });
     final st = await ClientAuthStore.instance()
         .markLocalVerified(reason: '외부망: OPS 접근 불가, SIP 자격으로 로컬 인증');
     if (!mounted) return;
@@ -328,6 +380,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
       _qualityMsg =
           '적용됨: ${next.label} · ${frameRate}fps${next.isAuto ? '' : ' · ${next.width}x${next.height}'}';
     });
+    AppLogger.instance.ui('SETTINGS', 'qualityApplied', params: {
+      'mode': next.label,
+      'frameRate': frameRate,
+      'width': next.width,
+      'height': next.height,
+      'isAuto': next.isAuto,
+    });
   }
 
   Future<void> _resetAuth() async {
@@ -339,6 +398,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       _auth = st;
       _verifyMsg = '인증 정보를 초기화했습니다(키/인증 내선).';
     });
+    AppLogger.instance.ui('SETTINGS', 'authReset', params: {'reason': '사용자 재설정'});
   }
 
   Future<_VerifyResult> _verifyAgainstServer(
@@ -354,6 +414,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       req.headers.add('X-Client-Extension', ext);
       final res = await req.close().timeout(const Duration(seconds: 5));
       final body = await res.transform(utf8.decoder).join();
+      AppLogger.instance.i('OPS 인증 검증 url=$base ext=$ext status=${res.statusCode} body=${body.length>200?body.substring(0,200):body}');
       if (res.statusCode == 200) {
         try {
           final j = jsonDecode(body) as Map<String, dynamic>;
@@ -367,6 +428,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       return _VerifyResult(
           false, res.statusCode, '서버 응답 오류(${res.statusCode})');
     } catch (e) {
+      AppLogger.instance.w('OPS 인증 검증 실패 url=$base ext=$ext err=${e.runtimeType}: $e');
       return _VerifyResult(false, -1, '서버 연결 실패');
     } finally {
       client.close(force: true);

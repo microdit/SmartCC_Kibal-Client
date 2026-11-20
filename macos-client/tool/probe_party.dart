@@ -63,7 +63,7 @@ class ProbeParty {
       username: username,
       password: password,
       domain: domain,
-      port: 8088,
+      port: 8089,
       displayName: 'Kibal Probe $username',
       wsServer: wsServer,
       turn: _probeTurn(),

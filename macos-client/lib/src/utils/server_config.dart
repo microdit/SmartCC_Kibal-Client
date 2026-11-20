@@ -223,8 +223,10 @@ class ServerConfig {
     if (domain == null || domain.isEmpty || ws == null || ws.isEmpty) {
       return null;
     }
-    final ops = (j['opsBaseUrl'] ?? j['ops_base_url']) as String? ??
+    // OPS는 HTTP-only. 저장된 https:// URL은 http://로 정규화.
+    var ops = (j['opsBaseUrl'] ?? j['ops_base_url']) as String? ??
         'http://$domain:${AppConstants.opsPort}';
+    ops = ops.replaceFirst(RegExp(r'^https://', caseSensitive: false), 'http://');
     final man = j['manifest'];
     final secureValue = j['secure'] ?? j['use_tls'] ?? j['tls'];
     final secure = secureValue is bool
@@ -238,8 +240,9 @@ class ServerConfig {
           AppConstants.defaultSipPort,
       wsServer: ws,
       opsBaseUrl: ops,
-      clientLogUrl: (j['clientLogUrl'] ?? j['client_log_url']) as String? ??
-          '$ops/api/client-logs',
+      clientLogUrl: ((j['clientLogUrl'] ?? j['client_log_url']) as String? ??
+              '$ops/api/client-logs')
+          .replaceFirst(RegExp(r'^https://', caseSensitive: false), 'http://'),
       publicHost: (j['publicHost'] ?? j['public_host']) as String?,
       updatedAt: (j['updatedAt'] ?? j['updated_at']) as String?,
       source: source,
@@ -350,7 +353,7 @@ class ServerConfigService {
   ServerConfigService._();
   static final ServerConfigService instance = ServerConfigService._();
 
-  static const Duration perCandidateTimeout = Duration(seconds: 3);
+  static const Duration perCandidateTimeout = Duration(seconds: 8);
 
   ServerConfig _current = ServerConfig.load();
   ServerConfig get current => _current;
@@ -358,6 +361,29 @@ class ServerConfigService {
   void setCurrent(ServerConfig cfg) {
     _current = cfg;
   }
+
+  /// 현재 네트워크가 내부망(LAN)인지 판별.
+  /// 192.168.11.5:8091에 2초 내 응답하면 LAN으로 판단.
+  Future<bool> isOnLan() async {
+    try {
+      final client = HttpClient()..connectionTimeout = const Duration(seconds: 2);
+      final req = await client
+          .getUrl(Uri.parse('http://192.168.11.5:${AppConstants.opsPort}/health'))
+          .timeout(const Duration(seconds: 2));
+      final res = await req.close().timeout(const Duration(seconds: 2));
+      await res.drain<void>();
+      client.close(force: true);
+      return res.statusCode == 200;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  /// 현재 프로필이 내부망(DEV/PRD)인지 판별
+  bool get _isInternalProfile =>
+      _current.sipDomain == '192.168.11.5' ||
+      _current.sipDomain == '192.168.11.3' ||
+      _current.sipDomain == '192.168.11.2';
 
   Future<ServerConfig?> probeProfile(
     ConnectionProfile profile, {
@@ -397,16 +423,21 @@ class ServerConfigService {
   }
 
   /// 탐색 후보 OPS 주소(순서대로 시도)
-  List<String> candidates({String? hintDomain}) {
+  /// 내부망이 아닐 때 내부 IP 후보를 건너뛰어 타임아웃 방지.
+  List<String> candidates({String? hintDomain, bool skipInternal = false}) {
     // OPS는 HTTP-only. HTTPS URL이 저장된 경우 HTTP로 정규화하여 hang 방지.
     String toHttp(String u) => u.replaceFirst(RegExp(r'^https://', caseSensitive: false), 'http://');
+    bool isInternal(String u) =>
+        u.contains('192.168.') || u.contains('10.0.') || u.contains('MacPro.local') || u.contains('localhost');
     final c = <String>[
-      toHttp(_current.opsBaseUrl),
+      if (!skipInternal || !isInternal(toHttp(_current.opsBaseUrl)))
+        toHttp(_current.opsBaseUrl),
       if (hintDomain != null && hintDomain.isNotEmpty)
         'http://$hintDomain:${AppConstants.opsPort}',
-      if ((_current.publicHost ?? '').isNotEmpty)
+      if ((_current.publicHost ?? '').isNotEmpty && (!skipInternal || !isInternal('http://${_current.publicHost}')))
         'http://${_current.publicHost}:${AppConstants.opsPort}',
-      'http://${ServerConfig.bootstrapHost}:${AppConstants.opsPort}',
+      if (!skipInternal)
+        'http://${ServerConfig.bootstrapHost}:${AppConstants.opsPort}',
       'http://${AppConstants.defaultDomain}:${AppConstants.opsPort}',
     ];
     final seen = <String>{};
@@ -418,12 +449,12 @@ class ServerConfigService {
 
   /// OPS에 접속해 최신 설정을 받는다. 성공 시 저장 후 반환, 모두 실패 시 null.
   Future<ServerConfig?> refresh(
-      {String? hintDomain, String? clientKey, String? extension}) async {
+      {String? hintDomain, String? clientKey, String? extension, bool skipInternal = false}) async {
     final key = clientKey ??
         (_current.clientKey.trim().isNotEmpty
             ? _current.clientKey.trim()
             : AppConstants.opsClientKey);
-    for (final base in candidates(hintDomain: hintDomain)) {
+    for (final base in candidates(hintDomain: hintDomain, skipInternal: skipInternal)) {
       final cfg = await _fetch(base, key,
           extension: extension ?? _current.clientExtension);
       if (cfg != null) {
@@ -435,10 +466,44 @@ class ServerConfigService {
             'domain=${cfg.sipDomain} ws=${cfg.wsServer} changed=$changed ver=${cfg.configVersion}');
         return cfg;
       }
+      AppLogger.instance.w('서버 설정 갱신 실패 via=$base (응답 없음/비정상)');
     }
     AppLogger.instance.w('서버 설정 갱신 실패: OPS 응답 없음 (후보 '
         '${candidates(hintDomain: hintDomain).join(', ')})');
     return null;
+  }
+
+  /// 네트워크 변경 감지 + 자동 프로필 전환.
+  /// 내부망에서 외부망으로 전환 시 자동으로 외부 프로필로 전환.
+  Future<ServerConfig?> refreshSmart({String? clientKey, String? extension}) async {
+    final onLan = await isOnLan();
+    AppLogger.instance.i('네트워크 감지: onLan=$onLan, currentProfile=${_current.sipDomain}');
+    // 내부망인데 외부 프로필이면 dev로 전환
+    if (onLan && _current.sipDomain == 'appletreeda.synology.me') {
+      AppLogger.instance.i('내부망 감지 → DEV 프로필로 자동 전환');
+      final cfg = ConnectionProfile.dev.defaultConfig();
+      _current = cfg;
+      cfg.save();
+      ConnectionProfileStore.instance.setSelected(ConnectionProfile.dev);
+      return cfg;
+    }
+    // 외부망인데 내부 프로필이면 external로 전환
+    if (!onLan && (_current.sipDomain == '192.168.11.5' ||
+        _current.sipDomain == '192.168.11.3' ||
+        _current.sipDomain == '192.168.11.2')) {
+      AppLogger.instance.i('외부망 감지 → 외부 프로필로 자동 전환');
+      final cfg = ConnectionProfile.external.defaultConfig();
+      _current = cfg;
+      cfg.save();
+      ConnectionProfileStore.instance.setSelected(ConnectionProfile.external);
+      return cfg;
+    }
+    // 프로필 전환 없이 refresh
+    return refresh(
+      clientKey: clientKey,
+      extension: extension,
+      skipInternal: !onLan,
+    );
   }
 
   void updateClientCredentials({String? clientKey, String? clientExtension}) {
@@ -465,11 +530,12 @@ class ServerConfigService {
               ? _current.clientKey.trim()
               : AppConstants.opsClientKey);
       if (useKey.isNotEmpty) req.headers.add('X-Client-Key', useKey);
-      if (useExt.isNotEmpty && _current.clientKey.trim().isNotEmpty) {
+      if (useExt.isNotEmpty && useKey.isNotEmpty) {
         req.headers.add('X-Client-Extension', useExt);
       }
       final res = await req.close().timeout(perCandidateTimeout);
       final body = await res.transform(utf8.decoder).join();
+      AppLogger.instance.i('OPS _fetch url=$base/api/client/config status=${res.statusCode} body=${body.length>120?body.substring(0,120):body}');
       if (res.statusCode != 200) return null;
       final json = jsonDecode(body) as Map<String, dynamic>;
       final data = json['data'];

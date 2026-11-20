@@ -183,6 +183,7 @@ class KibalSipClient implements SipUaHelperListener {
                 )
             ? IceTransportPolicy.RELAY
             : IceTransportPolicy.ALL
+        ..iceGatheringTimeout = 2000
         ..iceServers = _buildIceServers(config);
 
       AppLogger.instance.i(

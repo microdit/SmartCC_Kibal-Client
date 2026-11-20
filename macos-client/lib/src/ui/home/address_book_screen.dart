@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -49,6 +50,7 @@ class _AddressBookScreenState extends State<AddressBookScreen>
 
   @override
   void dispose() {
+    _networkCheckTimer?.cancel();
     WidgetsBinding.instance.removeObserver(this);
     try {
       final sip = Provider.of<SipProvider>(context, listen: false);
@@ -124,11 +126,23 @@ class _AddressBookScreenState extends State<AddressBookScreen>
     }
   }
 
+  Timer? _networkCheckTimer;
   Future<void> _bootstrap() async {
     _auth = await ClientAuthStore.instance().load();
     await _refresh();
     if (mounted) setState(() => _loading = false);
     await _autoRegisterSip(notify: false);
+    // 네트워크 변경 주기적 감지 (30초)
+    _networkCheckTimer = Timer.periodic(const Duration(seconds: 30), (_) async {
+      if (!mounted) return;
+      final before = ServerConfigService.instance.current.sipDomain;
+      await _refresh();
+      final after = ServerConfigService.instance.current.sipDomain;
+      if (before != after) {
+        AppLogger.instance.i('네트워크 전환 감지: $before → $after, SIP 재등록 시도');
+        await _autoRegisterSip(notify: true);
+      }
+    });
   }
 
   Future<void> _refresh({bool silent = false}) async {
@@ -139,8 +153,7 @@ class _AddressBookScreenState extends State<AddressBookScreen>
     });
     final auth = await ClientAuthStore.instance().load();
     _auth = auth;
-    await ServerConfigService.instance.refresh(
-      hintDomain: ServerConfigService.instance.current.sipDomain,
+    await ServerConfigService.instance.refreshSmart(
       clientKey: auth.clientKey,
       extension: auth.authExtension,
     );

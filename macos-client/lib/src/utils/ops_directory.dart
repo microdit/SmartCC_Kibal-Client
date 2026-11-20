@@ -42,7 +42,9 @@ class OpsDirectory {
   static const _timeout = Duration(seconds: 4);
 
   static Future<OpsDirectory> fetch() async {
-    final base = ServerConfigService.instance.current.opsBaseUrl;
+    // OPS는 HTTP-only. 저장된 https:// URL은 http://로 정규화.
+    final base = ServerConfigService.instance.current.opsBaseUrl
+        .replaceFirst(RegExp(r'^https://', caseSensitive: false), 'http://');
     const key = AppConstants.opsClientKey;
     try {
       final results = await Future.wait([
@@ -105,15 +107,18 @@ class OpsDirectory {
       if (useExt.isNotEmpty && useKey.isNotEmpty) {
         req.headers.add('X-Client-Extension', useExt);
       }
+      final sw = Stopwatch()..start();
       final res = await req.close().timeout(_timeout);
       final body = await res.transform(utf8.decoder).join();
+      sw.stop();
+      AppLogger.instance.i('OPS directory GET url=$url status=${res.statusCode} ${sw.elapsedMilliseconds}ms body=${body.length>120?body.substring(0,120):body}');
       if (res.statusCode != 200) return null;
       final json = jsonDecode(body) as Map<String, dynamic>;
       if (json['ok'] != true) return null;
       final data = json['data'];
       return data is Map<String, dynamic> ? data : null;
     } catch (e) {
-      AppLogger.instance.w('OPS directory get failed: $url (${e.runtimeType})');
+      AppLogger.instance.w('OPS directory get failed: $url (${e.runtimeType}: $e)');
       return null;
     } finally {
       client.close(force: true);

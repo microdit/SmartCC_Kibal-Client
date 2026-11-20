@@ -379,11 +379,13 @@ class RemoteLogForwarder {
         );
         return true;
       }
-      _recordFailure('http=${response.statusCode}');
+      _recordFailure('http=${response.statusCode} url=$url');
+      AppLogger.instance.w('원격 로그 전송 HTTP 오류 url=$url status=${response.statusCode}');
       return false;
     } catch (e) {
       if (quiet) return null; // 첫 시도 연결 오류는 조용히 새 연결로 재시도
-      _recordFailure(e.runtimeType.toString());
+      _recordFailure('${e.runtimeType}: $e');
+      AppLogger.instance.w('원격 로그 전송 연결 오류 url=$url err=${e.runtimeType}: $e');
       return null;
     }
   }
