@@ -143,6 +143,7 @@
 - **외부망 테스트 절차서**: [[wiki/03_Guides/20261120_외부망접근_테스트절차서_v1.0]] — 도메인은 `appletreeda.synology.me`만 사용(`appletree`는 오답), WSS REGISTER_OK 사전 확인 완료.
 - **v0.0.45 연결 프로필**: DEV/PRD/외부망 프로필 저장 + OPS `/api/client/config` 자동 탐색 적용, 실패 시 수동 입력. 사용안내 [[wiki/03_Guides/20261120_연결프로필_자동설정_사용안내_v1.0]], SHA256 `8fbf24e4…`
 - **v0.0.46 크래시 수정**: flutter_webrtc 로컬 포크 `getSources:`를 메인 큐로 이동해 AVCaptureDevice 초기화 레이스 제거. 보고서 [[wiki/06_Reports/20261120_getSources_네이티브크래시_수정보고서_v1.0]], 후속과제 [[wiki/01_Projects/20261120_후속과제_정리_v1.0]]
+- **릴리스 요약**: [[wiki/06_Reports/20261120_v0.0.41-46_릴리스요약_v1.0]] — v0.0.41~46 변경/커밋/SHA256/문서 색인. wiki 색인 재생성 완료.
 
 ## 이전 진행 (2026-11-13 02:00, 요약) — F1/F2/G3 구현·v0.0.24
 - F1 `_pendingCallTarget`, F2 A4 롤백, G3 `enable_events=yes` 반영(v0.0.24 build 24, sha256 `c8c6e4a7…`). ADR-008/D1·ADR-009/F2 실기 확인, G3 부분검증. 잔여: P0 크래시, H1/H5/F1/H6 재검증. 상세: [[wiki/06_Reports/20261113_F1F2G3_구현완료보고서_v1.0]], [[docs/보고서/20261113_후속작업계획서_v2.0]], [[wiki/07_Logs/작업로그_20261113]]
