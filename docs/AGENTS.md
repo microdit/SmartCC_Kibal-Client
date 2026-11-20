@@ -133,7 +133,7 @@
 - 점검 정상: IP `192.168.11.5`, OPS health 200, SIP auth 12건 PASS, RTP/STUN/WSS 정상.
 - 원인: 진단봇 데몬 2개 + 7001 ConfBridge 채널 2개/1106 잔류로 6700 영상 소스 중복.
 - 조치: 데몬/채널 전부 정리 후 단일 봇 재기동(PID 4131), 1080p 송출 및 6700 `conference_probe` videoBytes 증가 확인.
-- 후속: sleep/wake 대응 단일 인스턴스 보장 스크립트. 로그 [[wiki/07_Logs/20261120]]
+- 봇 단일 인스턴스 보장 완료: 서버 `scripts/restart-diag-bot.sh`(`ensure|restart|status|stop`) + 데몬 PID lock/잔류 7001 채널 자동 hangup. launchd는 TCC 차단으로 제거하고 데몬 자체 복구로 확정. 로그 [[wiki/07_Logs/20261120]]
 
 ## 이전 진행 (2026-11-13 02:00, 요약) — F1/F2/G3 구현·v0.0.24
 - F1 `_pendingCallTarget`, F2 A4 롤백, G3 `enable_events=yes` 반영(v0.0.24 build 24, sha256 `c8c6e4a7…`). ADR-008/D1·ADR-009/F2 실기 확인, G3 부분검증. 잔여: P0 크래시, H1/H5/F1/H6 재검증. 상세: [[wiki/06_Reports/20261113_F1F2G3_구현완료보고서_v1.0]], [[docs/보고서/20261113_후속작업계획서_v2.0]], [[wiki/07_Logs/작업로그_20261113]]
