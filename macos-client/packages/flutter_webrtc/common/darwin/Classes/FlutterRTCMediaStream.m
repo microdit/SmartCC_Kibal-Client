@@ -682,13 +682,10 @@ typedef void (^NavigatorUserMediaSuccessCallback)(RTCMediaStream* mediaStream);
 }
 
 - (void)getSources:(FlutterResult)result {
-  // The first camera discovery in a process loads the system's camera
-  // extensions and waits on the camera daemon, about a second on a Mac. Off
-  // the main thread, which is Flutter's UI thread on macOS.
 #if TARGET_OS_OSX
   RTCAudioDeviceModule* audioDeviceModule = [self.peerConnectionFactory audioDeviceModule];
 #endif
-  dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0), ^{
+  dispatch_async(dispatch_get_main_queue(), ^{
     NSMutableArray* sources = [NSMutableArray array];
     NSArray* videoDevices = [self captureDevices];
     for (AVCaptureDevice* device in videoDevices) {
