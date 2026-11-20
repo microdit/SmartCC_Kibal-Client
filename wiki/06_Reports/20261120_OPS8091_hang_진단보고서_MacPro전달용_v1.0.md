@@ -215,6 +215,22 @@ OPS_URL=http://192.168.11.5:8091 ./scripts/ops_client_logs.sh list
 
 ---
 
+## 8. MacPro 서버 측 검증 결과 (수령 후 확인)
+
+| 항목 | 결과 |
+|------|------|
+| 내부 OPS `/health` | HTTP 200 |
+| 외부 `http://211.253.173.236:8091/health` | HTTP 200 `{"status":"ok"}` |
+| 외부 `http://appletreeda.synology.me:8091/api/client/config` | HTTP 401 (인증 요구 → HTTP 도달 확인) |
+| 외부 프로필 scheme | `http://`로 정정됨(server_config.dart), HTTPS는 OPS 미지원 |
+| `git-sync.sh` | RC 0/2 모두 push 수행, push stderr 표시 확인 |
+| 코드 검증 | `flutter analyze` 0 / `flutter test` 17/17 |
+| 빌드 | `v0.0.49` 발행, SHA256 `fc5ae6db…` |
+
+P0 조치(OPS 컨테이너 재시작)는 이미 수행되어 정상 응답 중이다. 외부 로그 전송은 `http://` 프로파일로 정상화되었다.
+
+---
+
 **작성**: SmartCC_Kibal-Client macOS 클라이언트 측 AI 에이전트
 **전달 대상**: MacPro (192.168.11.5) 서버 AI 코딩 에이전트
-**클라이언트 브랜치/커밋**: `feature/external-network-access` @ `328ca2ce`
+**클라이언트 브랜치/커밋**: `feature/external-network-access` @ `de94ccb6` → `v0.0.49`
