@@ -10,13 +10,14 @@ import '../../providers/media_provider.dart';
 import '../../providers/sip_provider.dart';
 import '../../utils/app_logger.dart';
 import '../../utils/client_auth_state.dart';
+import '../../utils/connection_test.dart';
 import '../../utils/constants.dart';
 import '../../utils/ops_directory.dart';
+import '../../utils/remote_log_forwarder.dart';
+import '../../utils/remote_log_settings.dart';
 import '../../utils/server_config.dart';
 import '../../utils/video_quality_settings.dart';
 import 'remote_log_settings_dialog.dart';
-import '../../utils/remote_log_forwarder.dart';
-import '../../utils/remote_log_settings.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -43,6 +44,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
   String? _qualityMsg;
   late ConnectionProfile _profile;
   String? _autoMsg;
+  bool _testing = false;
+  List<ConnectionTestResult> _testResults = const [];
 
   @override
   void initState() {
@@ -81,6 +84,51 @@ class _SettingsScreenState extends State<SettingsScreen> {
     super.dispose();
   }
 
+  Future<void> _testConnection() async {
+    setState(() {
+      _testing = true;
+      _testResults = const [];
+      _autoMsg = null;
+    });
+    final base = ServerConfigService.instance.current;
+    final cfg = base.copyWith(
+      sipDomain: _domain.text.trim(),
+      sipPort: int.tryParse(_port.text.trim()) ?? base.sipPort,
+      wsServer: _ws.text.trim(),
+      opsBaseUrl: _ops.text.trim(),
+      clientLogUrl: '${_ops.text.trim()}/api/client-logs',
+      source: 'test',
+    );
+    final results = await ConnectionTestService.instance.test(
+      profile: _profile,
+      config: cfg,
+      clientKey: _authKey.text.trim(),
+      extension: _authExt.text.trim(),
+    );
+    if (!mounted) return;
+    setState(() {
+      _testing = false;
+      _testResults = results;
+      _autoMsg = results.any((r) => r.ok)
+          ? '연결 테스트 완료 — 결과를 확인하세요.'
+          : '모든 경로가 실패했습니다. 설정/방화벽을 확인하세요.';
+    });
+  }
+
+  void _applyLogUrl(ServerConfig cfg) {
+    final s = RemoteLogForwarder.instance.settings;
+    RemoteLogForwarder.instance.applySettings(RemoteLogSettings(
+      mode: s.mode,
+      url: cfg.clientLogUrl,
+      key: s.key,
+      levels: s.levels,
+      domains: s.domains,
+      includeStats: s.includeStats,
+      urlOverridden: true,
+      autoSend: s.autoSend,
+    ));
+  }
+
   Future<void> _switchProfile(ConnectionProfile profile) async {
     final base = ServerConfigService.instance.current;
     final current = base.copyWith(
@@ -93,19 +141,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final store = ConnectionProfileStore.instance;
     store.save(_profile, current);
     store.setSelected(profile);
-  final cfg = store.configFor(profile) ?? profile.defaultConfig();
-  ServerConfigService.instance.setCurrent(cfg);
-  cfg.save();
-  // 프로파일 전환 시 로그 전송 서버도 함께 갱신(사용자 수동 지정 시 보존)
-  try {
-    final rls = RemoteLogSettings.load();
-    if (!rls.urlOverridden) {
-      rls.url = cfg.clientLogUrl;
-      rls.key = cfg.clientKey.isNotEmpty ? cfg.clientKey : rls.key;
-      RemoteLogForwarder.instance.applySettings(rls);
-    }
-  } catch (_) {}
-  if (!mounted) return;
+    final cfg = store.configFor(profile) ?? profile.defaultConfig();
+    ServerConfigService.instance.setCurrent(cfg);
+    cfg.save();
+    _applyLogUrl(cfg);
+    if (!mounted) return;
     setState(() {
       _profile = profile;
       _domain.text = cfg.sipDomain;
@@ -130,15 +170,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     }
     ConnectionProfileStore.instance.save(_profile, cfg);
     ConnectionProfileStore.instance.setSelected(_profile);
-    // 자동 설정 시 로그 전송 서버도 함께 갱신
-    try {
-      final rls = RemoteLogSettings.load();
-      if (!rls.urlOverridden) {
-        rls.url = cfg.clientLogUrl;
-        if (cfg.clientKey.isNotEmpty) rls.key = cfg.clientKey;
-        RemoteLogForwarder.instance.applySettings(rls);
-      }
-    } catch (_) {}
+    _applyLogUrl(cfg);
     setState(() {
       _domain.text = cfg.sipDomain;
       _port.text = cfg.sipPort.toString();
@@ -164,33 +196,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
       }
       _ws.text = wsServer;
     }
-    final opsUrl = _ops.text.trim();
-    final existingLogUrl = ServerConfigService.instance.current.clientLogUrl;
-    final logUrl = opsUrl.isNotEmpty
-        ? '$opsUrl/api/client-logs'
-        : existingLogUrl;
     final cfg = ServerConfigService.instance.current.copyWith(
       sipDomain: domain,
       sipPort: int.tryParse(_port.text.trim()) ?? AppConstants.defaultSipPort,
       wsServer: wsServer,
-      opsBaseUrl: opsUrl,
-      clientLogUrl: logUrl,
+      opsBaseUrl: _ops.text.trim(),
+      clientLogUrl: '${_ops.text.trim()}/api/client-logs',
       secure: external || ServerConfigService.instance.current.secure,
       source: 'saved',
     );
     ServerConfigService.instance
         .setCurrent(cfg); // ignore: invalid_use_of_visible_for_testing_member
     cfg.save();
+    _applyLogUrl(cfg);
     ConnectionProfileStore.instance.save(_profile, cfg);
     ConnectionProfileStore.instance.setSelected(_profile);
-    // 수동 저장 시에도 로그 전송 서버 갱신(수동 지정 시 보존)
-    try {
-      final rls = RemoteLogSettings.load();
-      if (!rls.urlOverridden) {
-        rls.url = cfg.clientLogUrl;
-        RemoteLogForwarder.instance.applySettings(rls);
-      }
-    } catch (_) {}
     AppLogger.instance.ui('SETTINGS', 'connectionSaved', params: {
       'profile': _profile.name,
       'domain': cfg.sipDomain,
@@ -558,6 +578,52 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       icon: const Icon(Icons.cloud_download_outlined, size: 18),
                       label: const Text('서버에서 자동 설정'),
                     ),
+                    const SizedBox(height: 8),
+                    OutlinedButton.icon(
+                      onPressed: _testing ? null : _testConnection,
+                      icon: _testing
+                          ? const SizedBox(
+                              width: 14,
+                              height: 14,
+                              child: CircularProgressIndicator(strokeWidth: 2))
+                          : const Icon(Icons.network_check, size: 18),
+                      label: const Text('연결 테스트'),
+                    ),
+                    if (_testResults.isNotEmpty) ...[
+                      const SizedBox(height: 8),
+                      Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: Colors.black.withValues(alpha: 0.05),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            for (final r in _testResults)
+                              Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 2),
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      r.ok ? Icons.check_circle : Icons.error_outline,
+                                      size: 14,
+                                      color: r.ok ? Colors.green : Colors.redAccent,
+                                    ),
+                                    const SizedBox(width: 6),
+                                    Expanded(
+                                      child: Text(
+                                        '${r.label} — ${r.detail}',
+                                        style: const TextStyle(fontSize: 11),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                          ],
+                        ),
+                      ),
+                    ],
                     if (_autoMsg != null) ...[
                       const SizedBox(height: 6),
                       Text(_autoMsg!,
