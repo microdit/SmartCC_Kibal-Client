@@ -299,7 +299,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
       // 인증 성공 시 주소록/설정 즉시 갱신
       await ServerConfigService.instance.refreshSmart(
           clientKey: key, extension: ext);
-      await OpsDirectory.fetch();
+      final dirFetch = await OpsDirectory.fetch();
+      if (!dirFetch.ok) {
+        AppLogger.instance.w('Settings: 주소록 갱신 실패(캐시 유지): ${dirFetch.error}');
+      }
       _verifyMsg = '인증됨: 서버 검증 성공 ($ext)';
       AppLogger.instance.evt('AUTH', 'verifyResult',
           state: 'verified', details: {'ext': ext});

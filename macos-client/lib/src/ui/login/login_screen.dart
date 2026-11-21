@@ -97,10 +97,12 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future<void> _loadQuickContacts() async {
-    final dir = await OpsDirectory.fetch();
+    final fetch = await OpsDirectory.fetch();
     if (!mounted) return;
     setState(() {
-      _quickContacts = dir.contacts;
+      if (fetch.ok && fetch.directory != null) {
+        _quickContacts = fetch.directory!.contacts;
+      }
       _quickContactsLoaded = true;
     });
   }

@@ -458,6 +458,11 @@ class ServerConfigService {
       final cfg = await _fetch(base, key,
           extension: extension ?? _current.clientExtension);
       if (cfg != null) {
+        if (skipInternal && _looksInternalConfig(cfg)) {
+          AppLogger.instance.w(
+              '서버 설정 갱신 거부(외부망 내부주소 오염): via=$base domain=${cfg.sipDomain} ws=${cfg.wsServer}');
+          continue;
+        }
         final changed = !cfg.sameAddressAs(_current) ||
             cfg.configVersion != _current.configVersion;
         _current = cfg;
@@ -504,6 +509,28 @@ class ServerConfigService {
       extension: extension,
       skipInternal: !onLan,
     );
+  }
+
+  bool _looksInternalConfig(ServerConfig cfg) {
+    bool internalHost(String raw) {
+      final uri = Uri.tryParse(raw.contains('://') ? raw : 'http://$raw');
+      final host = (uri?.host ?? raw).toLowerCase();
+      if (host.isEmpty) return false;
+      if (host == 'localhost' || host == '127.0.0.1' || host.endsWith('.local')) return true;
+      final m = RegExp(r'^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$').firstMatch(host);
+      if (m == null) return false;
+      final a = int.parse(m.group(1)!);
+      final b = int.parse(m.group(2)!);
+      if (a == 10 || a == 127) return true;
+      if (a == 192 && b == 168) return true;
+      if (a == 172 && b >= 16 && b <= 31) return true;
+      return false;
+    }
+
+    return internalHost(cfg.sipDomain) ||
+        internalHost(cfg.wsServer) ||
+        internalHost(cfg.opsBaseUrl) ||
+        internalHost(cfg.clientLogUrl);
   }
 
   void updateClientCredentials({String? clientKey, String? clientExtension}) {

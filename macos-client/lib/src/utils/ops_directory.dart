@@ -41,19 +41,25 @@ class OpsDirectory {
 
   static const _timeout = Duration(seconds: 4);
 
-  static Future<OpsDirectory> fetch() async {
-    // OPS는 HTTP-only. 저장된 https:// URL은 http://로 정규화.
-    final base = ServerConfigService.instance.current.opsBaseUrl
-        .replaceFirst(RegExp(r'^https://', caseSensitive: false), 'http://');
+  /// 성공 시 [OpsDirectoryFetch.ok], 실패 시 [OpsDirectoryFetch.error].
+  /// 실패 시 빈 디렉터리를 정상 데이터로 반환하지 않는다(호출자가 기존 캐시 유지 결정).
+  static Future<OpsDirectoryFetch> fetch() async {
+    final base = ServerConfigService.instance.current.opsBaseUrl;
     const key = AppConstants.opsClientKey;
     try {
       final results = await Future.wait([
         _get('$base/api/client/contacts', key),
         _get('$base/api/client/conferences', key),
       ]);
+      if (results[0].error != null || results[1].error != null) {
+        final err = results[0].error ?? results[1].error ?? 'fetch-failed';
+        AppLogger.instance.w('OPS directory fetch failed: $err base=$base');
+        return OpsDirectoryFetch.error(err);
+      }
+      final cj = results[0].data;
+      final rj = results[1].data;
       final contacts = <OpsContact>[];
       final rooms = <OpsRoom>[];
-      final cj = results[0];
       if (cj != null) {
         for (final e in (cj['contacts'] as List? ?? const [])) {
           if (e is! Map) continue;
@@ -70,7 +76,6 @@ class OpsDirectory {
           ));
         }
       }
-      final rj = results[1];
       if (rj != null) {
         for (final e in (rj['rooms'] as List? ?? const [])) {
           if (e is! Map) continue;
@@ -86,14 +91,14 @@ class OpsDirectory {
       }
       AppLogger.instance.i(
           'OPS directory: contacts=${contacts.length} rooms=${rooms.length} base=$base');
-      return OpsDirectory(contacts: contacts, rooms: rooms);
+      return OpsDirectoryFetch.ok(OpsDirectory(contacts: contacts, rooms: rooms));
     } catch (e) {
       AppLogger.instance.w('OPS directory fetch failed: $e');
-      return const OpsDirectory();
+      return OpsDirectoryFetch.error(e.toString());
     }
   }
 
-  static Future<Map<String, dynamic>?> _get(String url, String key) async {
+  static Future<_OpsGetResult> _get(String url, String key) async {
     final client = HttpClient()..connectionTimeout = _timeout;
     try {
       // DEV: self-signed 허용(보안통신 전환 검증용). 운영 배포 시 인증서 신뢰 기반으로 제한 필요.
@@ -107,21 +112,42 @@ class OpsDirectory {
       if (useExt.isNotEmpty && useKey.isNotEmpty) {
         req.headers.add('X-Client-Extension', useExt);
       }
-      final sw = Stopwatch()..start();
       final res = await req.close().timeout(_timeout);
       final body = await res.transform(utf8.decoder).join();
-      sw.stop();
-      AppLogger.instance.i('OPS directory GET url=$url status=${res.statusCode} ${sw.elapsedMilliseconds}ms body=${body.length>120?body.substring(0,120):body}');
-      if (res.statusCode != 200) return null;
+      if (res.statusCode != 200) {
+        return _OpsGetResult.error('http-${res.statusCode}');
+      }
       final json = jsonDecode(body) as Map<String, dynamic>;
-      if (json['ok'] != true) return null;
+      if (json['ok'] != true) {
+        return _OpsGetResult.error('api-not-ok');
+      }
       final data = json['data'];
-      return data is Map<String, dynamic> ? data : null;
+      return _OpsGetResult.ok(data is Map<String, dynamic> ? data : <String, dynamic>{});
     } catch (e) {
-      AppLogger.instance.w('OPS directory get failed: $url (${e.runtimeType}: $e)');
-      return null;
+      AppLogger.instance.w('OPS directory get failed: $url (${e.runtimeType})');
+      return _OpsGetResult.error(e.runtimeType.toString());
     } finally {
       client.close(force: true);
     }
   }
+}
+
+class OpsDirectoryFetch {
+  OpsDirectoryFetch._({this.directory, this.error});
+  factory OpsDirectoryFetch.ok(OpsDirectory directory) =>
+      OpsDirectoryFetch._(directory: directory);
+  factory OpsDirectoryFetch.error(String error) =>
+      OpsDirectoryFetch._(error: error);
+
+  final OpsDirectory? directory;
+  final String? error;
+  bool get ok => directory != null && error == null;
+}
+
+class _OpsGetResult {
+  _OpsGetResult._({this.data, this.error});
+  factory _OpsGetResult.ok(Map<String, dynamic> data) => _OpsGetResult._(data: data);
+  factory _OpsGetResult.error(String error) => _OpsGetResult._(error: error);
+  final Map<String, dynamic>? data;
+  final String? error;
 }

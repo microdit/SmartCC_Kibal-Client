@@ -57,10 +57,10 @@ class _DialerScreenState extends State<DialerScreen> {
       if (mounted) setState(() => _refreshingServer = true);
       await ServerConfigService.instance.refresh();
     }
-    final dir = await OpsDirectory.fetch();
+    final fetch = await OpsDirectory.fetch();
     if (!mounted) return;
     setState(() {
-      _directory = dir;
+      if (fetch.ok && fetch.directory != null) _directory = fetch.directory!;
       _directoryLoaded = true;
       _refreshingServer = false;
     });
