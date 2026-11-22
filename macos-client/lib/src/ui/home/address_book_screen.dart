@@ -337,6 +337,12 @@ class _AddressBookScreenState extends State<AddressBookScreen>
   Future<bool> _autoRegisterSip({bool notify = true}) async {
     final sip = Provider.of<SipProvider>(context, listen: false);
     if (sip.isRegistered) return true;
+    // 외부망에서 TURN이 로드되기 전에 SIP를 초기화하면 ICE에 STUN만 남아
+    // RTP/ICE가 실패한다. autoRegister 전에 최신 OPS config(TURN 포함)를 먼저 반영.
+    await ServerConfigService.instance.refreshSmart(
+      clientKey: _auth.clientKey,
+      extension: _auth.authExtension,
+    );
     if (!_auth.isVerified || _auth.authExtension.isEmpty) {
       if (notify && mounted) {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(

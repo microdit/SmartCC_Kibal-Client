@@ -211,6 +211,9 @@ class ServerConfig {
         'publicHost': publicHost,
         'updatedAt': updatedAt,
         'secure': secure,
+        // TURN 자격증명은 만료 시간제(HMAC)라 캐시에 저장해도 무방. 앱 재시작 시
+        // autoRegister가 TURN 없이 ICE를 구성해 외부망 RTP가 끊기는 문제 방지.
+        if (turn != null) 'turn': turn,
         // 보안: Ops 클라이언트 키/인증내선은 기본적으로 평문 설정파일에 저장하지 않음(보안 저장소 사용)
         if (includeSecrets) 'clientKey': clientKey,
         if (includeSecrets) 'clientExtension': clientExtension,
@@ -249,6 +252,11 @@ class ServerConfig {
       clientKey: (j['clientKey'] as String?) ?? '',
       clientExtension: (j['clientExtension'] as String?) ?? '',
       secure: secure,
+      turn: j['turn'] is Map<String, dynamic>
+          ? Map<String, dynamic>.from(j['turn'] as Map<String, dynamic>)
+          : (j['turn'] is Map
+              ? Map<String, dynamic>.from(j['turn'] as Map)
+              : null),
       manifest: man is Map<String, dynamic>
           ? man
           : (man is Map ? Map<String, dynamic>.from(man) : null),
@@ -378,12 +386,6 @@ class ServerConfigService {
       return false;
     }
   }
-
-  /// 현재 프로필이 내부망(DEV/PRD)인지 판별
-  bool get _isInternalProfile =>
-      _current.sipDomain == '192.168.11.5' ||
-      _current.sipDomain == '192.168.11.3' ||
-      _current.sipDomain == '192.168.11.2';
 
   Future<ServerConfig?> probeProfile(
     ConnectionProfile profile, {
