@@ -560,21 +560,38 @@ class _ConferenceViewState extends State<ConferenceView> {
   List<_ConferenceTile> _buildTalkerTiles(
       MediaProvider mediaProvider, List<MediaStream> remoteStreams) {
     final snap = _participants.snapshot;
+    // 발언자에게 영상 소스가 없으면(카메라 없음/영상 끄기 공통) 억지로 소스를
+    // 바꾸지 않고, 큰 화면에 안내를 표시한다.
+    final notice = snap?.speakerNotice ?? '';
+    final speakerExt = snap?.speakerExtension;
+    final bigLabel = notice.isNotEmpty
+        ? '영상 소스 없는 참가자가 발언 중'
+        : '발언자 영상';
     final tiles = <_ConferenceTile>[
       _ConferenceTile(
-        label: '발언자 영상',
-        renderer: remoteStreams.isNotEmpty ? mediaProvider.getRemoteRenderer(0) : null,
-        stream: remoteStreams.isNotEmpty ? remoteStreams.first : null,
+        label: bigLabel,
+        renderer: notice.isEmpty && remoteStreams.isNotEmpty
+            ? mediaProvider.getRemoteRenderer(0)
+            : null,
+        stream: notice.isEmpty && remoteStreams.isNotEmpty
+            ? remoteStreams.first
+            : null,
+        hasVideo: notice.isEmpty,
       ),
     ];
+    if (notice.isNotEmpty) {
+      AppLogger.instance.i('CONFERENCE speakerNoVideo room=${_roomController.text.trim()} ext=$speakerExt notice=$notice');
+    }
     for (final p in (snap?.participants ?? const <ConferenceParticipant>[])) {
       if (p.isSelf) continue;
+      final talking = p.extension == speakerExt && notice.isNotEmpty;
       tiles.add(_ConferenceTile(
-        label: p.label,
+        label: talking ? '${p.label} · 발언 중(영상 없음)' : p.label,
         renderer: null,
         stream: null,
         hasVideo: false,
         participantOnly: true,
+        talking: talking,
       ));
     }
     return tiles;
@@ -608,8 +625,10 @@ class _ConferenceViewState extends State<ConferenceView> {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
             border: Border.all(
-              color: selected ? Colors.blueAccent : Colors.white24,
-              width: selected ? 3 : 1,
+              color: tile.talking
+                  ? Colors.orangeAccent
+                  : (selected ? Colors.blueAccent : Colors.white24),
+              width: tile.talking || selected ? 3 : 1,
             ),
           ),
           padding: const EdgeInsets.all(2),
@@ -726,10 +745,14 @@ class _ConferenceTile {
     this.hasVideo = true,
     this.isLocal = false,
     this.participantOnly = false,
+    this.talking = false,
   });
 
   /// 6100 참가자 목록 카드(영상은 발언자 화면에서만)
   final bool participantOnly;
+
+  /// 현재 발언 중인 참가자(영상 소스 없음 안내와 함께 강조)
+  final bool talking;
 
   final String label;
   final RTCVideoRenderer? renderer;
