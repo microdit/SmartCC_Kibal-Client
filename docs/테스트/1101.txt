@@ -1,0 +1,1128 @@
+--- [rotate] 크기 초과로 앞부분 잘림 ---
+[2026-11-21T21:36:40.793302] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote session dokufss380276594b3538227p544k0 handled: streams=2 event(video=24 audio=1) session(video=46 audio=2)
+[2026-11-21T21:36:40.793413] EVENT MEDIA event=remoteStreamAdded state=video=24 audio=1 sessionId=dokufss380276594b3538227p544k0 sessionStreams=2 sessionVideo=46 sessionAudio=2
+[2026-11-21T21:36:40.794096] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=41d9bf37-59eb-452c-9368-e8cef549913d
+[2026-11-21T21:36:40.794561] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=94af02de-edbe-4a4b-9a08-dd52f3ebdec1
+[2026-11-21T21:36:40.794734] EVENT SIP op=mediaStream target=6700 state=remote params=video=24 audio=1 id=dokufss380276594b3538227p544k0
+[2026-11-21T21:36:40.794815] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote session dokufss380276594b3538227p544k0 handled: streams=2 event(video=24 audio=1) session(video=46 audio=2)
+[2026-11-21T21:36:40.794865] EVENT MEDIA event=remoteStreamAdded state=video=24 audio=1 sessionId=dokufss380276594b3538227p544k0 sessionStreams=2 sessionVideo=46 sessionAudio=2
+[2026-11-21T21:36:40.798959] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 수신 hasAudio=true hasVideo=true -> 자동 수락
+[2026-11-21T21:36:40.799124] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 응답 전송 accepted=true recvOnlyVideo=true
+[2026-11-21T21:36:41.305490] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transceivers 0:audio:SendRecv/SendRecv 1:video:RecvOnly/RecvOnly 2:video:RecvOnly/RecvOnly
+[2026-11-21T21:36:45.529947] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=7932681 audioPackets=69953 videoBytes=23633
+[2026-11-21T21:36:45.530126] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tiles active=1 inactive=23
+[2026-11-21T21:36:45.630247] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] CONFERENCE participants room=6700 n=2 [이재명 대통령 (1101):A*,AI봇(7001):V]
+[2026-11-21T21:36:47.132764] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] VIDEO resync reason=auto:join localKick=false remoteTiles=1
+[2026-11-21T21:36:47.235672] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=41d9bf37-59eb-452c-9368-e8cef549913d
+[2026-11-21T21:36:50.529398] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=7947372 audioPackets=70202 videoBytes=23633
+[2026-11-21T21:36:50.529581] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP media summary 30s audioKB=91 videoKB=-14 videoTracks=1/1 audioLost=0 ice=RTCIceConnectionStateConnected
+[2026-11-21T21:36:50.529641] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP video summary 30s in=640x360@-fps decodedFrames+-16 keyframes=1 freeze=0 pli=2 nack=0 vLost=0 | out=-@-fps target=0kbps limit=- WARN_VIDEO_FROZEN
+[2026-11-21T21:36:55.528593] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=7962122 audioPackets=70452 videoBytes=23633
+[2026-11-21T21:37:00.528538] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=7976872 audioPackets=70702 videoBytes=23633
+[2026-11-21T21:37:05.527657] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=7991622 audioPackets=70952 videoBytes=23633
+[2026-11-21T21:37:05.527851] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tiles active=0 inactive=24
+[2026-11-21T21:37:10.527220] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=8006372 audioPackets=71202 videoBytes=23633
+[2026-11-21T21:37:13.405006] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 수신 hasAudio=true hasVideo=true -> 자동 수락
+[2026-11-21T21:37:13.405224] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 응답 전송 accepted=true recvOnlyVideo=true
+[2026-11-21T21:37:13.503674] EVENT SIP op=mediaStream target=6700 state=remote params=video=25 audio=1 id=dokufss380276594b3538227p544k0
+[2026-11-21T21:37:13.503839] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote session dokufss380276594b3538227p544k0 handled: streams=1 event(video=25 audio=1) session(video=25 audio=1)
+[2026-11-21T21:37:13.503903] EVENT MEDIA event=remoteStreamAdded state=video=25 audio=1 sessionId=dokufss380276594b3538227p544k0 sessionStreams=1 sessionVideo=25 sessionAudio=1
+[2026-11-21T21:37:13.504552] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=8b92abad-e63a-45a9-b1fb-07fb9cff7fae
+[2026-11-21T21:37:13.911131] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transceivers 0:audio:SendRecv/SendRecv 1:video:RecvOnly/RecvOnly
+[2026-11-21T21:37:15.526491] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=8022179 audioPackets=71451 videoBytes=0
+[2026-11-21T21:37:15.539188] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] CONFERENCE participants room=6700 n=1 [이재명 대통령 (1101):A*]
+[2026-11-21T21:37:17.041248] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] VIDEO resync reason=auto:leave localKick=false remoteTiles=1
+[2026-11-21T21:37:17.143538] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=8b92abad-e63a-45a9-b1fb-07fb9cff7fae
+[2026-11-21T21:37:19.752752] EVENT SIP op=mediaStream target=6700 state=remote params=video=27 audio=1 id=dokufss380276594b3538227p544k0
+[2026-11-21T21:37:19.753011] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote session dokufss380276594b3538227p544k0 handled: streams=2 event(video=27 audio=1) session(video=52 audio=2)
+[2026-11-21T21:37:19.753141] EVENT MEDIA event=remoteStreamAdded state=video=27 audio=1 sessionId=dokufss380276594b3538227p544k0 sessionStreams=2 sessionVideo=52 sessionAudio=2
+[2026-11-21T21:37:19.753196] EVENT SIP op=mediaStream target=6700 state=remote params=video=27 audio=1 id=dokufss380276594b3538227p544k0
+[2026-11-21T21:37:19.753244] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote session dokufss380276594b3538227p544k0 handled: streams=2 event(video=27 audio=1) session(video=52 audio=2)
+[2026-11-21T21:37:19.753279] EVENT MEDIA event=remoteStreamAdded state=video=27 audio=1 sessionId=dokufss380276594b3538227p544k0 sessionStreams=2 sessionVideo=52 sessionAudio=2
+[2026-11-21T21:37:19.753977] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=91c4c128-dd02-4ff9-8c9e-bd7f2dfe5dab
+[2026-11-21T21:37:19.754338] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=fb2e7a3d-3caf-48db-8e35-41063adcb0e6
+[2026-11-21T21:37:19.756455] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 수신 hasAudio=true hasVideo=true -> 자동 수락
+[2026-11-21T21:37:19.756643] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 응답 전송 accepted=true recvOnlyVideo=true
+[2026-11-21T21:37:20.264048] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transceivers 0:audio:SendRecv/SendRecv 1:video:RecvOnly/RecvOnly 2:video:RecvOnly/RecvOnly
+[2026-11-21T21:37:20.526731] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=8039192 audioPackets=71701 videoBytes=18695
+[2026-11-21T21:37:20.526916] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tiles active=1 inactive=26
+[2026-11-21T21:37:20.526976] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP media summary 30s audioKB=90 videoKB=-5 videoTracks=1/1 audioLost=0 ice=RTCIceConnectionStateConnected
+[2026-11-21T21:37:20.527009] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP video summary 30s in=960x540@21fps decodedFrames+-12 keyframes=1 freeze=0 pli=0 nack=0 vLost=0 | out=-@-fps target=0kbps limit=- WARN_VIDEO_FROZEN
+[2026-11-21T21:37:20.658351] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] CONFERENCE participants room=6700 n=2 [이재명 대통령 (1101):A*,AI봇(7001):V]
+[2026-11-21T21:37:22.159769] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] VIDEO resync reason=auto:join localKick=false remoteTiles=1
+[2026-11-21T21:37:22.262688] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=91c4c128-dd02-4ff9-8c9e-bd7f2dfe5dab
+[2026-11-21T21:37:25.527197] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=8055528 audioPackets=71950 videoBytes=23931
+[2026-11-21T21:37:30.526994] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=8070278 audioPackets=72200 videoBytes=23931
+[2026-11-21T21:37:35.526148] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=8085028 audioPackets=72450 videoBytes=23931
+[2026-11-21T21:37:40.526215] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=8099778 audioPackets=72700 videoBytes=23931
+[2026-11-21T21:37:45.525717] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=8114528 audioPackets=72950 videoBytes=23931
+[2026-11-21T21:37:45.525889] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tiles active=0 inactive=27
+[2026-11-21T21:37:50.526373] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=8129278 audioPackets=73200 videoBytes=23931
+[2026-11-21T21:37:50.526575] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP media summary 30s audioKB=88 videoKB=5 videoTracks=0/1 audioLost=0 ice=RTCIceConnectionStateConnected
+[2026-11-21T21:37:50.526638] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP video summary 30s in=960x540@-fps decodedFrames+9 keyframes=1 freeze=0 pli=1 nack=0 vLost=0 | out=-@-fps target=0kbps limit=-
+[2026-11-21T21:37:52.420345] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 수신 hasAudio=true hasVideo=true -> 자동 수락
+[2026-11-21T21:37:52.420584] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 응답 전송 accepted=true recvOnlyVideo=true
+[2026-11-21T21:37:52.517116] EVENT SIP op=mediaStream target=6700 state=remote params=video=28 audio=1 id=dokufss380276594b3538227p544k0
+[2026-11-21T21:37:52.517288] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote session dokufss380276594b3538227p544k0 handled: streams=1 event(video=28 audio=1) session(video=28 audio=1)
+[2026-11-21T21:37:52.517357] EVENT MEDIA event=remoteStreamAdded state=video=28 audio=1 sessionId=dokufss380276594b3538227p544k0 sessionStreams=1 sessionVideo=28 sessionAudio=1
+[2026-11-21T21:37:52.518116] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=473c1434-03c1-4434-ad60-b3aa0749524b
+[2026-11-21T21:37:52.925227] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transceivers 0:audio:SendRecv/SendRecv 1:video:RecvOnly/RecvOnly
+[2026-11-21T21:37:55.526070] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=8145149 audioPackets=73450 videoBytes=0
+[2026-11-21T21:37:55.575348] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] CONFERENCE participants room=6700 n=1 [이재명 대통령 (1101):A*]
+[2026-11-21T21:37:57.076527] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] VIDEO resync reason=auto:leave localKick=false remoteTiles=1
+[2026-11-21T21:37:57.179152] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=473c1434-03c1-4434-ad60-b3aa0749524b
+[2026-11-21T21:38:00.391201] EVENT SIP op=mediaStream target=6700 state=remote params=video=30 audio=1 id=dokufss380276594b3538227p544k0
+[2026-11-21T21:38:00.391407] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote session dokufss380276594b3538227p544k0 handled: streams=2 event(video=30 audio=1) session(video=58 audio=2)
+[2026-11-21T21:38:00.391596] EVENT MEDIA event=remoteStreamAdded state=video=30 audio=1 sessionId=dokufss380276594b3538227p544k0 sessionStreams=2 sessionVideo=58 sessionAudio=2
+[2026-11-21T21:38:00.392436] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=643c2f4c-3cf5-4e8d-a2fa-5f88cf8fda9d
+[2026-11-21T21:38:00.392935] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=57b116cb-9abe-471e-9661-c89fc5331f2f
+[2026-11-21T21:38:00.395179] EVENT SIP op=mediaStream target=6700 state=remote params=video=30 audio=1 id=dokufss380276594b3538227p544k0
+[2026-11-21T21:38:00.395322] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote session dokufss380276594b3538227p544k0 handled: streams=2 event(video=30 audio=1) session(video=58 audio=2)
+[2026-11-21T21:38:00.395396] EVENT MEDIA event=remoteStreamAdded state=video=30 audio=1 sessionId=dokufss380276594b3538227p544k0 sessionStreams=2 sessionVideo=58 sessionAudio=2
+[2026-11-21T21:38:00.398351] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 수신 hasAudio=true hasVideo=true -> 자동 수락
+[2026-11-21T21:38:00.398632] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 응답 전송 accepted=true recvOnlyVideo=true
+[2026-11-21T21:38:00.525872] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=8160751 audioPackets=73700 videoBytes=0
+[2026-11-21T21:38:00.718619] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] CONFERENCE participants room=6700 n=2 [이재명 대통령 (1101):A*,AI봇(7001):V]
+[2026-11-21T21:38:00.906807] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transceivers 0:audio:SendRecv/SendRecv 1:video:RecvOnly/RecvOnly 2:video:RecvOnly/RecvOnly
+[2026-11-21T21:38:02.219541] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] VIDEO resync reason=auto:join localKick=false remoteTiles=3
+[2026-11-21T21:38:02.322929] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=473c1434-03c1-4434-ad60-b3aa0749524b
+[2026-11-21T21:38:02.323544] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=643c2f4c-3cf5-4e8d-a2fa-5f88cf8fda9d
+[2026-11-21T21:38:02.324319] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=57b116cb-9abe-471e-9661-c89fc5331f2f
+[2026-11-21T21:38:05.525656] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=8180746 audioPackets=73950 videoBytes=27924
+[2026-11-21T21:38:05.525841] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tiles active=1 inactive=29
+[2026-11-21T21:38:10.525546] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=8195496 audioPackets=74200 videoBytes=27924
+[2026-11-21T21:38:15.524411] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=8210246 audioPackets=74450 videoBytes=27924
+[2026-11-21T21:38:20.525177] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=8224996 audioPackets=74700 videoBytes=27924
+[2026-11-21T21:38:20.525375] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP media summary 30s audioKB=93 videoKB=4 videoTracks=1/1 audioLost=0 ice=RTCIceConnectionStateCompleted
+[2026-11-21T21:38:20.525459] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP video summary 30s in=960x540@-fps decodedFrames+2 keyframes=1 freeze=0 pli=2 nack=0 vLost=0 | out=-@-fps target=0kbps limit=-
+[2026-11-21T21:38:25.525064] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=8239746 audioPackets=74950 videoBytes=27924
+[2026-11-21T21:38:25.525246] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tiles active=0 inactive=30
+[2026-11-21T21:38:30.524263] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=8254496 audioPackets=75200 videoBytes=27924
+[2026-11-21T21:38:33.974978] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 수신 hasAudio=true hasVideo=true -> 자동 수락
+[2026-11-21T21:38:33.975227] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 응답 전송 accepted=true recvOnlyVideo=true
+[2026-11-21T21:38:34.074495] EVENT SIP op=mediaStream target=6700 state=remote params=video=31 audio=1 id=dokufss380276594b3538227p544k0
+[2026-11-21T21:38:34.074725] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote session dokufss380276594b3538227p544k0 handled: streams=1 event(video=31 audio=1) session(video=31 audio=1)
+[2026-11-21T21:38:34.074808] EVENT MEDIA event=remoteStreamAdded state=video=31 audio=1 sessionId=dokufss380276594b3538227p544k0 sessionStreams=1 sessionVideo=31 sessionAudio=1
+[2026-11-21T21:38:34.075489] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=92a4aaad-8a18-4719-8d0c-7f232d73eef0
+[2026-11-21T21:38:34.482028] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transceivers 0:audio:SendRecv/SendRecv 1:video:RecvOnly/RecvOnly
+[2026-11-21T21:38:35.523935] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=8270364 audioPackets=75450 videoBytes=0
+[2026-11-21T21:38:35.570378] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] CONFERENCE participants room=6700 n=1 [이재명 대통령 (1101):A*]
+[2026-11-21T21:38:37.071825] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] VIDEO resync reason=auto:leave localKick=false remoteTiles=1
+[2026-11-21T21:38:37.175] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=92a4aaad-8a18-4719-8d0c-7f232d73eef0
+[2026-11-21T21:38:40.524763] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=8285055 audioPackets=75699 videoBytes=0
+[2026-11-21T21:38:41.441870] EVENT SIP op=mediaStream target=6700 state=remote params=video=33 audio=1 id=dokufss380276594b3538227p544k0
+[2026-11-21T21:38:41.442047] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote session dokufss380276594b3538227p544k0 handled: streams=2 event(video=33 audio=1) session(video=64 audio=2)
+[2026-11-21T21:38:41.442116] EVENT MEDIA event=remoteStreamAdded state=video=33 audio=1 sessionId=dokufss380276594b3538227p544k0 sessionStreams=2 sessionVideo=64 sessionAudio=2
+[2026-11-21T21:38:41.442775] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=1fc20a63-2825-4ae6-832d-b5d60c86a36c
+[2026-11-21T21:38:41.443320] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=0ae6fa5d-0f15-43d1-b597-eaa5ee207d13
+[2026-11-21T21:38:41.443507] EVENT SIP op=mediaStream target=6700 state=remote params=video=33 audio=1 id=dokufss380276594b3538227p544k0
+[2026-11-21T21:38:41.443602] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote session dokufss380276594b3538227p544k0 handled: streams=2 event(video=33 audio=1) session(video=64 audio=2)
+[2026-11-21T21:38:41.443655] EVENT MEDIA event=remoteStreamAdded state=video=33 audio=1 sessionId=dokufss380276594b3538227p544k0 sessionStreams=2 sessionVideo=64 sessionAudio=2
+[2026-11-21T21:38:41.447546] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 수신 hasAudio=true hasVideo=true -> 자동 수락
+[2026-11-21T21:38:41.447786] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 응답 전송 accepted=true recvOnlyVideo=true
+[2026-11-21T21:38:41.953711] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transceivers 0:audio:SendRecv/SendRecv 1:video:RecvOnly/RecvOnly 2:video:RecvOnly/RecvOnly
+[2026-11-21T21:38:45.523273] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=8304194 audioPackets=75950 videoBytes=24616
+[2026-11-21T21:38:45.523486] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tiles active=1 inactive=32
+[2026-11-21T21:38:45.689799] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] CONFERENCE participants room=6700 n=2 [이재명 대통령 (1101):A*,AI봇(7001):V]
+[2026-11-21T21:38:47.191947] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] VIDEO resync reason=auto:join localKick=false remoteTiles=1
+[2026-11-21T21:38:47.294025] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=1fc20a63-2825-4ae6-832d-b5d60c86a36c
+[2026-11-21T21:38:50.524870] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=8318944 audioPackets=76200 videoBytes=24616
+[2026-11-21T21:38:50.525076] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP media summary 30s audioKB=92 videoKB=-3 videoTracks=1/1 audioLost=0 ice=RTCIceConnectionStateConnected
+[2026-11-21T21:38:50.525134] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP video summary 30s in=960x540@-fps decodedFrames+0 keyframes=1 freeze=0 pli=2 nack=0 vLost=0 | out=-@-fps target=0kbps limit=- WARN_VIDEO_FROZEN
+[2026-11-21T21:38:55.523214] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=8333694 audioPackets=76450 videoBytes=24616
+[2026-11-21T21:39:00.522762] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=8348444 audioPackets=76700 videoBytes=24616
+[2026-11-21T21:39:05.521974] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=8363194 audioPackets=76950 videoBytes=24616
+[2026-11-21T21:39:05.522137] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tiles active=0 inactive=33
+[2026-11-21T21:39:10.521744] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=8377944 audioPackets=77200 videoBytes=24616
+[2026-11-21T21:39:14.133303] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 수신 hasAudio=true hasVideo=true -> 자동 수락
+[2026-11-21T21:39:14.133520] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 응답 전송 accepted=true recvOnlyVideo=true
+[2026-11-21T21:39:14.231994] EVENT SIP op=mediaStream target=6700 state=remote params=video=34 audio=1 id=dokufss380276594b3538227p544k0
+[2026-11-21T21:39:14.232160] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote session dokufss380276594b3538227p544k0 handled: streams=1 event(video=34 audio=1) session(video=34 audio=1)
+[2026-11-21T21:39:14.232228] EVENT MEDIA event=remoteStreamAdded state=video=34 audio=1 sessionId=dokufss380276594b3538227p544k0 sessionStreams=1 sessionVideo=34 sessionAudio=1
+[2026-11-21T21:39:14.233001] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=28952bf0-db0e-476a-8683-68768ece5635
+[2026-11-21T21:39:14.639556] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transceivers 0:audio:SendRecv/SendRecv 1:video:RecvOnly/RecvOnly
+[2026-11-21T21:39:15.521155] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=8393821 audioPackets=77450 videoBytes=0
+[2026-11-21T21:39:15.536827] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] CONFERENCE participants room=6700 n=1 [이재명 대통령 (1101):A*]
+[2026-11-21T21:39:17.038647] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] VIDEO resync reason=auto:leave localKick=false remoteTiles=1
+[2026-11-21T21:39:17.140635] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=28952bf0-db0e-476a-8683-68768ece5635
+[2026-11-21T21:39:20.398275] EVENT SIP op=mediaStream target=6700 state=remote params=video=36 audio=1 id=dokufss380276594b3538227p544k0
+[2026-11-21T21:39:20.398476] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote session dokufss380276594b3538227p544k0 handled: streams=2 event(video=36 audio=1) session(video=70 audio=2)
+[2026-11-21T21:39:20.398567] EVENT MEDIA event=remoteStreamAdded state=video=36 audio=1 sessionId=dokufss380276594b3538227p544k0 sessionStreams=2 sessionVideo=70 sessionAudio=2
+[2026-11-21T21:39:20.399304] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=3404aecd-31df-4ede-9a07-ffce9073c786
+[2026-11-21T21:39:20.399778] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=c054f3b5-6c2e-4c00-acf9-ac60632296c5
+[2026-11-21T21:39:20.399990] EVENT SIP op=mediaStream target=6700 state=remote params=video=36 audio=1 id=dokufss380276594b3538227p544k0
+[2026-11-21T21:39:20.400102] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote session dokufss380276594b3538227p544k0 handled: streams=2 event(video=36 audio=1) session(video=70 audio=2)
+[2026-11-21T21:39:20.400160] EVENT MEDIA event=remoteStreamAdded state=video=36 audio=1 sessionId=dokufss380276594b3538227p544k0 sessionStreams=2 sessionVideo=70 sessionAudio=2
+[2026-11-21T21:39:20.403552] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 수신 hasAudio=true hasVideo=true -> 자동 수락
+[2026-11-21T21:39:20.403795] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 응답 전송 accepted=true recvOnlyVideo=true
+[2026-11-21T21:39:20.521485] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=8409367 audioPackets=77700 videoBytes=166
+[2026-11-21T21:39:20.521665] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tiles active=1 inactive=35
+[2026-11-21T21:39:20.521725] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP media summary 30s audioKB=88 videoKB=-24 videoTracks=1/1 audioLost=0 ice=RTCIceConnectionStateConnected
+[2026-11-21T21:39:20.521757] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP video summary 30s in=-@-fps decodedFrames+-26 keyframes=0 freeze=0 pli=1 nack=0 vLost=0 | out=-@-fps target=0kbps limit=- WARN_VIDEO_FROZEN
+[2026-11-21T21:39:20.649207] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] CONFERENCE participants room=6700 n=2 [이재명 대통령 (1101):A*,AI봇(7001):V]
+[2026-11-21T21:39:20.910932] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transceivers 0:audio:SendRecv/SendRecv 1:video:RecvOnly/RecvOnly 2:video:RecvOnly/RecvOnly
+[2026-11-21T21:39:22.150289] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] VIDEO resync reason=auto:join localKick=false remoteTiles=1
+[2026-11-21T21:39:22.252676] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=3404aecd-31df-4ede-9a07-ffce9073c786
+[2026-11-21T21:39:25.521845] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=8427672 audioPackets=77950 videoBytes=17940
+[2026-11-21T21:39:30.521256] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=8442422 audioPackets=78200 videoBytes=17940
+[2026-11-21T21:39:35.520619] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=8457172 audioPackets=78450 videoBytes=17940
+[2026-11-21T21:39:40.520968] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=8471922 audioPackets=78700 videoBytes=17940
+[2026-11-21T21:39:45.520168] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=8486672 audioPackets=78950 videoBytes=17940
+[2026-11-21T21:39:45.520343] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tiles active=0 inactive=36
+[2026-11-21T21:39:50.520287] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=8501363 audioPackets=79199 videoBytes=17940
+[2026-11-21T21:39:50.520456] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP media summary 30s audioKB=90 videoKB=17 videoTracks=0/1 audioLost=0 ice=RTCIceConnectionStateConnected
+[2026-11-21T21:39:50.520509] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP video summary 30s in=640x360@-fps decodedFrames+23 keyframes=1 freeze=0 pli=2 nack=0 vLost=0 | out=-@-fps target=0kbps limit=-
+[2026-11-21T21:39:53.213895] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 수신 hasAudio=true hasVideo=true -> 자동 수락
+[2026-11-21T21:39:53.214124] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 응답 전송 accepted=true recvOnlyVideo=true
+[2026-11-21T21:39:53.311483] EVENT SIP op=mediaStream target=6700 state=remote params=video=37 audio=1 id=dokufss380276594b3538227p544k0
+[2026-11-21T21:39:53.311662] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote session dokufss380276594b3538227p544k0 handled: streams=1 event(video=37 audio=1) session(video=37 audio=1)
+[2026-11-21T21:39:53.311733] EVENT MEDIA event=remoteStreamAdded state=video=37 audio=1 sessionId=dokufss380276594b3538227p544k0 sessionStreams=1 sessionVideo=37 sessionAudio=1
+[2026-11-21T21:39:53.312622] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=c87bad70-9f74-486a-a865-f377ee33ede7
+[2026-11-21T21:39:53.719540] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transceivers 0:audio:SendRecv/SendRecv 1:video:RecvOnly/RecvOnly
+[2026-11-21T21:39:55.520146] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=8517236 audioPackets=79449 videoBytes=0
+[2026-11-21T21:39:55.577999] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] CONFERENCE participants room=6700 n=1 [이재명 대통령 (1101):A*]
+[2026-11-21T21:39:57.080040] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] VIDEO resync reason=auto:leave localKick=false remoteTiles=1
+[2026-11-21T21:39:57.183277] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=c87bad70-9f74-486a-a865-f377ee33ede7
+[2026-11-21T21:39:59.950613] EVENT SIP op=mediaStream target=6700 state=remote params=video=39 audio=1 id=dokufss380276594b3538227p544k0
+[2026-11-21T21:39:59.950822] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote session dokufss380276594b3538227p544k0 handled: streams=2 event(video=39 audio=1) session(video=76 audio=2)
+[2026-11-21T21:39:59.950904] EVENT MEDIA event=remoteStreamAdded state=video=39 audio=1 sessionId=dokufss380276594b3538227p544k0 sessionStreams=2 sessionVideo=76 sessionAudio=2
+[2026-11-21T21:39:59.951669] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=e07b9ca6-daba-4e59-8a20-05fb91fe4433
+[2026-11-21T21:39:59.952403] EVENT SIP op=mediaStream target=6700 state=remote params=video=39 audio=1 id=dokufss380276594b3538227p544k0
+[2026-11-21T21:39:59.952539] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote session dokufss380276594b3538227p544k0 handled: streams=2 event(video=39 audio=1) session(video=76 audio=2)
+[2026-11-21T21:39:59.952597] EVENT MEDIA event=remoteStreamAdded state=video=39 audio=1 sessionId=dokufss380276594b3538227p544k0 sessionStreams=2 sessionVideo=76 sessionAudio=2
+[2026-11-21T21:39:59.952767] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=888287a2-66e7-46b6-8741-5e56cd9efede
+[2026-11-21T21:39:59.955445] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 수신 hasAudio=true hasVideo=true -> 자동 수락
+[2026-11-21T21:39:59.955702] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 응답 전송 accepted=true recvOnlyVideo=true
+[2026-11-21T21:40:00.467760] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transceivers 0:audio:SendRecv/SendRecv 1:video:RecvOnly/RecvOnly 2:video:RecvOnly/RecvOnly
+[2026-11-21T21:40:00.520689] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=8533866 audioPackets=79699 videoBytes=15970
+[2026-11-21T21:40:00.520902] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tiles active=1 inactive=38
+[2026-11-21T21:40:00.677834] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] CONFERENCE participants room=6700 n=2 [이재명 대통령 (1101):A*,AI봇(7001):V]
+[2026-11-21T21:40:02.179222] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] VIDEO resync reason=auto:join localKick=false remoteTiles=1
+[2026-11-21T21:40:02.281605] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=e07b9ca6-daba-4e59-8a20-05fb91fe4433
+[2026-11-21T21:40:05.519423] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=8549632 audioPackets=79949 videoBytes=20652
+[2026-11-21T21:40:10.519263] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=8564382 audioPackets=80199 videoBytes=20652
+[2026-11-21T21:40:15.518852] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=8579132 audioPackets=80449 videoBytes=20652
+[2026-11-21T21:40:18.293391] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] 원격 로그 즉시전송 요청
+[2026-11-21T21:40:20.518355] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=8593882 audioPackets=80699 videoBytes=20652
+[2026-11-21T21:40:20.518556] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP media summary 30s audioKB=90 videoKB=3 videoTracks=1/1 audioLost=0 ice=RTCIceConnectionStateCompleted
+[2026-11-21T21:40:20.518615] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP video summary 30s in=960x540@-fps decodedFrames+-3 keyframes=1 freeze=0 pli=2 nack=0 vLost=0 | out=-@-fps target=0kbps limit=- WARN_VIDEO_FROZEN
+[2026-11-21T21:40:25.519174] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=8608632 audioPackets=80949 videoBytes=20652
+[2026-11-21T21:40:25.519374] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tiles active=0 inactive=39
+[2026-11-21T21:40:30.518467] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=8623382 audioPackets=81199 videoBytes=20652
+[2026-11-21T21:40:32.171611] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 수신 hasAudio=true hasVideo=true -> 자동 수락
+[2026-11-21T21:40:32.171834] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 응답 전송 accepted=true recvOnlyVideo=true
+[2026-11-21T21:40:32.268572] EVENT SIP op=mediaStream target=6700 state=remote params=video=40 audio=1 id=dokufss380276594b3538227p544k0
+[2026-11-21T21:40:32.268739] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote session dokufss380276594b3538227p544k0 handled: streams=1 event(video=40 audio=1) session(video=40 audio=1)
+[2026-11-21T21:40:32.268818] EVENT MEDIA event=remoteStreamAdded state=video=40 audio=1 sessionId=dokufss380276594b3538227p544k0 sessionStreams=1 sessionVideo=40 sessionAudio=1
+[2026-11-21T21:40:32.269619] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=05e92e03-02a7-4e6c-bfaf-d6b92d570957
+[2026-11-21T21:40:32.678519] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transceivers 0:audio:SendRecv/SendRecv 1:video:RecvOnly/RecvOnly
+[2026-11-21T21:40:35.518211] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=8639253 audioPackets=81449 videoBytes=0
+[2026-11-21T21:40:35.543491] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] CONFERENCE participants room=6700 n=1 [이재명 대통령 (1101):A*]
+[2026-11-21T21:40:37.045095] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] VIDEO resync reason=auto:leave localKick=false remoteTiles=1
+[2026-11-21T21:40:37.147283] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=05e92e03-02a7-4e6c-bfaf-d6b92d570957
+[2026-11-21T21:40:38.452978] EVENT SIP op=mediaStream target=6700 state=remote params=video=42 audio=1 id=dokufss380276594b3538227p544k0
+[2026-11-21T21:40:38.453168] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote session dokufss380276594b3538227p544k0 handled: streams=2 event(video=42 audio=1) session(video=82 audio=2)
+[2026-11-21T21:40:38.453239] EVENT MEDIA event=remoteStreamAdded state=video=42 audio=1 sessionId=dokufss380276594b3538227p544k0 sessionStreams=2 sessionVideo=82 sessionAudio=2
+[2026-11-21T21:40:38.453297] EVENT SIP op=mediaStream target=6700 state=remote params=video=42 audio=1 id=dokufss380276594b3538227p544k0
+[2026-11-21T21:40:38.453344] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote session dokufss380276594b3538227p544k0 handled: streams=2 event(video=42 audio=1) session(video=82 audio=2)
+[2026-11-21T21:40:38.453379] EVENT MEDIA event=remoteStreamAdded state=video=42 audio=1 sessionId=dokufss380276594b3538227p544k0 sessionStreams=2 sessionVideo=82 sessionAudio=2
+[2026-11-21T21:40:38.454114] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=bd12688c-a494-449f-a78b-9dc8a363976e
+[2026-11-21T21:40:38.454478] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=323064d2-759c-4d05-9aa6-1025f4088925
+[2026-11-21T21:40:38.457442] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 수신 hasAudio=true hasVideo=true -> 자동 수락
+[2026-11-21T21:40:38.457638] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 응답 전송 accepted=true recvOnlyVideo=true
+[2026-11-21T21:40:38.964793] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transceivers 0:audio:SendRecv/SendRecv 1:video:RecvOnly/RecvOnly 2:video:RecvOnly/RecvOnly
+[2026-11-21T21:40:40.518527] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=8658598 audioPackets=81699 videoBytes=17477
+[2026-11-21T21:40:40.518741] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tiles active=1 inactive=41
+[2026-11-21T21:40:40.614842] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] CONFERENCE participants room=6700 n=2 [이재명 대통령 (1101):A*,AI봇(7001):V]
+[2026-11-21T21:40:42.116341] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] VIDEO resync reason=auto:join localKick=false remoteTiles=1
+[2026-11-21T21:40:42.218680] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=bd12688c-a494-449f-a78b-9dc8a363976e
+[2026-11-21T21:40:45.517629] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=8673348 audioPackets=81949 videoBytes=17477
+[2026-11-21T21:40:50.518853] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=8688098 audioPackets=82199 videoBytes=17477
+[2026-11-21T21:40:50.519048] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP media summary 30s audioKB=92 videoKB=-3 videoTracks=1/1 audioLost=0 ice=RTCIceConnectionStateConnected
+[2026-11-21T21:40:50.519100] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP video summary 30s in=640x360@-fps decodedFrames+3 keyframes=1 freeze=0 pli=1 nack=0 vLost=0 | out=-@-fps target=0kbps limit=-
+[2026-11-21T21:40:55.517873] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=8703076 audioPackets=82449 videoBytes=17477
+[2026-11-21T21:41:00.517656] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=8717826 audioPackets=82699 videoBytes=17477
+[2026-11-21T21:41:00.517838] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tiles active=0 inactive=42
+[2026-11-21T21:41:05.517176] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=8732576 audioPackets=82949 videoBytes=17477
+[2026-11-21T21:41:10.516341] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=8747326 audioPackets=83199 videoBytes=17477
+[2026-11-21T21:41:11.291905] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 수신 hasAudio=true hasVideo=true -> 자동 수락
+[2026-11-21T21:41:11.292128] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 응답 전송 accepted=true recvOnlyVideo=true
+[2026-11-21T21:41:11.391460] EVENT SIP op=mediaStream target=6700 state=remote params=video=43 audio=1 id=dokufss380276594b3538227p544k0
+[2026-11-21T21:41:11.391641] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote session dokufss380276594b3538227p544k0 handled: streams=1 event(video=43 audio=1) session(video=43 audio=1)
+[2026-11-21T21:41:11.391707] EVENT MEDIA event=remoteStreamAdded state=video=43 audio=1 sessionId=dokufss380276594b3538227p544k0 sessionStreams=1 sessionVideo=43 sessionAudio=1
+[2026-11-21T21:41:11.392573] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=6b63e398-5f13-4e32-ba9d-2ac2f0dbe8df
+[2026-11-21T21:41:11.813471] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transceivers 0:audio:SendRecv/SendRecv 1:video:RecvOnly/RecvOnly
+[2026-11-21T21:41:15.516025] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=8763084 audioPackets=83447 videoBytes=0
+[2026-11-21T21:41:15.606476] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] CONFERENCE participants room=6700 n=1 [이재명 대통령 (1101):A*]
+[2026-11-21T21:41:17.107977] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] VIDEO resync reason=auto:leave localKick=false remoteTiles=1
+[2026-11-21T21:41:17.210440] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=6b63e398-5f13-4e32-ba9d-2ac2f0dbe8df
+[2026-11-21T21:41:17.707449] EVENT SIP op=mediaStream target=6700 state=remote params=video=45 audio=1 id=dokufss380276594b3538227p544k0
+[2026-11-21T21:41:17.707732] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote session dokufss380276594b3538227p544k0 handled: streams=2 event(video=45 audio=1) session(video=88 audio=2)
+[2026-11-21T21:41:17.707824] EVENT MEDIA event=remoteStreamAdded state=video=45 audio=1 sessionId=dokufss380276594b3538227p544k0 sessionStreams=2 sessionVideo=88 sessionAudio=2
+[2026-11-21T21:41:17.708727] EVENT SIP op=mediaStream target=6700 state=remote params=video=45 audio=1 id=dokufss380276594b3538227p544k0
+[2026-11-21T21:41:17.708874] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote session dokufss380276594b3538227p544k0 handled: streams=2 event(video=45 audio=1) session(video=88 audio=2)
+[2026-11-21T21:41:17.708929] EVENT MEDIA event=remoteStreamAdded state=video=45 audio=1 sessionId=dokufss380276594b3538227p544k0 sessionStreams=2 sessionVideo=88 sessionAudio=2
+[2026-11-21T21:41:17.709473] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=2528ae7b-2689-4751-b4e2-35eaed51802c
+[2026-11-21T21:41:17.711617] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=7ecd9b85-a47f-474e-b585-b8180cb4375a
+[2026-11-21T21:41:17.713453] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 수신 hasAudio=true hasVideo=true -> 자동 수락
+[2026-11-21T21:41:17.713651] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 응답 전송 accepted=true recvOnlyVideo=true
+[2026-11-21T21:41:18.221027] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transceivers 0:audio:SendRecv/SendRecv 1:video:RecvOnly/RecvOnly 2:video:RecvOnly/RecvOnly
+[2026-11-21T21:41:20.517222] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=8781471 audioPackets=83697 videoBytes=20097
+[2026-11-21T21:41:20.517394] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tiles active=1 inactive=44
+[2026-11-21T21:41:20.517460] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP media summary 30s audioKB=91 videoKB=3 videoTracks=1/1 audioLost=0 ice=RTCIceConnectionStateConnected
+[2026-11-21T21:41:20.517492] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP video summary 30s in=960x540@-fps decodedFrames+-5 keyframes=1 freeze=0 pli=1 nack=0 vLost=1 | out=-@-fps target=0kbps limit=- WARN_VIDEO_FROZEN
+[2026-11-21T21:41:20.631817] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] CONFERENCE participants room=6700 n=2 [이재명 대통령 (1101):A*,AI봇(7001):V]
+[2026-11-21T21:41:22.134289] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] VIDEO resync reason=auto:join localKick=false remoteTiles=1
+[2026-11-21T21:41:22.236811] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=2528ae7b-2689-4751-b4e2-35eaed51802c
+[2026-11-21T21:41:25.516695] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=8796221 audioPackets=83947 videoBytes=20097
+[2026-11-21T21:41:30.517164] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=8810971 audioPackets=84197 videoBytes=20097
+[2026-11-21T21:41:35.515369] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=8825721 audioPackets=84447 videoBytes=20097
+[2026-11-21T21:41:40.515401] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=8840471 audioPackets=84697 videoBytes=20097
+[2026-11-21T21:41:40.515577] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tiles active=0 inactive=45
+[2026-11-21T21:41:45.515003] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=8855302 audioPackets=84947 videoBytes=20097
+[2026-11-21T21:41:50.228354] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 수신 hasAudio=true hasVideo=true -> 자동 수락
+[2026-11-21T21:41:50.228580] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 응답 전송 accepted=true recvOnlyVideo=true
+[2026-11-21T21:41:50.327601] EVENT SIP op=mediaStream target=6700 state=remote params=video=46 audio=1 id=dokufss380276594b3538227p544k0
+[2026-11-21T21:41:50.327799] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote session dokufss380276594b3538227p544k0 handled: streams=1 event(video=46 audio=1) session(video=46 audio=1)
+[2026-11-21T21:41:50.327876] EVENT MEDIA event=remoteStreamAdded state=video=46 audio=1 sessionId=dokufss380276594b3538227p544k0 sessionStreams=1 sessionVideo=46 sessionAudio=1
+[2026-11-21T21:41:50.328663] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=d598b639-76a9-4179-94a6-4f12a42cfd9b
+[2026-11-21T21:41:50.514570] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=8870974 audioPackets=85197 videoBytes=0
+[2026-11-21T21:41:50.514713] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP media summary 30s audioKB=87 videoKB=-20 videoTracks=0/0 audioLost=0 ice=RTCIceConnectionStateConnected
+[2026-11-21T21:41:50.514759] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP video summary 30s in=-@-fps decodedFrames+-18 keyframes=0 freeze=0 pli=0 nack=0 vLost=0 | out=-@-fps target=0kbps limit=-
+[2026-11-21T21:41:50.535449] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] CONFERENCE participants room=6700 n=1 [이재명 대통령 (1101):A*]
+[2026-11-21T21:41:50.733524] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transceivers 0:audio:SendRecv/SendRecv 1:video:RecvOnly/RecvOnly
+[2026-11-21T21:41:52.036708] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] VIDEO resync reason=auto:leave localKick=false remoteTiles=1
+[2026-11-21T21:41:52.139597] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=d598b639-76a9-4179-94a6-4f12a42cfd9b
+[2026-11-21T21:41:55.514856] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=8885924 audioPackets=85447 videoBytes=0
+[2026-11-21T21:41:56.508622] EVENT SIP op=mediaStream target=6700 state=remote params=video=48 audio=1 id=dokufss380276594b3538227p544k0
+[2026-11-21T21:41:56.508794] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote session dokufss380276594b3538227p544k0 handled: streams=2 event(video=48 audio=1) session(video=94 audio=2)
+[2026-11-21T21:41:56.508869] EVENT MEDIA event=remoteStreamAdded state=video=48 audio=1 sessionId=dokufss380276594b3538227p544k0 sessionStreams=2 sessionVideo=94 sessionAudio=2
+[2026-11-21T21:41:56.509416] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=2495683c-440f-4646-988e-aafd52e7bcd3
+[2026-11-21T21:41:56.509885] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=114357c8-1a56-4ff5-bb49-ae5d26625461
+[2026-11-21T21:41:56.512148] EVENT SIP op=mediaStream target=6700 state=remote params=video=48 audio=1 id=dokufss380276594b3538227p544k0
+[2026-11-21T21:41:56.512269] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote session dokufss380276594b3538227p544k0 handled: streams=2 event(video=48 audio=1) session(video=94 audio=2)
+[2026-11-21T21:41:56.512330] EVENT MEDIA event=remoteStreamAdded state=video=48 audio=1 sessionId=dokufss380276594b3538227p544k0 sessionStreams=2 sessionVideo=94 sessionAudio=2
+[2026-11-21T21:41:56.514110] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 수신 hasAudio=true hasVideo=true -> 자동 수락
+[2026-11-21T21:41:56.514301] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 응답 전송 accepted=true recvOnlyVideo=true
+[2026-11-21T21:41:57.021189] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transceivers 0:audio:SendRecv/SendRecv 1:video:RecvOnly/RecvOnly 2:video:RecvOnly/RecvOnly
+[2026-11-21T21:42:00.514576] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=8905286 audioPackets=85697 videoBytes=31647
+[2026-11-21T21:42:00.516899] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tiles active=1 inactive=47
+[2026-11-21T21:42:00.692006] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] CONFERENCE participants room=6700 n=2 [이재명 대통령 (1101):A*,AI봇(7001):V]
+[2026-11-21T21:42:02.194049] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] VIDEO resync reason=auto:join localKick=false remoteTiles=1
+[2026-11-21T21:42:02.296911] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=2495683c-440f-4646-988e-aafd52e7bcd3
+[2026-11-21T21:42:05.513998] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=8920036 audioPackets=85947 videoBytes=31647
+[2026-11-21T21:42:10.514558] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=8934786 audioPackets=86197 videoBytes=31647
+[2026-11-21T21:42:15.513628] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=8949536 audioPackets=86447 videoBytes=31647
+[2026-11-21T21:42:20.514573] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=8964286 audioPackets=86697 videoBytes=31647
+[2026-11-21T21:42:20.514762] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tiles active=0 inactive=48
+[2026-11-21T21:42:20.514825] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP media summary 30s audioKB=91 videoKB=31 videoTracks=0/1 audioLost=0 ice=RTCIceConnectionStateCompleted
+[2026-11-21T21:42:20.514857] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP video summary 30s in=960x540@-fps decodedFrames+31 keyframes=1 freeze=0 pli=1 nack=0 vLost=0 | out=-@-fps target=0kbps limit=-
+[2026-11-21T21:42:25.514359] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=8979036 audioPackets=86947 videoBytes=31647
+[2026-11-21T21:42:29.349725] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 수신 hasAudio=true hasVideo=true -> 자동 수락
+[2026-11-21T21:42:29.349947] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 응답 전송 accepted=true recvOnlyVideo=true
+[2026-11-21T21:42:29.448349] EVENT SIP op=mediaStream target=6700 state=remote params=video=49 audio=1 id=dokufss380276594b3538227p544k0
+[2026-11-21T21:42:29.448521] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote session dokufss380276594b3538227p544k0 handled: streams=1 event(video=49 audio=1) session(video=49 audio=1)
+[2026-11-21T21:42:29.448591] EVENT MEDIA event=remoteStreamAdded state=video=49 audio=1 sessionId=dokufss380276594b3538227p544k0 sessionStreams=1 sessionVideo=49 sessionAudio=1
+[2026-11-21T21:42:29.449442] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=346da78b-1fad-4ed3-9efa-b6894f5b6c56
+[2026-11-21T21:42:29.886090] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transceivers 0:audio:SendRecv/SendRecv 1:video:RecvOnly/RecvOnly
+[2026-11-21T21:42:30.512765] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=8994842 audioPackets=87196 videoBytes=0
+[2026-11-21T21:42:30.542586] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] CONFERENCE participants room=6700 n=1 [이재명 대통령 (1101):A*]
+[2026-11-21T21:42:32.044600] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] VIDEO resync reason=auto:leave localKick=false remoteTiles=1
+[2026-11-21T21:42:32.146804] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=346da78b-1fad-4ed3-9efa-b6894f5b6c56
+[2026-11-21T21:42:35.512779] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=9009592 audioPackets=87446 videoBytes=0
+[2026-11-21T21:42:35.838814] EVENT SIP op=mediaStream target=6700 state=remote params=video=51 audio=1 id=dokufss380276594b3538227p544k0
+[2026-11-21T21:42:35.839028] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote session dokufss380276594b3538227p544k0 handled: streams=2 event(video=51 audio=1) session(video=100 audio=2)
+[2026-11-21T21:42:35.839122] EVENT MEDIA event=remoteStreamAdded state=video=51 audio=1 sessionId=dokufss380276594b3538227p544k0 sessionStreams=2 sessionVideo=100 sessionAudio=2
+[2026-11-21T21:42:35.839483] EVENT SIP op=mediaStream target=6700 state=remote params=video=51 audio=1 id=dokufss380276594b3538227p544k0
+[2026-11-21T21:42:35.839631] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote session dokufss380276594b3538227p544k0 handled: streams=2 event(video=51 audio=1) session(video=100 audio=2)
+[2026-11-21T21:42:35.839689] EVENT MEDIA event=remoteStreamAdded state=video=51 audio=1 sessionId=dokufss380276594b3538227p544k0 sessionStreams=2 sessionVideo=100 sessionAudio=2
+[2026-11-21T21:42:35.840330] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=9f24228c-9411-4afd-800d-7360770b5592
+[2026-11-21T21:42:35.840717] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=4d30841d-836e-40fb-a8b0-53ebfeb735b8
+[2026-11-21T21:42:35.843741] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 수신 hasAudio=true hasVideo=true -> 자동 수락
+[2026-11-21T21:42:35.843900] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 응답 전송 accepted=true recvOnlyVideo=true
+[2026-11-21T21:42:36.351106] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transceivers 0:audio:SendRecv/SendRecv 1:video:RecvOnly/RecvOnly 2:video:RecvOnly/RecvOnly
+[2026-11-21T21:42:40.512091] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=9027754 audioPackets=87696 videoBytes=19198
+[2026-11-21T21:42:40.512277] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tiles active=1 inactive=50
+[2026-11-21T21:42:40.620349] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] CONFERENCE participants room=6700 n=2 [이재명 대통령 (1101):A*,AI봇(7001):V]
+[2026-11-21T21:42:42.121856] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] VIDEO resync reason=auto:join localKick=false remoteTiles=1
+[2026-11-21T21:42:42.223849] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=9f24228c-9411-4afd-800d-7360770b5592
+[2026-11-21T21:42:45.512168] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=9042504 audioPackets=87946 videoBytes=19198
+[2026-11-21T21:42:50.511685] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=9057254 audioPackets=88196 videoBytes=19198
+[2026-11-21T21:42:50.511873] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP media summary 30s audioKB=91 videoKB=-12 videoTracks=1/1 audioLost=0 ice=RTCIceConnectionStateConnected
+[2026-11-21T21:42:50.511932] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP video summary 30s in=960x540@-fps decodedFrames+-10 keyframes=1 freeze=0 pli=2 nack=0 vLost=0 | out=-@-fps target=0kbps limit=- WARN_VIDEO_FROZEN
+[2026-11-21T21:42:55.512679] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=9072004 audioPackets=88446 videoBytes=19198
+[2026-11-21T21:42:55.512934] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tiles active=0 inactive=51
+[2026-11-21T21:43:00.511708] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=9086754 audioPackets=88696 videoBytes=19198
+[2026-11-21T21:43:05.511254] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=9101504 audioPackets=88946 videoBytes=19198
+[2026-11-21T21:43:08.278838] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 수신 hasAudio=true hasVideo=true -> 자동 수락
+[2026-11-21T21:43:08.279060] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 응답 전송 accepted=true recvOnlyVideo=true
+[2026-11-21T21:43:08.377614] EVENT SIP op=mediaStream target=6700 state=remote params=video=52 audio=1 id=dokufss380276594b3538227p544k0
+[2026-11-21T21:43:08.377790] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote session dokufss380276594b3538227p544k0 handled: streams=1 event(video=52 audio=1) session(video=52 audio=1)
+[2026-11-21T21:43:08.377862] EVENT MEDIA event=remoteStreamAdded state=video=52 audio=1 sessionId=dokufss380276594b3538227p544k0 sessionStreams=1 sessionVideo=52 sessionAudio=1
+[2026-11-21T21:43:08.378572] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=7827bb28-5471-4436-831c-b4cf01e5eec6
+[2026-11-21T21:43:08.803802] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transceivers 0:audio:SendRecv/SendRecv 1:video:RecvOnly/RecvOnly
+[2026-11-21T21:43:10.510710] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=9117377 audioPackets=89196 videoBytes=0
+[2026-11-21T21:43:10.532381] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] CONFERENCE participants room=6700 n=1 [이재명 대통령 (1101):A*]
+[2026-11-21T21:43:12.033972] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] VIDEO resync reason=auto:leave localKick=false remoteTiles=1
+[2026-11-21T21:43:12.136794] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=7827bb28-5471-4436-831c-b4cf01e5eec6
+[2026-11-21T21:43:14.590993] EVENT SIP op=mediaStream target=6700 state=remote params=video=54 audio=1 id=dokufss380276594b3538227p544k0
+[2026-11-21T21:43:14.591174] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote session dokufss380276594b3538227p544k0 handled: streams=2 event(video=54 audio=1) session(video=106 audio=2)
+[2026-11-21T21:43:14.591249] EVENT MEDIA event=remoteStreamAdded state=video=54 audio=1 sessionId=dokufss380276594b3538227p544k0 sessionStreams=2 sessionVideo=106 sessionAudio=2
+[2026-11-21T21:43:14.591988] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=b1a108af-d3ac-4e00-8c07-fd2c8f398535
+[2026-11-21T21:43:14.592418] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=82e6ad3e-bb95-49be-b061-207666e84288
+[2026-11-21T21:43:14.593583] EVENT SIP op=mediaStream target=6700 state=remote params=video=54 audio=1 id=dokufss380276594b3538227p544k0
+[2026-11-21T21:43:14.593714] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote session dokufss380276594b3538227p544k0 handled: streams=2 event(video=54 audio=1) session(video=106 audio=2)
+[2026-11-21T21:43:14.593775] EVENT MEDIA event=remoteStreamAdded state=video=54 audio=1 sessionId=dokufss380276594b3538227p544k0 sessionStreams=2 sessionVideo=106 sessionAudio=2
+[2026-11-21T21:43:14.597336] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 수신 hasAudio=true hasVideo=true -> 자동 수락
+[2026-11-21T21:43:14.597535] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 응답 전송 accepted=true recvOnlyVideo=true
+[2026-11-21T21:43:15.105387] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transceivers 0:audio:SendRecv/SendRecv 1:video:RecvOnly/RecvOnly 2:video:RecvOnly/RecvOnly
+[2026-11-21T21:43:15.512017] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=9134811 audioPackets=89446 videoBytes=11409
+[2026-11-21T21:43:15.512228] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tiles active=1 inactive=53
+[2026-11-21T21:43:15.632236] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] CONFERENCE participants room=6700 n=2 [이재명 대통령 (1101):A*,AI봇(7001):V]
+[2026-11-21T21:43:17.133793] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] VIDEO resync reason=auto:join localKick=false remoteTiles=1
+[2026-11-21T21:43:17.236374] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=b1a108af-d3ac-4e00-8c07-fd2c8f398535
+[2026-11-21T21:43:20.511111] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=9151479 audioPackets=89696 videoBytes=20359
+[2026-11-21T21:43:20.511299] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP media summary 30s audioKB=92 videoKB=1 videoTracks=1/1 audioLost=0 ice=RTCIceConnectionStateConnected
+[2026-11-21T21:43:20.511355] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP video summary 30s in=640x360@-fps decodedFrames+5 keyframes=1 freeze=0 pli=2 nack=0 vLost=0 | out=-@-fps target=0kbps limit=-
+[2026-11-21T21:43:25.511178] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=9166229 audioPackets=89946 videoBytes=20359
+[2026-11-21T21:43:30.510524] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=9180979 audioPackets=90196 videoBytes=20359
+[2026-11-21T21:43:35.509829] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=9195729 audioPackets=90446 videoBytes=20359
+[2026-11-21T21:43:40.510102] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=9210479 audioPackets=90696 videoBytes=20359
+[2026-11-21T21:43:40.510282] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tiles active=0 inactive=54
+[2026-11-21T21:43:45.508946] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=9225229 audioPackets=90946 videoBytes=20359
+[2026-11-21T21:43:47.450946] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 수신 hasAudio=true hasVideo=true -> 자동 수락
+[2026-11-21T21:43:47.462347] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 응답 전송 accepted=true recvOnlyVideo=true
+[2026-11-21T21:43:47.547337] EVENT SIP op=mediaStream target=6700 state=remote params=video=55 audio=1 id=dokufss380276594b3538227p544k0
+[2026-11-21T21:43:47.547504] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote session dokufss380276594b3538227p544k0 handled: streams=1 event(video=55 audio=1) session(video=55 audio=1)
+[2026-11-21T21:43:47.547573] EVENT MEDIA event=remoteStreamAdded state=video=55 audio=1 sessionId=dokufss380276594b3538227p544k0 sessionStreams=1 sessionVideo=55 sessionAudio=1
+[2026-11-21T21:43:47.548393] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=4c42b207-5691-4085-aff8-01ba9b65c84d
+[2026-11-21T21:43:47.966517] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transceivers 0:audio:SendRecv/SendRecv 1:video:RecvOnly/RecvOnly
+[2026-11-21T21:43:50.508615] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=9241104 audioPackets=91196 videoBytes=0
+[2026-11-21T21:43:50.508769] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP media summary 30s audioKB=88 videoKB=-20 videoTracks=0/0 audioLost=0 ice=RTCIceConnectionStateCompleted
+[2026-11-21T21:43:50.541863] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP video summary 30s in=-@-fps decodedFrames+-26 keyframes=0 freeze=0 pli=0 nack=0 vLost=0 | out=-@-fps target=0kbps limit=-
+[2026-11-21T21:43:50.542215] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] CONFERENCE participants room=6700 n=1 [이재명 대통령 (1101):A*]
+[2026-11-21T21:43:52.043117] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] VIDEO resync reason=auto:leave localKick=false remoteTiles=1
+[2026-11-21T21:43:52.145349] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=4c42b207-5691-4085-aff8-01ba9b65c84d
+[2026-11-21T21:43:53.837259] EVENT SIP op=mediaStream target=6700 state=remote params=video=57 audio=1 id=dokufss380276594b3538227p544k0
+[2026-11-21T21:43:53.837579] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote session dokufss380276594b3538227p544k0 handled: streams=2 event(video=57 audio=1) session(video=112 audio=2)
+[2026-11-21T21:43:53.837689] EVENT MEDIA event=remoteStreamAdded state=video=57 audio=1 sessionId=dokufss380276594b3538227p544k0 sessionStreams=2 sessionVideo=112 sessionAudio=2
+[2026-11-21T21:43:53.838393] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=70f88637-711d-4389-bdbb-0175ae65d506
+[2026-11-21T21:43:53.838831] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=52faf0f1-26ee-4f73-a6c3-753cd4f101f7
+[2026-11-21T21:43:53.839075] EVENT SIP op=mediaStream target=6700 state=remote params=video=57 audio=1 id=dokufss380276594b3538227p544k0
+[2026-11-21T21:43:53.839204] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote session dokufss380276594b3538227p544k0 handled: streams=2 event(video=57 audio=1) session(video=112 audio=2)
+[2026-11-21T21:43:53.839268] EVENT MEDIA event=remoteStreamAdded state=video=57 audio=1 sessionId=dokufss380276594b3538227p544k0 sessionStreams=2 sessionVideo=112 sessionAudio=2
+[2026-11-21T21:43:53.843301] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 수신 hasAudio=true hasVideo=true -> 자동 수락
+[2026-11-21T21:43:53.843551] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 응답 전송 accepted=true recvOnlyVideo=true
+[2026-11-21T21:43:54.350767] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transceivers 0:audio:SendRecv/SendRecv 1:video:RecvOnly/RecvOnly 2:video:RecvOnly/RecvOnly
+[2026-11-21T21:43:55.510039] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=9259691 audioPackets=91446 videoBytes=21432
+[2026-11-21T21:43:55.510244] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tiles active=1 inactive=56
+[2026-11-21T21:43:55.612220] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] CONFERENCE participants room=6700 n=2 [이재명 대통령 (1101):A*,AI봇(7001):V]
+[2026-11-21T21:43:57.113601] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] VIDEO resync reason=auto:join localKick=false remoteTiles=1
+[2026-11-21T21:43:57.215684] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=70f88637-711d-4389-bdbb-0175ae65d506
+[2026-11-21T21:44:00.509275] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=9274382 audioPackets=91695 videoBytes=21432
+[2026-11-21T21:44:05.508517] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=9289132 audioPackets=91945 videoBytes=21432
+[2026-11-21T21:44:10.508793] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=9304012 audioPackets=92195 videoBytes=21432
+[2026-11-21T21:44:15.508357] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=9318762 audioPackets=92445 videoBytes=21432
+[2026-11-21T21:44:15.508525] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tiles active=0 inactive=57
+[2026-11-21T21:44:20.507435] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=9333512 audioPackets=92695 videoBytes=21432
+[2026-11-21T21:44:20.507641] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP media summary 30s audioKB=90 videoKB=21 videoTracks=0/1 audioLost=0 ice=RTCIceConnectionStateCompleted
+[2026-11-21T21:44:20.507700] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP video summary 30s in=960x540@-fps decodedFrames+21 keyframes=1 freeze=0 pli=2 nack=0 vLost=0 | out=-@-fps target=0kbps limit=-
+[2026-11-21T21:44:25.508556] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=9348262 audioPackets=92945 videoBytes=21432
+[2026-11-21T21:44:26.506531] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 수신 hasAudio=true hasVideo=true -> 자동 수락
+[2026-11-21T21:44:26.506782] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 응답 전송 accepted=true recvOnlyVideo=true
+[2026-11-21T21:44:26.603459] EVENT SIP op=mediaStream target=6700 state=remote params=video=58 audio=1 id=dokufss380276594b3538227p544k0
+[2026-11-21T21:44:26.603636] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote session dokufss380276594b3538227p544k0 handled: streams=1 event(video=58 audio=1) session(video=58 audio=1)
+[2026-11-21T21:44:26.603706] EVENT MEDIA event=remoteStreamAdded state=video=58 audio=1 sessionId=dokufss380276594b3538227p544k0 sessionStreams=1 sessionVideo=58 sessionAudio=1
+[2026-11-21T21:44:26.604473] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=ec004f55-5e11-4184-be49-499b2647b997
+[2026-11-21T21:44:27.011499] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transceivers 0:audio:SendRecv/SendRecv 1:video:RecvOnly/RecvOnly
+[2026-11-21T21:44:30.507407] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=9364134 audioPackets=93195 videoBytes=0
+[2026-11-21T21:44:30.563267] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] CONFERENCE participants room=6700 n=1 [이재명 대통령 (1101):A*]
+[2026-11-21T21:44:32.064856] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] VIDEO resync reason=auto:leave localKick=false remoteTiles=1
+[2026-11-21T21:44:32.166902] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=ec004f55-5e11-4184-be49-499b2647b997
+[2026-11-21T21:44:32.800546] EVENT SIP op=mediaStream target=6700 state=remote params=video=60 audio=1 id=dokufss380276594b3538227p544k0
+[2026-11-21T21:44:32.800719] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote session dokufss380276594b3538227p544k0 handled: streams=2 event(video=60 audio=1) session(video=118 audio=2)
+[2026-11-21T21:44:32.800792] EVENT MEDIA event=remoteStreamAdded state=video=60 audio=1 sessionId=dokufss380276594b3538227p544k0 sessionStreams=2 sessionVideo=118 sessionAudio=2
+[2026-11-21T21:44:32.800852] EVENT SIP op=mediaStream target=6700 state=remote params=video=60 audio=1 id=dokufss380276594b3538227p544k0
+[2026-11-21T21:44:32.800901] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote session dokufss380276594b3538227p544k0 handled: streams=2 event(video=60 audio=1) session(video=118 audio=2)
+[2026-11-21T21:44:32.800935] EVENT MEDIA event=remoteStreamAdded state=video=60 audio=1 sessionId=dokufss380276594b3538227p544k0 sessionStreams=2 sessionVideo=118 sessionAudio=2
+[2026-11-21T21:44:32.802585] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 수신 hasAudio=true hasVideo=true -> 자동 수락
+[2026-11-21T21:44:32.802884] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 응답 전송 accepted=true recvOnlyVideo=true
+[2026-11-21T21:44:32.803324] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=ed05a55c-cac5-4afc-9a40-23514db8debb
+[2026-11-21T21:44:32.803843] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=da7a1720-8a08-4ba6-aa5a-32fb5edff6cc
+[2026-11-21T21:44:33.309971] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transceivers 0:audio:SendRecv/SendRecv 1:video:RecvOnly/RecvOnly 2:video:RecvOnly/RecvOnly
+[2026-11-21T21:44:35.507638] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=9382941 audioPackets=93445 videoBytes=20557
+[2026-11-21T21:44:35.507829] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tiles active=1 inactive=59
+[2026-11-21T21:44:35.608392] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] CONFERENCE participants room=6700 n=2 [이재명 대통령 (1101):A*,AI봇(7001):V]
+[2026-11-21T21:44:37.109937] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] VIDEO resync reason=auto:join localKick=false remoteTiles=1
+[2026-11-21T21:44:37.212373] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=ed05a55c-cac5-4afc-9a40-23514db8debb
+[2026-11-21T21:44:40.507271] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=9397691 audioPackets=93695 videoBytes=20557
+[2026-11-21T21:44:45.506662] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=9412441 audioPackets=93945 videoBytes=20557
+[2026-11-21T21:44:50.506223] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=9427191 audioPackets=94195 videoBytes=20557
+[2026-11-21T21:44:50.506410] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP media summary 30s audioKB=91 videoKB=-1 videoTracks=1/1 audioLost=0 ice=RTCIceConnectionStateConnected
+[2026-11-21T21:44:50.506461] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP video summary 30s in=960x540@-fps decodedFrames+-2 keyframes=1 freeze=0 pli=3 nack=0 vLost=1 | out=-@-fps target=0kbps limit=- WARN_VIDEO_FROZEN
+[2026-11-21T21:44:55.506791] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=9441941 audioPackets=94445 videoBytes=20557
+[2026-11-21T21:44:55.506964] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tiles active=0 inactive=60
+[2026-11-21T21:45:00.506473] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=9456691 audioPackets=94695 videoBytes=20557
+[2026-11-21T21:45:05.424910] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 수신 hasAudio=true hasVideo=true -> 자동 수락
+[2026-11-21T21:45:05.425129] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 응답 전송 accepted=true recvOnlyVideo=true
+[2026-11-21T21:45:05.505526] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=9471755 audioPackets=94945 videoBytes=0
+[2026-11-21T21:45:05.522605] EVENT SIP op=mediaStream target=6700 state=remote params=video=61 audio=1 id=dokufss380276594b3538227p544k0
+[2026-11-21T21:45:05.522805] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote session dokufss380276594b3538227p544k0 handled: streams=1 event(video=61 audio=1) session(video=61 audio=1)
+[2026-11-21T21:45:05.522882] EVENT MEDIA event=remoteStreamAdded state=video=61 audio=1 sessionId=dokufss380276594b3538227p544k0 sessionStreams=1 sessionVideo=61 sessionAudio=1
+[2026-11-21T21:45:05.523566] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=7441b4cf-52a0-4055-b867-afeefe4e847e
+[2026-11-21T21:45:05.573154] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] CONFERENCE participants room=6700 n=1 [이재명 대통령 (1101):A*]
+[2026-11-21T21:45:05.928504] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transceivers 0:audio:SendRecv/SendRecv 1:video:RecvOnly/RecvOnly
+[2026-11-21T21:45:07.074591] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] VIDEO resync reason=auto:leave localKick=false remoteTiles=1
+[2026-11-21T21:45:07.177735] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=7441b4cf-52a0-4055-b867-afeefe4e847e
+[2026-11-21T21:45:10.504972] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=9487307 audioPackets=95195 videoBytes=0
+[2026-11-21T21:45:11.907273] EVENT SIP op=mediaStream target=6700 state=remote params=video=63 audio=1 id=dokufss380276594b3538227p544k0
+[2026-11-21T21:45:11.907457] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote session dokufss380276594b3538227p544k0 handled: streams=2 event(video=63 audio=1) session(video=124 audio=2)
+[2026-11-21T21:45:11.907534] EVENT MEDIA event=remoteStreamAdded state=video=63 audio=1 sessionId=dokufss380276594b3538227p544k0 sessionStreams=2 sessionVideo=124 sessionAudio=2
+[2026-11-21T21:45:11.907602] EVENT SIP op=mediaStream target=6700 state=remote params=video=63 audio=1 id=dokufss380276594b3538227p544k0
+[2026-11-21T21:45:11.907655] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote session dokufss380276594b3538227p544k0 handled: streams=2 event(video=63 audio=1) session(video=124 audio=2)
+[2026-11-21T21:45:11.907690] EVENT MEDIA event=remoteStreamAdded state=video=63 audio=1 sessionId=dokufss380276594b3538227p544k0 sessionStreams=2 sessionVideo=124 sessionAudio=2
+[2026-11-21T21:45:11.908715] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=6f0e7e82-f43c-4934-821e-0c4b52ff2e1b
+[2026-11-21T21:45:11.909137] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=3108e7e4-f544-4813-8b0d-cef2fb9898de
+[2026-11-21T21:45:11.913051] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 수신 hasAudio=true hasVideo=true -> 자동 수락
+[2026-11-21T21:45:11.913240] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 응답 전송 accepted=true recvOnlyVideo=true
+[2026-11-21T21:45:12.421076] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transceivers 0:audio:SendRecv/SendRecv 1:video:RecvOnly/RecvOnly 2:video:RecvOnly/RecvOnly
+[2026-11-21T21:45:15.505690] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=9505412 audioPackets=95444 videoBytes=16440
+[2026-11-21T21:45:15.505868] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tiles active=1 inactive=62
+[2026-11-21T21:45:15.674532] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] CONFERENCE participants room=6700 n=2 [이재명 대통령 (1101):A*,AI봇(7001):V]
+[2026-11-21T21:45:17.176320] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] VIDEO resync reason=auto:join localKick=false remoteTiles=1
+[2026-11-21T21:45:17.279141] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=6f0e7e82-f43c-4934-821e-0c4b52ff2e1b
+[2026-11-21T21:45:18.279649] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] 원격 로그 즉시전송 요청
+[2026-11-21T21:45:20.505017] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=9520162 audioPackets=95694 videoBytes=16440
+[2026-11-21T21:45:20.505213] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP media summary 30s audioKB=91 videoKB=-4 videoTracks=1/1 audioLost=0 ice=RTCIceConnectionStateConnected
+[2026-11-21T21:45:20.505272] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP video summary 30s in=640x360@-fps decodedFrames+2 keyframes=1 freeze=0 pli=2 nack=0 vLost=0 | out=-@-fps target=0kbps limit=-
+[2026-11-21T21:45:25.505780] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=9534912 audioPackets=95944 videoBytes=16440
+[2026-11-21T21:45:30.505299] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=9549662 audioPackets=96194 videoBytes=16440
+[2026-11-21T21:45:35.504422] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=9564412 audioPackets=96444 videoBytes=16440
+[2026-11-21T21:45:35.504604] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tiles active=0 inactive=63
+[2026-11-21T21:45:40.503795] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=9579162 audioPackets=96694 videoBytes=16440
+[2026-11-21T21:45:44.349892] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 수신 hasAudio=true hasVideo=true -> 자동 수락
+[2026-11-21T21:45:44.350115] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 응답 전송 accepted=true recvOnlyVideo=true
+[2026-11-21T21:45:44.445762] EVENT SIP op=mediaStream target=6700 state=remote params=video=64 audio=1 id=dokufss380276594b3538227p544k0
+[2026-11-21T21:45:44.445956] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote session dokufss380276594b3538227p544k0 handled: streams=1 event(video=64 audio=1) session(video=64 audio=1)
+[2026-11-21T21:45:44.446033] EVENT MEDIA event=remoteStreamAdded state=video=64 audio=1 sessionId=dokufss380276594b3538227p544k0 sessionStreams=1 sessionVideo=64 sessionAudio=1
+[2026-11-21T21:45:44.446872] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=24f6ec82-3d02-4cb5-b20c-ac5a1eeff2d9
+[2026-11-21T21:45:44.854257] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transceivers 0:audio:SendRecv/SendRecv 1:video:RecvOnly/RecvOnly
+[2026-11-21T21:45:45.503398] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=9595036 audioPackets=96944 videoBytes=0
+[2026-11-21T21:45:45.526374] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] CONFERENCE participants room=6700 n=1 [이재명 대통령 (1101):A*]
+[2026-11-21T21:45:47.026990] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] VIDEO resync reason=auto:leave localKick=false remoteTiles=1
+[2026-11-21T21:45:47.129133] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=24f6ec82-3d02-4cb5-b20c-ac5a1eeff2d9
+[2026-11-21T21:45:50.503643] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=9609786 audioPackets=97194 videoBytes=0
+[2026-11-21T21:45:50.503812] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP media summary 30s audioKB=88 videoKB=-16 videoTracks=0/0 audioLost=0 ice=RTCIceConnectionStateCompleted
+[2026-11-21T21:45:50.503906] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP video summary 30s in=-@-fps decodedFrames+-21 keyframes=0 freeze=0 pli=0 nack=0 vLost=0 | out=-@-fps target=0kbps limit=-
+[2026-11-21T21:45:50.846814] EVENT SIP op=mediaStream target=6700 state=remote params=video=66 audio=1 id=dokufss380276594b3538227p544k0
+[2026-11-21T21:45:50.847044] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote session dokufss380276594b3538227p544k0 handled: streams=2 event(video=66 audio=1) session(video=130 audio=2)
+[2026-11-21T21:45:50.847130] EVENT MEDIA event=remoteStreamAdded state=video=66 audio=1 sessionId=dokufss380276594b3538227p544k0 sessionStreams=2 sessionVideo=130 sessionAudio=2
+[2026-11-21T21:45:50.847855] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=4348ee75-de10-4eab-af5a-fb5025fc36dd
+[2026-11-21T21:45:50.848403] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=eab5a9cd-acf6-41db-b545-09dba7b5c874
+[2026-11-21T21:45:50.849386] EVENT SIP op=mediaStream target=6700 state=remote params=video=66 audio=1 id=dokufss380276594b3538227p544k0
+[2026-11-21T21:45:50.849521] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote session dokufss380276594b3538227p544k0 handled: streams=2 event(video=66 audio=1) session(video=130 audio=2)
+[2026-11-21T21:45:50.849587] EVENT MEDIA event=remoteStreamAdded state=video=66 audio=1 sessionId=dokufss380276594b3538227p544k0 sessionStreams=2 sessionVideo=130 sessionAudio=2
+[2026-11-21T21:45:50.852143] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 수신 hasAudio=true hasVideo=true -> 자동 수락
+[2026-11-21T21:45:50.852329] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 응답 전송 accepted=true recvOnlyVideo=true
+[2026-11-21T21:45:51.360205] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transceivers 0:audio:SendRecv/SendRecv 1:video:RecvOnly/RecvOnly 2:video:RecvOnly/RecvOnly
+[2026-11-21T21:45:55.504739] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=9628151 audioPackets=97444 videoBytes=19225
+[2026-11-21T21:45:55.504941] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tiles active=1 inactive=65
+[2026-11-21T21:45:55.617178] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] CONFERENCE participants room=6700 n=2 [이재명 대통령 (1101):A*,AI봇(7001):V]
+[2026-11-21T21:45:57.118761] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] VIDEO resync reason=auto:join localKick=false remoteTiles=1
+[2026-11-21T21:45:57.221717] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=4348ee75-de10-4eab-af5a-fb5025fc36dd
+[2026-11-21T21:46:00.503322] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=9642901 audioPackets=97694 videoBytes=19225
+[2026-11-21T21:46:05.502866] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=9657651 audioPackets=97944 videoBytes=19225
+[2026-11-21T21:46:10.502537] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=9672401 audioPackets=98194 videoBytes=19225
+[2026-11-21T21:46:15.503141] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=9687151 audioPackets=98444 videoBytes=19225
+[2026-11-21T21:46:15.503329] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tiles active=0 inactive=66
+[2026-11-21T21:46:20.502184] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=9701901 audioPackets=98694 videoBytes=19225
+[2026-11-21T21:46:20.502384] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP media summary 30s audioKB=90 videoKB=19 videoTracks=0/1 audioLost=0 ice=RTCIceConnectionStateCompleted
+[2026-11-21T21:46:20.502455] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP video summary 30s in=640x360@-fps decodedFrames+25 keyframes=1 freeze=0 pli=2 nack=0 vLost=0 | out=-@-fps target=0kbps limit=-
+[2026-11-21T21:46:23.426702] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 수신 hasAudio=true hasVideo=true -> 자동 수락
+[2026-11-21T21:46:23.426925] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 응답 전송 accepted=true recvOnlyVideo=true
+[2026-11-21T21:46:23.525806] EVENT SIP op=mediaStream target=6700 state=remote params=video=67 audio=1 id=dokufss380276594b3538227p544k0
+[2026-11-21T21:46:23.525986] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote session dokufss380276594b3538227p544k0 handled: streams=1 event(video=67 audio=1) session(video=67 audio=1)
+[2026-11-21T21:46:23.526059] EVENT MEDIA event=remoteStreamAdded state=video=67 audio=1 sessionId=dokufss380276594b3538227p544k0 sessionStreams=1 sessionVideo=67 sessionAudio=1
+[2026-11-21T21:46:23.526764] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=4d15d3c5-0954-45bb-9735-aa77267fd3df
+[2026-11-21T21:46:23.931888] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transceivers 0:audio:SendRecv/SendRecv 1:video:RecvOnly/RecvOnly
+[2026-11-21T21:46:25.501166] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=9717773 audioPackets=98944 videoBytes=0
+[2026-11-21T21:46:25.538553] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] CONFERENCE participants room=6700 n=1 [이재명 대통령 (1101):A*]
+[2026-11-21T21:46:27.040229] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] VIDEO resync reason=auto:leave localKick=false remoteTiles=1
+[2026-11-21T21:46:27.142876] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=4d15d3c5-0954-45bb-9735-aa77267fd3df
+[2026-11-21T21:46:29.825139] EVENT SIP op=mediaStream target=6700 state=remote params=video=69 audio=1 id=dokufss380276594b3538227p544k0
+[2026-11-21T21:46:29.825374] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote session dokufss380276594b3538227p544k0 handled: streams=2 event(video=69 audio=1) session(video=136 audio=2)
+[2026-11-21T21:46:29.825467] EVENT MEDIA event=remoteStreamAdded state=video=69 audio=1 sessionId=dokufss380276594b3538227p544k0 sessionStreams=2 sessionVideo=136 sessionAudio=2
+[2026-11-21T21:46:29.826046] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=82c894e2-37fb-4ca1-8362-660bf22e1b9c
+[2026-11-21T21:46:29.826547] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=c543a927-23d9-48d0-903c-6e6718f8954b
+[2026-11-21T21:46:29.827862] EVENT SIP op=mediaStream target=6700 state=remote params=video=69 audio=1 id=dokufss380276594b3538227p544k0
+[2026-11-21T21:46:29.827974] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote session dokufss380276594b3538227p544k0 handled: streams=2 event(video=69 audio=1) session(video=136 audio=2)
+[2026-11-21T21:46:29.828031] EVENT MEDIA event=remoteStreamAdded state=video=69 audio=1 sessionId=dokufss380276594b3538227p544k0 sessionStreams=2 sessionVideo=136 sessionAudio=2
+[2026-11-21T21:46:29.831192] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 수신 hasAudio=true hasVideo=true -> 자동 수락
+[2026-11-21T21:46:29.831357] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 응답 전송 accepted=true recvOnlyVideo=true
+[2026-11-21T21:46:30.338555] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transceivers 0:audio:SendRecv/SendRecv 1:video:RecvOnly/RecvOnly 2:video:RecvOnly/RecvOnly
+[2026-11-21T21:46:30.502958] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=9734655 audioPackets=99194 videoBytes=18988
+[2026-11-21T21:46:30.503164] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tiles active=1 inactive=68
+[2026-11-21T21:46:30.723712] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] CONFERENCE participants room=6700 n=2 [이재명 대통령 (1101):A*,AI봇(7001):V]
+[2026-11-21T21:46:32.225989] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] VIDEO resync reason=auto:join localKick=false remoteTiles=1
+[2026-11-21T21:46:32.328058] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=82c894e2-37fb-4ca1-8362-660bf22e1b9c
+[2026-11-21T21:46:35.502301] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=9751891 audioPackets=99444 videoBytes=31488
+[2026-11-21T21:46:40.501878] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=9766641 audioPackets=99694 videoBytes=31488
+[2026-11-21T21:46:45.502211] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=9781391 audioPackets=99944 videoBytes=31488
+[2026-11-21T21:46:50.502624] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=9796141 audioPackets=100194 videoBytes=31488
+[2026-11-21T21:46:50.502806] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tiles active=0 inactive=69
+[2026-11-21T21:46:50.502870] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP media summary 30s audioKB=92 videoKB=12 videoTracks=0/1 audioLost=0 ice=RTCIceConnectionStateCompleted
+[2026-11-21T21:46:50.502904] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP video summary 30s in=960x540@-fps decodedFrames+8 keyframes=1 freeze=0 pli=2 nack=0 vLost=0 | out=-@-fps target=0kbps limit=-
+[2026-11-21T21:46:55.501796] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=9810891 audioPackets=100444 videoBytes=31488
+[2026-11-21T21:47:00.500723] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=9825641 audioPackets=100694 videoBytes=31488
+[2026-11-21T21:47:02.655916] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 수신 hasAudio=true hasVideo=true -> 자동 수락
+[2026-11-21T21:47:02.656145] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 응답 전송 accepted=true recvOnlyVideo=true
+[2026-11-21T21:47:02.754189] EVENT SIP op=mediaStream target=6700 state=remote params=video=70 audio=1 id=dokufss380276594b3538227p544k0
+[2026-11-21T21:47:02.754375] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote session dokufss380276594b3538227p544k0 handled: streams=1 event(video=70 audio=1) session(video=70 audio=1)
+[2026-11-21T21:47:02.754450] EVENT MEDIA event=remoteStreamAdded state=video=70 audio=1 sessionId=dokufss380276594b3538227p544k0 sessionStreams=1 sessionVideo=70 sessionAudio=1
+[2026-11-21T21:47:02.755146] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=ac0e92b1-6e80-445b-9fa3-fa3ab57db530
+[2026-11-21T21:47:03.161198] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transceivers 0:audio:SendRecv/SendRecv 1:video:RecvOnly/RecvOnly
+[2026-11-21T21:47:05.500271] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=9841514 audioPackets=100944 videoBytes=0
+[2026-11-21T21:47:05.513428] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] CONFERENCE participants room=6700 n=1 [이재명 대통령 (1101):A*]
+[2026-11-21T21:47:07.015334] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] VIDEO resync reason=auto:leave localKick=false remoteTiles=1
+[2026-11-21T21:47:07.117785] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=ac0e92b1-6e80-445b-9fa3-fa3ab57db530
+[2026-11-21T21:47:09.053100] EVENT SIP op=mediaStream target=6700 state=remote params=video=72 audio=1 id=dokufss380276594b3538227p544k0
+[2026-11-21T21:47:09.053299] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote session dokufss380276594b3538227p544k0 handled: streams=2 event(video=72 audio=1) session(video=142 audio=2)
+[2026-11-21T21:47:09.053375] EVENT MEDIA event=remoteStreamAdded state=video=72 audio=1 sessionId=dokufss380276594b3538227p544k0 sessionStreams=2 sessionVideo=142 sessionAudio=2
+[2026-11-21T21:47:09.054069] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=5d07b9da-2e09-4725-b855-c8fc1309d3b4
+[2026-11-21T21:47:09.054481] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=8e078012-27e6-4875-9b2f-0cd95d1585ad
+[2026-11-21T21:47:09.054683] EVENT SIP op=mediaStream target=6700 state=remote params=video=72 audio=1 id=dokufss380276594b3538227p544k0
+[2026-11-21T21:47:09.054792] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote session dokufss380276594b3538227p544k0 handled: streams=2 event(video=72 audio=1) session(video=142 audio=2)
+[2026-11-21T21:47:09.054856] EVENT MEDIA event=remoteStreamAdded state=video=72 audio=1 sessionId=dokufss380276594b3538227p544k0 sessionStreams=2 sessionVideo=142 sessionAudio=2
+[2026-11-21T21:47:09.059308] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 수신 hasAudio=true hasVideo=true -> 자동 수락
+[2026-11-21T21:47:09.059541] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 응답 전송 accepted=true recvOnlyVideo=true
+[2026-11-21T21:47:09.565934] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transceivers 0:audio:SendRecv/SendRecv 1:video:RecvOnly/RecvOnly 2:video:RecvOnly/RecvOnly
+[2026-11-21T21:47:10.500399] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=9860088 audioPackets=101194 videoBytes=21130
+[2026-11-21T21:47:10.500614] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tiles active=1 inactive=71
+[2026-11-21T21:47:10.627734] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] CONFERENCE participants room=6700 n=2 [이재명 대통령 (1101):A*,AI봇(7001):V]
+[2026-11-21T21:47:12.129532] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] VIDEO resync reason=auto:join localKick=false remoteTiles=1
+[2026-11-21T21:47:12.231718] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=5d07b9da-2e09-4725-b855-c8fc1309d3b4
+[2026-11-21T21:47:15.500184] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=9874860 audioPackets=101444 videoBytes=21130
+[2026-11-21T21:47:20.499680] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=9889610 audioPackets=101694 videoBytes=21130
+[2026-11-21T21:47:20.499863] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP media summary 30s audioKB=91 videoKB=-10 videoTracks=1/1 audioLost=0 ice=RTCIceConnectionStateConnected
+[2026-11-21T21:47:20.499922] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP video summary 30s in=640x360@-fps decodedFrames+-9 keyframes=2 freeze=0 pli=1 nack=0 vLost=0 | out=-@-fps target=0kbps limit=- WARN_VIDEO_FROZEN
+[2026-11-21T21:47:25.500407] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=9904360 audioPackets=101944 videoBytes=21130
+[2026-11-21T21:47:25.500587] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tiles active=0 inactive=72
+[2026-11-21T21:47:30.499869] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=9919110 audioPackets=102194 videoBytes=21130
+[2026-11-21T21:47:35.499175] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=9933860 audioPackets=102444 videoBytes=21130
+[2026-11-21T21:47:40.498852] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=9948610 audioPackets=102694 videoBytes=21130
+[2026-11-21T21:47:41.687278] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 수신 hasAudio=true hasVideo=true -> 자동 수락
+[2026-11-21T21:47:41.687499] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 응답 전송 accepted=true recvOnlyVideo=true
+[2026-11-21T21:47:41.786751] EVENT SIP op=mediaStream target=6700 state=remote params=video=73 audio=1 id=dokufss380276594b3538227p544k0
+[2026-11-21T21:47:41.786926] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote session dokufss380276594b3538227p544k0 handled: streams=1 event(video=73 audio=1) session(video=73 audio=1)
+[2026-11-21T21:47:41.786999] EVENT MEDIA event=remoteStreamAdded state=video=73 audio=1 sessionId=dokufss380276594b3538227p544k0 sessionStreams=1 sessionVideo=73 sessionAudio=1
+[2026-11-21T21:47:41.787662] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=54d16b92-7294-4c65-b42f-6bd20d6b6d4a
+[2026-11-21T21:47:42.192655] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transceivers 0:audio:SendRecv/SendRecv 1:video:RecvOnly/RecvOnly
+[2026-11-21T21:47:45.498391] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=9964483 audioPackets=102944 videoBytes=0
+[2026-11-21T21:47:45.549390] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] CONFERENCE participants room=6700 n=1 [이재명 대통령 (1101):A*]
+[2026-11-21T21:47:47.050712] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] VIDEO resync reason=auto:leave localKick=false remoteTiles=1
+[2026-11-21T21:47:47.153155] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=54d16b92-7294-4c65-b42f-6bd20d6b6d4a
+[2026-11-21T21:47:47.961206] EVENT SIP op=mediaStream target=6700 state=remote params=video=75 audio=1 id=dokufss380276594b3538227p544k0
+[2026-11-21T21:47:47.961417] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote session dokufss380276594b3538227p544k0 handled: streams=2 event(video=75 audio=1) session(video=148 audio=2)
+[2026-11-21T21:47:47.961505] EVENT MEDIA event=remoteStreamAdded state=video=75 audio=1 sessionId=dokufss380276594b3538227p544k0 sessionStreams=2 sessionVideo=148 sessionAudio=2
+[2026-11-21T21:47:47.962206] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=c95c081d-22c0-49e1-be31-d236d07dfd84
+[2026-11-21T21:47:47.962666] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=b677896f-7a34-4d9e-b840-929b91617705
+[2026-11-21T21:47:47.964705] EVENT SIP op=mediaStream target=6700 state=remote params=video=75 audio=1 id=dokufss380276594b3538227p544k0
+[2026-11-21T21:47:47.964849] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote session dokufss380276594b3538227p544k0 handled: streams=2 event(video=75 audio=1) session(video=148 audio=2)
+[2026-11-21T21:47:47.964918] EVENT MEDIA event=remoteStreamAdded state=video=75 audio=1 sessionId=dokufss380276594b3538227p544k0 sessionStreams=2 sessionVideo=148 sessionAudio=2
+[2026-11-21T21:47:47.966931] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 수신 hasAudio=true hasVideo=true -> 자동 수락
+[2026-11-21T21:47:47.967143] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 응답 전송 accepted=true recvOnlyVideo=true
+[2026-11-21T21:47:48.475212] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transceivers 0:audio:SendRecv/SendRecv 1:video:RecvOnly/RecvOnly 2:video:RecvOnly/RecvOnly
+[2026-11-21T21:47:50.498861] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=9983690 audioPackets=103194 videoBytes=21296
+[2026-11-21T21:47:50.499058] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tiles active=1 inactive=74
+[2026-11-21T21:47:50.499129] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP media summary 30s audioKB=92 videoKB=0 videoTracks=1/1 audioLost=0 ice=RTCIceConnectionStateConnected
+[2026-11-21T21:47:50.499162] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP video summary 30s in=640x360@-fps decodedFrames+3 keyframes=1 freeze=0 pli=1 nack=0 vLost=0 | out=-@-fps target=0kbps limit=-
+[2026-11-21T21:47:50.690144] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] CONFERENCE participants room=6700 n=2 [이재명 대통령 (1101):A*,AI봇(7001):V]
+[2026-11-21T21:47:52.191570] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] VIDEO resync reason=auto:join localKick=false remoteTiles=1
+[2026-11-21T21:47:52.294246] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=c95c081d-22c0-49e1-be31-d236d07dfd84
+[2026-11-21T21:47:55.499506] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=9998440 audioPackets=103444 videoBytes=21296
+[2026-11-21T21:48:00.498567] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=10013190 audioPackets=103694 videoBytes=21296
+[2026-11-21T21:48:05.497800] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=10027940 audioPackets=103944 videoBytes=21296
+[2026-11-21T21:48:10.497948] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=10042690 audioPackets=104194 videoBytes=21296
+[2026-11-21T21:48:10.498123] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tiles active=0 inactive=75
+[2026-11-21T21:48:15.587418] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=10057440 audioPackets=104444 videoBytes=21296
+[2026-11-21T21:48:20.588666] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=10072190 audioPackets=104694 videoBytes=21296
+[2026-11-21T21:48:20.588816] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP media summary 30s audioKB=86 videoKB=0 videoTracks=0/1 audioLost=0 ice=RTCIceConnectionStateCompleted
+[2026-11-21T21:48:20.588875] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP video summary 30s in=640x360@-fps decodedFrames+0 keyframes=1 freeze=0 pli=2 nack=0 vLost=0 | out=-@-fps target=0kbps limit=- WARN_VIDEO_FROZEN
+[2026-11-21T21:48:20.892981] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 수신 hasAudio=true hasVideo=true -> 자동 수락
+[2026-11-21T21:48:20.893205] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 응답 전송 accepted=true recvOnlyVideo=true
+[2026-11-21T21:48:20.990944] EVENT SIP op=mediaStream target=6700 state=remote params=video=76 audio=1 id=dokufss380276594b3538227p544k0
+[2026-11-21T21:48:20.991188] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote session dokufss380276594b3538227p544k0 handled: streams=1 event(video=76 audio=1) session(video=76 audio=1)
+[2026-11-21T21:48:20.991273] EVENT MEDIA event=remoteStreamAdded state=video=76 audio=1 sessionId=dokufss380276594b3538227p544k0 sessionStreams=1 sessionVideo=76 sessionAudio=1
+[2026-11-21T21:48:20.992076] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=60bc6f60-51e3-4197-a5d2-76c367009d0e
+[2026-11-21T21:48:21.398234] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transceivers 0:audio:SendRecv/SendRecv 1:video:RecvOnly/RecvOnly
+[2026-11-21T21:48:25.586112] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=10088062 audioPackets=104944 videoBytes=0
+[2026-11-21T21:48:25.611382] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] CONFERENCE participants room=6700 n=1 [이재명 대통령 (1101):A*]
+[2026-11-21T21:48:27.096872] EVENT SIP op=mediaStream target=6700 state=remote params=video=78 audio=1 id=dokufss380276594b3538227p544k0
+[2026-11-21T21:48:27.097055] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote session dokufss380276594b3538227p544k0 handled: streams=2 event(video=78 audio=1) session(video=154 audio=2)
+[2026-11-21T21:48:27.097128] EVENT MEDIA event=remoteStreamAdded state=video=78 audio=1 sessionId=dokufss380276594b3538227p544k0 sessionStreams=2 sessionVideo=154 sessionAudio=2
+[2026-11-21T21:48:27.097198] EVENT SIP op=mediaStream target=6700 state=remote params=video=78 audio=1 id=dokufss380276594b3538227p544k0
+[2026-11-21T21:48:27.097255] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote session dokufss380276594b3538227p544k0 handled: streams=2 event(video=78 audio=1) session(video=154 audio=2)
+[2026-11-21T21:48:27.097290] EVENT MEDIA event=remoteStreamAdded state=video=78 audio=1 sessionId=dokufss380276594b3538227p544k0 sessionStreams=2 sessionVideo=154 sessionAudio=2
+[2026-11-21T21:48:27.098669] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 수신 hasAudio=true hasVideo=true -> 자동 수락
+[2026-11-21T21:48:27.098879] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 응답 전송 accepted=true recvOnlyVideo=true
+[2026-11-21T21:48:27.099171] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=9217c394-463e-446e-816d-a26ad52096d3
+[2026-11-21T21:48:27.099589] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=362e5db2-10a3-4610-ad75-4c342fa116d3
+[2026-11-21T21:48:27.112186] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] VIDEO resync reason=auto:leave localKick=false remoteTiles=3
+[2026-11-21T21:48:27.214852] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=60bc6f60-51e3-4197-a5d2-76c367009d0e
+[2026-11-21T21:48:27.215397] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=9217c394-463e-446e-816d-a26ad52096d3
+[2026-11-21T21:48:27.215864] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=362e5db2-10a3-4610-ad75-4c342fa116d3
+[2026-11-21T21:48:27.606286] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transceivers 0:audio:SendRecv/SendRecv 1:video:RecvOnly/RecvOnly 2:video:RecvOnly/RecvOnly
+[2026-11-21T21:48:30.587850] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=10107387 audioPackets=105194 videoBytes=20395
+[2026-11-21T21:48:30.588045] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tiles active=1 inactive=77
+[2026-11-21T21:48:30.685555] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] CONFERENCE participants room=6700 n=2 [이재명 대통령 (1101):A*,AI봇(7001):V]
+[2026-11-21T21:48:32.187414] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] VIDEO resync reason=auto:join localKick=false remoteTiles=1
+[2026-11-21T21:48:32.290370] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=9217c394-463e-446e-816d-a26ad52096d3
+[2026-11-21T21:48:35.587134] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=10122137 audioPackets=105444 videoBytes=20395
+[2026-11-21T21:48:40.586819] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=10136969 audioPackets=105694 videoBytes=20395
+[2026-11-21T21:48:45.586646] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=10151719 audioPackets=105944 videoBytes=20395
+[2026-11-21T21:48:50.585991] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=10166469 audioPackets=106194 videoBytes=20395
+[2026-11-21T21:48:50.586205] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tiles active=0 inactive=78
+[2026-11-21T21:48:50.586285] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP media summary 30s audioKB=92 videoKB=-1 videoTracks=0/1 audioLost=0 ice=RTCIceConnectionStateCompleted
+[2026-11-21T21:48:50.586318] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP video summary 30s in=640x360@-fps decodedFrames+-2 keyframes=1 freeze=0 pli=2 nack=0 vLost=0 | out=-@-fps target=0kbps limit=- WARN_VIDEO_FROZEN
+[2026-11-21T21:48:55.585279] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=10181219 audioPackets=106444 videoBytes=20395
+[2026-11-21T21:48:59.881531] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 수신 hasAudio=true hasVideo=true -> 자동 수락
+[2026-11-21T21:48:59.881743] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 응답 전송 accepted=true recvOnlyVideo=true
+[2026-11-21T21:48:59.980921] EVENT SIP op=mediaStream target=6700 state=remote params=video=79 audio=1 id=dokufss380276594b3538227p544k0
+[2026-11-21T21:48:59.981094] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote session dokufss380276594b3538227p544k0 handled: streams=1 event(video=79 audio=1) session(video=79 audio=1)
+[2026-11-21T21:48:59.981166] EVENT MEDIA event=remoteStreamAdded state=video=79 audio=1 sessionId=dokufss380276594b3538227p544k0 sessionStreams=1 sessionVideo=79 sessionAudio=1
+[2026-11-21T21:48:59.981863] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=c90387a0-4b63-4927-9305-f3a2033d8f6c
+[2026-11-21T21:49:00.388763] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transceivers 0:audio:SendRecv/SendRecv 1:video:RecvOnly/RecvOnly
+[2026-11-21T21:49:00.585269] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=10197094 audioPackets=106694 videoBytes=0
+[2026-11-21T21:49:00.611230] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] CONFERENCE participants room=6700 n=1 [이재명 대통령 (1101):A*]
+[2026-11-21T21:49:02.111580] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] VIDEO resync reason=auto:leave localKick=false remoteTiles=1
+[2026-11-21T21:49:02.214556] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=c90387a0-4b63-4927-9305-f3a2033d8f6c
+[2026-11-21T21:49:05.585872] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=10211844 audioPackets=106944 videoBytes=0
+[2026-11-21T21:49:06.341651] EVENT SIP op=mediaStream target=6700 state=remote params=video=81 audio=1 id=dokufss380276594b3538227p544k0
+[2026-11-21T21:49:06.341875] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote session dokufss380276594b3538227p544k0 handled: streams=2 event(video=81 audio=1) session(video=160 audio=2)
+[2026-11-21T21:49:06.341974] EVENT MEDIA event=remoteStreamAdded state=video=81 audio=1 sessionId=dokufss380276594b3538227p544k0 sessionStreams=2 sessionVideo=160 sessionAudio=2
+[2026-11-21T21:49:06.342513] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=7b66eb1d-0ac7-4af7-b3aa-e9d0a364efed
+[2026-11-21T21:49:06.342937] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=1a289530-5809-48d0-9b27-8d3dd8766f74
+[2026-11-21T21:49:06.345540] EVENT SIP op=mediaStream target=6700 state=remote params=video=81 audio=1 id=dokufss380276594b3538227p544k0
+[2026-11-21T21:49:06.345691] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote session dokufss380276594b3538227p544k0 handled: streams=2 event(video=81 audio=1) session(video=160 audio=2)
+[2026-11-21T21:49:06.345813] EVENT MEDIA event=remoteStreamAdded state=video=81 audio=1 sessionId=dokufss380276594b3538227p544k0 sessionStreams=2 sessionVideo=160 sessionAudio=2
+[2026-11-21T21:49:06.347776] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 수신 hasAudio=true hasVideo=true -> 자동 수락
+[2026-11-21T21:49:06.347966] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 응답 전송 accepted=true recvOnlyVideo=true
+[2026-11-21T21:49:06.854113] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transceivers 0:audio:SendRecv/SendRecv 1:video:RecvOnly/RecvOnly 2:video:RecvOnly/RecvOnly
+[2026-11-21T21:49:10.585030] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=10227644 audioPackets=107194 videoBytes=5977
+[2026-11-21T21:49:10.585226] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tiles active=1 inactive=80
+[2026-11-21T21:49:10.708144] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] CONFERENCE participants room=6700 n=2 [이재명 대통령 (1101):A*,AI봇(7001):V]
+[2026-11-21T21:49:12.210132] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] VIDEO resync reason=auto:join localKick=false remoteTiles=1
+[2026-11-21T21:49:12.312208] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=7b66eb1d-0ac7-4af7-b3aa-e9d0a364efed
+[2026-11-21T21:49:15.591641] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=10242335 audioPackets=107443 videoBytes=5977
+[2026-11-21T21:49:20.585404] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=10257144 audioPackets=107694 videoBytes=5977
+[2026-11-21T21:49:20.585584] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP media summary 30s audioKB=89 videoKB=-14 videoTracks=1/1 audioLost=0 ice=RTCIceConnectionStateConnected
+[2026-11-21T21:49:20.585635] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP video summary 30s in=640x360@-fps decodedFrames+-18 keyframes=1 freeze=0 pli=2 nack=0 vLost=1 | out=-@-fps target=0kbps limit=- WARN_VIDEO_FROZEN
+[2026-11-21T21:49:25.584378] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=10271894 audioPackets=107944 videoBytes=5977
+[2026-11-21T21:49:30.585601] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=10286644 audioPackets=108194 videoBytes=5977
+[2026-11-21T21:49:30.585782] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tiles active=0 inactive=81
+[2026-11-21T21:49:35.584979] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=10301394 audioPackets=108444 videoBytes=5977
+[2026-11-21T21:49:38.758933] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 수신 hasAudio=true hasVideo=true -> 자동 수락
+[2026-11-21T21:49:38.759147] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 응답 전송 accepted=true recvOnlyVideo=true
+[2026-11-21T21:49:38.864029] EVENT SIP op=mediaStream target=6700 state=remote params=video=82 audio=1 id=dokufss380276594b3538227p544k0
+[2026-11-21T21:49:38.864214] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote session dokufss380276594b3538227p544k0 handled: streams=1 event(video=82 audio=1) session(video=82 audio=1)
+[2026-11-21T21:49:38.864291] EVENT MEDIA event=remoteStreamAdded state=video=82 audio=1 sessionId=dokufss380276594b3538227p544k0 sessionStreams=1 sessionVideo=82 sessionAudio=1
+[2026-11-21T21:49:38.875347] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=fdfe2e4e-3052-49b5-8c4d-008af6008a55
+[2026-11-21T21:49:39.263889] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transceivers 0:audio:SendRecv/SendRecv 1:video:RecvOnly/RecvOnly
+[2026-11-21T21:49:40.583738] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=10317266 audioPackets=108694 videoBytes=0
+[2026-11-21T21:49:40.604716] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] CONFERENCE participants room=6700 n=1 [이재명 대통령 (1101):A*]
+[2026-11-21T21:49:42.106256] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] VIDEO resync reason=auto:leave localKick=false remoteTiles=1
+[2026-11-21T21:49:42.208479] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=fdfe2e4e-3052-49b5-8c4d-008af6008a55
+[2026-11-21T21:49:44.904744] EVENT SIP op=mediaStream target=6700 state=remote params=video=84 audio=1 id=dokufss380276594b3538227p544k0
+[2026-11-21T21:49:44.904963] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote session dokufss380276594b3538227p544k0 handled: streams=2 event(video=84 audio=1) session(video=166 audio=2)
+[2026-11-21T21:49:44.905060] EVENT MEDIA event=remoteStreamAdded state=video=84 audio=1 sessionId=dokufss380276594b3538227p544k0 sessionStreams=2 sessionVideo=166 sessionAudio=2
+[2026-11-21T21:49:44.905687] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=146f2468-d740-46d6-a516-a779cb5a9f0e
+[2026-11-21T21:49:44.906064] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=544dbd0b-db19-44c5-96fa-fb4fc1f948b7
+[2026-11-21T21:49:44.907437] EVENT SIP op=mediaStream target=6700 state=remote params=video=84 audio=1 id=dokufss380276594b3538227p544k0
+[2026-11-21T21:49:44.907589] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote session dokufss380276594b3538227p544k0 handled: streams=2 event(video=84 audio=1) session(video=166 audio=2)
+[2026-11-21T21:49:44.907658] EVENT MEDIA event=remoteStreamAdded state=video=84 audio=1 sessionId=dokufss380276594b3538227p544k0 sessionStreams=2 sessionVideo=166 sessionAudio=2
+[2026-11-21T21:49:44.909360] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 수신 hasAudio=true hasVideo=true -> 자동 수락
+[2026-11-21T21:49:44.909579] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 응답 전송 accepted=true recvOnlyVideo=true
+[2026-11-21T21:49:45.418039] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transceivers 0:audio:SendRecv/SendRecv 1:video:RecvOnly/RecvOnly 2:video:RecvOnly/RecvOnly
+[2026-11-21T21:49:45.584721] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=10334130 audioPackets=108944 videoBytes=7498
+[2026-11-21T21:49:45.584932] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tiles active=1 inactive=83
+[2026-11-21T21:49:45.707042] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] CONFERENCE participants room=6700 n=2 [이재명 대통령 (1101):A*,AI봇(7001):V]
+[2026-11-21T21:49:47.208493] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] VIDEO resync reason=auto:join localKick=false remoteTiles=1
+[2026-11-21T21:49:47.311377] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=146f2468-d740-46d6-a516-a779cb5a9f0e
+[2026-11-21T21:49:50.584371] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=10351223 audioPackets=109194 videoBytes=16367
+[2026-11-21T21:49:50.584568] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP media summary 30s audioKB=92 videoKB=10 videoTracks=1/1 audioLost=0 ice=RTCIceConnectionStateConnected
+[2026-11-21T21:49:50.584639] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP video summary 30s in=640x360@-fps decodedFrames+14 keyframes=1 freeze=0 pli=2 nack=0 vLost=0 | out=-@-fps target=0kbps limit=-
+[2026-11-21T21:49:55.583856] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=10365973 audioPackets=109444 videoBytes=16367
+[2026-11-21T21:50:00.584368] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=10380723 audioPackets=109694 videoBytes=16367
+[2026-11-21T21:50:05.583728] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=10395473 audioPackets=109944 videoBytes=16367
+[2026-11-21T21:50:10.583181] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=10410223 audioPackets=110194 videoBytes=16367
+[2026-11-21T21:50:10.583391] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tiles active=0 inactive=84
+[2026-11-21T21:50:15.582837] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=10424973 audioPackets=110444 videoBytes=16367
+[2026-11-21T21:50:17.660313] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 수신 hasAudio=true hasVideo=true -> 자동 수락
+[2026-11-21T21:50:17.660623] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 응답 전송 accepted=true recvOnlyVideo=true
+[2026-11-21T21:50:17.757848] EVENT SIP op=mediaStream target=6700 state=remote params=video=85 audio=1 id=dokufss380276594b3538227p544k0
+[2026-11-21T21:50:17.758047] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote session dokufss380276594b3538227p544k0 handled: streams=1 event(video=85 audio=1) session(video=85 audio=1)
+[2026-11-21T21:50:17.758136] EVENT MEDIA event=remoteStreamAdded state=video=85 audio=1 sessionId=dokufss380276594b3538227p544k0 sessionStreams=1 sessionVideo=85 sessionAudio=1
+[2026-11-21T21:50:17.759018] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=952b842b-aa5d-4b2e-bc4c-611137df1518
+[2026-11-21T21:50:18.165179] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transceivers 0:audio:SendRecv/SendRecv 1:video:RecvOnly/RecvOnly
+[2026-11-21T21:50:18.356514] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] 원격 로그 즉시전송 요청
+[2026-11-21T21:50:20.581902] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=10440845 audioPackets=110694 videoBytes=0
+[2026-11-21T21:50:20.582046] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP media summary 30s audioKB=88 videoKB=-16 videoTracks=0/0 audioLost=0 ice=RTCIceConnectionStateCompleted
+[2026-11-21T21:50:20.582092] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP video summary 30s in=-@-fps decodedFrames+-21 keyframes=0 freeze=0 pli=0 nack=0 vLost=0 | out=-@-fps target=0kbps limit=-
+[2026-11-21T21:50:20.600048] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] CONFERENCE participants room=6700 n=1 [이재명 대통령 (1101):A*]
+[2026-11-21T21:50:22.101034] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] VIDEO resync reason=auto:leave localKick=false remoteTiles=1
+[2026-11-21T21:50:22.203259] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=952b842b-aa5d-4b2e-bc4c-611137df1518
+[2026-11-21T21:50:24.042042] EVENT SIP op=mediaStream target=6700 state=remote params=video=87 audio=1 id=dokufss380276594b3538227p544k0
+[2026-11-21T21:50:24.042249] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote session dokufss380276594b3538227p544k0 handled: streams=2 event(video=87 audio=1) session(video=172 audio=2)
+[2026-11-21T21:50:24.042329] EVENT MEDIA event=remoteStreamAdded state=video=87 audio=1 sessionId=dokufss380276594b3538227p544k0 sessionStreams=2 sessionVideo=172 sessionAudio=2
+[2026-11-21T21:50:24.043143] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=9040250e-e477-41c0-a772-671f95386fe7
+[2026-11-21T21:50:24.043807] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=8b7d362b-91b3-4bfa-8631-8064c43f1076
+[2026-11-21T21:50:24.044590] EVENT SIP op=mediaStream target=6700 state=remote params=video=87 audio=1 id=dokufss380276594b3538227p544k0
+[2026-11-21T21:50:24.044804] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote session dokufss380276594b3538227p544k0 handled: streams=2 event(video=87 audio=1) session(video=172 audio=2)
+[2026-11-21T21:50:24.044933] EVENT MEDIA event=remoteStreamAdded state=video=87 audio=1 sessionId=dokufss380276594b3538227p544k0 sessionStreams=2 sessionVideo=172 sessionAudio=2
+[2026-11-21T21:50:24.047753] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 수신 hasAudio=true hasVideo=true -> 자동 수락
+[2026-11-21T21:50:24.047985] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 응답 전송 accepted=true recvOnlyVideo=true
+[2026-11-21T21:50:24.555711] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transceivers 0:audio:SendRecv/SendRecv 1:video:RecvOnly/RecvOnly 2:video:RecvOnly/RecvOnly
+[2026-11-21T21:50:25.582476] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=10459490 audioPackets=110944 videoBytes=16736
+[2026-11-21T21:50:25.582676] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tiles active=1 inactive=86
+[2026-11-21T21:50:25.730947] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] CONFERENCE participants room=6700 n=2 [이재명 대통령 (1101):A*,AI봇(7001):V]
+[2026-11-21T21:50:27.232676] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] VIDEO resync reason=auto:join localKick=false remoteTiles=1
+[2026-11-21T21:50:27.335021] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=9040250e-e477-41c0-a772-671f95386fe7
+[2026-11-21T21:50:30.583392] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=10474240 audioPackets=111194 videoBytes=16736
+[2026-11-21T21:50:35.581846] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=10489182 audioPackets=111444 videoBytes=16736
+[2026-11-21T21:50:40.582116] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=10503932 audioPackets=111694 videoBytes=16736
+[2026-11-21T21:50:45.581835] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=10518682 audioPackets=111944 videoBytes=16736
+[2026-11-21T21:50:45.582022] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tiles active=0 inactive=87
+[2026-11-21T21:50:50.581319] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=10533432 audioPackets=112194 videoBytes=16736
+[2026-11-21T21:50:50.581484] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP media summary 30s audioKB=90 videoKB=16 videoTracks=0/1 audioLost=0 ice=RTCIceConnectionStateCompleted
+[2026-11-21T21:50:50.581532] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP video summary 30s in=640x360@-fps decodedFrames+24 keyframes=1 freeze=0 pli=1 nack=0 vLost=0 | out=-@-fps target=0kbps limit=-
+[2026-11-21T21:50:55.581053] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=10548182 audioPackets=112444 videoBytes=16736
+[2026-11-21T21:50:56.664567] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 수신 hasAudio=true hasVideo=true -> 자동 수락
+[2026-11-21T21:50:56.664778] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 응답 전송 accepted=true recvOnlyVideo=true
+[2026-11-21T21:50:56.763583] EVENT SIP op=mediaStream target=6700 state=remote params=video=88 audio=1 id=dokufss380276594b3538227p544k0
+[2026-11-21T21:50:56.763761] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote session dokufss380276594b3538227p544k0 handled: streams=1 event(video=88 audio=1) session(video=88 audio=1)
+[2026-11-21T21:50:56.763839] EVENT MEDIA event=remoteStreamAdded state=video=88 audio=1 sessionId=dokufss380276594b3538227p544k0 sessionStreams=1 sessionVideo=88 sessionAudio=1
+[2026-11-21T21:50:56.764648] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=00093e50-f8fa-41cd-85c4-0a85ff63a50f
+[2026-11-21T21:50:57.171286] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transceivers 0:audio:SendRecv/SendRecv 1:video:RecvOnly/RecvOnly
+[2026-11-21T21:51:00.580741] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=10564055 audioPackets=112694 videoBytes=0
+[2026-11-21T21:51:00.630447] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] CONFERENCE participants room=6700 n=1 [이재명 대통령 (1101):A*]
+[2026-11-21T21:51:02.131574] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] VIDEO resync reason=auto:leave localKick=false remoteTiles=1
+[2026-11-21T21:51:02.234206] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=00093e50-f8fa-41cd-85c4-0a85ff63a50f
+[2026-11-21T21:51:03.140296] EVENT SIP op=mediaStream target=6700 state=remote params=video=90 audio=1 id=dokufss380276594b3538227p544k0
+[2026-11-21T21:51:03.140487] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote session dokufss380276594b3538227p544k0 handled: streams=2 event(video=90 audio=1) session(video=178 audio=2)
+[2026-11-21T21:51:03.140560] EVENT MEDIA event=remoteStreamAdded state=video=90 audio=1 sessionId=dokufss380276594b3538227p544k0 sessionStreams=2 sessionVideo=178 sessionAudio=2
+[2026-11-21T21:51:03.141107] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=93889614-90a6-4610-b92d-da9e159bd02c
+[2026-11-21T21:51:03.141555] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=5f2aa72e-eb4d-4b2c-a4cf-39ca574e2955
+[2026-11-21T21:51:03.142968] EVENT SIP op=mediaStream target=6700 state=remote params=video=90 audio=1 id=dokufss380276594b3538227p544k0
+[2026-11-21T21:51:03.143093] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote session dokufss380276594b3538227p544k0 handled: streams=2 event(video=90 audio=1) session(video=178 audio=2)
+[2026-11-21T21:51:03.143153] EVENT MEDIA event=remoteStreamAdded state=video=90 audio=1 sessionId=dokufss380276594b3538227p544k0 sessionStreams=2 sessionVideo=178 sessionAudio=2
+[2026-11-21T21:51:03.144742] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 수신 hasAudio=true hasVideo=true -> 자동 수락
+[2026-11-21T21:51:03.144900] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 응답 전송 accepted=true recvOnlyVideo=true
+[2026-11-21T21:51:03.652059] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transceivers 0:audio:SendRecv/SendRecv 1:video:RecvOnly/RecvOnly 2:video:RecvOnly/RecvOnly
+[2026-11-21T21:51:05.582463] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=10582469 audioPackets=112944 videoBytes=16451
+[2026-11-21T21:51:05.582802] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tiles active=1 inactive=89
+[2026-11-21T21:51:05.696214] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] CONFERENCE participants room=6700 n=2 [이재명 대통령 (1101):A*,AI봇(7001):V]
+[2026-11-21T21:51:07.197525] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] VIDEO resync reason=auto:join localKick=false remoteTiles=1
+[2026-11-21T21:51:07.300205] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=93889614-90a6-4610-b92d-da9e159bd02c
+[2026-11-21T21:51:10.581478] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=10597219 audioPackets=113194 videoBytes=16451
+[2026-11-21T21:51:15.580822] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=10612076 audioPackets=113444 videoBytes=16451
+[2026-11-21T21:51:20.580388] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=10626826 audioPackets=113694 videoBytes=16451
+[2026-11-21T21:51:20.580590] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP media summary 30s audioKB=91 videoKB=-0 videoTracks=1/1 audioLost=0 ice=RTCIceConnectionStateCompleted
+[2026-11-21T21:51:20.580648] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP video summary 30s in=640x360@-fps decodedFrames+-2 keyframes=1 freeze=0 pli=2 nack=0 vLost=0 | out=-@-fps target=0kbps limit=- WARN_VIDEO_FROZEN
+[2026-11-21T21:51:25.579883] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=10641576 audioPackets=113944 videoBytes=16451
+[2026-11-21T21:51:25.580061] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tiles active=0 inactive=90
+[2026-11-21T21:51:30.581296] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=10656326 audioPackets=114194 videoBytes=16451
+[2026-11-21T21:51:35.580830] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=10671076 audioPackets=114444 videoBytes=16451
+[2026-11-21T21:51:35.703798] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 수신 hasAudio=true hasVideo=true -> 자동 수락
+[2026-11-21T21:51:35.704016] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 응답 전송 accepted=true recvOnlyVideo=true
+[2026-11-21T21:51:35.758954] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] CONFERENCE participants room=6700 n=2 [이재명 대통령 (1101):A*,AI봇(7001):A]
+[2026-11-21T21:51:35.801786] EVENT SIP op=mediaStream target=6700 state=remote params=video=91 audio=1 id=dokufss380276594b3538227p544k0
+[2026-11-21T21:51:35.802001] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote session dokufss380276594b3538227p544k0 handled: streams=1 event(video=91 audio=1) session(video=91 audio=1)
+[2026-11-21T21:51:35.802105] EVENT MEDIA event=remoteStreamAdded state=video=91 audio=1 sessionId=dokufss380276594b3538227p544k0 sessionStreams=1 sessionVideo=91 sessionAudio=1
+[2026-11-21T21:51:35.802888] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=aeb77870-5cf1-4c59-8ee0-b8282fccf380
+[2026-11-21T21:51:36.208495] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transceivers 0:audio:SendRecv/SendRecv 1:video:RecvOnly/RecvOnly
+[2026-11-21T21:51:40.579500] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=10686947 audioPackets=114694 videoBytes=0
+[2026-11-21T21:51:40.610371] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] CONFERENCE participants room=6700 n=1 [이재명 대통령 (1101):A*]
+[2026-11-21T21:51:42.112778] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] VIDEO resync reason=auto:leave localKick=false remoteTiles=1
+[2026-11-21T21:51:42.165543] EVENT SIP op=mediaStream target=6700 state=remote params=video=93 audio=1 id=dokufss380276594b3538227p544k0
+[2026-11-21T21:51:42.165768] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote session dokufss380276594b3538227p544k0 handled: streams=2 event(video=93 audio=1) session(video=184 audio=2)
+[2026-11-21T21:51:42.165857] EVENT MEDIA event=remoteStreamAdded state=video=93 audio=1 sessionId=dokufss380276594b3538227p544k0 sessionStreams=2 sessionVideo=184 sessionAudio=2
+[2026-11-21T21:51:42.166747] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=aeb77870-5cf1-4c59-8ee0-b8282fccf380
+[2026-11-21T21:51:42.167230] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=030ea1e0-497d-4967-95dc-ac7cfb13f192
+[2026-11-21T21:51:42.167637] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=a2df90c5-b533-41b5-9f66-6a8e736caf02
+[2026-11-21T21:51:42.168214] EVENT SIP op=mediaStream target=6700 state=remote params=video=93 audio=1 id=dokufss380276594b3538227p544k0
+[2026-11-21T21:51:42.168384] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote session dokufss380276594b3538227p544k0 handled: streams=2 event(video=93 audio=1) session(video=184 audio=2)
+[2026-11-21T21:51:42.168454] EVENT MEDIA event=remoteStreamAdded state=video=93 audio=1 sessionId=dokufss380276594b3538227p544k0 sessionStreams=2 sessionVideo=184 sessionAudio=2
+[2026-11-21T21:51:42.170958] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 수신 hasAudio=true hasVideo=true -> 자동 수락
+[2026-11-21T21:51:42.171151] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 응답 전송 accepted=true recvOnlyVideo=true
+[2026-11-21T21:51:42.678760] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transceivers 0:audio:SendRecv/SendRecv 1:video:RecvOnly/RecvOnly 2:video:RecvOnly/RecvOnly
+[2026-11-21T21:51:45.579434] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=10705581 audioPackets=114943 videoBytes=15478
+[2026-11-21T21:51:45.579635] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tiles active=1 inactive=92
+[2026-11-21T21:51:45.689471] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] CONFERENCE participants room=6700 n=2 [이재명 대통령 (1101):A*,AI봇(7001):V]
+[2026-11-21T21:51:47.190762] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] VIDEO resync reason=auto:join localKick=false remoteTiles=1
+[2026-11-21T21:51:47.293826] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=030ea1e0-497d-4967-95dc-ac7cfb13f192
+[2026-11-21T21:51:50.578977] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=10720526 audioPackets=115193 videoBytes=15478
+[2026-11-21T21:51:50.579188] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP media summary 30s audioKB=92 videoKB=-1 videoTracks=1/1 audioLost=0 ice=RTCIceConnectionStateConnected
+[2026-11-21T21:51:50.579251] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP video summary 30s in=640x360@-fps decodedFrames+-3 keyframes=1 freeze=0 pli=2 nack=0 vLost=0 | out=-@-fps target=0kbps limit=- WARN_VIDEO_FROZEN
+[2026-11-21T21:51:55.579640] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=10735276 audioPackets=115443 videoBytes=15478
+[2026-11-21T21:52:00.579220] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=10750026 audioPackets=115693 videoBytes=15478
+[2026-11-21T21:52:05.579596] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=10764776 audioPackets=115943 videoBytes=15478
+[2026-11-21T21:52:05.579781] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tiles active=0 inactive=93
+[2026-11-21T21:52:10.578938] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=10779526 audioPackets=116193 videoBytes=15478
+[2026-11-21T21:52:14.781638] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 수신 hasAudio=true hasVideo=true -> 자동 수락
+[2026-11-21T21:52:14.781893] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 응답 전송 accepted=true recvOnlyVideo=true
+[2026-11-21T21:52:14.879240] EVENT SIP op=mediaStream target=6700 state=remote params=video=94 audio=1 id=dokufss380276594b3538227p544k0
+[2026-11-21T21:52:14.879427] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote session dokufss380276594b3538227p544k0 handled: streams=1 event(video=94 audio=1) session(video=94 audio=1)
+[2026-11-21T21:52:14.879509] EVENT MEDIA event=remoteStreamAdded state=video=94 audio=1 sessionId=dokufss380276594b3538227p544k0 sessionStreams=1 sessionVideo=94 sessionAudio=1
+[2026-11-21T21:52:14.880366] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=723a3253-2ebb-4833-9361-f74380680c71
+[2026-11-21T21:52:15.287372] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transceivers 0:audio:SendRecv/SendRecv 1:video:RecvOnly/RecvOnly
+[2026-11-21T21:52:15.578592] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=10795400 audioPackets=116443 videoBytes=0
+[2026-11-21T21:52:15.606531] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] CONFERENCE participants room=6700 n=1 [이재명 대통령 (1101):A*]
+[2026-11-21T21:52:17.107252] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] VIDEO resync reason=auto:leave localKick=false remoteTiles=1
+[2026-11-21T21:52:17.209395] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=723a3253-2ebb-4833-9361-f74380680c71
+[2026-11-21T21:52:20.577991] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=10810150 audioPackets=116693 videoBytes=0
+[2026-11-21T21:52:20.578128] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP media summary 30s audioKB=88 videoKB=-15 videoTracks=0/0 audioLost=0 ice=RTCIceConnectionStateCompleted
+[2026-11-21T21:52:20.578172] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP video summary 30s in=-@-fps decodedFrames+-19 keyframes=0 freeze=0 pli=0 nack=0 vLost=0 | out=-@-fps target=0kbps limit=-
+[2026-11-21T21:52:21.442632] EVENT SIP op=mediaStream target=6700 state=remote params=video=96 audio=1 id=dokufss380276594b3538227p544k0
+[2026-11-21T21:52:21.442883] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote session dokufss380276594b3538227p544k0 handled: streams=2 event(video=96 audio=1) session(video=190 audio=2)
+[2026-11-21T21:52:21.442970] EVENT MEDIA event=remoteStreamAdded state=video=96 audio=1 sessionId=dokufss380276594b3538227p544k0 sessionStreams=2 sessionVideo=190 sessionAudio=2
+[2026-11-21T21:52:21.443708] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=2ebe8426-67a2-4cb1-aad7-21fcb64e2608
+[2026-11-21T21:52:21.444212] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=6f3ad410-ae3d-4b35-8900-079227edf54e
+[2026-11-21T21:52:21.445357] EVENT SIP op=mediaStream target=6700 state=remote params=video=96 audio=1 id=dokufss380276594b3538227p544k0
+[2026-11-21T21:52:21.445527] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote session dokufss380276594b3538227p544k0 handled: streams=2 event(video=96 audio=1) session(video=190 audio=2)
+[2026-11-21T21:52:21.445609] EVENT MEDIA event=remoteStreamAdded state=video=96 audio=1 sessionId=dokufss380276594b3538227p544k0 sessionStreams=2 sessionVideo=190 sessionAudio=2
+[2026-11-21T21:52:21.449561] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 수신 hasAudio=true hasVideo=true -> 자동 수락
+[2026-11-21T21:52:21.449864] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 응답 전송 accepted=true recvOnlyVideo=true
+[2026-11-21T21:52:21.957281] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transceivers 0:audio:SendRecv/SendRecv 1:video:RecvOnly/RecvOnly 2:video:RecvOnly/RecvOnly
+[2026-11-21T21:52:25.577681] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=10828026 audioPackets=116943 videoBytes=20394
+[2026-11-21T21:52:25.577884] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tiles active=1 inactive=95
+[2026-11-21T21:52:25.690306] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] CONFERENCE participants room=6700 n=2 [이재명 대통령 (1101):A*,AI봇(7001):V]
+[2026-11-21T21:52:27.191835] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] VIDEO resync reason=auto:join localKick=false remoteTiles=1
+[2026-11-21T21:52:27.294237] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=2ebe8426-67a2-4cb1-aad7-21fcb64e2608
+[2026-11-21T21:52:30.577843] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=10843073 audioPackets=117193 videoBytes=20394
+[2026-11-21T21:52:35.578778] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=10857823 audioPackets=117443 videoBytes=20394
+[2026-11-21T21:52:40.578430] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=10872573 audioPackets=117693 videoBytes=20394
+[2026-11-21T21:52:40.578676] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tiles active=0 inactive=96
+[2026-11-21T21:52:45.577248] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=10887323 audioPackets=117943 videoBytes=20394
+[2026-11-21T21:52:50.577027] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=10902073 audioPackets=118193 videoBytes=20394
+[2026-11-21T21:52:50.577198] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP media summary 30s audioKB=90 videoKB=20 videoTracks=0/1 audioLost=0 ice=RTCIceConnectionStateCompleted
+[2026-11-21T21:52:50.577248] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP video summary 30s in=960x540@-fps decodedFrames+19 keyframes=1 freeze=0 pli=2 nack=0 vLost=0 | out=-@-fps target=0kbps limit=-
+[2026-11-21T21:52:53.809916] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 수신 hasAudio=true hasVideo=true -> 자동 수락
+[2026-11-21T21:52:53.810158] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 응답 전송 accepted=true recvOnlyVideo=true
+[2026-11-21T21:52:53.908244] EVENT SIP op=mediaStream target=6700 state=remote params=video=97 audio=1 id=dokufss380276594b3538227p544k0
+[2026-11-21T21:52:53.908442] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote session dokufss380276594b3538227p544k0 handled: streams=1 event(video=97 audio=1) session(video=97 audio=1)
+[2026-11-21T21:52:53.908520] EVENT MEDIA event=remoteStreamAdded state=video=97 audio=1 sessionId=dokufss380276594b3538227p544k0 sessionStreams=1 sessionVideo=97 sessionAudio=1
+[2026-11-21T21:52:53.909348] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=a18cf809-dd63-48e4-b097-20edd2148f74
+[2026-11-21T21:52:54.315946] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transceivers 0:audio:SendRecv/SendRecv 1:video:RecvOnly/RecvOnly
+[2026-11-21T21:52:55.576233] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=10917939 audioPackets=118443 videoBytes=0
+[2026-11-21T21:52:55.612496] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] CONFERENCE participants room=6700 n=1 [이재명 대통령 (1101):A*]
+[2026-11-21T21:52:57.113972] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] VIDEO resync reason=auto:leave localKick=false remoteTiles=1
+[2026-11-21T21:52:57.216421] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=a18cf809-dd63-48e4-b097-20edd2148f74
+[2026-11-21T21:53:00.368476] EVENT SIP op=mediaStream target=6700 state=remote params=video=99 audio=1 id=dokufss380276594b3538227p544k0
+[2026-11-21T21:53:00.368663] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote session dokufss380276594b3538227p544k0 handled: streams=2 event(video=99 audio=1) session(video=196 audio=2)
+[2026-11-21T21:53:00.368752] EVENT MEDIA event=remoteStreamAdded state=video=99 audio=1 sessionId=dokufss380276594b3538227p544k0 sessionStreams=2 sessionVideo=196 sessionAudio=2
+[2026-11-21T21:53:00.369298] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=9762f6fb-e2ad-4705-852b-15b42f5ffa9f
+[2026-11-21T21:53:00.369813] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=9933b6bf-b445-4b0d-86f1-15cba8267770
+[2026-11-21T21:53:00.371078] EVENT SIP op=mediaStream target=6700 state=remote params=video=99 audio=1 id=dokufss380276594b3538227p544k0
+[2026-11-21T21:53:00.371253] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote session dokufss380276594b3538227p544k0 handled: streams=2 event(video=99 audio=1) session(video=196 audio=2)
+[2026-11-21T21:53:00.371329] EVENT MEDIA event=remoteStreamAdded state=video=99 audio=1 sessionId=dokufss380276594b3538227p544k0 sessionStreams=2 sessionVideo=196 sessionAudio=2
+[2026-11-21T21:53:00.375976] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 수신 hasAudio=true hasVideo=true -> 자동 수락
+[2026-11-21T21:53:00.377048] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 응답 전송 accepted=true recvOnlyVideo=true
+[2026-11-21T21:53:00.576913] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=10933826 audioPackets=118693 videoBytes=5770
+[2026-11-21T21:53:00.577143] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tiles active=1 inactive=98
+[2026-11-21T21:53:00.721106] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] CONFERENCE participants room=6700 n=2 [이재명 대통령 (1101):A*,AI봇(7001):V]
+[2026-11-21T21:53:00.884034] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transceivers 0:audio:SendRecv/SendRecv 1:video:RecvOnly/RecvOnly 2:video:RecvOnly/RecvOnly
+[2026-11-21T21:53:02.221674] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] VIDEO resync reason=auto:join localKick=false remoteTiles=1
+[2026-11-21T21:53:02.323739] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=9762f6fb-e2ad-4705-852b-15b42f5ffa9f
+[2026-11-21T21:53:05.577502] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=10950752 audioPackets=118943 videoBytes=20207
+[2026-11-21T21:53:10.577222] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=10965502 audioPackets=119193 videoBytes=20207
+[2026-11-21T21:53:15.577073] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=10980252 audioPackets=119443 videoBytes=20207
+[2026-11-21T21:53:20.576399] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=10995002 audioPackets=119693 videoBytes=20207
+[2026-11-21T21:53:20.576608] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP media summary 30s audioKB=91 videoKB=-0 videoTracks=1/1 audioLost=0 ice=RTCIceConnectionStateCompleted
+[2026-11-21T21:53:20.576665] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP video summary 30s in=960x540@-fps decodedFrames+-2 keyframes=1 freeze=0 pli=2 nack=0 vLost=0 | out=-@-fps target=0kbps limit=- WARN_VIDEO_FROZEN
+[2026-11-21T21:53:25.576080] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=11009752 audioPackets=119943 videoBytes=20207
+[2026-11-21T21:53:25.576295] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tiles active=0 inactive=99
+[2026-11-21T21:53:30.576374] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=11024502 audioPackets=120193 videoBytes=20207
+[2026-11-21T21:53:32.803860] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 수신 hasAudio=true hasVideo=true -> 자동 수락
+[2026-11-21T21:53:32.804083] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 응답 전송 accepted=true recvOnlyVideo=true
+[2026-11-21T21:53:32.901786] EVENT SIP op=mediaStream target=6700 state=remote params=video=100 audio=1 id=dokufss380276594b3538227p544k0
+[2026-11-21T21:53:32.902] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote session dokufss380276594b3538227p544k0 handled: streams=1 event(video=100 audio=1) session(video=100 audio=1)
+[2026-11-21T21:53:32.902078] EVENT MEDIA event=remoteStreamAdded state=video=100 audio=1 sessionId=dokufss380276594b3538227p544k0 sessionStreams=1 sessionVideo=100 sessionAudio=1
+[2026-11-21T21:53:32.902864] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=2dd30f92-e646-4b88-9dee-b41750b5cf04
+[2026-11-21T21:53:33.309936] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transceivers 0:audio:SendRecv/SendRecv 1:video:RecvOnly/RecvOnly
+[2026-11-21T21:53:35.575823] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=11040382 audioPackets=120443 videoBytes=0
+[2026-11-21T21:53:35.608212] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] CONFERENCE participants room=6700 n=1 [이재명 대통령 (1101):A*]
+[2026-11-21T21:53:37.109695] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] VIDEO resync reason=auto:leave localKick=false remoteTiles=1
+[2026-11-21T21:53:37.211964] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=2dd30f92-e646-4b88-9dee-b41750b5cf04
+[2026-11-21T21:53:39.166165] EVENT SIP op=mediaStream target=6700 state=remote params=video=102 audio=1 id=dokufss380276594b3538227p544k0
+[2026-11-21T21:53:39.166374] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote session dokufss380276594b3538227p544k0 handled: streams=2 event(video=102 audio=1) session(video=202 audio=2)
+[2026-11-21T21:53:39.166456] EVENT MEDIA event=remoteStreamAdded state=video=102 audio=1 sessionId=dokufss380276594b3538227p544k0 sessionStreams=2 sessionVideo=202 sessionAudio=2
+[2026-11-21T21:53:39.167120] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=6944a7e4-6628-4ab5-85b6-9dab1f9f5e21
+[2026-11-21T21:53:39.167508] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=91b887ea-a07c-43d2-b8c5-527c28c7dbac
+[2026-11-21T21:53:39.168787] EVENT SIP op=mediaStream target=6700 state=remote params=video=102 audio=1 id=dokufss380276594b3538227p544k0
+[2026-11-21T21:53:39.168938] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote session dokufss380276594b3538227p544k0 handled: streams=2 event(video=102 audio=1) session(video=202 audio=2)
+[2026-11-21T21:53:39.169008] EVENT MEDIA event=remoteStreamAdded state=video=102 audio=1 sessionId=dokufss380276594b3538227p544k0 sessionStreams=2 sessionVideo=202 sessionAudio=2
+[2026-11-21T21:53:39.172739] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 수신 hasAudio=true hasVideo=true -> 자동 수락
+[2026-11-21T21:53:39.173026] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 응답 전송 accepted=true recvOnlyVideo=true
+[2026-11-21T21:53:39.680820] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transceivers 0:audio:SendRecv/SendRecv 1:video:RecvOnly/RecvOnly 2:video:RecvOnly/RecvOnly
+[2026-11-21T21:53:40.575929] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=11058932 audioPackets=120693 videoBytes=21243
+[2026-11-21T21:53:40.576140] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tiles active=1 inactive=101
+[2026-11-21T21:53:40.738772] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] CONFERENCE participants room=6700 n=2 [이재명 대통령 (1101):A*,AI봇(7001):V]
+[2026-11-21T21:53:42.240393] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] VIDEO resync reason=auto:join localKick=false remoteTiles=1
+[2026-11-21T21:53:42.342847] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=6944a7e4-6628-4ab5-85b6-9dab1f9f5e21
+[2026-11-21T21:53:45.575648] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=11073700 audioPackets=120943 videoBytes=21243
+[2026-11-21T21:53:50.574944] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=11088450 audioPackets=121193 videoBytes=21243
+[2026-11-21T21:53:50.575150] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP media summary 30s audioKB=91 videoKB=1 videoTracks=1/1 audioLost=0 ice=RTCIceConnectionStateConnected
+[2026-11-21T21:53:50.575207] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP video summary 30s in=640x360@-fps decodedFrames+10 keyframes=1 freeze=0 pli=2 nack=0 vLost=0 | out=-@-fps target=0kbps limit=-
+[2026-11-21T21:53:55.575260] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=11103200 audioPackets=121443 videoBytes=21243
+[2026-11-21T21:54:00.574789] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=11117950 audioPackets=121693 videoBytes=21243
+[2026-11-21T21:54:00.574977] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tiles active=0 inactive=102
+[2026-11-21T21:54:05.575169] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=11132700 audioPackets=121943 videoBytes=21243
+[2026-11-21T21:54:10.574659] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=11147450 audioPackets=122193 videoBytes=21243
+[2026-11-21T21:54:11.813296] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 수신 hasAudio=true hasVideo=true -> 자동 수락
+[2026-11-21T21:54:11.813522] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 응답 전송 accepted=true recvOnlyVideo=true
+[2026-11-21T21:54:11.911528] EVENT SIP op=mediaStream target=6700 state=remote params=video=103 audio=1 id=dokufss380276594b3538227p544k0
+[2026-11-21T21:54:11.911718] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote session dokufss380276594b3538227p544k0 handled: streams=1 event(video=103 audio=1) session(video=103 audio=1)
+[2026-11-21T21:54:11.911798] EVENT MEDIA event=remoteStreamAdded state=video=103 audio=1 sessionId=dokufss380276594b3538227p544k0 sessionStreams=1 sessionVideo=103 sessionAudio=1
+[2026-11-21T21:54:11.912595] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=88a17dc2-0198-40b0-b6f8-8a2deea286ad
+[2026-11-21T21:54:12.318225] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transceivers 0:audio:SendRecv/SendRecv 1:video:RecvOnly/RecvOnly
+[2026-11-21T21:54:15.574429] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=11163322 audioPackets=122443 videoBytes=0
+[2026-11-21T21:54:15.656827] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] CONFERENCE participants room=6700 n=1 [이재명 대통령 (1101):A*]
+[2026-11-21T21:54:17.158677] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] VIDEO resync reason=auto:leave localKick=false remoteTiles=1
+[2026-11-21T21:54:17.261678] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=88a17dc2-0198-40b0-b6f8-8a2deea286ad
+[2026-11-21T21:54:18.167993] EVENT SIP op=mediaStream target=6700 state=remote params=video=105 audio=1 id=dokufss380276594b3538227p544k0
+[2026-11-21T21:54:18.168192] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote session dokufss380276594b3538227p544k0 handled: streams=2 event(video=105 audio=1) session(video=208 audio=2)
+[2026-11-21T21:54:18.168268] EVENT MEDIA event=remoteStreamAdded state=video=105 audio=1 sessionId=dokufss380276594b3538227p544k0 sessionStreams=2 sessionVideo=208 sessionAudio=2
+[2026-11-21T21:54:18.168801] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=8ef6ffe9-d4f3-453e-9dd1-0ce0d151d2fe
+[2026-11-21T21:54:18.169243] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=a97fbaef-1a19-4448-b2ef-533e4f5843e1
+[2026-11-21T21:54:18.171459] EVENT SIP op=mediaStream target=6700 state=remote params=video=105 audio=1 id=dokufss380276594b3538227p544k0
+[2026-11-21T21:54:18.171620] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote session dokufss380276594b3538227p544k0 handled: streams=2 event(video=105 audio=1) session(video=208 audio=2)
+[2026-11-21T21:54:18.171700] EVENT MEDIA event=remoteStreamAdded state=video=105 audio=1 sessionId=dokufss380276594b3538227p544k0 sessionStreams=2 sessionVideo=208 sessionAudio=2
+[2026-11-21T21:54:18.174184] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 수신 hasAudio=true hasVideo=true -> 자동 수락
+[2026-11-21T21:54:18.174369] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 응답 전송 accepted=true recvOnlyVideo=true
+[2026-11-21T21:54:18.681857] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transceivers 0:audio:SendRecv/SendRecv 1:video:RecvOnly/RecvOnly 2:video:RecvOnly/RecvOnly
+[2026-11-21T21:54:20.573953] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=11181824 audioPackets=122693 videoBytes=26597
+[2026-11-21T21:54:20.574227] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tiles active=1 inactive=104
+[2026-11-21T21:54:20.574327] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP media summary 30s audioKB=91 videoKB=5 videoTracks=1/1 audioLost=0 ice=RTCIceConnectionStateConnected
+[2026-11-21T21:54:20.574365] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP video summary 30s in=960x540@-fps decodedFrames+-1 keyframes=1 freeze=0 pli=0 nack=0 vLost=0 | out=-@-fps target=0kbps limit=- WARN_VIDEO_FROZEN
+[2026-11-21T21:54:20.703562] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] CONFERENCE participants room=6700 n=2 [이재명 대통령 (1101):A*,AI봇(7001):V]
+[2026-11-21T21:54:22.206148] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] VIDEO resync reason=auto:join localKick=false remoteTiles=1
+[2026-11-21T21:54:22.308390] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=8ef6ffe9-d4f3-453e-9dd1-0ce0d151d2fe
+[2026-11-21T21:54:25.573238] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=11196574 audioPackets=122943 videoBytes=26597
+[2026-11-21T21:54:30.573102] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=11211403 audioPackets=123192 videoBytes=26597
+[2026-11-21T21:54:35.574071] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=11226153 audioPackets=123442 videoBytes=26597
+[2026-11-21T21:54:35.574267] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tiles active=0 inactive=105
+[2026-11-21T21:54:40.573544] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=11240903 audioPackets=123692 videoBytes=26597
+[2026-11-21T21:54:45.572930] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=11255653 audioPackets=123942 videoBytes=26597
+[2026-11-21T21:54:50.572572] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=11270403 audioPackets=124192 videoBytes=26597
+[2026-11-21T21:54:50.572754] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP media summary 30s audioKB=87 videoKB=0 videoTracks=0/1 audioLost=0 ice=RTCIceConnectionStateCompleted
+[2026-11-21T21:54:50.572807] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP video summary 30s in=960x540@-fps decodedFrames+0 keyframes=1 freeze=0 pli=1 nack=0 vLost=0 | out=-@-fps target=0kbps limit=- WARN_VIDEO_FROZEN
+[2026-11-21T21:54:50.901305] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 수신 hasAudio=true hasVideo=true -> 자동 수락
+[2026-11-21T21:54:50.901539] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 응답 전송 accepted=true recvOnlyVideo=true
+[2026-11-21T21:54:51.000946] EVENT SIP op=mediaStream target=6700 state=remote params=video=106 audio=1 id=dokufss380276594b3538227p544k0
+[2026-11-21T21:54:51.001178] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote session dokufss380276594b3538227p544k0 handled: streams=1 event(video=106 audio=1) session(video=106 audio=1)
+[2026-11-21T21:54:51.001268] EVENT MEDIA event=remoteStreamAdded state=video=106 audio=1 sessionId=dokufss380276594b3538227p544k0 sessionStreams=1 sessionVideo=106 sessionAudio=1
+[2026-11-21T21:54:51.002107] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=69b3b67e-f7ab-4fd4-974d-8a0ce634ff17
+[2026-11-21T21:54:51.410721] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transceivers 0:audio:SendRecv/SendRecv 1:video:RecvOnly/RecvOnly
+[2026-11-21T21:54:55.572150] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=11286323 audioPackets=124442 videoBytes=0
+[2026-11-21T21:54:55.606866] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] CONFERENCE participants room=6700 n=1 [이재명 대통령 (1101):A*]
+[2026-11-21T21:54:57.108384] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] VIDEO resync reason=auto:leave localKick=false remoteTiles=1
+[2026-11-21T21:54:57.210664] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=69b3b67e-f7ab-4fd4-974d-8a0ce634ff17
+[2026-11-21T21:54:57.255415] EVENT SIP op=mediaStream target=6700 state=remote params=video=108 audio=1 id=dokufss380276594b3538227p544k0
+[2026-11-21T21:54:57.255601] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote session dokufss380276594b3538227p544k0 handled: streams=2 event(video=108 audio=1) session(video=214 audio=2)
+[2026-11-21T21:54:57.255684] EVENT MEDIA event=remoteStreamAdded state=video=108 audio=1 sessionId=dokufss380276594b3538227p544k0 sessionStreams=2 sessionVideo=214 sessionAudio=2
+[2026-11-21T21:54:57.256307] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=c352f79b-a76c-4a0c-bc56-caac8f733223
+[2026-11-21T21:54:57.256721] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=f991e331-67c4-4682-bef3-3eb96537d5ff
+[2026-11-21T21:54:57.258978] EVENT SIP op=mediaStream target=6700 state=remote params=video=108 audio=1 id=dokufss380276594b3538227p544k0
+[2026-11-21T21:54:57.259142] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote session dokufss380276594b3538227p544k0 handled: streams=2 event(video=108 audio=1) session(video=214 audio=2)
+[2026-11-21T21:54:57.259216] EVENT MEDIA event=remoteStreamAdded state=video=108 audio=1 sessionId=dokufss380276594b3538227p544k0 sessionStreams=2 sessionVideo=214 sessionAudio=2
+[2026-11-21T21:54:57.261401] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 수신 hasAudio=true hasVideo=true -> 자동 수락
+[2026-11-21T21:54:57.261592] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 응답 전송 accepted=true recvOnlyVideo=true
+[2026-11-21T21:54:57.770803] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transceivers 0:audio:SendRecv/SendRecv 1:video:RecvOnly/RecvOnly 2:video:RecvOnly/RecvOnly
+[2026-11-21T21:55:00.573114] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=11304684 audioPackets=124692 videoBytes=19224
+[2026-11-21T21:55:00.573328] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tiles active=1 inactive=107
+[2026-11-21T21:55:00.693598] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] CONFERENCE participants room=6700 n=2 [이재명 대통령 (1101):A*,AI봇(7001):V]
+[2026-11-21T21:55:02.194704] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] VIDEO resync reason=auto:join localKick=false remoteTiles=1
+[2026-11-21T21:55:02.297638] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=c352f79b-a76c-4a0c-bc56-caac8f733223
+[2026-11-21T21:55:05.573178] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=11319434 audioPackets=124942 videoBytes=19224
+[2026-11-21T21:55:10.572287] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=11334184 audioPackets=125192 videoBytes=19224
+[2026-11-21T21:55:13.591010] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transport disconnected (cause: Code: [1006], Cause: error, Reason: )
+[2026-11-21T21:55:13.591173] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> disconnected
+[2026-11-21T21:55:13.591278] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> unregistered
+[2026-11-21T21:55:15.571915] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=11342916 audioPackets=125340 videoBytes=19224
+[2026-11-21T21:55:15.592915] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connecting
+[2026-11-21T21:55:15.593061] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transport disconnected (cause: Code: [0], Cause: error, Reason: Client send disconnect)
+[2026-11-21T21:55:15.593100] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> disconnected
+[2026-11-21T21:55:18.345846] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] 원격 로그 즉시전송 요청
+[2026-11-21T21:55:18.595048] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connecting
+[2026-11-21T21:55:20.572107] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=11342916 audioPackets=125340 videoBytes=19224
+[2026-11-21T21:55:20.572317] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tiles active=0 inactive=108
+[2026-11-21T21:55:20.572390] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP media summary 30s audioKB=71 videoKB=-7 videoTracks=0/1 audioLost=0 ice=RTCIceConnectionStateDisconnected
+[2026-11-21T21:55:20.572424] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP video summary 30s in=640x360@-fps decodedFrames+0 keyframes=1 freeze=0 pli=1 nack=0 vLost=0 | out=-@-fps target=0kbps limit=- WARN_VIDEO_FROZEN
+[2026-11-21T21:55:25.571400] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=11342916 audioPackets=125340 videoBytes=19224
+[2026-11-21T21:55:25.898093] WARN [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] 원격 로그 전송 실패 TimeoutException → 로컬 보관 후 재시도
+[2026-11-21T21:55:28.682647] EVENT SIP op=callTerminated target=6700 state=ENDED params=id=dokufss380276594b3538227p544k0 cause=Code: [408], Cause: RTP Timeout, Reason: ICE Connection Failed
+[2026-11-21T21:55:28.682789] EVENT UI VIDEO action=fullscreenExit params=screen=conference label=AI봇(7001)
+[2026-11-21T21:55:28.682876] EVENT UI CONFERENCE action=autoCloseOnCallEnd
+[2026-11-21T21:55:28.708511] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] 실시간 품질 진단 중지
+[2026-11-21T22:00:18.333940] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] 원격 로그 즉시전송 요청
+[2026-11-21T22:05:20.354146] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] 원격 로그 즉시전송 요청
+[2026-11-21T22:10:20.342473] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] 원격 로그 즉시전송 요청
+[2026-11-21T22:15:20.331266] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] 원격 로그 즉시전송 요청
+[2026-11-21T22:20:20.382094] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] 원격 로그 즉시전송 요청
+[2026-11-21T22:25:20.370229] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] 원격 로그 즉시전송 요청
+[2026-11-21T22:30:20.359364] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] 원격 로그 즉시전송 요청
+[2026-11-21T22:32:08.811174] EVENT UI ADDRESSBOOK action=autoRegister params=ext=1101
+[2026-11-21T22:32:08.811362] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connecting
+[2026-11-21T22:32:08.811480] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transport disconnected (cause: Code: [0], Cause: disconnect, Reason: close by local)
+[2026-11-21T22:32:08.811538] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> disconnected
+[2026-11-21T22:32:08.812278] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connecting
+[2026-11-21T22:32:08.827834] EVENT SIP op=init target=- state=- params=ws=ws://192.168.11.5:8088/ws domain=192.168.11.5 port=5060 transport=ws
+[2026-11-21T22:32:23.827971] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> error
+[2026-11-21T22:32:23.828150] ERROR [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP SIP 전송 연결 시간 초과
+[2026-11-21T22:32:23.828209] WARN [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP 연결 실패 → 30s 후 재시도 (시도 10)
+[2026-11-21T22:32:23.828259] EVENT ADDRESSBOOK event=autoRegisterResult state=failed ext=1101 error=SIP 전송 연결 시간 초과
+[2026-11-21T22:32:29.889887] WARN [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] 서버 설정 갱신 실패: OPS 응답 없음 (후보 http://192.168.11.5:8091, http://MacPro.local:8091)
+[2026-11-21T22:32:33.891939] WARN [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] OPS directory get failed: http://192.168.11.5:8091/api/client/contacts (TimeoutException)
+[2026-11-21T22:32:33.892120] WARN [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] OPS directory get failed: http://192.168.11.5:8091/api/client/conferences (TimeoutException)
+[2026-11-21T22:32:33.892189] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] OPS directory: contacts=0 rooms=0 base=http://192.168.11.5:8091
+[2026-11-21T22:32:33.892228] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] AddressBook synced contacts=0 rooms=0
+[2026-11-21T22:32:45.429445] WARN [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP auto-register failed: 1101 password missing
+[2026-11-21T22:32:51.473892] WARN [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] 서버 설정 갱신 실패: OPS 응답 없음 (후보 http://192.168.11.5:8091, http://MacPro.local:8091)
+[2026-11-21T22:32:52.221695] EVENT UI SETTINGS action=connectionSaved params=profile=dev domain=192.168.11.5 secureWs=false secureOps=false
+[2026-11-21T22:32:53.829431] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connecting
+[2026-11-21T22:32:53.829592] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transport disconnected (cause: Code: [0], Cause: disconnect, Reason: close by local)
+[2026-11-21T22:32:53.829646] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> disconnected
+[2026-11-21T22:32:53.830233] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connecting
+[2026-11-21T22:32:53.830522] EVENT SIP op=init target=- state=- params=ws=ws://192.168.11.5:8088/ws domain=192.168.11.5 port=5060 transport=ws
+[2026-11-21T22:33:08.830586] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> error
+[2026-11-21T22:33:08.830742] ERROR [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP SIP 전송 연결 시간 초과
+[2026-11-21T22:33:08.830797] WARN [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP 연결 실패 → 30s 후 재시도 (시도 10)
+[2026-11-21T22:33:08.831542] WARN [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] OPS directory get failed: http://192.168.11.5:8091/api/client/contacts (TimeoutException)
+[2026-11-21T22:33:08.831676] WARN [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] OPS directory get failed: http://192.168.11.5:8091/api/client/conferences (TimeoutException)
+[2026-11-21T22:33:08.831733] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] OPS directory: contacts=0 rooms=0 base=http://192.168.11.5:8091
+[2026-11-21T22:33:08.831765] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] AddressBook synced contacts=0 rooms=0
+[2026-11-21T22:33:38.898015] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connecting
+[2026-11-21T22:33:38.898176] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transport disconnected (cause: Code: [0], Cause: disconnect, Reason: close by local)
+[2026-11-21T22:33:38.898222] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> disconnected
+[2026-11-21T22:33:38.898748] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connecting
+[2026-11-21T22:33:38.899019] EVENT SIP op=init target=- state=- params=ws=ws://192.168.11.5:8088/ws domain=192.168.11.5 port=5060 transport=ws
+[2026-11-21T22:33:53.899080] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> error
+[2026-11-21T22:33:53.899243] ERROR [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP SIP 전송 연결 시간 초과
+[2026-11-21T22:33:53.899304] WARN [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP 연결 실패 → 30s 후 재시도 (시도 10)
+[2026-11-21T22:34:23.899596] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connecting
+[2026-11-21T22:34:23.899768] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transport disconnected (cause: Code: [0], Cause: disconnect, Reason: close by local)
+[2026-11-21T22:34:23.899813] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> disconnected
+[2026-11-21T22:34:23.900255] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connecting
+[2026-11-21T22:34:23.900536] EVENT SIP op=init target=- state=- params=ws=ws://192.168.11.5:8088/ws domain=192.168.11.5 port=5060 transport=ws
+[2026-11-21T22:34:38.900600] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> error
+[2026-11-21T22:34:38.900769] ERROR [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP SIP 전송 연결 시간 초과
+[2026-11-21T22:34:38.900826] WARN [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP 연결 실패 → 30s 후 재시도 (시도 10)
+[2026-11-21T22:35:08.901409] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connecting
+[2026-11-21T22:35:08.901562] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transport disconnected (cause: Code: [0], Cause: disconnect, Reason: close by local)
+[2026-11-21T22:35:08.901608] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> disconnected
+[2026-11-21T22:35:08.902100] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connecting
+[2026-11-21T22:35:08.902384] EVENT SIP op=init target=- state=- params=ws=ws://192.168.11.5:8088/ws domain=192.168.11.5 port=5060 transport=ws
+[2026-11-21T22:35:23.902451] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> error
+[2026-11-21T22:35:23.902619] ERROR [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP SIP 전송 연결 시간 초과
+[2026-11-21T22:35:23.902679] WARN [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP 연결 실패 → 30s 후 재시도 (시도 10)
+[2026-11-21T22:35:23.903144] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] 원격 로그 즉시전송 요청

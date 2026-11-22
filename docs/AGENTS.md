@@ -153,6 +153,7 @@
 - **E2E 결과**: [[wiki/08_Experiments/20261120_외부망_종단간검증_v1.0]] — 미국 VPN에서 REGISTER/CALL/CONFERENCE OK. client_log_url 내부 IP 덮어쓰기 방지 v0.0.50 반영.
 - **TURN Staging**: [[wiki/08_Experiments/20261120_TURN_coturn_Staging검증_v1.0]] — coturn 시간제 HMAC, 강제 RELAY 1:1/3자 OK. 운영 포트 개방·인증서 갱신·공인IP 동기화는 승인 대기. v0.0.53.
 - **OPS hang 대응**: 서버 e715384 — WAL 일원화·단일 워커·SIGUSR1 스택 덤프로 재발 구조 제거, 120/120 HTTP 200. 클라이언트는 /api/client/config 인증 + HTTP 정규화(daa0a711)로 우회.
+- **1104 외부망 테스트**: 5G 테더링으로 WSS REGISTER_OK, 6700 입장·AI봇 영상 수신 정상. 그러나 re-INVITE 후 media stall 오검출 → RTP Timeout → ICE Failed → 통화 종료. v0.0.40 스톨 수정 불완전. OPS `/api/client/config` 401로 설정 갱신 실패, contacts/conferences는 200. 세션 중복(2채널) 의심. 보고서 작성 중.
 - **v0.0.54**: 로그 URL https→http 시작 시 강제 정규화. 23:00 1102 로그 미수신 원인(https URL) 제거.
 - **v0.0.55**: 인증 실패 시 키/내선 보존, 서버 불통은 localVerified 유지, 200 ok 검증. 주소록/인증 소실 방지..
 
