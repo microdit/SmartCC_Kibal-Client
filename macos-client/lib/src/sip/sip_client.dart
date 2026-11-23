@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:sip_ua/sip_ua.dart';
 import '../utils/app_logger.dart';
+import '../utils/constants.dart';
 import '../utils/conference_participants.dart';
 import '../utils/remote_log_forwarder.dart';
 import '../utils/video_quality_settings.dart';
@@ -141,6 +142,13 @@ class KibalSipClient implements SipUaHelperListener {
     final ice = <Map<String, String>>[
       for (final url in config.iceServers) {'urls': url},
     ];
+    // 내부망(192.168.11.x)에서는 TURN 불필요 — LAN 내 P2P/host candidate로 충분.
+    // TURN Allocation 인증 실패(370401)가 1:1 미디어 불안정 요인이므로 제외한다.
+    final internalHost = RegExp(r'^192\.168\.11\.\d+$').hasMatch(config.domain.trim());
+    if (internalHost) {
+      AppLogger.instance.i('ICE: 내부망 도메인(${config.domain}) → TURN 제외 (host/STUN만)');
+      return ice;
+    }
     final turn = config.turn;
     if (turn != null) {
       final urls = turn['urls'];
@@ -907,6 +915,13 @@ class KibalSipClient implements SipUaHelperListener {
     final pc = _currentCall?.peerConnection;
     if (pc == null) return;
     final settings = VideoQualitySettings.load();
+
+    // A10 등 SIP 단말과의 1:1은 최대 30fps. 사용자 설정이 60fps여도
+    // 1:1에서는 상한을 30으로 제한해 단말 측 미디어 처리 실패/BYE를 방지한다.
+    final target = _currentSession?.remoteParty ?? _pendingCallTarget ?? '';
+    final isOneToOne = target.isNotEmpty && !AppConstants.isConferenceRoom(target);
+    final effectiveFps = isOneToOne && settings.frameRate > 30 ? 30 : settings.frameRate;
+
     for (final sender in await pc.getSenders()) {
       if (sender.track?.kind != 'video') continue;
       try {
@@ -914,11 +929,12 @@ class KibalSipClient implements SipUaHelperListener {
         params.degradationPreference = settings.degradationPreference;
         for (final encoding in params.encodings ?? const <RTCRtpEncoding>[]) {
           encoding.maxBitrate = settings.maxBitrate;
-          encoding.maxFramerate = settings.maxFramerate;
+          encoding.maxFramerate = effectiveFps;
         }
         await sender.setParameters(params);
         AppLogger.instance.i(
-            '영상 품질 파라미터 적용 mode=${settings.mode.name} fps=${settings.frameRate}');
+            '영상 품질 파라미터 적용 mode=${settings.mode.name} fps=$effectiveFps'
+            '${isOneToOne ? ' (1:1 30fps cap)' : ''}');
       } catch (e) {
         AppLogger.instance.w('영상 품질 파라미터 적용 실패: $e');
       }
