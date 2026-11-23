@@ -2083,15 +2083,30 @@ class RTCSession extends EventManager implements Owner {
       return true;
     }
 
-    RTCSessionDescription? desc = await _processInDialogSdpOffer(request);
+    await _processInDialogSdpOffer(request);
 
     Future<bool> acceptReInvite(dynamic options) async {
       try {
-        // Send answer.
         if (_state == RtcSessionState.terminated) {
           return false;
         }
-        sendAnswer(desc.sdp);
+        // 앱 핸들러가 re-INVITE 처리 중 PC를 변경(예: recvonly video transceiver 추가)
+        // 할 수 있으므로, 미리 생성한 answer 대신 수락 시점에 answer를 재생성한다.
+        Map<String, dynamic>? answerConstraints = _rtcAnswerConstraints;
+        if (options is Map<String, dynamic>) {
+          final dynamic optAnswer = options['rtcAnswerConstraints'];
+          if (optAnswer is Map<String, dynamic>) {
+            answerConstraints = optAnswer;
+          }
+        } else if (options is Map) {
+          final dynamic optAnswer = options['rtcAnswerConstraints'];
+          if (optAnswer is Map) {
+            answerConstraints = Map<String, dynamic>.from(optAnswer);
+          }
+        }
+        final RTCSessionDescription answer = await _createLocalDescription(
+            SdpType.answer, answerConstraints);
+        sendAnswer(answer.sdp);
       } catch (error) {
         logger.e('Got anerror on re-INVITE: ${error.toString()}');
       }
