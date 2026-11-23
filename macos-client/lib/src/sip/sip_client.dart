@@ -726,9 +726,33 @@ class KibalSipClient implements SipUaHelperListener {
       if (_receiveOnlyVideo) {
         MapHelper.merge(options, _receiveVideoOptions());
       }
+      // A10 1:1 workaround: Asterisk가 ConfBridge join 후 re-INVITE로 video를
+      // 추가한다. 초기 INVITE가 audio-only였으면 sip_ua/PC가 video m-line을
+      // port 0으로 응답할 수 있어, video 수신을 명시적으로 요청한다.
+      final hasVideo = event.hasVideo ?? false;
+      if (hasVideo && !_receiveOnlyVideo) {
+        final pc = _currentCall?.peerConnection;
+        bool hasVideoTransceiver = false;
+        if (pc != null) {
+          try {
+            final trs = await pc.getTransceivers();
+            for (final t in trs) {
+              final kind = t.receiver.track?.kind ?? t.sender.track?.kind ?? '';
+              if (kind == 'video') {
+                hasVideoTransceiver = true;
+                break;
+              }
+            }
+          } catch (_) {}
+        }
+        if (!hasVideoTransceiver) {
+          AppLogger.instance.i('SIP re-INVITE video 추가 감지, recvonly video 옵션 적용');
+          MapHelper.merge(options, _receiveVideoOptions());
+        }
+      }
       final accepted = await accept(options);
       AppLogger.instance.i('SIP re-INVITE 응답 전송 accepted=$accepted '
-          'recvOnlyVideo=$_receiveOnlyVideo');
+          'recvOnlyVideo=$_receiveOnlyVideo hasVideo=${event.hasVideo}');
       unawaited(Future<void>.delayed(
           const Duration(milliseconds: 500), _logTransceivers));
       unawaited(Future<void>.delayed(
