@@ -728,7 +728,7 @@ class KibalSipClient implements SipUaHelperListener {
       }
       // A10 1:1 workaround: Asterisk가 ConfBridge join 후 re-INVITE로 video를
       // 추가한다. 초기 INVITE가 audio-only였으면 sip_ua/PC가 video m-line을
-      // port 0으로 응답할 수 있어, video 수신을 명시적으로 요청한다.
+      // port 0으로 응답할 수 있어, video transceiver를 실제로 생성한다.
       final hasVideo = event.hasVideo ?? false;
       if (hasVideo && !_receiveOnlyVideo) {
         final pc = _currentCall?.peerConnection;
@@ -743,11 +743,26 @@ class KibalSipClient implements SipUaHelperListener {
                 break;
               }
             }
-          } catch (_) {}
-        }
-        if (!hasVideoTransceiver) {
-          AppLogger.instance.i('SIP re-INVITE video 추가 감지, recvonly video 옵션 적용');
-          MapHelper.merge(options, _receiveVideoOptions());
+          } catch (e) {
+            AppLogger.instance.w('SIP re-INVITE transceiver 조회 실패: $e');
+          }
+          if (!hasVideoTransceiver) {
+            AppLogger.instance.i('SIP re-INVITE video 추가 감지, recvonly video transceiver 생성');
+            try {
+              await pc.addTransceiver(
+                kind: RTCRtpMediaType.RTCRtpMediaTypeVideo,
+                init: RTCRtpTransceiverInit(
+                  direction: TransceiverDirection.RecvOnly,
+                ),
+              );
+              hasVideoTransceiver = true;
+              AppLogger.instance.i('SIP re-INVITE recvonly video transceiver 생성 완료');
+            } catch (e) {
+              AppLogger.instance.w(
+                  'SIP re-INVITE video transceiver 생성 실패, recvonly 제약만 적용: $e');
+              MapHelper.merge(options, _receiveVideoOptions());
+            }
+          }
         }
       }
       final accepted = await accept(options);
