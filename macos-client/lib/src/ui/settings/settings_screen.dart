@@ -715,7 +715,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     const SizedBox(height: 4),
                     const Text(
                         '프로필별 설정을 저장하며, 자동 설정은 연결되는 서버에만 적용됩니다. '
-                        'DEV·PRD는 내부 OPS, 외부망은 DDNS OPS를 먼저 시도합니다.',
+                        'DEV/PRD/TEST는 내부 OPS, 외부망은 DDNS OPS를 먼저 시도합니다.',
                         style: TextStyle(fontSize: 12, color: Colors.grey)),
                   ]),
             ),

@@ -5,7 +5,7 @@ import 'dart:io';
 import 'app_logger.dart';
 import 'constants.dart';
 
-enum ConnectionProfile { dev, prd, external }
+enum ConnectionProfile { dev, prd, external, test }
 
 extension ConnectionProfileX on ConnectionProfile {
   String get label {
@@ -16,6 +16,8 @@ extension ConnectionProfileX on ConnectionProfile {
         return 'PRD';
       case ConnectionProfile.external:
         return '외부망';
+      case ConnectionProfile.test:
+        return 'TEST';
     }
   }
 
@@ -50,6 +52,15 @@ extension ConnectionProfileX on ConnectionProfile {
           secure: false,
           source: 'profile',
         );
+      case ConnectionProfile.test:
+        return ServerConfig(
+          sipDomain: '192.168.11.5',
+          sipPort: 15060,
+          wsServer: 'ws://192.168.11.5:18088/ws',
+          opsBaseUrl: 'http://192.168.11.5:8091',
+          clientLogUrl: 'http://192.168.11.5:8091/api/client-logs',
+          source: 'profile',
+        );
     }
   }
 
@@ -68,6 +79,10 @@ extension ConnectionProfileX on ConnectionProfile {
       case ConnectionProfile.external:
         return const [
           'http://appletreeda.synology.me:8091',
+        ];
+      case ConnectionProfile.test:
+        return const [
+          'http://192.168.11.5:8091',
         ];
     }
   }
@@ -485,19 +500,24 @@ class ServerConfigService {
   Future<ServerConfig?> refreshSmart({String? clientKey, String? extension}) async {
     final onLan = await isOnLan();
     AppLogger.instance.i('네트워크 감지: onLan=$onLan, currentProfile=${_current.sipDomain}');
-    // 내부망인데 외부 프로필이면 dev로 전환
+    final selected = ConnectionProfileStore.instance.selected;
+    // 내부망인데 외부 프로필이면 선택된 내부 프로필(DEV/TEST)로 전환
     if (onLan && _current.sipDomain == 'appletreeda.synology.me') {
-      AppLogger.instance.i('내부망 감지 → DEV 프로필로 자동 전환');
-      final cfg = ConnectionProfile.dev.defaultConfig();
+      final target = selected == ConnectionProfile.test
+          ? ConnectionProfile.test
+          : ConnectionProfile.dev;
+      AppLogger.instance.i('내부망 감지 → ${target.label} 프로필로 자동 전환');
+      final cfg = target.defaultConfig();
       _current = cfg;
       cfg.save();
-      ConnectionProfileStore.instance.setSelected(ConnectionProfile.dev);
+      ConnectionProfileStore.instance.setSelected(target);
       return cfg;
     }
-    // 외부망인데 내부 프로필이면 external로 전환
-    if (!onLan && (_current.sipDomain == '192.168.11.5' ||
-        _current.sipDomain == '192.168.11.3' ||
-        _current.sipDomain == '192.168.11.2')) {
+    // 외부망인데 내부 프로필이면 external로 전환 (TEST 포함)
+    if (!onLan &&
+        (_current.sipDomain == '192.168.11.5' ||
+            _current.sipDomain == '192.168.11.3' ||
+            _current.sipDomain == '192.168.11.2')) {
       AppLogger.instance.i('외부망 감지 → 외부 프로필로 자동 전환');
       final cfg = ConnectionProfile.external.defaultConfig();
       _current = cfg;
