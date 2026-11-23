@@ -2,6 +2,11 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
+
+import '../../providers/sip_provider.dart';
+import '../../utils/live_quality_service.dart';
+import 'live_quality_overlay.dart';
 
 /// 영상 전체 화면 스테이지 (1:1·다자간 공통)
 ///
@@ -31,6 +36,7 @@ class _FullscreenStageState extends State<FullscreenStage> {
   final FocusNode _focus = FocusNode();
   // 진입 직후·해제 중에는 컨트롤을 숨긴다(더블클릭 중 버튼이 크게 보이며 눌리는 문제)
   bool _showControls = false;
+  bool _showDiagnostics = false;
   bool _exiting = false;
   Timer? _hide;
   DateTime _enteredAt = DateTime.now();
@@ -55,8 +61,19 @@ class _FullscreenStageState extends State<FullscreenStage> {
   @override
   void dispose() {
     _hide?.cancel();
+    if (_showDiagnostics) LiveQualityService.instance.stop();
     _focus.dispose();
     super.dispose();
+  }
+
+  void _toggleDiagnostics() {
+    if (_showDiagnostics) {
+      LiveQualityService.instance.stop();
+    } else {
+      final sip = context.read<SipProvider>();
+      LiveQualityService.instance.start(provider: sip.collectLiveStats);
+    }
+    setState(() => _showDiagnostics = !_showDiagnostics);
   }
 
   void _poke() {
@@ -92,6 +109,12 @@ class _FullscreenStageState extends State<FullscreenStage> {
               fit: StackFit.expand,
               children: [
                 widget.child,
+                if (_showDiagnostics)
+                  const Positioned(
+                    top: 16,
+                    right: 16,
+                    child: LiveQualityOverlay(),
+                  ),
                 IgnorePointer(
                   ignoring: !_showControls,
                   child: AnimatedOpacity(
@@ -115,6 +138,15 @@ class _FullscreenStageState extends State<FullscreenStage> {
                               icon: Icon(widget.audioMuted ? Icons.mic_off : Icons.mic,
                                   color: widget.audioMuted ? Colors.red : Colors.white),
                               onPressed: widget.onToggleAudio,
+                            ),
+                            IconButton(
+                              tooltip: _showDiagnostics ? '진단 종료' : '전송속도 진단',
+                              icon: Icon(
+                                _showDiagnostics ? Icons.analytics : Icons.speed,
+                                color:
+                                    _showDiagnostics ? Colors.tealAccent : Colors.white,
+                              ),
+                              onPressed: _toggleDiagnostics,
                             ),
                             IconButton(
                               tooltip: '전체 화면 해제 (더블클릭 / Esc)',

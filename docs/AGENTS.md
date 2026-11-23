@@ -121,7 +121,41 @@
 - 서버 주의: ws/wss 전송은 transport `external_*` 무시 → endpoint `media_address=<공인 IP>` 필요, SDP `c=`에는 DDNS 호스트명 불가.
 - 미확인: 공인 IP 동적 갱신 시 SDP `c=` 반영 방식, IPTime1 접근/테더링 실기 검증 시간, Synology 인증서 내보내기 경로.
 - 의견서 v1.2: DEV/PRD/외부 서버 환경별 대비책(프로필 기반 OPS config, 공인 IP↔SDP 분리, 인증서/포트/RTP 범위 분리, TURN/VPS fallback) 추가. PRD `MEDIA_ADDRESS=CHANGE_ME_PUBLIC_IP` placeholder는 미해소 리스크.
+- **전용 브랜치**: `feature/external-network-access` 생성. 작업계획서 [[wiki/01_Projects/20261119_외부망접근_작업계획서_v1.0]] (W1~W10), 로그 [[wiki/07_Logs/20261119]] 섹션 3. 포트: IPTime1 → `192.168.11.5` 8089/TCP + 10000-10200/UDP.
+- **구현 완료(코드)**: 서버 `http.conf.template`/`entrypoint.sh`(조건부 transport-wss·인증서 검사·`SDP_MEDIA_ADDRESS`), DEV/PRD compose·env, 클라이언트 `ServerConfig.secure` + OPS `secure`→withScheme 자동 https/wss. analyze 0 / test 17/17.
+- **실제 적용(2026-11-19)**: Synology DDNS 인증서(`CN=appletreeda.synology.me`, 만료 2026-12-31)를 `deploy/dev/certs/`에 배치, `.env` `TLS_ENABLE=yes`. HTTPS 8089·wss transport 확인, WSS REGISTER_OK. probe 3종 초기화 버그 수정. 6700 AI봇(7001) 재기동 후 1080p 송출 확인. 외부망 1103 인증 실패는 OPS 8091 미개방 → **오프라인 인증** + DDNS 저장 시 wss 자동전환 추가. **v0.0.38 빌드/발행**.
+- **6700 품질 수정(v1.6)**: 공인 IP를 전역 `media_address`로 써서 내부 RTP가 NAT hairpin을 통과하며 1102 프리즈/1101 media stall 발생 → `SDP_MEDIA_ADDRESS=192.168.11.5` 복구, `rtp.conf`에 `stunaddr` + `ice_host_candidates`(Docker IP→LAN, include_local_address)로 내부/공인 이중 후보 구성. 1:1·3자·6700 프로브 재검증 OK.
+- **v1.7 클라이언트 수정**: 클라이언트도 LAN이면 STUN을 쓰지 않아 SDP `c=`가 공인 IP가 되지 않도록 `AppConstants.iceServersFor()` 분리, 로그인 성공 시 `markLocalVerified()`로 외부 1103 로컬 인증, 설정 오프라인 인증 버튼 상시 노출. **v0.0.39 발행**(SHA256 `c4d05d88…`), analyze 0 / test 17/17. 잔여: v0.0.39 실기 재검증, 외부 단말 미디어, 인증서 갱신, PRD, TURN.
+- **버그 보고서**: [[wiki/06_Reports/20261119_외부망WSS_6700품질_버그원인분석보고서_v1.0]], [[wiki/06_Reports/20261119_외부망WSS_6700품질_버그수정완료보고서_v1.0]] 작성. 봇 Chromium 재실행 수정 포함 서버/클라이언트 변경 검증 결과 기록.
 - 클라이언트: 로그인 WSS hint 반영, `flutter analyze` 0 / `test` 17/17. 작업로그 [[docs/_작업이력/2026-11-19]]
+
+## 현재 진행 (2026-11-20) — 슬립/재개 후 6700 복구
+- 점검 정상: IP `192.168.11.5`, OPS health 200, SIP auth 12건 PASS, RTP/STUN/WSS 정상.
+- 원인: 진단봇 데몬 2개 + 7001 ConfBridge 채널 2개/1106 잔류로 6700 영상 소스 중복.
+- 조치: 데몬/채널 전부 정리 후 단일 봇 재기동(PID 4131), 1080p 송출 및 6700 `conference_probe` videoBytes 증가 확인.
+- 봇 단일 인스턴스 보장 완료: 서버 `scripts/restart-diag-bot.sh`(`ensure|restart|status|stop`) + 데몬 PID lock/잔류 7001 채널 자동 hangup. launchd는 TCC 차단으로 제거하고 데몬 자체 복구로 확정. 사용 안내 [[wiki/03_Guides/20261120_진단봇_단일인스턴스_사용안내_v1.0]], 로그 [[wiki/07_Logs/20261120]]
+- **v0.0.40**: v0.0.39 media stall 오검출(re-INVITE 시 카운터 감소) 및 재진입 경합 수정. `sip_client.dart` 재baseline, `sip_provider.dart` 스톨 플래그 초기화, `conference_screen.dart` connecting 중 입장 차단. analyze 0/test 17/17. 보고서 [[wiki/06_Reports/20261120_v0.0.39_6700재진입실패_버그분석_v1.0]]
+- **v0.0.41**: 설정에 `로그보내기` 추가 — 자동보내기(즉시+5분 주기, `autoSend` 저장)와 즉시보내기(1회) 동시 사용 가능. `scripts/collect-test-metrics.sh`로 네트워크 전환 품질지표를 phase별 wiki 수집. 사용안내 [[wiki/03_Guides/20261120_로그보내기_및_품질지표수집_사용안내_v1.0]], SHA256 `e02eb552…`
+- **v0.0.42**: 앱 내 품질지표 GUI 추가 — OPS 로그 기반 표+그래프(fps/vLost/freeze/pli), 양호·주의·위험 진단. `CustomPaint`만 사용해 외부 의존성 없음(1 source multi OS). SHA256 `0e8aeab8…`
+- **v0.0.43**: 영상 품질 수동 설정 추가 — 320p/640p/720p/1080p/4K × 15/24/30/60fps 조합, `VideoQualitySettings` 저장, `setParameters`+트랙 교체 적용. 자동은 BALANCED 위임. SHA256 `64a528ac…`
+- **v0.0.44**: 전체화면에 전송속도 진단 버튼/오버레이 추가 — 영상·음성·네트워크 실시간/60초 평균, 외부 의존성 없음. SHA256 `056e3e90…`
+- **품질진단 문서**: [[wiki/01_Projects/20261120_클라이언트품질진단_기획서_v1.0]], [[wiki/02_Design/20261120_클라이언트품질진단_설계서_v1.0]], [[wiki/03_Guides/20261120_클라이언트품질진단_사용안내서_v1.0]], [[wiki/08_Experiments/20261120_클라이언트품질진단_자체검증_v1.0]] 작성. v0.0.41~44 기능/검증/이슈 정리.
+- **외부망 테스트 절차서**: [[wiki/03_Guides/20261120_외부망접근_테스트절차서_v1.0]] — 도메인은 `appletreeda.synology.me`만 사용(`appletree`는 오답), WSS REGISTER_OK 사전 확인 완료.
+- **v0.0.45 연결 프로필**: DEV/PRD/외부망 프로필 저장 + OPS `/api/client/config` 자동 탐색 적용, 실패 시 수동 입력. 사용안내 [[wiki/03_Guides/20261120_연결프로필_자동설정_사용안내_v1.0]], SHA256 `8fbf24e4…`
+- **v0.0.46 크래시 수정**: flutter_webrtc 로컬 포크 `getSources:`를 메인 큐로 이동해 AVCaptureDevice 초기화 레이스 제거. 보고서 [[wiki/06_Reports/20261120_getSources_네이티브크래시_수정보고서_v1.0]], 후속과제 [[wiki/01_Projects/20261120_후속과제_정리_v1.0]]
+- **릴리스 요약**: [[wiki/06_Reports/20261120_v0.0.41-46_릴리스요약_v1.0]] — v0.0.41~48 변경/커밋/SHA256/문서 색인. wiki 색인 재생성 완료.
+- **v0.0.47~48**: 프로필 변경 시 로그 URL 연동, 프로필별 연결 테스트(OPS/WS/로그) 추가. 외부망 8091 차단은 정상이며 로그는 로컬 보관 후 재전송. 안내서 [[wiki/03_Guides/20261120_연결프로필_자동설정_사용안내_v1.0]], [[wiki/03_Guides/20261120_외부망접근_테스트절차서_v1.0]]
+- **외부관점 테스트**: [[wiki/08_Experiments/20261120_외부망접근_외부관점_테스트_v1.0]] — DDNS 8089 HTTPS/WS PASS, 8091/8088 TIMEOUT(정책 차단). webfetch egress가 공인 IP와 동일해 해외 관점은 사용자 VPN 재확인 필요.
+- **미국 VPN 로그 분석**: [[wiki/08_Experiments/20261120_미국VPN_외부망테스트_로그분석_v1.0]] — OPS 8091 차단(예상), 로그는 지연 재전송 후 서버 수신, OPS unhealthy 재시작 복구. SIP/통화 이벤트 없음 → 외부 통화 미검증.
+- **OPS hang 진단 수령 검증**: [[wiki/06_Reports/20261120_OPS8091_hang_진단보고서_MacPro전달용_v1.0]] — 외부 OPS HTTP-only 정정, git-sync push 버그 수정 확인, 내부/외부 health 200 재검증. v0.0.49 SHA256 `fc5ae6db…`
+- **자체 테스트 종합**: [[wiki/08_Experiments/20261120_에이전트_자체테스트_종합_v1.0]] — 빌드/외부관점/SIP·회의/로그/일일점검 결과 및 미수행 항목 정리.
+- **MacBook 검증 지시**: [[wiki/04_Prompts/20261120_MacBook_외부망_종단간검증_작업지시_v1.0]] — 외부 프로필 종단간 검증 절차(연결 테스트·SIP·통화·진단·로그·보고). SHA 대신 Info.plist 버전 기준.
+- **E2E 결과**: [[wiki/08_Experiments/20261120_외부망_종단간검증_v1.0]] — 미국 VPN에서 REGISTER/CALL/CONFERENCE OK. client_log_url 내부 IP 덮어쓰기 방지 v0.0.50 반영.
+- **TURN Staging**: [[wiki/08_Experiments/20261120_TURN_coturn_Staging검증_v1.0]] — coturn 시간제 HMAC, 강제 RELAY 1:1/3자 OK. 운영 포트 개방·인증서 갱신·공인IP 동기화는 승인 대기. v0.0.53.
+- **OPS hang 대응**: 서버 e715384 — WAL 일원화·단일 워커·SIGUSR1 스택 덤프로 재발 구조 제거, 120/120 HTTP 200. 클라이언트는 /api/client/config 인증 + HTTP 정규화(daa0a711)로 우회.
+- **1104 외부망 테스트**: 5G 테더링으로 WSS REGISTER_OK, 6700 입장·AI봇 영상 수신 정상. 그러나 re-INVITE 후 media stall 오검출 → RTP Timeout → ICE Failed → 통화 종료. v0.0.40 스톨 수정 불완전. OPS `/api/client/config` 401로 설정 갱신 실패, contacts/conferences는 200. 세션 중복(2채널) 의심. 보고서 작성 중.
+- **v0.0.54**: 로그 URL https→http 시작 시 강제 정규화. 23:00 1102 로그 미수신 원인(https URL) 제거.
+- **v0.0.55**: 인증 실패 시 키/내선 보존, 서버 불통은 localVerified 유지, 200 ok 검증. 주소록/인증 소실 방지..
 
 ## 이전 진행 (2026-11-13 02:00, 요약) — F1/F2/G3 구현·v0.0.24
 - F1 `_pendingCallTarget`, F2 A4 롤백, G3 `enable_events=yes` 반영(v0.0.24 build 24, sha256 `c8c6e4a7…`). ADR-008/D1·ADR-009/F2 실기 확인, G3 부분검증. 잔여: P0 크래시, H1/H5/F1/H6 재검증. 상세: [[wiki/06_Reports/20261113_F1F2G3_구현완료보고서_v1.0]], [[docs/보고서/20261113_후속작업계획서_v2.0]], [[wiki/07_Logs/작업로그_20261113]]

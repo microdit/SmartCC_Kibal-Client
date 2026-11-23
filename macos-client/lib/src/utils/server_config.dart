@@ -5,6 +5,154 @@ import 'dart:io';
 import 'app_logger.dart';
 import 'constants.dart';
 
+enum ConnectionProfile { dev, prd, external, test }
+
+extension ConnectionProfileX on ConnectionProfile {
+  String get label {
+    switch (this) {
+      case ConnectionProfile.dev:
+        return 'DEV';
+      case ConnectionProfile.prd:
+        return 'PRD';
+      case ConnectionProfile.external:
+        return '외부망';
+      case ConnectionProfile.test:
+        return 'TEST';
+    }
+  }
+
+  ServerConfig defaultConfig() {
+    switch (this) {
+      case ConnectionProfile.dev:
+        return ServerConfig(
+          sipDomain: '192.168.11.5',
+          sipPort: 5060,
+          wsServer: 'ws://192.168.11.5:8088/ws',
+          opsBaseUrl: 'http://192.168.11.5:8091',
+          clientLogUrl: AppConstants.opsLogUrl('192.168.11.5'),
+          source: 'profile',
+        );
+      case ConnectionProfile.prd:
+        return ServerConfig(
+          sipDomain: '192.168.11.3',
+          sipPort: 5060,
+          wsServer: 'ws://192.168.11.3:8088/ws',
+          opsBaseUrl: 'http://192.168.11.3:8091',
+          clientLogUrl: AppConstants.opsLogUrl('192.168.11.3'),
+          source: 'profile',
+        );
+      case ConnectionProfile.external:
+        return ServerConfig(
+          sipDomain: 'appletreeda.synology.me',
+          sipPort: 8089,
+          wsServer: 'wss://appletreeda.synology.me:8089/ws',
+          opsBaseUrl: 'http://appletreeda.synology.me:8091',
+          clientLogUrl:
+              'http://appletreeda.synology.me:${AppConstants.opsPort}/api/client-logs',
+          secure: false,
+          source: 'profile',
+        );
+      case ConnectionProfile.test:
+        return ServerConfig(
+          sipDomain: '192.168.11.5',
+          sipPort: 15060,
+          wsServer: 'ws://192.168.11.5:18088/ws',
+          opsBaseUrl: 'http://192.168.11.5:8091',
+          clientLogUrl: 'http://192.168.11.5:8091/api/client-logs',
+          source: 'profile',
+        );
+    }
+  }
+
+  List<String> get candidates {
+    switch (this) {
+      case ConnectionProfile.dev:
+        return const [
+          'http://192.168.11.5:8091',
+          'http://MacPro.local:8091',
+        ];
+      case ConnectionProfile.prd:
+        return const [
+          'http://192.168.11.3:8091',
+          'http://nas2:8091',
+        ];
+      case ConnectionProfile.external:
+        return const [
+          'http://appletreeda.synology.me:8091',
+        ];
+      case ConnectionProfile.test:
+        return const [
+          'http://192.168.11.5:8091',
+        ];
+    }
+  }
+}
+
+class ConnectionProfileStore {
+  ConnectionProfileStore._();
+
+  static final ConnectionProfileStore instance = ConnectionProfileStore._();
+
+  static String get path =>
+      '${AppLogger.logDirectory}/connection-profiles.json';
+
+  Map<String, dynamic> _data = {};
+
+  Future<void> load() async {
+    try {
+      final file = File(path);
+      if (!file.existsSync()) {
+        _data = {};
+        return;
+      }
+      final decoded = jsonDecode(file.readAsStringSync());
+      if (decoded is Map<String, dynamic>) _data = decoded;
+    } catch (_) {
+      _data = {};
+    }
+  }
+
+  ConnectionProfile get selected {
+    final name = _data['selected'] as String?;
+    return ConnectionProfile.values.firstWhere(
+      (p) => p.name == name,
+      orElse: () => ConnectionProfile.dev,
+    );
+  }
+
+  void setSelected(ConnectionProfile profile) {
+    _data['selected'] = profile.name;
+    _save();
+  }
+
+  ServerConfig? configFor(ConnectionProfile profile) {
+    final raw = _data[profile.name];
+    if (raw is! Map<String, dynamic>) return null;
+    return ServerConfig._fromJson(raw, 'profile');
+  }
+
+  void save(ConnectionProfile profile, ServerConfig config) {
+    final map = <String, dynamic>{
+      'sipDomain': config.sipDomain,
+      'sipPort': config.sipPort,
+      'wsServer': config.wsServer,
+      'opsBaseUrl': config.opsBaseUrl,
+      'clientLogUrl': config.clientLogUrl,
+      'secure': config.secure,
+    };
+    _data[profile.name] = map;
+    _save();
+  }
+
+  void _save() {
+    try {
+      File(path).writeAsStringSync(jsonEncode(_data));
+    } catch (e) {
+      AppLogger.instance.w('연결 프로필 저장 실패: $e');
+    }
+  }
+}
+
 /// 서버 환경설정(SIP 도메인·WS·OPS 주소) — OPS `/api/client/config`에서 자동 갱신.
 ///
 /// 서버(Docker 호스트) IP가 유선/무선 전환 등으로 바뀌어도:
@@ -23,7 +171,9 @@ class ServerConfig {
     this.source = 'default',
     this.clientKey = '',
     this.clientExtension = '',
+    this.secure = false,
     this.manifest,
+    this.turn,
   });
 
   final String sipDomain;
@@ -43,8 +193,12 @@ class ServerConfig {
   final String clientKey;
   final String clientExtension;
 
+  final bool secure;
+
   /// 서버 manifest(D1): config_version, latest/min_supported, update flags 등
   final Map<String, dynamic>? manifest;
+
+  final Map<String, dynamic>? turn;
 
   static String get filePath => '${AppLogger.logDirectory}/server-config.json';
 
@@ -71,6 +225,10 @@ class ServerConfig {
         'clientLogUrl': clientLogUrl,
         'publicHost': publicHost,
         'updatedAt': updatedAt,
+        'secure': secure,
+        // TURN 자격증명은 만료 시간제(HMAC)라 캐시에 저장해도 무방. 앱 재시작 시
+        // autoRegister가 TURN 없이 ICE를 구성해 외부망 RTP가 끊기는 문제 방지.
+        if (turn != null) 'turn': turn,
         // 보안: Ops 클라이언트 키/인증내선은 기본적으로 평문 설정파일에 저장하지 않음(보안 저장소 사용)
         if (includeSecrets) 'clientKey': clientKey,
         if (includeSecrets) 'clientExtension': clientExtension,
@@ -83,26 +241,42 @@ class ServerConfig {
     if (domain == null || domain.isEmpty || ws == null || ws.isEmpty) {
       return null;
     }
-    final ops = (j['opsBaseUrl'] ?? j['ops_base_url']) as String? ??
+    // OPS는 HTTP-only. 저장된 https:// URL은 http://로 정규화.
+    var ops = (j['opsBaseUrl'] ?? j['ops_base_url']) as String? ??
         'http://$domain:${AppConstants.opsPort}';
+    ops = ops.replaceFirst(RegExp(r'^https://', caseSensitive: false), 'http://');
     final man = j['manifest'];
-    return ServerConfig(
+    final secureValue = j['secure'] ?? j['use_tls'] ?? j['tls'];
+    final secure = secureValue is bool
+        ? secureValue
+        : secureValue is String
+            ? secureValue.toLowerCase() == 'true' || secureValue == '1'
+            : secureValue == 1;
+    final cfg = ServerConfig(
       sipDomain: domain,
       sipPort: ((j['sipPort'] ?? j['sip_port']) as num?)?.toInt() ??
           AppConstants.defaultSipPort,
       wsServer: ws,
       opsBaseUrl: ops,
-      clientLogUrl: (j['clientLogUrl'] ?? j['client_log_url']) as String? ??
-          '$ops/api/client-logs',
+      clientLogUrl: ((j['clientLogUrl'] ?? j['client_log_url']) as String? ??
+              '$ops/api/client-logs')
+          .replaceFirst(RegExp(r'^https://', caseSensitive: false), 'http://'),
       publicHost: (j['publicHost'] ?? j['public_host']) as String?,
       updatedAt: (j['updatedAt'] ?? j['updated_at']) as String?,
       source: source,
       clientKey: (j['clientKey'] as String?) ?? '',
       clientExtension: (j['clientExtension'] as String?) ?? '',
+      secure: secure,
+      turn: j['turn'] is Map<String, dynamic>
+          ? Map<String, dynamic>.from(j['turn'] as Map<String, dynamic>)
+          : (j['turn'] is Map
+              ? Map<String, dynamic>.from(j['turn'] as Map)
+              : null),
       manifest: man is Map<String, dynamic>
           ? man
           : (man is Map ? Map<String, dynamic>.from(man) : null),
     );
+    return cfg;
   }
 
   static ServerConfig load() {
@@ -172,7 +346,9 @@ class ServerConfig {
     String? source,
     String? clientKey,
     String? clientExtension,
+    bool? secure,
     Map<String, dynamic>? manifest,
+    Map<String, dynamic>? turn,
   }) =>
       ServerConfig(
         sipDomain: sipDomain ?? this.sipDomain,
@@ -185,7 +361,9 @@ class ServerConfig {
         source: source ?? this.source,
         clientKey: clientKey ?? this.clientKey,
         clientExtension: clientExtension ?? this.clientExtension,
+        secure: secure ?? this.secure,
         manifest: manifest ?? this.manifest,
+        turn: turn ?? this.turn,
       );
 
   @override
@@ -198,7 +376,7 @@ class ServerConfigService {
   ServerConfigService._();
   static final ServerConfigService instance = ServerConfigService._();
 
-  static const Duration perCandidateTimeout = Duration(seconds: 3);
+  static const Duration perCandidateTimeout = Duration(seconds: 8);
 
   ServerConfig _current = ServerConfig.load();
   ServerConfig get current => _current;
@@ -207,15 +385,76 @@ class ServerConfigService {
     _current = cfg;
   }
 
+  /// 현재 네트워크가 내부망(LAN)인지 판별.
+  /// 192.168.11.5:8091에 2초 내 응답하면 LAN으로 판단.
+  Future<bool> isOnLan() async {
+    try {
+      final client = HttpClient()..connectionTimeout = const Duration(seconds: 2);
+      final req = await client
+          .getUrl(Uri.parse('http://192.168.11.5:${AppConstants.opsPort}/health'))
+          .timeout(const Duration(seconds: 2));
+      final res = await req.close().timeout(const Duration(seconds: 2));
+      await res.drain<void>();
+      client.close(force: true);
+      return res.statusCode == 200;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  Future<ServerConfig?> probeProfile(
+    ConnectionProfile profile, {
+    String? clientKey,
+    String? extension,
+  }) async {
+    final key = (clientKey ?? _current.clientKey).trim().isNotEmpty
+        ? (clientKey ?? _current.clientKey).trim()
+        : AppConstants.opsClientKey;
+    for (final base in profile.candidates) {
+      final cfg = await _fetch(
+        base,
+        key,
+        extension: extension ?? _current.clientExtension,
+      );
+      if (cfg != null) {
+        final resolved = profile == ConnectionProfile.external
+            ? profile.defaultConfig().copyWith(
+                  clientKey: cfg.clientKey,
+                  clientExtension: cfg.clientExtension,
+                  publicHost: cfg.publicHost,
+                  updatedAt: cfg.updatedAt,
+                  source: cfg.source,
+                  manifest: cfg.manifest,
+                  turn: cfg.turn,
+                )
+            : cfg;
+        _current = resolved;
+        resolved.save();
+        AppLogger.instance
+            .i('연결 프로필 자동설정 성공 profile=${profile.name} via=$base');
+        return resolved;
+      }
+    }
+    AppLogger.instance.w('연결 프로필 자동설정 실패 profile=${profile.name}');
+    return null;
+  }
+
   /// 탐색 후보 OPS 주소(순서대로 시도)
-  List<String> candidates({String? hintDomain}) {
+  /// 내부망이 아닐 때 내부 IP 후보를 건너뛰어 타임아웃 방지.
+  List<String> candidates({String? hintDomain, bool skipInternal = false}) {
+    // OPS는 HTTP-only. HTTPS URL이 저장된 경우 HTTP로 정규화하여 hang 방지.
+    String toHttp(String u) => u.replaceFirst(RegExp(r'^https://', caseSensitive: false), 'http://');
+    bool isInternal(String u) =>
+        u.contains('192.168.') || u.contains('10.0.') || u.contains('MacPro.local') || u.contains('localhost');
     final c = <String>[
-      _current.opsBaseUrl,
+      if (!skipInternal || !isInternal(toHttp(_current.opsBaseUrl)))
+        toHttp(_current.opsBaseUrl),
       if (hintDomain != null && hintDomain.isNotEmpty)
         'http://$hintDomain:${AppConstants.opsPort}',
-      if ((_current.publicHost ?? '').isNotEmpty)
+      if ((_current.publicHost ?? '').isNotEmpty && (!skipInternal || !isInternal('http://${_current.publicHost}')))
         'http://${_current.publicHost}:${AppConstants.opsPort}',
-      'http://${ServerConfig.bootstrapHost}:${AppConstants.opsPort}',
+      if (!skipInternal)
+        'http://${ServerConfig.bootstrapHost}:${AppConstants.opsPort}',
       'http://${AppConstants.defaultDomain}:${AppConstants.opsPort}',
     ];
     final seen = <String>{};
@@ -227,15 +466,20 @@ class ServerConfigService {
 
   /// OPS에 접속해 최신 설정을 받는다. 성공 시 저장 후 반환, 모두 실패 시 null.
   Future<ServerConfig?> refresh(
-      {String? hintDomain, String? clientKey, String? extension}) async {
+      {String? hintDomain, String? clientKey, String? extension, bool skipInternal = false}) async {
     final key = clientKey ??
         (_current.clientKey.trim().isNotEmpty
             ? _current.clientKey.trim()
             : AppConstants.opsClientKey);
-    for (final base in candidates(hintDomain: hintDomain)) {
+    for (final base in candidates(hintDomain: hintDomain, skipInternal: skipInternal)) {
       final cfg = await _fetch(base, key,
           extension: extension ?? _current.clientExtension);
       if (cfg != null) {
+        if (skipInternal && _looksInternalConfig(cfg)) {
+          AppLogger.instance.w(
+              '서버 설정 갱신 거부(외부망 내부주소 오염): via=$base domain=${cfg.sipDomain} ws=${cfg.wsServer}');
+          continue;
+        }
         final changed = !cfg.sameAddressAs(_current) ||
             cfg.configVersion != _current.configVersion;
         _current = cfg;
@@ -244,10 +488,71 @@ class ServerConfigService {
             'domain=${cfg.sipDomain} ws=${cfg.wsServer} changed=$changed ver=${cfg.configVersion}');
         return cfg;
       }
+      AppLogger.instance.w('서버 설정 갱신 실패 via=$base (응답 없음/비정상)');
     }
     AppLogger.instance.w('서버 설정 갱신 실패: OPS 응답 없음 (후보 '
         '${candidates(hintDomain: hintDomain).join(', ')})');
     return null;
+  }
+
+  /// 네트워크 변경 감지 + 자동 프로필 전환.
+  /// 내부망에서 외부망으로 전환 시 자동으로 외부 프로필로 전환.
+  Future<ServerConfig?> refreshSmart({String? clientKey, String? extension}) async {
+    final onLan = await isOnLan();
+    AppLogger.instance.i('네트워크 감지: onLan=$onLan, currentProfile=${_current.sipDomain}');
+    final selected = ConnectionProfileStore.instance.selected;
+    // 내부망인데 외부 프로필이면 선택된 내부 프로필(DEV/TEST)로 전환
+    if (onLan && _current.sipDomain == 'appletreeda.synology.me') {
+      final target = selected == ConnectionProfile.test
+          ? ConnectionProfile.test
+          : ConnectionProfile.dev;
+      AppLogger.instance.i('내부망 감지 → ${target.label} 프로필로 자동 전환');
+      final cfg = target.defaultConfig();
+      _current = cfg;
+      cfg.save();
+      ConnectionProfileStore.instance.setSelected(target);
+      return cfg;
+    }
+    // 외부망인데 내부 프로필이면 external로 전환 (TEST 포함)
+    if (!onLan &&
+        (_current.sipDomain == '192.168.11.5' ||
+            _current.sipDomain == '192.168.11.3' ||
+            _current.sipDomain == '192.168.11.2')) {
+      AppLogger.instance.i('외부망 감지 → 외부 프로필로 자동 전환');
+      final cfg = ConnectionProfile.external.defaultConfig();
+      _current = cfg;
+      cfg.save();
+      ConnectionProfileStore.instance.setSelected(ConnectionProfile.external);
+      return cfg;
+    }
+    // 프로필 전환 없이 refresh
+    return refresh(
+      clientKey: clientKey,
+      extension: extension,
+      skipInternal: !onLan,
+    );
+  }
+
+  bool _looksInternalConfig(ServerConfig cfg) {
+    bool internalHost(String raw) {
+      final uri = Uri.tryParse(raw.contains('://') ? raw : 'http://$raw');
+      final host = (uri?.host ?? raw).toLowerCase();
+      if (host.isEmpty) return false;
+      if (host == 'localhost' || host == '127.0.0.1' || host.endsWith('.local')) return true;
+      final m = RegExp(r'^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$').firstMatch(host);
+      if (m == null) return false;
+      final a = int.parse(m.group(1)!);
+      final b = int.parse(m.group(2)!);
+      if (a == 10 || a == 127) return true;
+      if (a == 192 && b == 168) return true;
+      if (a == 172 && b >= 16 && b <= 31) return true;
+      return false;
+    }
+
+    return internalHost(cfg.sipDomain) ||
+        internalHost(cfg.wsServer) ||
+        internalHost(cfg.opsBaseUrl) ||
+        internalHost(cfg.clientLogUrl);
   }
 
   void updateClientCredentials({String? clientKey, String? clientExtension}) {
@@ -274,21 +579,27 @@ class ServerConfigService {
               ? _current.clientKey.trim()
               : AppConstants.opsClientKey);
       if (useKey.isNotEmpty) req.headers.add('X-Client-Key', useKey);
-      if (useExt.isNotEmpty && _current.clientKey.trim().isNotEmpty) {
+      if (useExt.isNotEmpty && useKey.isNotEmpty) {
         req.headers.add('X-Client-Extension', useExt);
       }
       final res = await req.close().timeout(perCandidateTimeout);
       final body = await res.transform(utf8.decoder).join();
+      AppLogger.instance.i('OPS _fetch url=$base/api/client/config status=${res.statusCode} body=${body.length>120?body.substring(0,120):body}');
       if (res.statusCode != 200) return null;
       final json = jsonDecode(body) as Map<String, dynamic>;
       final data = json['data'];
       if (data is! Map<String, dynamic>) return null;
       final fetched = ServerConfig._fromJson(data, 'ops');
       if (fetched == null) return null;
+      final turnRaw = data['turn'];
+      final turn = turnRaw is Map<String, dynamic>
+          ? Map<String, dynamic>.from(turnRaw)
+          : null;
       // 로컬 인증 입력값 유지
       return fetched.copyWith(
         clientKey: _current.clientKey,
         clientExtension: _current.clientExtension,
+        turn: turn,
       );
     } catch (_) {
       return null;

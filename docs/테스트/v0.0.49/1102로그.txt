@@ -1,0 +1,31 @@
+[2026-11-20T20:46:35.404382] INFO [usr=- host=- ip=-] AppLogger 초기화 완료 file=/Users/microdit/Library/Containers/com.microdit.macosClient/Data/Library/Application Support/com.microdit.macosClient/logs/app.log identity=usr=- host=- ip=- mode=release
+[2026-11-20T20:46:35.519559] WARN [usr=- host=- ip=-] SIP auto-register failed: 1102 password missing
+[2026-11-20T20:46:38.550649] WARN [usr=- host=- ip=-] 서버 설정 갱신 실패: OPS 응답 없음 (후보 https://appletreeda.synology.me:8091, http://appletreeda.synology.me:8091, http://MacPro.local:8091, http://192.168.11.5:8091)
+[2026-11-20T20:46:43.413947] WARN [usr=- host=- ip=-] 원격 로그 전송 실패 SocketException → 로컬 보관 후 재시도
+[2026-11-20T20:46:43.414747] INFO [usr=- host=- ip=-] 원격 로그 업로더 시작 session=mwowylu4-8bks7g mode=전체 url=https://appletreeda.synology.me:8091/api/client-logs
+[2026-11-20T20:46:47.317712] WARN [usr=- host=- ip=-] OPS client auth failed count=1
+[2026-11-20T20:46:47.317874] EVENT AUTH event=verifyResult state=failed ext=1102 failCount=1 status=-1 reason=서버 연결 실패
+[2026-11-20T20:47:21.094963] EVENT UI SETTINGS action=logSendOpened
+[2026-11-20T20:47:23.144586] INFO [usr=- host=- ip=-] 원격 로그 즉시전송 요청
+[2026-11-20T20:47:26.011136] EVENT UI SETTINGS action=remoteLogSettingsOpened
+[2026-11-20T20:48:41.723724] WARN [usr=- host=- ip=-] SIP auto-register failed: 1102 password missing
+[2026-11-20T20:48:53.852369] WARN [usr=- host=- ip=-] 서버 설정 갱신 실패: OPS 응답 없음 (후보 https://appletreeda.synology.me:8091, http://appletreeda.synology.me:8091, http://MacPro.local:8091, http://192.168.11.5:8091)
+[2026-11-20T20:51:43.416658] INFO [usr=- host=- ip=-] 원격 로그 즉시전송 요청
+[2026-11-20T20:56:34.749935] WARN [usr=- host=- ip=-] 서버 설정 갱신 실패: OPS 응답 없음 (후보 https://appletreeda.synology.me:8091, http://appletreeda.synology.me:8091, http://MacPro.local:8091, http://192.168.11.5:8091)
+[2026-11-20T20:56:41.718209] INFO [usr=- host=- ip=-] 원격 로그 설정 변경 mode=전체 url=https://appletreeda.synology.me:8091/api/client-logs
+[2026-11-20T20:56:51.775153] EVENT UI SETTINGS action=remoteLogSettingsOpened
+[2026-11-20T20:57:03.785948] INFO [usr=- host=- ip=-] 원격 로그 설정 변경 mode=전체 url=https://appletreeda.synology.me:8091/api/client-logs
+[2026-11-20T20:57:15.375104] WARN [usr=- host=- ip=-] OPS client auth failed count=2
+[2026-11-20T20:57:15.375224] EVENT AUTH event=verifyResult state=failed ext=1102 failCount=2 status=-1 reason=서버 연결 실패
+[2026-11-20T20:58:40.250546] WARN [usr=- host=- ip=-] 서버 설정 갱신 실패: OPS 응답 없음 (후보 https://appletreeda.synology.me:8091, http://appletreeda.synology.me:8091, http://MacPro.local:8091, http://192.168.11.5:8091)
+[2026-11-20T20:58:44.341938] WARN [usr=- host=- ip=-] OPS client auth failed count=3
+[2026-11-20T20:58:44.342047] EVENT AUTH event=verifyResult state=failed ext=1102 failCount=3 status=-1 reason=서버 연결 실패
+[2026-11-20T20:58:45.652333] INFO [usr=- host=- ip=-] OPS client auth local-verified (offline) ext=1102
+[2026-11-20T20:58:45.652430] EVENT AUTH event=verifyResult state=localVerified ext=1102
+[2026-11-20T20:59:40.198742] WARN [usr=- host=- ip=-] SIP auto-register failed: 1102 password missing
+[2026-11-20T20:59:40.454558] WARN [usr=- host=- ip=-] 서버 설정 갱신 실패: OPS 응답 없음 (후보 https://appletreeda.synology.me:8091, http://appletreeda.synology.me:8091, http://MacPro.local:8091, http://192.168.11.5:8091)
+[2026-11-20T20:59:41.861650] WARN [usr=- host=- ip=-] SIP auto-register failed: 1102 password missing
+[2026-11-20T20:59:48.596121] INFO (동일 로그 2회 반복 스킵 요약)
+[2026-11-20T20:59:48.596259] WARN [usr=- host=- ip=-] SIP auto-register failed: 1102 password missing
+[2026-11-20T20:59:54.610331] INFO (동일 로그 3회 반복 스킵 요약)
+[2026-11-20T20:59:54.610475] WARN [usr=- host=- ip=-] SIP auto-register failed: 1102 password missing

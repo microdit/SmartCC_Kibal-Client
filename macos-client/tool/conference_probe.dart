@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/widgets.dart';
+import 'package:macos_client/src/utils/app_logger.dart';
+import 'package:macos_client/src/utils/remote_log_forwarder.dart';
 import 'probe_party.dart';
 
 /// DEV Asterisk ConfBridge(6000) 3자 회의 스모크/S0 비교 테스트.
@@ -14,6 +16,8 @@ import 'probe_party.dart';
 /// flutter run -d macos --debug -t tool/conference_probe.dart
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await AppLogger.instance.init();
+  await RemoteLogForwarder.instance.start();
 
   const domain = String.fromEnvironment('SIP_DOMAIN', defaultValue: '192.168.11.39');
   const wsServer = String.fromEnvironment(

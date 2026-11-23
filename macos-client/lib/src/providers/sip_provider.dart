@@ -156,6 +156,7 @@ class SipProvider with ChangeNotifier {
       return false;
     }
 
+    _mediaStalled = false;
     final completer = Completer<bool>();
     _connectInFlight = completer.future;
     bool result = false;
@@ -302,6 +303,16 @@ class SipProvider with ChangeNotifier {
     });
   }
 
+  Future<List<Map<String, dynamic>>> collectLiveStats() =>
+      _client?.collectRawStats() ?? Future.value(const <Map<String, dynamic>>[]);
+
+  Future<void> applyVideoQuality({MediaStreamTrack? videoTrack}) async {
+    await _client?.applyVideoQuality();
+    if (videoTrack != null) {
+      await _client?.replaceVideoTrack(videoTrack);
+    }
+  }
+
   Future<bool> call(String target, {MediaStream? mediaStream}) async {    if (_client == null) {
       _error = 'SIP 클라이언트가 초기화되지 않음';
       notifyListeners();
@@ -313,6 +324,8 @@ class SipProvider with ChangeNotifier {
       notifyListeners();
       return false;
     }
+
+    _mediaStalled = false;
 
     // 발신 전 진행 중 수신이 있으면 자동 거절 (수신 대기 세션이 발신을 막는 문제 해결)
     if (_hasIncomingCall) {

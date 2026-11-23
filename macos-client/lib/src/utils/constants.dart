@@ -125,6 +125,15 @@ class AppConstants {
     // TURN server will be added when configured
     // 'turn:192.168.11.2:3478',
   ];
+
+  static List<String> iceServersFor(String target) {
+    final value = target.toLowerCase();
+    final isLan = value.contains('192.168.') ||
+        value.contains('10.') ||
+        value.contains('127.0.0.1') ||
+        value.contains('.local');
+    return isLan ? const <String>[] : prdIceServers;
+  }
   
   //--------------------------------------------------------------------------
   // Timeouts
@@ -229,7 +238,7 @@ class AppConstants {
   //--------------------------------------------------------------------------
   
   static const bool enableStun = true;
-  static const bool enableTurn = false; // TURN not configured yet
+  static const bool enableTurn = true; // coturn staging 완료
   static const bool enableIce = true;
   static const bool enableSfu = true;
   

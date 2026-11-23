@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/widgets.dart';
+import 'package:macos_client/src/utils/app_logger.dart';
+import 'package:macos_client/src/utils/remote_log_forwarder.dart';
 import 'probe_party.dart';
 
 /// DEV Asterisk에서 1102 → 1103 자동 1:1 영상통화 스모크 테스트.
@@ -10,6 +12,8 @@ import 'probe_party.dart';
 /// flutter run -d macos --debug -t tool/call_probe.dart
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await AppLogger.instance.init();
+  await RemoteLogForwarder.instance.start();
 
   const domain = String.fromEnvironment('SIP_DOMAIN', defaultValue: '192.168.11.39');
   const wsServer = String.fromEnvironment(

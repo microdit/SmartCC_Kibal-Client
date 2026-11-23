@@ -16,6 +16,7 @@ class ConferenceParticipant {
     required this.displayName,
     required this.hasVideo,
     required this.isSelf,
+    this.talking = false,
   });
 
   final String channel;
@@ -25,6 +26,9 @@ class ConferenceParticipant {
   final String displayName;
   final bool hasVideo;
   final bool isSelf;
+
+  /// 서버가 보고한 현재 발언자 여부(AMI 활성 시 실시간).
+  final bool talking;
 
   /// 카드 라벨: "표시이름 (내선)" — 표시 이름이 내선과 같으면 내선만.
   /// 7001 진단봇은 "AI봇(7001)"으로 고정 표기.
@@ -45,18 +49,34 @@ class ConferenceParticipant {
       displayName: (j['display_name'] as String?)?.trim() ?? ext,
       hasVideo: j['has_video'] == true,
       isSelf: j['self'] == true,
+      talking: j['talking'] == true,
     );
   }
 }
 
 class ConferenceSnapshot {
-  const ConferenceSnapshot(this.participants, this.videoOrder, {this.syncSeq = 0, this.syncBy});
+  const ConferenceSnapshot(
+    this.participants,
+    this.videoOrder, {
+    this.syncSeq = 0,
+    this.syncBy,
+    this.speakerExtension,
+    this.speakerHasVideo = true,
+    this.speakerNotice = '',
+    this.videoParticipants = const [],
+  });
   final int syncSeq;
   final String? syncBy;
   final List<ConferenceParticipant> participants;
 
   /// 내 원격 영상 m-line 순서(채널명)
   final List<String> videoOrder;
+
+  /// 발언자(AMI/정적 후보). 영상 소스 없으면 speakerNotice를 표시한다.
+  final String? speakerExtension;
+  final bool speakerHasVideo;
+  final String speakerNotice;
+  final List<ConferenceParticipant> videoParticipants;
 
   int get count => participants.length;
 }
@@ -140,8 +160,23 @@ class ConferenceParticipantService extends ChangeNotifier {
     ].whereType<ConferenceParticipant>().toList();
     final order = [for (final c in (data['video_order'] as List? ?? const [])) '$c'];
     final syncSeq = (data['sync_seq'] as num?)?.toInt() ?? 0;
-    _snapshot = ConferenceSnapshot(list, order,
-        syncSeq: syncSeq, syncBy: data['sync_by'] as String?);
+    final speaker = data['speaker'] is Map<String, dynamic>
+        ? data['speaker'] as Map<String, dynamic>
+        : null;
+    final videoList = <ConferenceParticipant?>[
+      for (final p in (data['video_participants'] as List? ?? const []))
+        if (p is Map<String, dynamic>) ConferenceParticipant.fromJson(p),
+    ].whereType<ConferenceParticipant>().toList();
+    _snapshot = ConferenceSnapshot(
+      list,
+      order,
+      syncSeq: syncSeq,
+      syncBy: data['sync_by'] as String?,
+      speakerExtension: speaker?['extension'] as String?,
+      speakerHasVideo: data['speaker_has_video'] == true,
+      speakerNotice: (data['speaker_notice'] as String?) ?? '',
+      videoParticipants: videoList,
+    );
     // 자동 동기화: 참가자 입장/퇴장
     final members = (list.map((p) => p.channel).toList()..sort()).join(',');
     if (_lastMembers.isNotEmpty && members != _lastMembers) {

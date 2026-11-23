@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'app_logger.dart';
 import 'secure_store.dart';
 
-enum ClientAuthStatus { unauthenticated, verifying, verified }
+enum ClientAuthStatus { unauthenticated, verifying, verified, localVerified }
 
 class ClientAuthState {
   ClientAuthState({
@@ -24,7 +24,10 @@ class ClientAuthState {
 
   static const maxFailCount = 10;
 
-  bool get isVerified => status == ClientAuthStatus.verified;
+  bool get isVerified =>
+      status == ClientAuthStatus.verified ||
+      status == ClientAuthStatus.localVerified;
+  bool get isOfflineVerified => status == ClientAuthStatus.localVerified;
   bool get isLockedOut => failCount >= maxFailCount && !isVerified;
 
   ClientAuthState copyWith({
@@ -168,26 +171,33 @@ class ClientAuthStore {
     return _state;
   }
 
+  Future<ClientAuthState> markLocalVerified({String? reason}) async {
+    _state = _state.copyWith(
+      status: ClientAuthStatus.localVerified,
+      failCount: 0,
+      lastVerifiedAt: DateTime.now().toUtc().toIso8601String(),
+      lastError: reason,
+    );
+    await _persist();
+    AppLogger.instance
+        .i('OPS client auth local-verified (offline) ext=${_state.authExtension}');
+    return _state;
+  }
+
   /// 검증 실패: 횟수 증가, 10회 도달 시 로컬 인증정보(키/내선) 초기화
   Future<ClientAuthState> markFailed({String? reason}) async {
     final nextFail =
         (_state.failCount + 1).clamp(0, ClientAuthState.maxFailCount);
     if (nextFail >= ClientAuthState.maxFailCount) {
-      await resetAuth(reason: '10회 오류로 초기화(서버 관리자 확인 필요, 자동 폐기 아님)');
-      _state = _state.copyWith(
-          lastError: reason, failCount: ClientAuthState.maxFailCount);
-      // resetAuth가 failCount 0으로 만들 수 있으니 정책 표기용 유지
       _state = ClientAuthState(
-        authExtension: '',
-        clientKey: '',
+        authExtension: _state.authExtension,
+        clientKey: _state.clientKey,
         status: ClientAuthStatus.unauthenticated,
         failCount: ClientAuthState.maxFailCount,
-        lastError:
-            '10회 오류로 초기화되었습니다. 서버 관리자 확인이 필요합니다(자동 폐기 아님). 다시 인증번호를 입력하세요.',
+        lastError: reason ?? '인증 실패가 반복되었습니다. 키/내선은 유지됩니다.',
       );
       await _persist();
-      AppLogger.instance.w(
-          'OPS client auth reset after 10 failures ext(before reset masked)');
+      AppLogger.instance.w('OPS client auth locked (credentials kept)');
       return _state;
     }
     _state = _state.copyWith(

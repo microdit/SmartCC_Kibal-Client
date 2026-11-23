@@ -1,0 +1,213 @@
+[2026-11-20T14:13:27.854867] INFO [usr=- host=- ip=-] AppLogger 초기화 완료 file=/Users/microdit/Library/Containers/com.microdit.macosClient/Data/Library/Application Support/com.microdit.macosClient/logs/app.log identity=usr=- host=- ip=- mode=release
+[2026-11-20T14:13:27.855713] INFO [usr=- host=- ip=-] 원격 로그 업로더 시작 session=mwoix1kf-1a5l77t mode=INFO + 이벤트 url=http://192.168.11.5:8091/api/client-logs
+[2026-11-20T14:13:27.891231] WARN [usr=- host=- ip=-] 서버 설정 갱신 실패: OPS 응답 없음 (후보 http://192.168.11.5:8091, http://MacPro.local:8091)
+[2026-11-20T14:13:27.901816] INFO [usr=- host=- ip=-] OPS directory: contacts=7 rooms=3 base=http://192.168.11.5:8091
+[2026-11-20T14:13:27.901933] INFO [usr=- host=- ip=-] AddressBook synced contacts=7 rooms=3
+[2026-11-20T14:13:27.902018] EVENT UI ADDRESSBOOK action=autoRegister params=ext=1101
+[2026-11-20T14:13:27.902051] INFO [usr=- host=- ip=-] SIP state -> connecting
+[2026-11-20T14:13:27.903380] INFO (동일 로그 2회 반복 스킵 요약)
+[2026-11-20T14:13:27.903464] EVENT SIP op=init target=- state=- params=ws=ws://192.168.11.5:8088/ws domain=192.168.11.5 port=5060 transport=ws
+[2026-11-20T14:13:27.932390] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connected
+[2026-11-20T14:13:27.941053] INFO (동일 로그 2회 반복 스킵 요약)
+[2026-11-20T14:13:27.941155] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> registered
+[2026-11-20T14:13:27.941977] EVENT ADDRESSBOOK event=autoRegisterResult state=registered ext=1101 error=-
+[2026-11-20T14:13:31.041703] EVENT UI CONFERENCE action=autoJoin params=room=6700
+[2026-11-20T14:13:31.041872] EVENT UI CONFERENCE action=joinPressed params=room=6700 registered=true
+[2026-11-20T14:13:31.041912] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] CONFERENCE: 로컬 미디어 없음 → getLocalMedia() 선행
+[2026-11-20T14:13:31.455014] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] MEDIA device resolve camera=기본 mic=기본 speaker=기본
+[2026-11-20T14:13:31.456867] EVENT MEDIA event=localStreamReady state=video=0 audio=1 frontCamera=true audioMuted=false
+[2026-11-20T14:13:31.456962] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP call -> 6700 voiceOnly=true hasLocalStream=true
+[2026-11-20T14:13:31.463865] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP remote-track recovery armed id=1b90z846743646a0173j95icaijxo4
+[2026-11-20T14:13:31.463940] EVENT SIP op=callInitiation target=6700 state=initiated params=direction=outgoing id=1b90z846743646a0173j95icaijxo4
+[2026-11-20T14:13:31.464003] EVENT SIP op=callProgress target=6700 state=CONNECTING params=id=1b90z846743646a0173j95icaijxo4
+[2026-11-20T14:13:31.565213] EVENT SIP op=mediaStream target=6700 state=local params=video=0 audio=1 id=1b90z846743646a0173j95icaijxo4
+[2026-11-20T14:13:31.667570] EVENT SIP op=callEstablished target=6700 state=ACCEPTED params=id=1b90z846743646a0173j95icaijxo4
+[2026-11-20T14:13:31.667781] EVENT SIP op=callEstablished target=6700 state=CONFIRMED params=id=1b90z846743646a0173j95icaijxo4
+[2026-11-20T14:13:31.768263] EVENT SIP op=mediaStream target=6700 state=remote params=video=1 audio=1 id=1b90z846743646a0173j95icaijxo4
+[2026-11-20T14:13:31.768448] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote session 1b90z846743646a0173j95icaijxo4 handled: streams=1 event(video=1 audio=1) session(video=1 audio=1)
+[2026-11-20T14:13:31.768543] EVENT MEDIA event=remoteStreamAdded state=video=1 audio=1 sessionId=1b90z846743646a0173j95icaijxo4 sessionStreams=1 sessionVideo=1 sessionAudio=1
+[2026-11-20T14:13:34.047851] EVENT SIP op=mediaStream target=6700 state=remote params=video=1 audio=1 id=1b90z846743646a0173j95icaijxo4
+[2026-11-20T14:13:34.048005] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote session 1b90z846743646a0173j95icaijxo4 handled: streams=1 event(video=1 audio=1) session(video=1 audio=1)
+[2026-11-20T14:13:34.048090] EVENT MEDIA event=remoteStreamAdded state=video=1 audio=1 sessionId=1b90z846743646a0173j95icaijxo4 sessionStreams=1 sessionVideo=1 sessionAudio=1
+[2026-11-20T14:13:34.049075] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] CONFERENCE participants room=6700 n=2 [AI봇(7001):V,김민석 당대표 (1102):V]
+[2026-11-20T14:13:34.063836] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=73f139ae-2d0c-4307-8bf3-f6e6d13322c6
+[2026-11-20T14:13:34.189681] EVENT SIP op=mediaStream target=6700 state=remote params=video=3 audio=1 id=1b90z846743646a0173j95icaijxo4
+[2026-11-20T14:13:34.189818] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote session 1b90z846743646a0173j95icaijxo4 handled: streams=2 event(video=3 audio=1) session(video=4 audio=2)
+[2026-11-20T14:13:34.189880] EVENT MEDIA event=remoteStreamAdded state=video=3 audio=1 sessionId=1b90z846743646a0173j95icaijxo4 sessionStreams=2 sessionVideo=4 sessionAudio=2
+[2026-11-20T14:13:34.190576] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=e3affc75-2df9-4a0b-bb96-3b1267a5b3ab
+[2026-11-20T14:13:34.191030] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=4b9fb8bf-9891-4a34-a6bd-0a2958fd8a59
+[2026-11-20T14:13:34.197156] EVENT SIP op=mediaStream target=6700 state=remote params=video=3 audio=1 id=1b90z846743646a0173j95icaijxo4
+[2026-11-20T14:13:34.197246] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote session 1b90z846743646a0173j95icaijxo4 handled: streams=2 event(video=3 audio=1) session(video=4 audio=2)
+[2026-11-20T14:13:34.197296] EVENT MEDIA event=remoteStreamAdded state=video=3 audio=1 sessionId=1b90z846743646a0173j95icaijxo4 sessionStreams=2 sessionVideo=4 sessionAudio=2
+[2026-11-20T14:13:34.201518] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 수신 hasAudio=true hasVideo=true -> 자동 수락
+[2026-11-20T14:13:34.201794] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 응답 전송 accepted=true recvOnlyVideo=true
+[2026-11-20T14:13:34.714507] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transceivers 0:audio:SendRecv/SendRecv 1:video:RecvOnly/RecvOnly 2:video:RecvOnly/RecvOnly 3:video:RecvOnly/RecvOnly
+[2026-11-20T14:13:36.672045] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=28595 audioPackets=226 videoBytes=794188
+[2026-11-20T14:13:36.681712] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tiles active=2 inactive=1
+[2026-11-20T14:13:37.000235] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] CONFERENCE participants room=6700 n=3 [AI봇(7001):V,김민석 당대표 (1102):V,이재명 대통령 (1101):A*]
+[2026-11-20T14:13:38.501723] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] VIDEO resync reason=auto:join localKick=false remoteTiles=2
+[2026-11-20T14:13:38.604301] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=e3affc75-2df9-4a0b-bb96-3b1267a5b3ab
+[2026-11-20T14:13:38.604946] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=4b9fb8bf-9891-4a34-a6bd-0a2958fd8a59
+[2026-11-20T14:13:40.433458] EVENT UI VIDEO action=fullscreenEnter params=screen=conference label=AI봇(7001)
+[2026-11-20T14:13:40.561754] WARN [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] 서버 설정 갱신 실패: OPS 응답 없음 (후보 http://192.168.11.5:8091, http://MacPro.local:8091)
+[2026-11-20T14:13:40.594030] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] OPS directory: contacts=7 rooms=3 base=http://192.168.11.5:8091
+[2026-11-20T14:13:40.594148] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] AddressBook synced contacts=7 rooms=3
+[2026-11-20T14:13:41.085476] WARN [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] 서버 설정 갱신 실패: OPS 응답 없음 (후보 http://192.168.11.5:8091, http://MacPro.local:8091)
+[2026-11-20T14:13:41.095832] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] OPS directory: contacts=7 rooms=3 base=http://192.168.11.5:8091
+[2026-11-20T14:13:41.095932] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] AddressBook synced contacts=7 rooms=3
+[2026-11-20T14:13:41.673113] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=59847 audioPackets=476 videoBytes=2377094
+[2026-11-20T14:13:46.671441] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=92056 audioPackets=726 videoBytes=4044362
+[2026-11-20T14:13:51.671740] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=124189 audioPackets=976 videoBytes=5753771
+[2026-11-20T14:13:56.671395] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=156314 audioPackets=1226 videoBytes=7620331
+[2026-11-20T14:14:01.671482] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=188225 audioPackets=1474 videoBytes=9274579
+[2026-11-20T14:14:01.671661] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP media summary 30s audioKB=184 videoKB=9057 videoTracks=2/2 audioLost=0 ice=RTCIceConnectionStateConnected
+[2026-11-20T14:14:01.671703] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP video summary 30s in=640x360@30fps decodedFrames+1486 keyframes=4 freeze=0 pli=13 nack=0 vLost=9 | out=-@-fps target=0kbps limit=-
+[2026-11-20T14:14:06.671450] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=219965 audioPackets=1722 videoBytes=11020006
+[2026-11-20T14:14:11.670743] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=251841 audioPackets=1970 videoBytes=12977043
+[2026-11-20T14:14:16.676360] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=283777 audioPackets=2218 videoBytes=15196382
+[2026-11-20T14:14:21.670124] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=314122 audioPackets=2469 videoBytes=16877617
+[2026-11-20T14:14:26.671228] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=342737 audioPackets=2717 videoBytes=18224732
+[2026-11-20T14:14:31.670339] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=368917 audioPackets=2967 videoBytes=19758536
+[2026-11-20T14:14:31.670515] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP media summary 30s audioKB=176 videoKB=10238 videoTracks=2/2 audioLost=0 ice=RTCIceConnectionStateConnected
+[2026-11-20T14:14:31.670570] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP video summary 30s in=1280x720@30fps decodedFrames+1801 keyframes=7 freeze=0 pli=13 nack=0 vLost=9 | out=-@-fps target=0kbps limit=-
+[2026-11-20T14:14:36.669962] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=391187 audioPackets=3215 videoBytes=21643408
+[2026-11-20T14:14:39.747797] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 수신 hasAudio=true hasVideo=true -> 자동 수락
+[2026-11-20T14:14:39.748038] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP re-INVITE 응답 전송 accepted=true recvOnlyVideo=true
+[2026-11-20T14:14:40.255675] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transceivers 0:audio:SendRecv/SendRecv 1:video:RecvOnly/RecvOnly 2:video:RecvOnly/RecvOnly
+[2026-11-20T14:14:41.669172] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=416459 audioPackets=3465 videoBytes=14735381
+[2026-11-20T14:14:41.669321] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tiles active=1 inactive=2
+[2026-11-20T14:14:41.779190] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] CONFERENCE participants room=6700 n=2 [AI봇(7001):V,이재명 대통령 (1101):A*]
+[2026-11-20T14:14:43.280969] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] VIDEO resync reason=auto:leave localKick=false remoteTiles=1
+[2026-11-20T14:14:43.383642] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] remote video tile 등록(전용) track=e3affc75-2df9-4a0b-bb96-3b1267a5b3ab
+[2026-11-20T14:14:46.669024] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=447785 audioPackets=3715 videoBytes=16296852
+[2026-11-20T14:14:51.669231] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=480123 audioPackets=3965 videoBytes=17860762
+[2026-11-20T14:14:56.668600] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP stats inbound audioBytes=511775 audioPackets=4215 videoBytes=19416596
+[2026-11-20T14:14:56.668716] WARN [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP media stalled (20s no RTP) → network recovery
+[2026-11-20T14:14:56.668769] WARN [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP mediaStalled 이벤트 수신 → 네트워크 복구 절차 트리거
+[2026-11-20T14:14:56.668884] WARN [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] Media stall recovery: force SIP re-init
+[2026-11-20T14:14:56.668931] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connecting
+[2026-11-20T14:14:56.669184] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> unregistered
+[2026-11-20T14:14:56.669255] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transport disconnected (cause: Code: [0], Cause: disconnect, Reason: close by local)
+[2026-11-20T14:14:56.669285] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> disconnected
+[2026-11-20T14:14:56.669822] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connecting
+[2026-11-20T14:14:56.670109] EVENT SIP op=callTerminated target=6700 state=ENDED params=id=1b90z846743646a0173j95icaijxo4 cause=Code: [200], Cause: Terminated, Reason: Terminated by local
+[2026-11-20T14:14:56.670167] EVENT UI VIDEO action=fullscreenExit params=screen=conference label=AI봇(7001)
+[2026-11-20T14:14:56.670242] EVENT UI CONFERENCE action=autoCloseOnCallEnd
+[2026-11-20T14:14:56.670488] EVENT SIP op=init target=- state=- params=ws=ws://192.168.11.5:8088/ws domain=192.168.11.5 port=5060 transport=ws
+[2026-11-20T14:15:11.670538] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> error
+[2026-11-20T14:15:11.670664] ERROR [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP SIP 전송 연결 시간 초과
+[2026-11-20T14:15:11.670707] WARN [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP 연결 실패 → 2s 후 재시도 (시도 1)
+[2026-11-20T14:15:11.976187] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transport disconnected (cause: Code: [500], Cause: error, Reason: HttpException: Connection closed before full header was received, uri = http://192.168.11.5:8088/ws)
+[2026-11-20T14:15:11.976298] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> disconnected
+[2026-11-20T14:15:13.671361] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connecting
+[2026-11-20T14:15:13.671503] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transport disconnected (cause: Code: [0], Cause: disconnect, Reason: close by local)
+[2026-11-20T14:15:13.671539] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> disconnected
+[2026-11-20T14:15:13.672071] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connecting
+[2026-11-20T14:15:13.672332] EVENT SIP op=init target=- state=- params=ws=ws://192.168.11.5:8088/ws domain=192.168.11.5 port=5060 transport=ws
+[2026-11-20T14:15:28.672385] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> error
+[2026-11-20T14:15:28.672522] ERROR [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP SIP 전송 연결 시간 초과
+[2026-11-20T14:15:28.672569] WARN [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP 연결 실패 → 4s 후 재시도 (시도 2)
+[2026-11-20T14:15:28.677470] EVENT UI ADDRESSBOOK action=autoRegister params=ext=1101
+[2026-11-20T14:15:28.677555] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connecting
+[2026-11-20T14:15:28.677599] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transport disconnected (cause: Code: [0], Cause: disconnect, Reason: close by local)
+[2026-11-20T14:15:28.677646] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> disconnected
+[2026-11-20T14:15:28.678073] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connecting
+[2026-11-20T14:15:28.692617] EVENT SIP op=init target=- state=- params=ws=ws://192.168.11.5:8088/ws domain=192.168.11.5 port=5060 transport=ws
+[2026-11-20T14:15:43.692724] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> error
+[2026-11-20T14:15:43.692839] ERROR [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP SIP 전송 연결 시간 초과
+[2026-11-20T14:15:43.693093] EVENT ADDRESSBOOK event=autoRegisterResult state=failed ext=1101 error=SIP 전송 연결 시간 초과
+[2026-11-20T14:15:43.693775] EVENT UI ADDRESSBOOK action=autoRegister params=ext=1101
+[2026-11-20T14:15:43.693830] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connecting
+[2026-11-20T14:15:43.693866] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transport disconnected (cause: Code: [0], Cause: disconnect, Reason: close by local)
+[2026-11-20T14:15:43.693888] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> disconnected
+[2026-11-20T14:15:43.694295] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connecting
+[2026-11-20T14:15:43.694510] EVENT SIP op=init target=- state=- params=ws=ws://192.168.11.5:8088/ws domain=192.168.11.5 port=5060 transport=ws
+[2026-11-20T14:15:58.694732] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> error
+[2026-11-20T14:15:58.694857] ERROR [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP SIP 전송 연결 시간 초과
+[2026-11-20T14:15:58.694909] EVENT ADDRESSBOOK event=autoRegisterResult state=failed ext=1101 error=SIP 전송 연결 시간 초과
+[2026-11-20T14:15:58.697877] EVENT UI ADDRESSBOOK action=autoRegister params=ext=1101
+[2026-11-20T14:15:58.697968] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connecting
+[2026-11-20T14:15:58.698012] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transport disconnected (cause: Code: [0], Cause: disconnect, Reason: close by local)
+[2026-11-20T14:15:58.698038] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> disconnected
+[2026-11-20T14:15:58.698458] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connecting
+[2026-11-20T14:15:58.713025] EVENT SIP op=init target=- state=- params=ws=ws://192.168.11.5:8088/ws domain=192.168.11.5 port=5060 transport=ws
+[2026-11-20T14:16:13.713114] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> error
+[2026-11-20T14:16:13.713247] ERROR [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP SIP 전송 연결 시간 초과
+[2026-11-20T14:16:13.713301] EVENT ADDRESSBOOK event=autoRegisterResult state=failed ext=1101 error=SIP 전송 연결 시간 초과
+[2026-11-20T14:16:13.713659] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connecting
+[2026-11-20T14:16:13.713733] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transport disconnected (cause: Code: [0], Cause: disconnect, Reason: close by local)
+[2026-11-20T14:16:13.713760] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> disconnected
+[2026-11-20T14:16:13.714172] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connecting
+[2026-11-20T14:16:13.714374] EVENT SIP op=init target=- state=- params=ws=ws://192.168.11.5:8088/ws domain=192.168.11.5 port=5060 transport=ws
+[2026-11-20T14:16:28.714423] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> error
+[2026-11-20T14:16:28.714545] ERROR [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP SIP 전송 연결 시간 초과
+[2026-11-20T14:16:28.714594] WARN [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP 연결 실패 → 8s 후 재시도 (시도 3)
+[2026-11-20T14:16:28.719997] EVENT UI ADDRESSBOOK action=autoRegister params=ext=1101
+[2026-11-20T14:16:28.720094] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connecting
+[2026-11-20T14:16:28.720136] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transport disconnected (cause: Code: [0], Cause: disconnect, Reason: close by local)
+[2026-11-20T14:16:28.720159] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> disconnected
+[2026-11-20T14:16:28.720572] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connecting
+[2026-11-20T14:16:28.720800] EVENT SIP op=init target=- state=- params=ws=ws://192.168.11.5:8088/ws domain=192.168.11.5 port=5060 transport=ws
+[2026-11-20T14:16:43.720845] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> error
+[2026-11-20T14:16:43.720966] ERROR [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP SIP 전송 연결 시간 초과
+[2026-11-20T14:16:43.721018] EVENT ADDRESSBOOK event=autoRegisterResult state=failed ext=1101 error=SIP 전송 연결 시간 초과
+[2026-11-20T14:16:43.731196] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connecting
+[2026-11-20T14:16:43.731296] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transport disconnected (cause: Code: [0], Cause: disconnect, Reason: close by local)
+[2026-11-20T14:16:43.731323] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> disconnected
+[2026-11-20T14:16:43.731732] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connecting
+[2026-11-20T14:16:43.731961] EVENT SIP op=init target=- state=- params=ws=ws://192.168.11.5:8088/ws domain=192.168.11.5 port=5060 transport=ws
+[2026-11-20T14:16:58.732008] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> error
+[2026-11-20T14:16:58.732144] ERROR [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP SIP 전송 연결 시간 초과
+[2026-11-20T14:16:58.732188] WARN [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP 연결 실패 → 16s 후 재시도 (시도 4)
+[2026-11-20T14:16:58.767983] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transport disconnected (cause: Code: [500], Cause: error, Reason: HttpException: Connection closed before full header was received, uri = http://192.168.11.5:8088/ws)
+[2026-11-20T14:16:58.768076] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> disconnected
+[2026-11-20T14:16:58.883844] EVENT UI ADDRESSBOOK action=autoRegister params=ext=1101
+[2026-11-20T14:16:58.883924] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connecting
+[2026-11-20T14:16:58.883969] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transport disconnected (cause: Code: [0], Cause: disconnect, Reason: close by local)
+[2026-11-20T14:16:58.883994] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> disconnected
+[2026-11-20T14:16:58.884582] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connecting
+[2026-11-20T14:16:58.966044] EVENT SIP op=init target=- state=- params=ws=ws://192.168.11.5:8088/ws domain=192.168.11.5 port=5060 transport=ws
+[2026-11-20T14:17:13.966192] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> error
+[2026-11-20T14:17:13.966330] ERROR [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP SIP 전송 연결 시간 초과
+[2026-11-20T14:17:13.966385] EVENT ADDRESSBOOK event=autoRegisterResult state=failed ext=1101 error=SIP 전송 연결 시간 초과
+[2026-11-20T14:17:14.023370] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connected
+[2026-11-20T14:17:14.035973] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> registered
+[2026-11-20T14:17:14.045803] WARN [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] 서버 설정 갱신 실패: OPS 응답 없음 (후보 http://192.168.11.5:8091, http://MacPro.local:8091)
+[2026-11-20T14:17:14.055791] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] OPS directory: contacts=7 rooms=3 base=http://192.168.11.5:8091
+[2026-11-20T14:17:14.055912] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] AddressBook synced contacts=7 rooms=3
+[2026-11-20T14:17:44.121611] WARN [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] 서버 설정 갱신 실패: OPS 응답 없음 (후보 http://192.168.11.5:8091, http://MacPro.local:8091)
+[2026-11-20T14:17:44.133989] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] OPS directory: contacts=7 rooms=3 base=http://192.168.11.5:8091
+[2026-11-20T14:17:44.134087] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] AddressBook synced contacts=7 rooms=3
+[2026-11-20T14:19:30.372980] WARN [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] 서버 설정 갱신 실패: OPS 응답 없음 (후보 http://192.168.11.5:8091, http://MacPro.local:8091)
+[2026-11-20T14:19:30.383554] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] OPS directory: contacts=7 rooms=3 base=http://192.168.11.5:8091
+[2026-11-20T14:19:30.383679] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] AddressBook synced contacts=7 rooms=3
+[2026-11-20T14:21:16.357186] WARN [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] 서버 설정 갱신 실패: OPS 응답 없음 (후보 http://192.168.11.5:8091, http://MacPro.local:8091)
+[2026-11-20T14:21:16.376976] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] OPS directory: contacts=7 rooms=3 base=http://192.168.11.5:8091
+[2026-11-20T14:21:16.377091] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] AddressBook synced contacts=7 rooms=3
+[2026-11-20T14:21:18.051959] EVENT UI CONFERENCE action=autoJoin params=room=6700
+[2026-11-20T14:21:18.052069] EVENT UI CONFERENCE action=joinPressed params=room=6700 registered=true
+[2026-11-20T14:21:18.052231] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP call -> 6700 voiceOnly=true hasLocalStream=true
+[2026-11-20T14:21:18.052623] WARN [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] Media stall recovery: force SIP re-init
+[2026-11-20T14:21:18.052744] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connecting
+[2026-11-20T14:21:18.052872] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> unregistered
+[2026-11-20T14:21:18.052917] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP transport disconnected (cause: Code: [0], Cause: disconnect, Reason: close by local)
+[2026-11-20T14:21:18.052948] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> disconnected
+[2026-11-20T14:21:18.053441] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connecting
+[2026-11-20T14:21:18.053721] EVENT SIP op=init target=- state=- params=ws=ws://192.168.11.5:8088/ws domain=192.168.11.5 port=5060 transport=ws
+[2026-11-20T14:21:33.053775] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> error
+[2026-11-20T14:21:33.053934] ERROR [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP SIP 전송 연결 시간 초과
+[2026-11-20T14:21:33.053981] WARN [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP 연결 실패 → 30s 후 재시도 (시도 5)
+[2026-11-20T14:21:33.101009] DEBUG [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP remote-track recovery armed id=rg95yf9wog5o8kr1vu8f16831cd657
+[2026-11-20T14:21:33.101123] EVENT SIP op=callInitiation target=6700 state=initiated params=direction=outgoing id=rg95yf9wog5o8kr1vu8f16831cd657
+[2026-11-20T14:21:33.101192] EVENT SIP op=callTerminated target=6700 state=FAILED params=id=rg95yf9wog5o8kr1vu8f16831cd657 cause=Code: [500], Cause: Canceled, Reason: SIP ;cause=500 ;text="Connection Error"
+[2026-11-20T14:21:33.101249] EVENT UI CONFERENCE action=autoCloseOnCallEnd
+[2026-11-20T14:21:33.101515] ERROR [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] UnhandledError: Instance of 'InvalidStateError'
+[2026-11-20T14:21:33.101589] ERROR [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5]   at #0      RTCSession._sendInitialRequest (package:sip_ua/src/rtc_session.dart:2566)
+#1      RTCSession.connect (package:sip_ua/src/rtc_session.dart:364)
+<asynchronous suspension>
+
+[2026-11-20T14:21:33.102217] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> connected
+[2026-11-20T14:21:33.113513] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] SIP state -> registered
+[2026-11-20T14:21:46.195982] WARN [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] 서버 설정 갱신 실패: OPS 응답 없음 (후보 http://192.168.11.5:8091, http://MacPro.local:8091)
+[2026-11-20T14:21:46.221177] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] OPS directory: contacts=7 rooms=3 base=http://192.168.11.5:8091
+[2026-11-20T14:21:46.221273] INFO [usr=1101@192.168.11.5 host=MacPro ip=192.168.11.5] AddressBook synced contacts=7 rooms=3

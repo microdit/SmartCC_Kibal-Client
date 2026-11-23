@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -6,6 +7,7 @@ import '../../providers/media_provider.dart';
 import '../../providers/sip_provider.dart';
 import '../../sip/sip_client.dart';
 import '../../sip/sip_config.dart';
+import '../../utils/address_book_cache.dart';
 import '../../utils/app_logger.dart';
 import '../../utils/client_auth_state.dart';
 import '../../utils/constants.dart';
@@ -22,9 +24,13 @@ class AddressBookScreen extends StatefulWidget {
 class _AddressBookScreenState extends State<AddressBookScreen>
     with WidgetsBindingObserver {
   OpsDirectory _directory = const OpsDirectory();
+  AddressBookCache? _cache;
   bool _loading = true;
   bool _syncing = false;
+  bool _updateAvailable = false;
+  bool _forceUpdate = false;
   String? _syncError;
+  String? _syncInfo;
   ClientAuthState _auth = ClientAuthState.empty();
   DateTime? _lastSync;
   bool _sipRegistering = false;
@@ -49,6 +55,7 @@ class _AddressBookScreenState extends State<AddressBookScreen>
 
   @override
   void dispose() {
+    _networkCheckTimer?.cancel();
     WidgetsBinding.instance.removeObserver(this);
     try {
       final sip = Provider.of<SipProvider>(context, listen: false);
@@ -119,52 +126,208 @@ class _AddressBookScreenState extends State<AddressBookScreen>
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
-      _refresh(silent: true);
+      _checkForUpdate(silent: true);
       _autoRegisterSip(notify: false);
     }
   }
 
+  Timer? _networkCheckTimer;
   Future<void> _bootstrap() async {
     _auth = await ClientAuthStore.instance().load();
-    await _refresh();
+    _cache = AddressBookCache.load();
+    if (_cache != null && _cache!.hasData) {
+      _directory = _cache!.directory;
+      _lastSync = _cache!.fetchedAt;
+    }
+    await _checkForUpdate(initial: true);
     if (mounted) setState(() => _loading = false);
     await _autoRegisterSip(notify: false);
+    // 네트워크 변경 주기적 감지(30초) — 전체 fetch 금지, 버전 메타만 확인
+    _networkCheckTimer = Timer.periodic(const Duration(seconds: 30), (_) async {
+      if (!mounted) return;
+      final before = ServerConfigService.instance.current.sipDomain;
+      await _checkForUpdate(silent: true);
+      final after = ServerConfigService.instance.current.sipDomain;
+      if (before != after) {
+        AppLogger.instance.i('네트워크 전환 감지: $before → $after, SIP 재등록 시도');
+        await _autoRegisterSip(notify: true);
+      }
+    });
   }
 
-  Future<void> _refresh({bool silent = false}) async {
+  /// 버전 메타 확인. 캐시가 없으면 최초 1회 전체 fetch, 캐시가 있으면 버전 비교만.
+  Future<void> _checkForUpdate({bool silent = false, bool initial = false}) async {
     if (_syncing) return;
     setState(() {
       _syncing = true;
-      if (!silent) _syncError = null;
+      if (!silent) {
+        _syncError = null;
+        _syncInfo = null;
+      }
     });
     final auth = await ClientAuthStore.instance().load();
     _auth = auth;
-    await ServerConfigService.instance.refresh(
-      hintDomain: ServerConfigService.instance.current.sipDomain,
+    await ServerConfigService.instance.refreshSmart(
       clientKey: auth.clientKey,
       extension: auth.authExtension,
     );
-    if (auth.isVerified) {
-      final dir = await OpsDirectory.fetch();
+    final cfg = ServerConfigService.instance.current;
+
+    if (!auth.isVerified && !auth.isOfflineVerified) {
       if (!mounted) return;
       setState(() {
-        _directory = dir;
-        _lastSync = DateTime.now();
-        _syncError = (dir.contacts.isEmpty && dir.rooms.isEmpty)
-            ? '연락처를 가져오지 못했습니다(네트워크/인증 확인).'
-            : null;
-      });
-      AppLogger.instance.i(
-          'AddressBook synced contacts=${dir.contacts.length} rooms=${dir.rooms.length}');
-    } else {
-      if (!mounted) return;
-      setState(() {
+        // 캐시는 디스크에 유지, 미인증 상태에서는 표시만 제한
         _directory = const OpsDirectory();
+        _updateAvailable = false;
+        _forceUpdate = false;
         _syncError = '미인증 상태입니다. 설정에서 인증 내선·OPS 클라이언트 키를 검증하세요.';
+        _syncing = false;
       });
+      return;
+    }
+
+    final decision = AddressBookVersionPolicy.decide(
+      cache: _cache,
+      cfg: cfg,
+      userRequested: false,
+    );
+    _forceUpdate = decision.forceUpdate;
+
+    if (decision.shouldFetch) {
+      await _fetchDirectory(
+        reason: decision.reason,
+        remoteVersion: decision.remoteVersion,
+        forceVersion: decision.forceVersion,
+        silent: silent,
+      );
+      return;
+    }
+
+    if (!mounted) return;
+    setState(() {
+      if (_cache != null && _cache!.hasData) {
+        _directory = _cache!.directory;
+        _lastSync = _cache!.fetchedAt;
+      }
+      _updateAvailable = decision.reason == 'update-available';
+      if (_updateAvailable) {
+        _syncInfo = '서버 주소록이 변경되었습니다. 필요할 때 업데이트하세요.';
+        _syncError = null;
+      } else if (!silent && initial && _cache != null && _cache!.hasData) {
+        _syncInfo = '저장된 주소록을 사용 중입니다.';
+      } else if (!silent && _cache != null && _cache!.hasData) {
+        _syncInfo = '저장된 주소록이 최신입니다.';
+      }
+      _syncing = false;
+    });
+  }
+
+  /// 사용자가 명시적으로 요청한 업데이트.
+  Future<void> _refresh({bool silent = false}) async {
+    await _updateAddressBook(userRequested: true, silent: silent);
+  }
+
+  Future<void> _updateAddressBook({bool userRequested = false, bool silent = false}) async {
+    if (_syncing) return;
+    setState(() {
+      _syncing = true;
+      if (!silent) {
+        _syncError = null;
+        _syncInfo = null;
+      }
+    });
+    final auth = await ClientAuthStore.instance().load();
+    _auth = auth;
+    await ServerConfigService.instance.refreshSmart(
+      clientKey: auth.clientKey,
+      extension: auth.authExtension,
+    );
+    if (!auth.isVerified && !auth.isOfflineVerified) {
+      if (!mounted) return;
+      setState(() {
+        _syncError = '미인증 상태입니다. 설정에서 인증 내선·OPS 클라이언트 키를 검증하세요.';
+        _syncing = false;
+      });
+      return;
+    }
+    final cfg = ServerConfigService.instance.current;
+    final decision = AddressBookVersionPolicy.decide(
+      cache: _cache,
+      cfg: cfg,
+      userRequested: userRequested,
+    );
+    _forceUpdate = decision.forceUpdate;
+    if (decision.shouldFetch || userRequested) {
+      await _fetchDirectory(
+        reason: userRequested ? 'user-requested' : decision.reason,
+        remoteVersion: decision.remoteVersion,
+        forceVersion: decision.forceVersion,
+        silent: silent,
+      );
+      return;
     }
     if (!mounted) return;
-    setState(() => _syncing = false);
+    setState(() {
+      if (_cache != null && _cache!.hasData) {
+        _directory = _cache!.directory;
+        _lastSync = _cache!.fetchedAt;
+      }
+      _updateAvailable = decision.reason == 'update-available';
+      _syncInfo = _updateAvailable
+          ? '서버 주소록이 변경되었습니다. 필요할 때 업데이트하세요.'
+          : (_cache != null && _cache!.hasData ? '저장된 주소록이 최신입니다.' : null);
+      _syncing = false;
+    });
+  }
+
+  Future<void> _fetchDirectory({
+    required String reason,
+    required String remoteVersion,
+    required String forceVersion,
+    bool silent = false,
+  }) async {
+    final fetch = await OpsDirectory.fetch();
+    if (!mounted) return;
+    if (fetch.ok && fetch.directory != null) {
+      final dir = fetch.directory!;
+      final cache = AddressBookCache(
+        directory: dir,
+        directoryVersion: remoteVersion,
+        fetchedAt: DateTime.now(),
+        forceVersion: forceVersion,
+        source: 'ops',
+      );
+      cache.save();
+      setState(() {
+        _cache = cache;
+        _directory = dir;
+        _lastSync = cache.fetchedAt;
+        _updateAvailable = false;
+        _forceUpdate = false;
+        _syncError = null;
+        _syncInfo = silent ? null : '주소록을 업데이트했습니다.';
+        _syncing = false;
+      });
+      AppLogger.instance.i(
+          'AddressBook synced reason=$reason contacts=${dir.contacts.length} rooms=${dir.rooms.length} ver=$remoteVersion');
+      return;
+    }
+
+    // 실패: 기존 캐시 유지. 빈 목록으로 덮어쓰지 않음.
+    final hasCache = _cache != null && _cache!.hasData;
+    setState(() {
+      if (hasCache) {
+        _directory = _cache!.directory;
+        _lastSync = _cache!.fetchedAt;
+        _syncError = '주소록 업데이트 실패(네트워크/서버 확인). 기존 주소록을 유지합니다.';
+        _syncInfo = null;
+      } else {
+        _directory = const OpsDirectory();
+        _syncError = '주소록을 가져오지 못했습니다(네트워크/인증 확인).';
+      }
+      _syncing = false;
+    });
+    AppLogger.instance.w('AddressBook sync failed reason=$reason err=${fetch.error} keepCache=$hasCache');
   }
 
   bool get _canCall => _auth.isVerified;
@@ -174,6 +337,12 @@ class _AddressBookScreenState extends State<AddressBookScreen>
   Future<bool> _autoRegisterSip({bool notify = true}) async {
     final sip = Provider.of<SipProvider>(context, listen: false);
     if (sip.isRegistered) return true;
+    // 외부망에서 TURN이 로드되기 전에 SIP를 초기화하면 ICE에 STUN만 남아
+    // RTP/ICE가 실패한다. autoRegister 전에 최신 OPS config(TURN 포함)를 먼저 반영.
+    await ServerConfigService.instance.refreshSmart(
+      clientKey: _auth.clientKey,
+      extension: _auth.authExtension,
+    );
     if (!_auth.isVerified || _auth.authExtension.isEmpty) {
       if (notify && mounted) {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
@@ -189,7 +358,10 @@ class _AddressBookScreenState extends State<AddressBookScreen>
         break;
       }
     }
-    final password = bound?.sipPassword;
+    // 오프라인/주소록 미동기화 시 DEV 빠른 계정 매핑으로 폴백 (수동 테스트용)
+    final password = (bound?.sipPassword != null && bound!.sipPassword!.isNotEmpty)
+        ? bound.sipPassword!
+        : AppConstants.devQuickAccounts[ext];
     if (password == null || password.isEmpty) {
       setState(() => _sipError = '$ext SIP 비밀번호를 동기화하지 못했습니다.');
       if (notify && mounted) {
@@ -209,9 +381,12 @@ class _AddressBookScreenState extends State<AddressBookScreen>
       password: password,
       domain: cfgBase.sipDomain,
       port: cfgBase.sipPort,
-      displayName: bound!.displayName.isNotEmpty ? bound.displayName : ext,
+      displayName: (bound != null && bound.displayName.isNotEmpty) ? bound.displayName : ext,
       wsServer: cfgBase.wsServer,
-      iceServers: AppConstants.prdIceServers,
+      iceServers: AppConstants.iceServersFor(
+        cfgBase.wsServer.isEmpty ? cfgBase.sipDomain : cfgBase.wsServer,
+      ),
+      turn: cfgBase.turn,
     );
     sip.updateConfig(sipConfig);
     AppLogger.instance.ui('ADDRESSBOOK', 'autoRegister', params: {'ext': ext});
@@ -253,7 +428,10 @@ class _AddressBookScreenState extends State<AddressBookScreen>
       port: cfgBase.sipPort,
       displayName: c.displayName.isNotEmpty ? c.displayName : c.extension,
       wsServer: cfgBase.wsServer,
-      iceServers: AppConstants.prdIceServers,
+      iceServers: AppConstants.iceServersFor(
+        cfgBase.wsServer.isEmpty ? cfgBase.sipDomain : cfgBase.wsServer,
+      ),
+      turn: cfgBase.turn,
     );
     sip.updateConfig(sipConfig);
     AppLogger.instance
@@ -279,7 +457,7 @@ class _AddressBookScreenState extends State<AddressBookScreen>
     if (msg != null) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
     }
-    context.push('/settings').then((_) => _refresh());
+    context.push('/settings').then((_) => _checkForUpdate());
   }
 
   void _openTestCall() {
@@ -374,14 +552,14 @@ class _AddressBookScreenState extends State<AddressBookScreen>
               icon: const Icon(Icons.network_check),
               onPressed: _openTestCall),
           IconButton(
-              tooltip: '새로고침',
+              tooltip: _updateAvailable ? '주소록 업데이트' : '주소록 업데이트 확인',
               icon: _syncing
                   ? const SizedBox(
                       width: 18,
                       height: 18,
                       child: CircularProgressIndicator(strokeWidth: 2))
-                  : const Icon(Icons.refresh),
-              onPressed: _syncing ? null : () => _refresh()),
+                  : Icon(_updateAvailable ? Icons.system_update_alt : Icons.refresh),
+              onPressed: _syncing ? null : () => _updateAddressBook(userRequested: true)),
           IconButton(
               tooltip: '설정',
               icon:
@@ -391,16 +569,37 @@ class _AddressBookScreenState extends State<AddressBookScreen>
       ),
       body: Column(children: [
         _buildStatusBar(verified),
+        if (_forceUpdate || _updateAvailable)
+          MaterialBanner(
+            content: Text(_forceUpdate
+                ? '서버 주소록 전면 개편이 발행되었습니다. 업데이트가 필요합니다.'
+                : (_syncInfo ?? '서버 주소록이 변경되었습니다.')),
+            leading: Icon(_forceUpdate ? Icons.priority_high : Icons.system_update),
+            actions: [
+              TextButton(
+                  onPressed: _syncing ? null : () => _updateAddressBook(userRequested: true),
+                  child: const Text('업데이트')),
+            ],
+          ),
         if (_syncError != null)
           MaterialBanner(
             content: Text(_syncError!),
             leading: const Icon(Icons.info_outline),
             actions: [
+              if (!verified)
+                TextButton(onPressed: () => _goSettings(), child: const Text('설정')),
               TextButton(
-                  onPressed: () => _goSettings(), child: const Text('설정')),
-              TextButton(
-                  onPressed: () => _refresh(), child: const Text('다시 시도'))
+                  onPressed: _syncing ? null : () => _updateAddressBook(userRequested: true),
+                  child: const Text('다시 시도')),
             ],
+          ),
+        if (_syncInfo != null && !_updateAvailable && !_forceUpdate && _syncError == null)
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text(_syncInfo!, style: const TextStyle(fontSize: 12, color: Colors.grey)),
+            ),
           ),
         Expanded(child: _buildList(verified)),
       ]),
@@ -481,7 +680,7 @@ class _AddressBookScreenState extends State<AddressBookScreen>
     if (contacts.isEmpty && rooms.isEmpty) {
       return Center(
           child: Text(
-              _syncing ? '동기화 중...' : '표시할 연락처가 없습니다. 새로고침하거나 Ops 설정을 확인하세요.'));
+              _syncing ? '동기화 중...' : '저장된 주소록이 없습니다. 업데이트를 눌러 서버에서 가져오세요.'));
     }
     return RefreshIndicator(
         onRefresh: () => _refresh(),

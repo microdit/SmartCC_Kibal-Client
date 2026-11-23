@@ -7,6 +7,7 @@ import '../../providers/media_provider.dart';
 import '../../sip/sip_config.dart';
 import '../../sip/sip_client.dart';
 import '../../utils/app_logger.dart';
+import '../../utils/client_auth_state.dart';
 import '../../utils/constants.dart';
 import '../../utils/formatters.dart';
 import '../../utils/ops_directory.dart';
@@ -96,10 +97,12 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future<void> _loadQuickContacts() async {
-    final dir = await OpsDirectory.fetch();
+    final fetch = await OpsDirectory.fetch();
     if (!mounted) return;
     setState(() {
-      _quickContacts = dir.contacts;
+      if (fetch.ok && fetch.directory != null) {
+        _quickContacts = fetch.directory!.contacts;
+      }
       _quickContactsLoaded = true;
     });
   }
@@ -545,7 +548,7 @@ class _LoginScreenState extends State<LoginScreen> {
           controller: _wsServerController,
           decoration: const InputDecoration(
             labelText: 'WebSocket 서버',
-            hintText: 'ws://<서버IP>:8088/ws (서버 설정 갱신으로 자동 입력)',
+            hintText: 'wss://<DDNS>:8089/ws (외부) · ws://<서버IP>:8088/ws (내부)',
             prefixIcon: Icon(Icons.web_asset_outlined),
             border: OutlineInputBorder(),
           ),
@@ -830,7 +833,8 @@ class _LoginScreenState extends State<LoginScreen> {
         port: port,
         displayName: displayName,
         wsServer: wsServer,
-        iceServers: AppConstants.prdIceServers,
+        iceServers: AppConstants.iceServersFor(wsServer.isEmpty ? domain : wsServer),
+        turn: ServerConfigService.instance.current.turn,
       );
     } else {
       config = SipConfig.udp(
@@ -839,7 +843,8 @@ class _LoginScreenState extends State<LoginScreen> {
         domain: domain,
         port: port,
         displayName: displayName,
-        iceServers: AppConstants.prdIceServers,
+        iceServers: AppConstants.iceServersFor(domain),
+        turn: ServerConfigService.instance.current.turn,
       );
     }
     
@@ -856,6 +861,16 @@ class _LoginScreenState extends State<LoginScreen> {
     if (!mounted) return;
 
     if (success && sipProvider.isRegistered) {
+      final auth = await ClientAuthStore.instance().load();
+      if (!auth.isVerified || auth.authExtension != username) {
+        await ClientAuthStore.instance().applyInput(
+              extension: username,
+              clientKey: auth.clientKey.isEmpty ? 'sip-local' : auth.clientKey,
+            );
+        await ClientAuthStore.instance()
+            .markLocalVerified(reason: 'SIP 등록 성공');
+      }
+      if (!mounted) return;
       // 미디어 초기화
       final mediaProvider = Provider.of<MediaProvider>(context, listen: false);
       await mediaProvider.getLocalMedia();

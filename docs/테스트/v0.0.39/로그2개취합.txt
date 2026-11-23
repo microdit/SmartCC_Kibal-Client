@@ -1,0 +1,6 @@
+1101 로그. 동작중 6700 회의실에서 튕겨져 났다. 끊어짐. 복구도 자동으로 안됨.
+/Users/microdit/Downloads/dev/SmartCC_Kibal-Client/docs/테스트/v0.0.39/1101로그.txt
+
+
+1102 로그. 
+/Users/microdit/Downloads/dev/SmartCC_Kibal-Client/docs/테스트/v0.0.39/1102로그.txt

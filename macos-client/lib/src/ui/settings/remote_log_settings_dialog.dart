@@ -17,6 +17,126 @@ Future<void> showRemoteLogSettingsDialog(BuildContext context) {
   );
 }
 
+Future<void> showLogSendDialog(BuildContext context) {
+  AppLogger.instance.ui('SETTINGS', 'logSendOpened');
+  return showDialog<void>(
+    context: context,
+    builder: (_) => const _LogSendDialog(),
+  );
+}
+
+class _LogSendDialog extends StatefulWidget {
+  const _LogSendDialog();
+
+  @override
+  State<_LogSendDialog> createState() => _LogSendDialogState();
+}
+
+class _LogSendDialogState extends State<_LogSendDialog> {
+  final _forwarder = RemoteLogForwarder.instance;
+  bool _sending = false;
+  String? _message;
+
+  Future<void> _sendNow() async {
+    setState(() {
+      _sending = true;
+      _message = null;
+    });
+    await _forwarder.sendNow();
+    if (!mounted) return;
+    setState(() {
+      _sending = false;
+      _message = '현재 로그 즉시 전송을 요청했습니다.';
+    });
+  }
+
+  void _toggleAuto(bool value) {
+    _forwarder.setAutoSend(value);
+    setState(() {
+      _message = value
+          ? '자동전송 시작: 지금 1회 전송 후 5분마다 전송합니다.'
+          : '자동전송을 중지했습니다.';
+    });
+  }
+
+  String _fmt(DateTime? t) {
+    if (t == null) return '-';
+    String two(int v) => v.toString().padLeft(2, '0');
+    return '${two(t.hour)}:${two(t.minute)}:${two(t.second)}';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: const Row(
+        children: [
+          Icon(Icons.cloud_upload_outlined),
+          SizedBox(width: 8),
+          Text('로그보내기'),
+        ],
+      ),
+      content: SizedBox(
+        width: 420,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ValueListenableBuilder<RemoteLogStatus>(
+              valueListenable: _forwarder.status,
+              builder: (_, s, __) => SwitchListTile(
+                contentPadding: EdgeInsets.zero,
+                dense: true,
+                title: const Text('자동보내기 (5분 주기)'),
+                subtitle: Text(
+                  '즉시 1회 전송 후 5분마다 분할 전송 · 마지막 ${_fmt(s.lastSentAt)}',
+                  style: const TextStyle(fontSize: 11),
+                ),
+                value: _forwarder.settings.autoSend,
+                onChanged: _toggleAuto,
+              ),
+            ),
+            const SizedBox(height: 8),
+            SizedBox(
+              width: double.infinity,
+              child: FilledButton.icon(
+                onPressed: _sending ? null : _sendNow,
+                icon: _sending
+                    ? const SizedBox(
+                        width: 14,
+                        height: 14,
+                        child: CircularProgressIndicator(strokeWidth: 2))
+                    : const Icon(Icons.send, size: 18),
+                label: const Text('즉시보내기 (1회)'),
+              ),
+            ),
+            const SizedBox(height: 8),
+            const Text(
+              '자동보내기와 즉시보내기는 동시에 사용할 수 있습니다. '
+              '자동 대기 중에도 즉시보내기를 누르면 현재 로그가 바로 전송됩니다.',
+              style: TextStyle(fontSize: 11, color: Colors.grey),
+            ),
+            if (_message != null) ...[
+              const SizedBox(height: 8),
+              Text(_message!,
+                  style: const TextStyle(fontSize: 12, color: Colors.green)),
+            ],
+          ],
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => showRemoteLogSettingsDialog(context),
+          child: const Text('전송 설정'),
+        ),
+        FilledButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: const Text('닫기'),
+        ),
+      ],
+    );
+  }
+}
+
 class _RemoteLogSettingsDialog extends StatefulWidget {
   const _RemoteLogSettingsDialog();
 
@@ -66,6 +186,7 @@ class _RemoteLogSettingsDialogState extends State<_RemoteLogSettingsDialog> {
       domains: _domains,
       includeStats: _includeStats,
       urlOverridden: current.urlOverridden || url != current.url,
+      autoSend: current.autoSend,
     );
   }
 

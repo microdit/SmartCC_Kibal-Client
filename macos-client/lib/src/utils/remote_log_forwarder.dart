@@ -60,6 +60,7 @@ class RemoteLogForwarder {
   Timer? _debounceTimer;
   Timer? _safetyTimer;
   Timer? _retryTimer;
+  Timer? _autoTimer;
   int _backoffSec = 0;
   bool _flushing = false;
   bool _again = false;
@@ -93,12 +94,21 @@ class RemoteLogForwarder {
   String get session => _session;
   String get extension => _extension;
 
+  static String _httpUrl(String url) =>
+      url.replaceFirst(RegExp(r'^https://', caseSensitive: false), 'http://');
+
   /// 앱 시작 시 1회. AppLogger.init() 이후 호출.
   Future<void> start() async {
     if (_started) return;
     _started = true;
     _startedAt = DateTime.now();
     settings = RemoteLogSettings.load();
+    final normalized = _httpUrl(settings.url);
+    if (normalized != settings.url) {
+      settings.url = normalized;
+      settings.save();
+      AppLogger.instance.i('원격 로그 URL HTTP로 정규화: $normalized');
+    }
 
     // 직전 실행의 미전송분(app-prev.log) 먼저 보충 전송
     await _drainPreviousSession();
@@ -109,6 +119,36 @@ class RemoteLogForwarder {
     _safetyTimer = Timer.periodic(safetyInterval, (_) => requestFlush());
     AppLogger.instance.i(
         '원격 로그 업로더 시작 session=$_session mode=${settings.filter.describe()} url=${settings.url}');
+    if (settings.autoSend) {
+      _autoTimer?.cancel();
+      _autoTimer = Timer.periodic(
+        const Duration(minutes: 5),
+        (_) => unawaited(sendNow()),
+      );
+    }
+  }
+
+  void setAutoSend(bool enabled) {
+    settings.autoSend = enabled;
+    settings.save();
+    _autoTimer?.cancel();
+    _autoTimer = null;
+    if (enabled) {
+      unawaited(sendNow());
+      _autoTimer = Timer.periodic(
+        const Duration(minutes: 5),
+        (_) => unawaited(sendNow()),
+      );
+    }
+    AppLogger.instance
+        .i('원격 로그 자동전송 ${enabled ? '활성(5분 주기)' : '비활성'}');
+  }
+
+  Future<void> sendNow() async {
+    if (!_started) await start();
+    _startedAt = DateTime.now().subtract(loginGrace);
+    AppLogger.instance.i('원격 로그 즉시전송 요청');
+    requestFlush(immediate: true);
   }
 
   /// 로그인 성공 시: 내선 번호/도메인 반영
@@ -122,10 +162,19 @@ class RemoteLogForwarder {
 
   /// 설정 화면에서 변경 후 저장
   void applySettings(RemoteLogSettings next) {
+    next.url = _httpUrl(next.url);
     settings = next;
     settings.save();
     AppLogger.instance.i(
         '원격 로그 설정 변경 mode=${settings.filter.describe()} url=${settings.url}');
+    _autoTimer?.cancel();
+    _autoTimer = null;
+    if (settings.autoSend) {
+      _autoTimer = Timer.periodic(
+        const Duration(minutes: 5),
+        (_) => unawaited(sendNow()),
+      );
+    }
     requestFlush(immediate: true);
   }
 
@@ -340,11 +389,13 @@ class RemoteLogForwarder {
         );
         return true;
       }
-      _recordFailure('http=${response.statusCode}');
+      _recordFailure('http=${response.statusCode} url=$url');
+      AppLogger.instance.w('원격 로그 전송 HTTP 오류 url=$url status=${response.statusCode}');
       return false;
     } catch (e) {
       if (quiet) return null; // 첫 시도 연결 오류는 조용히 새 연결로 재시도
-      _recordFailure(e.runtimeType.toString());
+      _recordFailure('${e.runtimeType}: $e');
+      AppLogger.instance.w('원격 로그 전송 연결 오류 url=$url err=${e.runtimeType}: $e');
       return null;
     }
   }

@@ -2,8 +2,10 @@ import 'dart:async';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:sip_ua/sip_ua.dart';
 import '../utils/app_logger.dart';
+import '../utils/constants.dart';
 import '../utils/conference_participants.dart';
 import '../utils/remote_log_forwarder.dart';
+import '../utils/video_quality_settings.dart';
 import 'sdp_codec.dart';
 import 'sip_config.dart';
 import 'sip_session.dart';
@@ -136,6 +138,34 @@ class KibalSipClient implements SipUaHelperListener {
   Future<bool>? _initInFlight;
 
   /// SIP 클라이언트 초기화 및 전송 연결
+  List<Map<String, String>> _buildIceServers(SipConfig config) {
+    final ice = <Map<String, String>>[
+      for (final url in config.iceServers) {'urls': url},
+    ];
+    // 내부망(192.168.11.x)에서는 TURN 불필요 — LAN 내 P2P/host candidate로 충분.
+    // TURN Allocation 인증 실패(370401)가 1:1 미디어 불안정 요인이므로 제외한다.
+    final internalHost = RegExp(r'^192\.168\.11\.\d+$').hasMatch(config.domain.trim());
+    if (internalHost) {
+      AppLogger.instance.i('ICE: 내부망 도메인(${config.domain}) → TURN 제외 (host/STUN만)');
+      return ice;
+    }
+    final turn = config.turn;
+    if (turn != null) {
+      final urls = turn['urls'];
+      final url = urls is List && urls.isNotEmpty
+          ? urls.first.toString()
+          : urls?.toString();
+      if (url != null && url.isNotEmpty) {
+        ice.add({
+          'urls': url,
+          'username': (turn['username'] ?? '').toString(),
+          'credential': (turn['credential'] ?? '').toString(),
+        });
+      }
+    }
+    return ice;
+  }
+
   Future<bool> init(SipConfig config) async {
     final pending = _initInFlight;
     if (pending != null) return pending;
@@ -155,9 +185,18 @@ class KibalSipClient implements SipUaHelperListener {
         ..register = true
         ..register_expires = 300
         ..userAgent = 'Kibal Client/1.0'
-        ..iceServers = config.iceServers
-            .map((url) => <String, String>{'urls': url})
-            .toList();
+        ..iceTransportPolicy = const bool.fromEnvironment(
+                  'FORCE_RELAY',
+                  defaultValue: false,
+                )
+            ? IceTransportPolicy.RELAY
+            : IceTransportPolicy.ALL
+        ..iceGatheringTimeout = 2000
+        ..iceServers = _buildIceServers(config);
+
+      AppLogger.instance.i(
+          'ICE 설정 urls=${_buildIceServers(config).map((e) => e['urls']).toList()} '
+          'policy=${const bool.fromEnvironment('FORCE_RELAY', defaultValue: false) ? 'relay' : 'all'}');
 
       final transportCompleter = Completer<bool>();
       _transportCompleter = transportCompleter;
@@ -577,6 +616,7 @@ class KibalSipClient implements SipUaHelperListener {
       case CallStateEnum.ACCEPTED:
       case CallStateEnum.CONFIRMED:
         _currentSession?.updateState(SipSessionState.established);
+        unawaited(applyVideoQuality());
         _startStatsProbe(call);
         call.session.onInDialogTimeoutTolerated = (count) {
           AppLogger.instance.w(
@@ -686,11 +726,37 @@ class KibalSipClient implements SipUaHelperListener {
       if (_receiveOnlyVideo) {
         MapHelper.merge(options, _receiveVideoOptions());
       }
+      // A10 1:1 workaround: Asterisk가 ConfBridge join 후 re-INVITE로 video를
+      // 추가한다. 초기 INVITE가 audio-only였으면 sip_ua/PC가 video m-line을
+      // port 0으로 응답할 수 있어, video 수신을 명시적으로 요청한다.
+      final hasVideo = event.hasVideo ?? false;
+      if (hasVideo && !_receiveOnlyVideo) {
+        final pc = _currentCall?.peerConnection;
+        bool hasVideoTransceiver = false;
+        if (pc != null) {
+          try {
+            final trs = await pc.getTransceivers();
+            for (final t in trs) {
+              final kind = t.receiver.track?.kind ?? t.sender.track?.kind ?? '';
+              if (kind == 'video') {
+                hasVideoTransceiver = true;
+                break;
+              }
+            }
+          } catch (_) {}
+        }
+        if (!hasVideoTransceiver) {
+          AppLogger.instance.i('SIP re-INVITE video 추가 감지, recvonly video 옵션 적용');
+          MapHelper.merge(options, _receiveVideoOptions());
+        }
+      }
       final accepted = await accept(options);
       AppLogger.instance.i('SIP re-INVITE 응답 전송 accepted=$accepted '
-          'recvOnlyVideo=$_receiveOnlyVideo');
+          'recvOnlyVideo=$_receiveOnlyVideo hasVideo=${event.hasVideo}');
       unawaited(Future<void>.delayed(
           const Duration(milliseconds: 500), _logTransceivers));
+      unawaited(Future<void>.delayed(
+          const Duration(milliseconds: 700), applyVideoQuality));
     } catch (error) {
       AppLogger.instance.e('SIP re-INVITE 수락 실패: $error');
     }
@@ -860,6 +926,59 @@ class KibalSipClient implements SipUaHelperListener {
   /// - 5초 DEBUG: 기존 `SIP stats inbound` (로컬 정밀 분석용)
   /// - 30초 INFO: `SIP media summary` (기본 업로드 모드에서도 서버 진단/하트비트)
   /// - 유효 트랙: 최근 15초 내 bytesReceived가 증가한 영상 트랙 → UI 타일 정리
+  Future<List<Map<String, dynamic>>> collectRawStats() async {
+    final pc = _currentCall?.peerConnection;
+    if (pc == null) return const [];
+    final reports = await pc.getStats();
+    return reports
+        .map((r) => <String, dynamic>{'type': r.type, 'values': r.values})
+        .toList();
+  }
+
+  Future<void> applyVideoQuality() async {
+    final pc = _currentCall?.peerConnection;
+    if (pc == null) return;
+    final settings = VideoQualitySettings.load();
+
+    // A10 등 SIP 단말과의 1:1은 최대 30fps. 사용자 설정이 60fps여도
+    // 1:1에서는 상한을 30으로 제한해 단말 측 미디어 처리 실패/BYE를 방지한다.
+    final target = _currentSession?.remoteParty ?? _pendingCallTarget ?? '';
+    final isOneToOne = target.isNotEmpty && !AppConstants.isConferenceRoom(target);
+    final effectiveFps = isOneToOne && settings.frameRate > 30 ? 30 : settings.frameRate;
+
+    for (final sender in await pc.getSenders()) {
+      if (sender.track?.kind != 'video') continue;
+      try {
+        final params = sender.parameters;
+        params.degradationPreference = settings.degradationPreference;
+        for (final encoding in params.encodings ?? const <RTCRtpEncoding>[]) {
+          encoding.maxBitrate = settings.maxBitrate;
+          encoding.maxFramerate = effectiveFps;
+        }
+        await sender.setParameters(params);
+        AppLogger.instance.i(
+            '영상 품질 파라미터 적용 mode=${settings.mode.name} fps=$effectiveFps'
+            '${isOneToOne ? ' (1:1 30fps cap)' : ''}');
+      } catch (e) {
+        AppLogger.instance.w('영상 품질 파라미터 적용 실패: $e');
+      }
+    }
+  }
+
+  Future<void> replaceVideoTrack(MediaStreamTrack? track) async {
+    final pc = _currentCall?.peerConnection;
+    if (pc == null) return;
+    for (final sender in await pc.getSenders()) {
+      if (sender.track?.kind != 'video') continue;
+      try {
+        await sender.replaceTrack(track);
+        AppLogger.instance.i('영상 트랙 교체 완료');
+      } catch (e) {
+        AppLogger.instance.w('영상 트랙 교체 실패: $e');
+      }
+    }
+  }
+
   void _startStatsProbe(Call call) {
     _statsTimer?.cancel();
     _videoTrackBytes.clear();
@@ -950,6 +1069,14 @@ class KibalSipClient implements SipUaHelperListener {
         if (total > _stallTotalBase) {
           _stallTicks = 0;
           _stallTotalBase = total;
+          if (_mediaStallNotified) {
+            _mediaStallNotified = false;
+            _emitEvent(const SipEvent(type: SipEventType.call,
+                data: {'action': 'mediaRecovered'}));
+          }
+        } else if (total < _stallTotalBase) {
+          _stallTotalBase = total;
+          _stallTicks = 0;
           if (_mediaStallNotified) {
             _mediaStallNotified = false;
             _emitEvent(const SipEvent(type: SipEventType.call,
