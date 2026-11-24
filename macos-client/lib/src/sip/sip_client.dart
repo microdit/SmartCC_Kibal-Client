@@ -749,12 +749,13 @@ class KibalSipClient implements SipUaHelperListener {
           if (!hasVideoTransceiver) {
             AppLogger.instance.i('SIP re-INVITE video 추가 감지, recvonly video transceiver 생성');
             try {
-              await pc.addTransceiver(
+              final transceiver = await pc.addTransceiver(
                 kind: RTCRtpMediaType.RTCRtpMediaTypeVideo,
                 init: RTCRtpTransceiverInit(
                   direction: TransceiverDirection.RecvOnly,
                 ),
               );
+              await _preferH264VideoCodec(transceiver, reason: 'reinvite-recvonly');
               hasVideoTransceiver = true;
               AppLogger.instance.i('SIP re-INVITE recvonly video transceiver 생성 완료');
             } catch (e) {
@@ -792,6 +793,45 @@ class KibalSipClient implements SipUaHelperListener {
           },
         },
       };
+
+  /// A10 1:1: H.264가 지원되면 비디오 코덱 우선순위를 H.264 first로 맞춘다.
+  /// simple_bridge는 비디오 트랜스코딩이 불가하므로 VP8-only answer를 피해야 한다.
+  Future<void> _preferH264VideoCodec(
+    RTCRtpTransceiver transceiver, {
+    required String reason,
+  }) async {
+    try {
+      final caps = await getRtpReceiverCapabilities('video');
+      final codecs = caps.codecs ?? const <RTCRtpCodecCapability>[];
+      if (codecs.isEmpty) {
+        AppLogger.instance.w('H264 codec preference skipped ($reason): no caps');
+        return;
+      }
+      final h264 = <RTCRtpCodecCapability>[];
+      final others = <RTCRtpCodecCapability>[];
+      for (final c in codecs) {
+        final mime = c.mimeType.toLowerCase();
+        if (mime == 'video/h264') {
+          h264.add(c);
+        } else if (mime == 'video/rtx' || mime == 'video/red' || mime == 'video/ulpfec') {
+          others.add(c);
+        } else {
+          others.add(c);
+        }
+      }
+      if (h264.isEmpty) {
+        AppLogger.instance.w(
+            'H264 codec preference skipped ($reason): receiver has no H264 capability');
+        return;
+      }
+      final preferred = <RTCRtpCodecCapability>[...h264, ...others];
+      await transceiver.setCodecPreferences(preferred);
+      AppLogger.instance.i(
+          'H264 codec preference applied ($reason) h264=${h264.length} total=${preferred.length}');
+    } catch (e) {
+      AppLogger.instance.w('H264 codec preference failed ($reason): $e');
+    }
+  }
 
   /// 진단: transceiver별 kind/direction 요약 1줄
   Future<void> _logTransceivers() async {

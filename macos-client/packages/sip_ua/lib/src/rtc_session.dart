@@ -1846,6 +1846,7 @@ class RTCSession extends EventManager implements Owner {
     }
 
     _rtcReady = false;
+    await _preferH264CodecForVideo(reason: 'createLocalDescription:$type');
     late RTCSessionDescription desc;
     if (type == SdpType.offer) {
       try {
@@ -2341,6 +2342,50 @@ class RTCSession extends EventManager implements Owner {
     } catch (_) {
       request.reply(500);
       throw Exceptions.TypeError('_createLocalDescription() failed');
+    }
+  }
+
+  Future<void> _preferH264CodecForVideo({required String reason}) async {
+    final RTCPeerConnection? pc = _connection;
+    if (pc == null) return;
+    try {
+      final List<RTCRtpTransceiver> transceivers = await pc.getTransceivers();
+      final RTCRtpCapabilities caps = await getRtpReceiverCapabilities('video');
+      final List<RTCRtpCodecCapability> codecs =
+          caps.codecs ?? const <RTCRtpCodecCapability>[];
+      if (codecs.isEmpty) return;
+      final List<RTCRtpCodecCapability> h264 = <RTCRtpCodecCapability>[];
+      final List<RTCRtpCodecCapability> others = <RTCRtpCodecCapability>[];
+      for (final RTCRtpCodecCapability c in codecs) {
+        final String mime = c.mimeType.toLowerCase();
+        if (mime == 'video/h264') {
+          h264.add(c);
+        } else {
+          others.add(c);
+        }
+      }
+      if (h264.isEmpty) {
+        logger.w('H264 codec preference skipped ($reason): no H264 capability');
+        return;
+      }
+      final List<RTCRtpCodecCapability> preferred = <RTCRtpCodecCapability>[
+        ...h264,
+        ...others,
+      ];
+      for (final RTCRtpTransceiver t in transceivers) {
+        final String kind =
+            t.receiver.track?.kind ?? t.sender.track?.kind ?? '';
+        if (kind != 'video') continue;
+        try {
+          await t.setCodecPreferences(preferred);
+          logger.i(
+              'H264 codec preference applied ($reason) h264=${h264.length} total=${preferred.length}');
+        } catch (e) {
+          logger.w('H264 codec preference failed ($reason): $e');
+        }
+      }
+    } catch (e) {
+      logger.w('H264 codec preference scan failed ($reason): $e');
     }
   }
 
