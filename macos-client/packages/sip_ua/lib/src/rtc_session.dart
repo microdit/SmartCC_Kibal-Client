@@ -1856,6 +1856,7 @@ class RTCSession extends EventManager implements Owner {
             'emit "peerconnection:createofferfailed" [error:${error.toString()}]');
         emit(EventCreateOfferFailed(exception: error));
         completer.completeError(error);
+        return completer.future;
       }
     } else {
       try {
@@ -1863,8 +1864,27 @@ class RTCSession extends EventManager implements Owner {
       } catch (error) {
         logger.e(
             'emit "peerconnection:createanswerfailed" [error:${error.toString()}]');
-        emit(EventCreateAnswerFialed(exception: error));
-        completer.completeError(error);
+
+        // H264 codec preference가 원인일 수 있어 롤백 후 1회 재시도한다.
+        // A10↔WebRTC 1:1 reinvite에서 setCodecPreferences 후 createAnswer가
+        // null 오류로 실패하는 사례 대응.
+        bool retried = false;
+        try {
+          await _clearVideoCodecPreferences(
+              reason: 'createAnswer-retry:$type');
+          desc = await _connection!.createAnswer(constraints);
+          retried = true;
+          logger.w(
+              'createAnswer recovered after clearing video codec preferences');
+        } catch (retryError) {
+          logger.e(
+              'createAnswer retry after codec-preference clear failed [error:${retryError.toString()}]');
+        }
+        if (!retried) {
+          emit(EventCreateAnswerFialed(exception: error));
+          completer.completeError(error);
+          return completer.future;
+        }
       }
     }
 
@@ -2386,6 +2406,27 @@ class RTCSession extends EventManager implements Owner {
       }
     } catch (e) {
       logger.w('H264 codec preference scan failed ($reason): $e');
+    }
+  }
+
+  Future<void> _clearVideoCodecPreferences({required String reason}) async {
+    final RTCPeerConnection? pc = _connection;
+    if (pc == null) return;
+    try {
+      final List<RTCRtpTransceiver> transceivers = await pc.getTransceivers();
+      for (final RTCRtpTransceiver t in transceivers) {
+        final String kind =
+            t.receiver.track?.kind ?? t.sender.track?.kind ?? '';
+        if (kind != 'video') continue;
+        try {
+          await t.setCodecPreferences(<RTCRtpCodecCapability>[]);
+          logger.w('Video codec preferences cleared ($reason)');
+        } catch (e) {
+          logger.w('Video codec preference clear failed ($reason): $e');
+        }
+      }
+    } catch (e) {
+      logger.w('Video codec preference clear scan failed ($reason): $e');
     }
   }
 
