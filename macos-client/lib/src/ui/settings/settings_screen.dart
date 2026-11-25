@@ -160,7 +160,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final store = ConnectionProfileStore.instance;
     store.save(_profile, current);
     store.setSelected(profile);
-    final cfg = store.configFor(profile) ?? profile.defaultConfig();
+    final cfg = ServerConfigService.instance.resolvedProfileConfig(profile);
     ServerConfigService.instance.setCurrent(cfg);
     cfg.save();
     _applyLogUrl(cfg);
@@ -171,7 +171,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       _port.text = cfg.sipPort.toString();
       _ws.text = cfg.wsServer;
       _ops.text = cfg.opsBaseUrl;
-      _autoMsg = '${profile.label} 프로필로 전환했습니다.';
+      _autoMsg = '${profile.label} 프로필로 전환했습니다. (source=${cfg.source})';
     });
     AppLogger.instance.ui('SETTINGS', 'profileSwitched', params: {
       'from': _profile.name,
@@ -180,6 +180,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       'sipPort': cfg.sipPort,
       'wsServer': cfg.wsServer,
       'opsBaseUrl': cfg.opsBaseUrl,
+      'source': cfg.source,
     });
   }
 
@@ -715,7 +716,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     const SizedBox(height: 4),
                     const Text(
                         '프로필별 설정을 저장하며, 자동 설정은 연결되는 서버에만 적용됩니다. '
-                        'DEV/PRD/TEST는 내부 OPS, 외부망은 DDNS OPS를 먼저 시도합니다.',
+                        'DEV/PRD/TEST는 내부 OPS, 외부망은 DDNS OPS를 먼저 시도합니다. 서버 profile manifest 수신 시 캐시 우선 적용됩니다.',
                         style: TextStyle(fontSize: 12, color: Colors.grey)),
                   ]),
             ),

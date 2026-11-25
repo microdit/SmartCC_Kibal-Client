@@ -88,6 +88,95 @@ extension ConnectionProfileX on ConnectionProfile {
   }
 }
 
+class ProfileManifest {
+  ProfileManifest({required this.version, required this.generatedAt, required this.defaultProfile, required this.profiles});
+  final String version;
+  final String? generatedAt;
+  final String defaultProfile;
+  final Map<String, ProfileManifestEntry> profiles;
+
+  static String get filePath => '${AppLogger.logDirectory}/profile-manifest.json';
+
+  static ProfileManifest? fromJson(dynamic raw) {
+    if (raw is! Map) return null;
+    final m = Map<String, dynamic>.from(raw);
+    final psRaw = m['profiles'];
+    if (psRaw is! Map) return null;
+    final profiles = <String, ProfileManifestEntry>{};
+    psRaw.forEach((k, v) {
+      final e = ProfileManifestEntry.fromJson(k.toString(), v);
+      if (e != null) profiles[k.toString()] = e;
+    });
+    if (profiles.isEmpty) return null;
+    return ProfileManifest(
+      version: (m['version'] ?? '').toString(),
+      generatedAt: m['generated_at']?.toString(),
+      defaultProfile: (m['default_profile'] ?? 'dev').toString(),
+      profiles: profiles,
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+        'version': version,
+        'generated_at': generatedAt,
+        'default_profile': defaultProfile,
+        'profiles': {for (final e in profiles.entries) e.key: e.value.toJson()},
+      };
+
+  ProfileManifestEntry? entryFor(ConnectionProfile profile) => profiles[profile.name];
+
+  static ProfileManifest? load() {
+    try {
+      final f = File(filePath);
+      if (!f.existsSync()) return null;
+      return fromJson(jsonDecode(f.readAsStringSync()));
+    } catch (_) {
+      return null;
+    }
+  }
+
+  void save() {
+    try {
+      File(filePath).writeAsStringSync(jsonEncode(toJson()));
+    } catch (e) {
+      AppLogger.instance.w('프로파일 manifest 저장 실패: $e');
+    }
+  }
+}
+
+class ProfileManifestEntry {
+  ProfileManifestEntry({required this.name, required this.label, required this.opsCandidates, required this.config});
+  final String name;
+  final String label;
+  final List<String> opsCandidates;
+  final ServerConfig config;
+
+  static ProfileManifestEntry? fromJson(String name, dynamic raw) {
+    if (raw is! Map) return null;
+    final m = Map<String, dynamic>.from(raw);
+    final cfgRaw = m['config'];
+    final cfg = cfgRaw is Map ? ServerConfig._fromJson(Map<String, dynamic>.from(cfgRaw), 'manifest') : null;
+    if (cfg == null) return null;
+    final cands = <String>[];
+    final rc = m['ops_candidates'] ?? m['opsCandidates'];
+    if (rc is List) {
+      for (final c in rc) {
+        final s = c.toString().trim();
+        if (s.isNotEmpty) cands.add(s);
+      }
+    }
+    if (cands.isEmpty) cands.add(cfg.opsBaseUrl);
+    return ProfileManifestEntry(name: name, label: (m['label'] ?? name).toString(), opsCandidates: cands, config: cfg);
+  }
+
+  Map<String, dynamic> toJson() => {
+        'name': name,
+        'label': label,
+        'ops_candidates': opsCandidates,
+        'config': config.toJson(),
+      };
+}
+
 class ConnectionProfileStore {
   ConnectionProfileStore._();
 
@@ -385,6 +474,37 @@ class ServerConfigService {
     _current = cfg;
   }
 
+  ProfileManifest? _profileManifest = ProfileManifest.load();
+  ProfileManifest? get profileManifest => _profileManifest;
+
+  void setProfileManifest(ProfileManifest? manifest) {
+    _profileManifest = manifest;
+    manifest?.save();
+  }
+
+  ProfileManifestEntry? _manifestEntry(ConnectionProfile profile) =>
+      _profileManifest?.entryFor(profile);
+
+  ServerConfig resolvedProfileConfig(ConnectionProfile profile) {
+    final fromManifest = _manifestEntry(profile)?.config;
+    if (fromManifest != null) {
+      return fromManifest.copyWith(source: 'manifest');
+    }
+    return ConnectionProfileStore.instance.configFor(profile) ?? profile.defaultConfig();
+  }
+
+  List<String> profileCandidates(ConnectionProfile profile, {bool skipInternal = false}) {
+    final manifestCandidates = _manifestEntry(profile)?.opsCandidates ?? const <String>[];
+    final base = <String>[...manifestCandidates, ...profile.candidates];
+    String toHttp(String u) => u.replaceFirst(RegExp(r'^https://', caseSensitive: false), 'http://');
+    bool isInternal(String u) => u.contains('192.168.') || u.contains('10.0.') || u.contains('MacPro.local') || u.contains('localhost') || u.startsWith('http://127.0.0.1');
+    final seen = <String>{};
+    return [
+      for (final u in base.map(toHttp))
+        if (u.isNotEmpty && (!skipInternal || !isInternal(u)) && seen.add(u)) u
+    ];
+  }
+
   /// 현재 네트워크가 내부망(LAN)인지 판별.
   /// 192.168.11.5:8091에 2초 내 응답하면 LAN으로 판단.
   Future<bool> isOnLan() async {
@@ -410,28 +530,30 @@ class ServerConfigService {
     final key = (clientKey ?? _current.clientKey).trim().isNotEmpty
         ? (clientKey ?? _current.clientKey).trim()
         : AppConstants.opsClientKey;
-    for (final base in profile.candidates) {
+    for (final base in profileCandidates(profile)) {
       final cfg = await _fetch(
         base,
         key,
         extension: extension ?? _current.clientExtension,
       );
       if (cfg != null) {
-        final resolved = profile == ConnectionProfile.external
-            ? profile.defaultConfig().copyWith(
-                  clientKey: cfg.clientKey,
-                  clientExtension: cfg.clientExtension,
-                  publicHost: cfg.publicHost,
-                  updatedAt: cfg.updatedAt,
-                  source: cfg.source,
-                  manifest: cfg.manifest,
-                  turn: cfg.turn,
-                )
-            : cfg;
+        final manifestEntry = _manifestEntry(profile);
+        final resolved = (profile == ConnectionProfile.external
+                ? profile.defaultConfig()
+                : (manifestEntry?.config ?? cfg))
+            .copyWith(
+          clientKey: cfg.clientKey,
+          clientExtension: cfg.clientExtension,
+          publicHost: cfg.publicHost ?? manifestEntry?.config.publicHost,
+          updatedAt: cfg.updatedAt,
+          source: cfg.source,
+          manifest: cfg.manifest,
+          turn: cfg.turn ?? manifestEntry?.config.turn,
+        );
         _current = resolved;
         resolved.save();
-        AppLogger.instance
-            .i('연결 프로필 자동설정 성공 profile=${profile.name} via=$base');
+        ConnectionProfileStore.instance.save(profile, resolved);
+        AppLogger.instance.i('연결 프로필 자동설정 성공 profile=${profile.name} via=$base manifest=${_profileManifest?.version ?? '-'}');
         return resolved;
       }
     }
@@ -591,6 +713,8 @@ class ServerConfigService {
       if (data is! Map<String, dynamic>) return null;
       final fetched = ServerConfig._fromJson(data, 'ops');
       if (fetched == null) return null;
+      final pm = ProfileManifest.fromJson(data['profile_manifest'] ?? data['profileManifest']);
+      if (pm != null) setProfileManifest(pm);
       final turnRaw = data['turn'];
       final turn = turnRaw is Map<String, dynamic>
           ? Map<String, dynamic>.from(turnRaw)
