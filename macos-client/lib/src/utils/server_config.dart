@@ -57,8 +57,8 @@ extension ConnectionProfileX on ConnectionProfile {
           sipDomain: '192.168.11.5',
           sipPort: 15060,
           wsServer: 'ws://192.168.11.5:18088/ws',
-          opsBaseUrl: 'http://192.168.11.5:8091',
-          clientLogUrl: 'http://192.168.11.5:8091/api/client-logs',
+          opsBaseUrl: 'http://192.168.11.5:18091',
+          clientLogUrl: 'http://192.168.11.5:18091/api/client-logs',
           source: 'profile',
         );
     }
@@ -82,6 +82,8 @@ extension ConnectionProfileX on ConnectionProfile {
         ];
       case ConnectionProfile.test:
         return const [
+          'http://192.168.11.5:18091',
+          'http://127.0.0.1:18091',
           'http://192.168.11.5:8091',
         ];
     }
