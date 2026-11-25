@@ -98,39 +98,57 @@ class _SettingsScreenState extends State<SettingsScreen> {
     setState(() {
       _testing = true;
       _testResults = const [];
-      _autoMsg = null;
+      _autoMsg = '서버 프로파일 정보를 갱신하고 연결 테스트 중…';
     });
-    final base = ServerConfigService.instance.current;
-    final cfg = base.copyWith(
-      sipDomain: _domain.text.trim(),
-      sipPort: int.tryParse(_port.text.trim()) ?? base.sipPort,
-      wsServer: _ws.text.trim(),
-      opsBaseUrl: _ops.text.trim(),
-      clientLogUrl: '${_ops.text.trim()}/api/client-logs',
-      source: 'test',
+    // 연결 테스트 전에 서버 profile manifest 동기화: 서버에서 바뀐 DEV/PRD/TEST/외부망 정보 반영
+    await ServerConfigService.instance.refreshProfileManifest(
+      clientKey: _authKey.text.trim(),
+      extension: _authExt.text.trim(),
     );
+    final resolved = ServerConfigService.instance.resolvedProfileConfig(_profile).copyWith(
+      clientKey: _authKey.text.trim(),
+      clientExtension: _authExt.text.trim(),
+    );
+    _applyResolvedConfig(resolved, sourceMsg: '서버 프로파일 동기화 후 연결 테스트');
     AppLogger.instance.ui('SETTINGS', 'connectionTest', params: {
       'profile': _profile.name,
-      'sipDomain': _domain.text.trim(),
-      'sipPort': _port.text.trim(),
-      'wsServer': _ws.text.trim(),
-      'opsBaseUrl': _ops.text.trim(),
+      'sipDomain': resolved.sipDomain,
+      'sipPort': resolved.sipPort,
+      'wsServer': resolved.wsServer,
+      'opsBaseUrl': resolved.opsBaseUrl,
       'authExt': _authExt.text.trim(),
       'authKey': _authKey.text.trim().isNotEmpty ? '***' : '',
     });
     final results = await ConnectionTestService.instance.test(
       profile: _profile,
-      config: cfg,
+      config: resolved,
       clientKey: _authKey.text.trim(),
       extension: _authExt.text.trim(),
     );
     if (!mounted) return;
+    final ok = results.any((r) => r.ok);
     setState(() {
       _testing = false;
       _testResults = results;
-      _autoMsg = results.any((r) => r.ok)
-          ? '연결 테스트 완료 — 결과를 확인하세요.'
-          : '모든 경로가 실패했습니다. 설정/방화벽을 확인하세요.';
+      _autoMsg = ok
+          ? '연결 테스트 완료 — 서버 프로파일 정보 동기화됨.'
+          : '모든 경로가 실패했습니다. 서버 프로파일 정보를 갱신했지만 연결은 실패했습니다.';
+    });
+  }
+
+  void _applyResolvedConfig(ServerConfig cfg, {String? sourceMsg}) {
+    ServerConfigService.instance.setCurrent(cfg);
+    cfg.save();
+    ConnectionProfileStore.instance.save(_profile, cfg);
+    ConnectionProfileStore.instance.setSelected(_profile);
+    _applyLogUrl(cfg);
+    if (!mounted) return;
+    setState(() {
+      _domain.text = cfg.sipDomain;
+      _port.text = cfg.sipPort.toString();
+      _ws.text = cfg.wsServer;
+      _ops.text = cfg.opsBaseUrl;
+      if (sourceMsg != null) _autoMsg = '$sourceMsg (${cfg.source})';
     });
   }
 
@@ -160,21 +178,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final store = ConnectionProfileStore.instance;
     store.save(_profile, current);
     store.setSelected(profile);
+    setState(() { _profile = profile; _autoMsg = '${profile.label} 프로필 전환 중 서버 정보 동기화...'; });
+    // 프로파일 전환 시 서버 manifest를 먼저 갱신해 최신 DEV/PRD/TEST/외부망 값을 반영
+    await ServerConfigService.instance.refreshProfileManifest(
+      clientKey: _authKey.text.trim(), extension: _authExt.text.trim());
     final cfg = ServerConfigService.instance.resolvedProfileConfig(profile);
-    ServerConfigService.instance.setCurrent(cfg);
-    cfg.save();
-    _applyLogUrl(cfg);
-    if (!mounted) return;
-    setState(() {
-      _profile = profile;
-      _domain.text = cfg.sipDomain;
-      _port.text = cfg.sipPort.toString();
-      _ws.text = cfg.wsServer;
-      _ops.text = cfg.opsBaseUrl;
-      _autoMsg = '${profile.label} 프로필로 전환했습니다. (source=${cfg.source})';
-    });
+    _applyResolvedConfig(cfg, sourceMsg: '${profile.label} 프로필로 전환됨');
     AppLogger.instance.ui('SETTINGS', 'profileSwitched', params: {
-      'from': _profile.name,
+      'from': current.source,
       'to': profile.name,
       'sipDomain': cfg.sipDomain,
       'sipPort': cfg.sipPort,

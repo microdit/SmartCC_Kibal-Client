@@ -498,6 +498,27 @@ class ServerConfigService {
   List<String> profileCandidates(ConnectionProfile profile, {bool skipInternal = false}) {
     final manifestCandidates = _manifestEntry(profile)?.opsCandidates ?? const <String>[];
     final base = <String>[...manifestCandidates, ...profile.candidates];
+    return _normalizeCandidates(base, skipInternal: skipInternal);
+  }
+
+  List<String> manifestDiscoveryCandidates({bool skipInternal = false}) {
+    final base = <String>[];
+    final pm = _profileManifest;
+    if (pm != null) {
+      for (final e in pm.profiles.values) {
+        base.addAll(e.opsCandidates);
+        base.add(e.config.opsBaseUrl);
+      }
+    }
+    for (final p in ConnectionProfile.values) {
+      base.addAll(p.candidates);
+      base.add(p.defaultConfig().opsBaseUrl);
+    }
+    base.add(_current.opsBaseUrl);
+    return _normalizeCandidates(base, skipInternal: skipInternal);
+  }
+
+  List<String> _normalizeCandidates(List<String> base, {bool skipInternal = false}) {
     String toHttp(String u) => u.replaceFirst(RegExp(r'^https://', caseSensitive: false), 'http://');
     bool isInternal(String u) => u.contains('192.168.') || u.contains('10.0.') || u.contains('MacPro.local') || u.contains('localhost') || u.startsWith('http://127.0.0.1');
     final seen = <String>{};
@@ -505,6 +526,21 @@ class ServerConfigService {
       for (final u in base.map(toHttp))
         if (u.isNotEmpty && (!skipInternal || !isInternal(u)) && seen.add(u)) u
     ];
+  }
+
+  Future<ProfileManifest?> refreshProfileManifest({String? clientKey, String? extension, bool skipInternal = false}) async {
+    final key = (clientKey ?? _current.clientKey).trim().isNotEmpty
+        ? (clientKey ?? _current.clientKey).trim()
+        : AppConstants.opsClientKey;
+    final candidates = manifestDiscoveryCandidates(skipInternal: skipInternal);
+    for (final base in candidates) {
+      final cfg = await _fetch(base, key, extension: extension ?? _current.clientExtension);
+      if (cfg != null && _profileManifest != null) {
+        AppLogger.instance.i('프로파일 manifest 갱신 via=$base ver=${_profileManifest?.version}');
+        return _profileManifest;
+      }
+    }
+    return _profileManifest;
   }
 
   /// 현재 네트워크가 내부망(LAN)인지 판별.
@@ -532,6 +568,7 @@ class ServerConfigService {
     final key = (clientKey ?? _current.clientKey).trim().isNotEmpty
         ? (clientKey ?? _current.clientKey).trim()
         : AppConstants.opsClientKey;
+    await refreshProfileManifest(clientKey: key, extension: extension);
     for (final base in profileCandidates(profile)) {
       final cfg = await _fetch(
         base,
@@ -565,27 +602,21 @@ class ServerConfigService {
 
   /// 탐색 후보 OPS 주소(순서대로 시도)
   /// 내부망이 아닐 때 내부 IP 후보를 건너뛰어 타임아웃 방지.
-  List<String> candidates({String? hintDomain, bool skipInternal = false}) {
-    // OPS는 HTTP-only. HTTPS URL이 저장된 경우 HTTP로 정규화하여 hang 방지.
-    String toHttp(String u) => u.replaceFirst(RegExp(r'^https://', caseSensitive: false), 'http://');
-    bool isInternal(String u) =>
-        u.contains('192.168.') || u.contains('10.0.') || u.contains('MacPro.local') || u.contains('localhost');
-    final c = <String>[
-      if (!skipInternal || !isInternal(toHttp(_current.opsBaseUrl)))
-        toHttp(_current.opsBaseUrl),
-      if (hintDomain != null && hintDomain.isNotEmpty)
-        'http://$hintDomain:${AppConstants.opsPort}',
-      if ((_current.publicHost ?? '').isNotEmpty && (!skipInternal || !isInternal('http://${_current.publicHost}')))
-        'http://${_current.publicHost}:${AppConstants.opsPort}',
-      if (!skipInternal)
-        'http://${ServerConfig.bootstrapHost}:${AppConstants.opsPort}',
+  List<String> candidates({String? hintDomain, bool skipInternal = false, ConnectionProfile? profile}) {
+    final selected = profile ?? ConnectionProfileStore.instance.selected;
+    final manifestEntry = _manifestEntry(selected);
+    final profileCfg = manifestEntry?.config ?? resolvedProfileConfig(selected);
+    final base = <String>[
+      _current.opsBaseUrl,
+      ...profileCandidates(selected, skipInternal: skipInternal),
+      profileCfg.opsBaseUrl,
+      if (hintDomain != null && hintDomain.isNotEmpty) 'http://$hintDomain:${AppConstants.opsPort}',
+      if ((_current.publicHost ?? '').isNotEmpty) 'http://${_current.publicHost}:${AppConstants.opsPort}',
+      if ((profileCfg.publicHost ?? '').isNotEmpty) 'http://${profileCfg.publicHost}:${AppConstants.opsPort}',
+      if (!skipInternal) 'http://${ServerConfig.bootstrapHost}:${AppConstants.opsPort}',
       'http://${AppConstants.defaultDomain}:${AppConstants.opsPort}',
     ];
-    final seen = <String>{};
-    return [
-      for (final u in c)
-        if (seen.add(u)) u
-    ];
+    return _normalizeCandidates(base, skipInternal: skipInternal);
   }
 
   /// OPS에 접속해 최신 설정을 받는다. 성공 시 저장 후 반환, 모두 실패 시 null.
@@ -595,7 +626,10 @@ class ServerConfigService {
         (_current.clientKey.trim().isNotEmpty
             ? _current.clientKey.trim()
             : AppConstants.opsClientKey);
-    for (final base in candidates(hintDomain: hintDomain, skipInternal: skipInternal)) {
+    // 서버 profile manifest 먼저 동기화: 연결/테스트/갱신 시 오래된 프로파일 후보를 최신 서버 정보로 교체
+    await refreshProfileManifest(clientKey: key, extension: extension, skipInternal: skipInternal);
+    final selected = ConnectionProfileStore.instance.selected;
+    for (final base in candidates(hintDomain: hintDomain, skipInternal: skipInternal, profile: selected)) {
       final cfg = await _fetch(base, key,
           extension: extension ?? _current.clientExtension);
       if (cfg != null) {
@@ -604,18 +638,29 @@ class ServerConfigService {
               '서버 설정 갱신 거부(외부망 내부주소 오염): via=$base domain=${cfg.sipDomain} ws=${cfg.wsServer}');
           continue;
         }
-        final changed = !cfg.sameAddressAs(_current) ||
-            cfg.configVersion != _current.configVersion;
-        _current = cfg;
-        cfg.save();
+        final manifestCfg = resolvedProfileConfig(selected);
+        final resolved = manifestCfg.copyWith(
+          clientKey: cfg.clientKey,
+          clientExtension: cfg.clientExtension,
+          publicHost: cfg.publicHost ?? manifestCfg.publicHost,
+          updatedAt: cfg.updatedAt,
+          source: cfg.source,
+          manifest: cfg.manifest,
+          turn: cfg.turn ?? manifestCfg.turn,
+        );
+        final changed = !resolved.sameAddressAs(_current) ||
+            resolved.configVersion != _current.configVersion;
+        _current = resolved;
+        resolved.save();
+        ConnectionProfileStore.instance.save(selected, resolved);
         AppLogger.instance.i('서버 설정 갱신 via=$base '
-            'domain=${cfg.sipDomain} ws=${cfg.wsServer} changed=$changed ver=${cfg.configVersion}');
-        return cfg;
+            'domain=${resolved.sipDomain} ws=${resolved.wsServer} changed=$changed ver=${resolved.configVersion} manifest=${_profileManifest?.version ?? '-'}');
+        return resolved;
       }
       AppLogger.instance.w('서버 설정 갱신 실패 via=$base (응답 없음/비정상)');
     }
     AppLogger.instance.w('서버 설정 갱신 실패: OPS 응답 없음 (후보 '
-        '${candidates(hintDomain: hintDomain).join(', ')})');
+        '${candidates(hintDomain: hintDomain, skipInternal: skipInternal, profile: selected).join(', ')})');
     return null;
   }
 
