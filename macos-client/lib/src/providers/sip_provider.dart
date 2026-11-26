@@ -50,6 +50,9 @@ class SipProvider with ChangeNotifier {
   /// 등록 재연결 성공 콜백(네트워크 복구 후 통화 재입장 등에 사용)
   VoidCallback? onReconnected;
 
+  /// 통화 종료 콜백(원격 트랙/렌더 타일 정리용)
+  VoidCallback? onCallEnded;
+
   /// 연결 시도 중 여부
   bool get isConnecting => _connectInFlight != null;
 

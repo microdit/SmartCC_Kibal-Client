@@ -122,20 +122,16 @@ class MediaManager {
     }
   }
   
-  /// 리소스 정리 (완전 폐기 — 로그아웃 전용)
-  Future<void> dispose() async {
-    // 로컬 스트림 정리
-    await _disposeStream(_localStream);
-    _localStream = null;
-    
-    // 원격 스트림 정리
+  /// 원격 세션/영상 타일만 정리 (통화 종료 시 호출 — 로컬 스트림은 유지)
+  ///
+  /// 11/17 수정은 SIP BYE만 정리했고 여기는 건드리지 않아 재입장마다
+  /// 이전 세션의 MediaStream이 누적되어 `Track is nil` 타일 폭주가 재현됐다.
+  Future<void> clearRemoteSessions() async {
     for (final streams in _remoteSessions.values) {
       for (final stream in streams) {
         await _disposeStream(stream);
       }
     }
-
-    // 트랙별 렌더 스트림 정리 (공유 중인 원본 스트림은 건너뛴다)
     for (final stream in _remoteVideoStreams.values) {
       await _disposeRenderStream(stream);
     }
@@ -143,6 +139,17 @@ class MediaManager {
     _remoteVideoTrackOrder.clear();
     _inactiveVideoTracks.clear();
     _remoteSessions.clear();
+    _rebindAllRemoteRenderers();
+    onRemoteVideoStreamsChanged?.call();
+  }
+
+  /// 리소스 정리 (완전 폐기 — 로그아웃 전용)
+  Future<void> dispose() async {
+    // 로컬 스트림 정리
+    await _disposeStream(_localStream);
+    _localStream = null;
+
+    await clearRemoteSessions();
     
     // 렌더러 정리
     for (final renderer in [..._localRenderers.values, ..._remoteRenderers.values]) {
@@ -459,6 +466,19 @@ class MediaManager {
               sourceStreams[trackId] = stream;
             }
           }
+        }
+
+        // 동기화 단계에서 타일 수 제한: 렌더 생성 전에 오래된 트랙을 제외한다.
+        // (remoteStreams getter에서 자르는 것은 이미 32개 addTrack을 시도한 뒤라
+        //  `Track is nil` 폭주를 막지 못한다.)
+        if (tracks.length > maxRemoteVideoTiles) {
+          final ids = tracks.keys.toList();
+          final drop = ids.sublist(0, ids.length - maxRemoteVideoTiles);
+          for (final id in drop) {
+            tracks.remove(id);
+            sourceStreams.remove(id);
+          }
+          AppLogger.instance.w('video sync: drop stale tracks count=${drop.length}');
         }
 
         // 사라진 트랙 정리

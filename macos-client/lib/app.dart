@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -73,7 +74,13 @@ class _KibalAppState extends State<KibalApp> {
     // 방법이 없던 문제 → 앱 최상위(어느 화면에서든)에 전역 표시
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
-      context.read<SipProvider>().addListener(_handleIncomingCall);
+      final sip = context.read<SipProvider>();
+      sip.addListener(_handleIncomingCall);
+      // 통화 종료 시 원격 MediaStream/타일을 정리해 재입장 시 트랙이 누적되지 않게 한다.
+      sip.onCallEnded = () {
+        final media = context.read<MediaProvider>();
+        unawaited(media.clearRemoteSessions());
+      };
     });
   }
 

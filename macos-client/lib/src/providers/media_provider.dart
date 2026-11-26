@@ -48,6 +48,13 @@ class MediaProvider with ChangeNotifier {
   
   /// 미디어 매니저
   MediaManager get mediaManager => _mediaManager;
+
+  /// 통화 종료 시 원격 세션/타일 정리 (SipProvider.onCallEnded 연결)
+  Future<void> clearRemoteSessions() async {
+    await _mediaManager.clearRemoteSessions();
+    _remoteStreamCount = 0;
+    if (!_disposed) notifyListeners();
+  }
   
   /// 로컬 스트림
   MediaStream? get localStream => _mediaManager.localStream;
