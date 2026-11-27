@@ -20,6 +20,7 @@
 | 2026-11-26 | Client | `feature/external-network-access` / `4af92345` | 규약 반영 | 4환경 분리·검수 승격 규약 영속 반영 | 답변서 지정 경로 push |
 | 2026-11-27 14:28 | Server | `feature/external-network-wss` / 작업중 | 답변서 미확인 | Server fetch 기준 답변서 `eea01b6` 미확인 | Client push 위치 확인 |
 | 2026-11-27 14:28 | Client | `feature/external-network-access` / `4af92345` | 대기 | 답변서 파일/커밋을 지정 경로에 push 필요 | 아래 지정 경로로 push 후 해시 공유 |
+| 2026-11-27 18:08 | Client/Server | Client `562420b5` / Server `80444bf` | 절차서 작성 | 로그 동기화 확인 절차서를 양쪽 wiki에 작성하고 커밋/런타임 로그 판정 결과 상호 참조 | TEST 브랜치 푸시, DEV 승격 보류 |
 
 ## 답변서 지정 경로
 
@@ -53,3 +54,13 @@
 - Server와 동일한 규약을 Client `wiki/04_Prompts/20261127_작업시작전_준수지시서_읽기_규약_v1.0.md`에 제정, CLAUDE.md에 포인터 추가.
 - 매 작업 시작 시 지시서/영속규약/버전·브랜치 상태 확인 후 착수. "진행해"는 정책 준수 전제.
 - 현재: origin/feature=`9cddfb08`(v0.0.65), origin/test=`aa52367f`(v0.0.66 TEST 산출물). 실기 PASS 전 DEV 승격 금지.
+
+### 2026-11-27 18:08 KST - 로그 동기화 확인 절차서
+
+- **Client 문서**: `wiki/03_Guides/20261127_로그동기화_확인절차서_v1.0.md`
+- **Client 커밋**: `562420b5` (`test/client-v0.0.64-recovery`)
+- **Server 문서**: `SmartCC_Kibal/wiki/03_Guides/20261127_로그동기화_확인절차서_v1.0.md`
+- **Server 커밋**: `80444bf` (`test/log-sync-verification-procedure`)
+- **확인 결과**: Client 커밋 로그 `5c3f74f9` 로컬/원격 일치. 1102(v0.0.66)/1104(v0.0.64) OPS `mirror_ok=true` 및 NAS 일자별 파일 최신 로그 일치.
+- **주의**: AI봇 7001의 OPS/NAS 클라이언트 로그 파일은 없음. AI 작업 커밋 로그와 AI봇 런타임 로그는 별도 축으로 확인.
+- **다음 액션**: 양쪽 TEST 브랜치에 명시 커밋/푸시. DEV 승격 없음.
