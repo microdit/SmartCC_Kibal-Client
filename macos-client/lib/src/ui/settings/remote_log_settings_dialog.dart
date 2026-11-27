@@ -54,8 +54,17 @@ class _LogSendDialogState extends State<_LogSendDialog> {
     _forwarder.setAutoSend(value);
     setState(() {
       _message = value
-          ? '자동전송 시작: 지금 1회 전송 후 5분마다 전송합니다.'
+          ? '자동전송 시작: 지금 1회 전송 후 ${_forwarder.settings.autoSendMinutes}분마다 전송합니다.'
           : '자동전송을 중지했습니다.';
+    });
+  }
+
+  void _setMinutes(int? minutes) {
+    if (minutes == null) return;
+    final clamped = RemoteLogSettings.clampMinutes(minutes);
+    _forwarder.setAutoSend(_forwarder.settings.autoSend, minutes: clamped);
+    setState(() {
+      _message = '자동전송 주기를 $clamped분으로 설정했습니다.';
     });
   }
 
@@ -86,14 +95,43 @@ class _LogSendDialogState extends State<_LogSendDialog> {
               builder: (_, s, __) => SwitchListTile(
                 contentPadding: EdgeInsets.zero,
                 dense: true,
-                title: const Text('자동보내기 (5분 주기)'),
+                title: Text('자동보내기 (${_forwarder.settings.autoSendMinutes}분 주기)'),
                 subtitle: Text(
-                  '즉시 1회 전송 후 5분마다 분할 전송 · 마지막 ${_fmt(s.lastSentAt)}',
+                  '즉시 1회 전송 후 ${_forwarder.settings.autoSendMinutes}분마다 분할 전송 · 마지막 ${_fmt(s.lastSentAt)}',
                   style: const TextStyle(fontSize: 11),
                 ),
                 value: _forwarder.settings.autoSend,
                 onChanged: _toggleAuto,
               ),
+            ),
+            const SizedBox(height: 8),
+            Row(
+              children: [
+                const SizedBox(width: 8, child: Text('주기', style: TextStyle(fontSize: 12))),
+                const SizedBox(width: 8),
+                SizedBox(
+                  width: 70,
+                  child: TextField(
+                    keyboardType: TextInputType.number,
+                    decoration: const InputDecoration(
+                      isDense: true,
+                      suffixText: '분',
+                      border: OutlineInputBorder(),
+                    ),
+                    controller: TextEditingController(
+                      text: '${_forwarder.settings.autoSendMinutes}',
+                    ),
+                    onSubmitted: (v) => _setMinutes(int.tryParse(v)),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                const Text('1~60분', style: TextStyle(fontSize: 11, color: Colors.grey)),
+                const Spacer(),
+                TextButton(
+                  onPressed: () => _setMinutes(5),
+                  child: const Text('5분 기본'),
+                ),
+              ],
             ),
             const SizedBox(height: 8),
             SizedBox(
@@ -187,6 +225,7 @@ class _RemoteLogSettingsDialogState extends State<_RemoteLogSettingsDialog> {
       includeStats: _includeStats,
       urlOverridden: current.urlOverridden || url != current.url,
       autoSend: current.autoSend,
+      autoSendMinutes: current.autoSendMinutes,
     );
   }
 

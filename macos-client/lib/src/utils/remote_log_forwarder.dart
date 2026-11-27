@@ -122,26 +122,27 @@ class RemoteLogForwarder {
     if (settings.autoSend) {
       _autoTimer?.cancel();
       _autoTimer = Timer.periodic(
-        const Duration(minutes: 5),
+        Duration(minutes: settings.autoSendMinutes),
         (_) => unawaited(sendNow()),
       );
     }
   }
 
-  void setAutoSend(bool enabled) {
+  void setAutoSend(bool enabled, {int? minutes}) {
     settings.autoSend = enabled;
+    if (minutes != null) settings.autoSendMinutes = RemoteLogSettings.clampMinutes(minutes);
     settings.save();
     _autoTimer?.cancel();
     _autoTimer = null;
     if (enabled) {
       unawaited(sendNow());
       _autoTimer = Timer.periodic(
-        const Duration(minutes: 5),
+        Duration(minutes: settings.autoSendMinutes),
         (_) => unawaited(sendNow()),
       );
     }
     AppLogger.instance
-        .i('원격 로그 자동전송 ${enabled ? '활성(5분 주기)' : '비활성'}');
+        .i('원격 로그 자동전송 ${enabled ? '활성(${settings.autoSendMinutes}분 주기)' : '비활성'}');
   }
 
   Future<void> sendNow() async {
@@ -171,7 +172,7 @@ class RemoteLogForwarder {
     _autoTimer = null;
     if (settings.autoSend) {
       _autoTimer = Timer.periodic(
-        const Duration(minutes: 5),
+        Duration(minutes: settings.autoSendMinutes),
         (_) => unawaited(sendNow()),
       );
     }

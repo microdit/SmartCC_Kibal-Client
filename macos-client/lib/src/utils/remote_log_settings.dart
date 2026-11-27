@@ -20,6 +20,7 @@ class RemoteLogSettings {
     required this.includeStats,
     this.urlOverridden = false,
     this.autoSend = false,
+    this.autoSendMinutes = 5,
   });
 
   RemoteLogMode mode;
@@ -32,8 +33,13 @@ class RemoteLogSettings {
   /// 사용자가 서버 주소를 직접 바꿨는지(로그인 도메인 자동 반영 중단)
   bool urlOverridden;
 
-  /// 5분 주기 자동 전송 활성화
+  /// 자동 전송 활성화
   bool autoSend;
+
+  /// 자동 전송 주기(분). 1~60 범위로 제한한다.
+  int autoSendMinutes;
+
+  static int clampMinutes(int minutes) => minutes.clamp(1, 60);
 
   static const String _defineUrl = String.fromEnvironment('OPS_LOG_URL');
   static const String _defineKey = String.fromEnvironment('OPS_CLIENT_KEY');
@@ -55,6 +61,7 @@ class RemoteLogSettings {
         domains: kEventDomains.toSet(),
         includeStats: false,
         autoSend: false,
+        autoSendMinutes: 5,
       );
 
   RemoteLogFilter get filter => RemoteLogFilter(
@@ -82,6 +89,9 @@ class RemoteLogSettings {
         includeStats: json['includeStats'] as bool? ?? false,
         urlOverridden: json['urlOverridden'] as bool? ?? false,
         autoSend: json['autoSend'] as bool? ?? false,
+        autoSendMinutes: clampMinutes(
+          (json['autoSendMinutes'] as num?)?.toInt() ?? d.autoSendMinutes,
+        ),
       );
     } catch (_) {
       return RemoteLogSettings.defaults();
@@ -99,6 +109,7 @@ class RemoteLogSettings {
         'includeStats': includeStats,
         'urlOverridden': urlOverridden,
         'autoSend': autoSend,
+        'autoSendMinutes': clampMinutes(autoSendMinutes),
       }));
     } catch (e) {
       AppLogger.instance.w('로그 전송 설정 저장 실패: $e');
