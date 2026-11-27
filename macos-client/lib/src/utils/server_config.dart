@@ -501,16 +501,25 @@ class ServerConfigService {
     return _normalizeCandidates(base, skipInternal: skipInternal);
   }
 
-  List<String> manifestDiscoveryCandidates({bool skipInternal = false}) {
+  List<String> manifestDiscoveryCandidates({bool skipInternal = false, ConnectionProfile? profile}) {
+    final selected = profile ?? ConnectionProfileStore.instance.selected;
     final base = <String>[];
+    // 선택된 프로파일 후보를 최우선으로 둔다(TEST 선택 시 DEV 8091 오염 방지).
+    base.addAll(profileCandidates(selected, skipInternal: skipInternal));
     final pm = _profileManifest;
     if (pm != null) {
+      final selectedEntry = pm.entryFor(selected);
+      if (selectedEntry != null) {
+        base.addAll(selectedEntry.opsCandidates);
+        base.add(selectedEntry.config.opsBaseUrl);
+      }
       for (final e in pm.profiles.values) {
         base.addAll(e.opsCandidates);
         base.add(e.config.opsBaseUrl);
       }
     }
     for (final p in ConnectionProfile.values) {
+      if (p == selected) continue;
       base.addAll(p.candidates);
       base.add(p.defaultConfig().opsBaseUrl);
     }
@@ -528,15 +537,23 @@ class ServerConfigService {
     ];
   }
 
-  Future<ProfileManifest?> refreshProfileManifest({String? clientKey, String? extension, bool skipInternal = false}) async {
+  Future<ProfileManifest?> refreshProfileManifest({String? clientKey, String? extension, bool skipInternal = false, ConnectionProfile? profile}) async {
+    final selected = profile ?? ConnectionProfileStore.instance.selected;
     final key = (clientKey ?? _current.clientKey).trim().isNotEmpty
         ? (clientKey ?? _current.clientKey).trim()
         : AppConstants.opsClientKey;
-    final candidates = manifestDiscoveryCandidates(skipInternal: skipInternal);
+    final candidates = manifestDiscoveryCandidates(skipInternal: skipInternal, profile: selected);
     for (final base in candidates) {
       final cfg = await _fetch(base, key, extension: extension ?? _current.clientExtension);
       if (cfg != null && _profileManifest != null) {
-        AppLogger.instance.i('프로파일 manifest 갱신 via=$base ver=${_profileManifest?.version}');
+        final manifestData = cfg.manifest ?? const <String, dynamic>{};
+        final env = (manifestData['environment'] ?? manifestData['env'] ?? '').toString().toLowerCase();
+        final looksTest = env == 'test' || cfg.opsBaseUrl.contains(':18091') || cfg.wsServer.contains(':18088') || cfg.sipPort == 15060;
+        if (selected == ConnectionProfile.test && !looksTest) {
+          AppLogger.instance.w('TEST manifest 갱신 거부(비TEST 응답): via=$base env=$env');
+          continue;
+        }
+        AppLogger.instance.i('프로파일 manifest 갱신 via=$base ver=${_profileManifest?.version} selected=${selected.name}');
         return _profileManifest;
       }
     }
@@ -568,7 +585,7 @@ class ServerConfigService {
     final key = (clientKey ?? _current.clientKey).trim().isNotEmpty
         ? (clientKey ?? _current.clientKey).trim()
         : AppConstants.opsClientKey;
-    await refreshProfileManifest(clientKey: key, extension: extension);
+    await refreshProfileManifest(clientKey: key, extension: extension, profile: profile);
     for (final base in profileCandidates(profile)) {
       final cfg = await _fetch(
         base,
@@ -607,14 +624,17 @@ class ServerConfigService {
     final manifestEntry = _manifestEntry(selected);
     final profileCfg = manifestEntry?.config ?? resolvedProfileConfig(selected);
     final base = <String>[
-      _current.opsBaseUrl,
-      ...profileCandidates(selected, skipInternal: skipInternal),
       profileCfg.opsBaseUrl,
-      if (hintDomain != null && hintDomain.isNotEmpty) 'http://$hintDomain:${AppConstants.opsPort}',
+      ...profileCandidates(selected, skipInternal: skipInternal),
+      _current.opsBaseUrl,
+      if (hintDomain != null && hintDomain.isNotEmpty && selected != ConnectionProfile.test)
+        'http://$hintDomain:${AppConstants.opsPort}',
       if ((_current.publicHost ?? '').isNotEmpty) 'http://${_current.publicHost}:${AppConstants.opsPort}',
       if ((profileCfg.publicHost ?? '').isNotEmpty) 'http://${profileCfg.publicHost}:${AppConstants.opsPort}',
-      if (!skipInternal) 'http://${ServerConfig.bootstrapHost}:${AppConstants.opsPort}',
-      'http://${AppConstants.defaultDomain}:${AppConstants.opsPort}',
+      if (!skipInternal && selected != ConnectionProfile.test)
+        'http://${ServerConfig.bootstrapHost}:${AppConstants.opsPort}',
+      if (selected != ConnectionProfile.test)
+        'http://${AppConstants.defaultDomain}:${AppConstants.opsPort}',
     ];
     return _normalizeCandidates(base, skipInternal: skipInternal);
   }
@@ -626,9 +646,9 @@ class ServerConfigService {
         (_current.clientKey.trim().isNotEmpty
             ? _current.clientKey.trim()
             : AppConstants.opsClientKey);
-    // 서버 profile manifest 먼저 동기화: 연결/테스트/갱신 시 오래된 프로파일 후보를 최신 서버 정보로 교체
-    await refreshProfileManifest(clientKey: key, extension: extension, skipInternal: skipInternal);
     final selected = ConnectionProfileStore.instance.selected;
+    // 서버 profile manifest 먼저 동기화: 연결/테스트/갱신 시 오래된 프로파일 후보를 최신 서버 정보로 교체
+    await refreshProfileManifest(clientKey: key, extension: extension, skipInternal: skipInternal, profile: selected);
     for (final base in candidates(hintDomain: hintDomain, skipInternal: skipInternal, profile: selected)) {
       final cfg = await _fetch(base, key,
           extension: extension ?? _current.clientExtension);
@@ -637,6 +657,21 @@ class ServerConfigService {
           AppLogger.instance.w(
               '서버 설정 갱신 거부(외부망 내부주소 오염): via=$base domain=${cfg.sipDomain} ws=${cfg.wsServer}');
           continue;
+        }
+        // 명시적 TEST 선택 시 DEV/다른 프로파일 응답으로 top-level을 오염시키지 않는다.
+        if (selected == ConnectionProfile.test) {
+          final manifestData = cfg.manifest ?? const <String, dynamic>{};
+          final env = (manifestData['environment'] ?? manifestData['env'] ?? '')
+              .toString()
+              .toLowerCase();
+          final looksTest = env == 'test' ||
+              cfg.opsBaseUrl.contains(':18091') ||
+              cfg.wsServer.contains(':18088') ||
+              cfg.sipPort == 15060;
+          if (!looksTest) {
+            AppLogger.instance.w('TEST 프로파일 설정 갱신 거부(비TEST 응답): via=$base env=$env ws=${cfg.wsServer} ops=${cfg.opsBaseUrl}');
+            continue;
+          }
         }
         final manifestCfg = resolvedProfileConfig(selected);
         final resolved = manifestCfg.copyWith(
@@ -668,21 +703,28 @@ class ServerConfigService {
   /// 내부망에서 외부망으로 전환 시 자동으로 외부 프로필로 전환.
   Future<ServerConfig?> refreshSmart({String? clientKey, String? extension}) async {
     final onLan = await isOnLan();
-    AppLogger.instance.i('네트워크 감지: onLan=$onLan, currentProfile=${_current.sipDomain}');
     final selected = ConnectionProfileStore.instance.selected;
-    // 내부망인데 외부 프로필이면 선택된 내부 프로필(DEV/TEST)로 전환
+    AppLogger.instance.i('네트워크 감지: onLan=$onLan, currentProfile=${_current.sipDomain} selected=${selected.name}');
+    // 명시적으로 선택된 TEST 프로파일은 외부망 감지로 EXTERNAL로 자동 전환하지 않는다.
+    // TEST는 내부 검수 전용 프로파일이며, 외부망 전환은 사용자가 명시 선택한다.
+    if (selected == ConnectionProfile.test) {
+      final refreshed = await refresh(
+        clientKey: clientKey,
+        extension: extension,
+        skipInternal: false,
+      );
+      return refreshed ?? _current;
+    }
+    // 내부망인데 외부 프로필이면 DEV로 전환
     if (onLan && _current.sipDomain == 'appletreeda.synology.me') {
-      final target = selected == ConnectionProfile.test
-          ? ConnectionProfile.test
-          : ConnectionProfile.dev;
-      AppLogger.instance.i('내부망 감지 → ${target.label} 프로필로 자동 전환');
-      final cfg = target.defaultConfig();
+      AppLogger.instance.i('내부망 감지 → DEV 프로필로 자동 전환');
+      final cfg = ConnectionProfile.dev.defaultConfig();
       _current = cfg;
       cfg.save();
-      ConnectionProfileStore.instance.setSelected(target);
+      ConnectionProfileStore.instance.setSelected(ConnectionProfile.dev);
       return cfg;
     }
-    // 외부망인데 내부 프로필이면 external로 전환 (TEST 포함)
+    // 외부망인데 내부 프로필이면 external로 전환 (TEST 제외)
     if (!onLan &&
         (_current.sipDomain == '192.168.11.5' ||
             _current.sipDomain == '192.168.11.3' ||

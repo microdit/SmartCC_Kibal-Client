@@ -105,6 +105,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     await ServerConfigService.instance.refreshProfileManifest(
       clientKey: _authKey.text.trim(),
       extension: _authExt.text.trim(),
+      profile: _profile,
     );
     final resolved = ServerConfigService.instance.resolvedProfileConfig(_profile).copyWith(
       clientKey: _authKey.text.trim(),
@@ -186,7 +187,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     });
     // 프로파일 전환 시 서버 manifest를 먼저 갱신해 최신 DEV/PRD/TEST/외부망 값을 반영
     await ServerConfigService.instance.refreshProfileManifest(
-        clientKey: _authKey.text.trim(), extension: _authExt.text.trim());
+        clientKey: _authKey.text.trim(), extension: _authExt.text.trim(), profile: profile);
     final cfg = ServerConfigService.instance.resolvedProfileConfig(profile);
     _applyResolvedConfig(cfg, sourceMsg: '${profile.label} 프로필로 전환됨');
     final oldCfg = sip.config;
