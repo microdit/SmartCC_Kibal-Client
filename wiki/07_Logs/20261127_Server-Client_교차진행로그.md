@@ -21,6 +21,8 @@
 | 2026-11-27 14:28 | Server | `feature/external-network-wss` / 작업중 | 답변서 미확인 | Server fetch 기준 답변서 `eea01b6` 미확인 | Client push 위치 확인 |
 | 2026-11-27 14:28 | Client | `feature/external-network-access` / `4af92345` | 대기 | 답변서 파일/커밋을 지정 경로에 push 필요 | 아래 지정 경로로 push 후 해시 공유 |
 | 2026-11-27 18:08 | Client/Server | Client `562420b5` / Server `80444bf` | 절차서 작성 | 로그 동기화 확인 절차서를 양쪽 wiki에 작성하고 커밋/런타임 로그 판정 결과 상호 참조 | TEST 브랜치 푸시, DEV 승격 보류 |
+| 2026-11-27 18:29 | Client/Server | Client `44fdc5e7` / Server `9ddf207` | 보고서 작성 | DMG 공유폴더 자동발행 보고서를 양쪽 wiki에 작성하고 공통 산출물/SHA256 상호 참조 | MacBook/MacBookAir 재현 검증, DEV 승격 보류 |
+| 2026-11-27 18:31 | Client/Server | Client `6acf8c77` / Server `6fbed05` | 전체 요약 | 오늘 작업 전체와 Server AI 인계 P0/P1/P2를 양쪽 wiki에 상호 참조 | 1102 408 분석, 6700 실기 PASS, 다단말 발행 검증 |
 
 ## 답변서 지정 경로
 
@@ -65,3 +67,25 @@
 - **주의**: AI봇 7001의 OPS/NAS 클라이언트 로그 파일은 없음. AI 작업 커밋 로그와 AI봇 런타임 로그는 별도 축으로 확인.
 - **다음 액션**: 양쪽 TEST 브랜치에 명시 커밋/푸시. DEV 승격 없음.
 - **브랜치명 보완**: Server 원격에 `test` 기준 브랜치가 있어 `test/...` ref 생성이 거절됨. `test-pending-log-sync`로 변경해 force 없이 push.
+
+### 2026-11-27 18:29 KST - DMG 공유폴더 자동발행 보고서
+
+- **Client 보고서**: `wiki/06_Reports/20261127_DMG_공유폴더_자동발행_보고서_v1.0.md`
+- **Client 보고서 커밋**: `44fdc5e7`
+- **Server 보고서**: `SmartCC_Kibal/wiki/06_Reports/20261127_DMG_공유폴더_자동발행_보고서_v1.0.md`
+- **Server 보고서 커밋**: `9ddf207`
+- **구현 커밋**: Client `5420f62f`
+- **공통 산출물**: `/Volumes/NetBackup/보관함/개발/Live_Log/macOS_Client_v0.0.66.dmg`
+- **SHA256**: `58b3f5b4b454e1fa1082f61af6d1c1df2b90d7d4c4d28836d8fe6a83096bda58`
+- **다음 액션**: MacBook/MacBookAir SMB 마운트·빌드·자동 발행 재현 검증. DEV 승격 없음.
+
+### 2026-11-27 18:31 KST - 오늘 작업 전체 요약보고서
+
+- **Client 보고서**: `wiki/06_Reports/20261127_오늘작업_전체요약보고서_v1.0.md`
+- **Client 커밋**: `6acf8c77`
+- **Server 보고서**: `SmartCC_Kibal/wiki/06_Reports/20261127_오늘작업_전체요약보고서_v1.0.md`
+- **Server 커밋**: `6fbed05`
+- **인계 대상**: Server AI agent
+- **P0**: v0.0.66 승격 보류, 1102 408/ICE 분석, 6700 실기 PASS
+- **P1**: MacBook/MacBookAir SMB 마운트·빌드·공통 발행 재현
+- **P2**: AI봇 7001 런타임 로그 경로 확인
