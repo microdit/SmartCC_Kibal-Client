@@ -47,3 +47,9 @@
   3. 로그는 `usr=` 기준 판정, NAS 공유 경로/대체 경로 명시
   4. NAS 4949 복구 시 dev/prd 선행 재확인
 - **상대 문서**: `SmartCC_Kibal/wiki/07_Logs/20261127_Server-Client_교차진행로그.md`
+
+## 작업 시작 전 준수 지시서 읽기 규약 제정 (2026-11-27)
+
+- Server와 동일한 규약을 Client `wiki/04_Prompts/20261127_작업시작전_준수지시서_읽기_규약_v1.0.md`에 제정, CLAUDE.md에 포인터 추가.
+- 매 작업 시작 시 지시서/영속규약/버전·브랜치 상태 확인 후 착수. "진행해"는 정책 준수 전제.
+- 현재: origin/feature=`9cddfb08`(v0.0.65), origin/test=`aa52367f`(v0.0.66 TEST 산출물). 실기 PASS 전 DEV 승격 금지.
