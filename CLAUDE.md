@@ -46,9 +46,17 @@
 
 | 리모트 | 용도 | URL 패턴 |
 |--------|------|---------|
-| `github` | 소스 of truth (GitHub) | `git@github.com:microdit/SmartCC_Kibal-Client.git` |
-| `dev` | 개발 환경 (Local) | `ssh://atom@nas2:4949/var/services/homes/atom/gitRepo/SmartCC_Kibal-Client.git` |
-| `prd` | 운영 환경 (NAS) | `ssh://atom@nas2:4949/var/services/homes/atom/gitRepo/SmartCC_Kibal-Client_prd.git` |
+| `origin` | 레거시 GitHub(전환 기간) | `https://github.com/microdit/SmartCC_Kibal-Client.git` |
+| `dev-gh` | DEV GitHub(생성 시) | `https://github.com/microdit/Smart_Kibal-Client-DEV.git` |
+| `test-gh` | TEST GitHub(생성 시) | `https://github.com/microdit/Smart_Kibal-Client-TEST.git` |
+| `prd-gh` | PRD GitHub(생성 시) | `https://github.com/microdit/Smart_Kibal-Client-PRD.git` |
+| `external-gh` | EXTERNAL GitHub(생성 시) | `https://github.com/microdit/Smart_Kibal-Client-EXTERNAL.git` |
+| `dev` | 레거시 NAS DEV | `ssh://atom@nas2:4949/.../SmartCC_Kibal-Client.git` |
+| `prd` | 레거시 NAS PRD | `ssh://atom@nas2:4949/.../SmartCC_Kibal-Client_prd.git` |
+
+- **2026-11-26 영속 규약**: Server 4환경 분리와 쌍 관리. 검수 전 변경은 TEST(`test/<topic>` 또는 `test-gh`)에만 커밋/푸시. 검수 PASS 증거(analyze/test/DMG/SHA256/실기 로그) 후 DEV 승격. PRD/EXTERNAL은 승인 후 승격.
+- **버전 사고 방지**: `git fetch --all --prune` 후 remote/tag 최신 확인. 선행 커밋 보존 + 버전 상향, 역행 덮어쓰기 금지. `git add -A` 금지.
+- 상세: `wiki/03_Guides/20261126_4환경_Git_운영규약_v1.0.md`, Server `SmartCC_Kibal/wiki/03_Guides/20261126_4환경_Git_운영규약_v1.0.md` 참조.
 
 > **2026-11-11 네트워크 참고**: 서버 MacPro가 유선 `192.168.0.3`(192.168.0.0/24)으로 전환됨. PRD 시놀로지 NAS(`nas2`=192.168.11.2)는 이 대역에서 **접근 경로 없음** → `dev`/`prd` push·PRD 배포 불가, GitHub만 동기화. `git-sync.sh`는 미도달 원격을 SKIP. DEV 배포는 로컬 Docker(`deploy/dev/up.sh`).
 

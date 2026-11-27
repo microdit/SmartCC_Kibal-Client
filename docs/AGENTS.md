@@ -32,8 +32,10 @@
 2. `docs/_작업이력/{오늘날짜}.md`에 작업 로그 작성 (커밋 메시지 자동 생성용)
 3. `docs/AGENTS.md`를 업데이트하며 작업
 4. 위키 문서는 9-Layer 구조에 맞게 분류 (`wiki/01_Projects` ~ `wiki/09_Knowledge`)
-5. `git-sync.sh --auto --no-deploy`로 커밋 및 3-way 동기화
-6. Client 리포지토리는 Server(`SmartCC_Kibal`)와 분리 — cross-reference는 위키 링크로 참조
+5. **4환경 분리(2026-11-26, 영속)**: 검수 전 변경은 TEST 브랜치(`test/<topic>` 또는 `test-gh`)에만 커밋/푸시. PASS 후 DEV 승격, 승인 후 PRD/EXTERNAL 승격.
+6. **버전 사고 방지**: DMG/앱 변경 전 `git fetch --all --prune` + remote/tag/dev/prd 선행 확인. 선행 보존+버전 상향, 역행 덮어쓰기 금지.
+7. `git add -A` 금지. 명시 파일만 stage. `git-sync.sh` 사용 시 포함 파일 확인.
+8. Client 리포지토리는 Server(`SmartCC_Kibal`)와 분리 — cross-reference는 위키 링크로 참조
 
 ## Git Remote (3-way)
 | 리모트 | URL |
