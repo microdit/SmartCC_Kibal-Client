@@ -336,13 +336,15 @@ class _AddressBookScreenState extends State<AddressBookScreen>
   /// 실패하면 상태바와 스낵바로 알린다.
   Future<bool> _autoRegisterSip({bool notify = true}) async {
     final sip = Provider.of<SipProvider>(context, listen: false);
-    if (sip.isRegistered) return true;
-    // 외부망에서 TURN이 로드되기 전에 SIP를 초기화하면 ICE에 STUN만 남아
-    // RTP/ICE가 실패한다. autoRegister 전에 최신 OPS config(TURN 포함)를 먼저 반영.
+    final wasRegistered = sip.isRegistered;
+    // 외부망→내부망 전환 후에도 OPS config를 갱신해야 ICE/STUN 프로필이 바뀐다.
+    // 기존엔 isRegistered면 여기서 early-return 해 예전 STUN 설정이 남아
+    // 6700 입장 시 videoBytes=0 / ICE Connection Failed(408)가 재현됐다.
     await ServerConfigService.instance.refreshSmart(
       clientKey: _auth.clientKey,
       extension: _auth.authExtension,
     );
+    if (wasRegistered) return true;
     if (!_auth.isVerified || _auth.authExtension.isEmpty) {
       if (notify && mounted) {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
