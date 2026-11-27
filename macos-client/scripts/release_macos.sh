@@ -50,8 +50,41 @@ echo "host: $(scutil --get ComputerName 2>/dev/null || hostname) / $(uname -m)"
 
 CUR=$(sed -E -n 's/^version: ([0-9]+\.[0-9]+\.[0-9]+)(\+([0-9]+))?$/\1/p' pubspec.yaml | head -1)
 CUR_BUILD=$(sed -E -n 's/^version: [0-9]+\.[0-9]+\.[0-9]+\+([0-9]+)$/\1/p' pubspec.yaml | head -1)
+CUR_FULL=$(sed -n 's/^version: //p' pubspec.yaml | head -1)
 CUR_BUILD=${CUR_BUILD:-0}
 [ -n "$CUR" ] || fail "pubspec.yaml version 파싱 실패"
+
+BRANCH="$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo unknown)"
+case "$BRANCH" in
+  test/*|test-pending-verification) ;;
+  *) echo "WARN: 현재 브랜치 '$BRANCH' — 검수 전 산출물은 TEST 브랜치(test/*)여야 합니다. 빌드 계속(로컬 검증용), DEV/PRD 승격 금지." ;;
+esac
+
+REMOTE_BRANCH="origin/$BRANCH"
+if git fetch origin "$BRANCH" >/dev/null 2>&1; then
+  REMOTE_FULL=$(git show "$REMOTE_BRANCH:macos-client/pubspec.yaml" 2>/dev/null \
+    | sed -n 's/^version: //p' | head -1)
+  if [ -n "$REMOTE_FULL" ]; then
+    if ! python3 - "$CUR_FULL" "$REMOTE_FULL" <<'PY'
+import sys
+
+def key(value: str) -> tuple[int, int, int, int]:
+    version, build = (value.split("+", 1) + ["0"])[:2]
+    major, minor, patch = (int(part) for part in version.split("."))
+    return major, minor, patch, int(build)
+
+sys.exit(0 if key(sys.argv[1]) >= key(sys.argv[2]) else 1)
+PY
+    then
+      fail "버전 역행 방지: 로컬 $CUR_FULL < 원격 $REMOTE_FULL. 먼저 원격 최신을 반영하고 +1 하세요."
+    fi
+    if [ "$CUR_FULL" = "$REMOTE_FULL" ] && [ "$BUMP" != "none" ]; then
+      echo ">>> 원격과 동일 버전 $CUR_FULL — +1 상향 진행 (검수 PASS 증거 확인 필수)"
+    fi
+  fi
+else
+  echo "WARN: origin/$BRANCH 확인 실패 — 버전 역행 검증을 완료하지 못했습니다."
+fi
 
 # ── 2. 버전 결정 ──
 step 2 "버전 결정"
