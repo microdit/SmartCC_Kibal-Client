@@ -35,7 +35,8 @@
 5. **4환경 분리(2026-11-26, 영속)**: 검수 전 변경은 TEST 브랜치(`test/<topic>` 또는 `test-gh`)에만 커밋/푸시. PASS 후 DEV 승격, 승인 후 PRD/EXTERNAL 승격.
 6. **버전 사고 방지**: DMG/앱 변경 전 `git fetch --all --prune` + remote/tag/dev/prd 선행 확인. 선행 보존+버전 상향, 역행 덮어쓰기 금지.
 7. `git add -A` 금지. 명시 파일만 stage. `git-sync.sh` 사용 시 포함 파일 확인.
-8. Client 리포지토리는 Server(`SmartCC_Kibal`)와 분리 — cross-reference는 위키 링크로 참조
+8. **Server-Client 교차 문서 동기화(영속)**: 양쪽 영향 사항은 같은 날짜 로그를 Client `wiki/07_Logs/YYYYMMDD_Server-Client_교차진행로그.md`와 Server `SmartCC_Kibal/wiki/07_Logs/YYYYMMDD_Server-Client_교차진행로그.md`에 모두 기록. 상세는 해당 repo, 상대 repo는 요약+경로+커밋 해시.
+9. Client 리포지토리는 Server(`SmartCC_Kibal`)와 분리 — cross-reference는 위키 링크로 참조
 
 ## Git Remote (3-way)
 | 리모트 | URL |

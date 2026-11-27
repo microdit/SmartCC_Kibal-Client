@@ -66,6 +66,12 @@
 
 ---
 
+## 상태 (2026-11-27 업데이트)
+
+- **4환경 분리 쌍 관리(영속)**: Server 규약과 동일하게 검수 전 TEST, PASS 후 DEV, 승인 후 PRD/EXTERNAL. 상세 `wiki/03_Guides/20261126_4환경_Git_운영규약_v1.0.md`.
+- **Server-Client 교차 문서 동기화(영속)**: 양쪽 영향 사항은 Server `SmartCC_Kibal/wiki/07_Logs/YYYYMMDD_Server-Client_교차진행로그.md`와 Client `wiki/07_Logs/YYYYMMDD_Server-Client_교차진행로그.md`에 같은 날짜로 기록. 상세는 해당 repo, 상대 repo는 요약+경로+커밋 해시.
+- **버전 사고 방지**: fetch/prune 후 선행 확인, 선행 보존+버전 상향, 역행 덮어쓰기/무검수 DEV·PRD 승격 금지.
+
 ## 상태 (2026-11-09)
 
 - **macOS Client M1~M6 완료** (`feature/macOS-version`, `macos-client/`)
