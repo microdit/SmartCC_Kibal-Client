@@ -107,25 +107,21 @@ class _LogSendDialogState extends State<_LogSendDialog> {
             const SizedBox(height: 8),
             Row(
               children: [
-                const SizedBox(width: 8, child: Text('주기', style: TextStyle(fontSize: 12))),
+                const Text('주기', style: TextStyle(fontSize: 12)),
                 const SizedBox(width: 8),
-                SizedBox(
-                  width: 70,
-                  child: TextField(
-                    keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(
-                      isDense: true,
-                      suffixText: '분',
-                      border: OutlineInputBorder(),
-                    ),
-                    controller: TextEditingController(
-                      text: '${_forwarder.settings.autoSendMinutes}',
-                    ),
-                    onSubmitted: (v) => _setMinutes(int.tryParse(v)),
-                  ),
+                DropdownButton<int>(
+                  value: RemoteLogSettings.clampMinutes(
+                      _forwarder.settings.autoSendMinutes),
+                  isDense: true,
+                  items: [
+                    for (int m = 1; m <= 60; m++)
+                      DropdownMenuItem(value: m, child: Text('$m분')),
+                  ],
+                  onChanged: _setMinutes,
                 ),
                 const SizedBox(width: 8),
-                const Text('1~60분', style: TextStyle(fontSize: 11, color: Colors.grey)),
+                const Text('1~60분',
+                    style: TextStyle(fontSize: 11, color: Colors.grey)),
                 const Spacer(),
                 TextButton(
                   onPressed: () => _setMinutes(5),

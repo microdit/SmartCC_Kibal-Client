@@ -372,6 +372,8 @@ class RemoteLogForwarder {
         'ip': AppLogger.localIp,
         'app_version': appVersion,
         'mode': settings.filter.describe(),
+        'auto_send': settings.autoSend,
+        'auto_send_minutes': settings.autoSendMinutes,
         'offset': offset,
         'next_offset': nextOffset,
         'rotated': rotated,

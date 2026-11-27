@@ -811,7 +811,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
                   const SizedBox(height: 4),
                   const Text(
-                    '자동보내기(5분 주기)와 즉시보내기(1회)를 함께 사용할 수 있습니다.',
+                    '자동보내기(1~60분 주기)와 즉시보내기(1회)를 함께 사용할 수 있습니다.',
                     style: TextStyle(fontSize: 12, color: Colors.grey),
                   ),
                 ],
