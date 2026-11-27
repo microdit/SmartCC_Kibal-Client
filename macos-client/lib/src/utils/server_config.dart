@@ -42,6 +42,8 @@ extension ConnectionProfileX on ConnectionProfile {
           source: 'profile',
         );
       case ConnectionProfile.external:
+        // 외부망(DDNS): 동일 DDNS로 접근하되 기본값은 DEV 외부 포트.
+        // TEST/PRD 외부 접속은 해당 프로파일의 manifest/수동 설정으로 분리한다.
         return ServerConfig(
           sipDomain: 'appletreeda.synology.me',
           sipPort: 8089,
@@ -79,6 +81,7 @@ extension ConnectionProfileX on ConnectionProfile {
       case ConnectionProfile.external:
         return const [
           'http://appletreeda.synology.me:8091',
+          'http://appletreeda.synology.me:18091',
         ];
       case ConnectionProfile.test:
         return const [
@@ -498,6 +501,17 @@ class ServerConfigService {
   List<String> profileCandidates(ConnectionProfile profile, {bool skipInternal = false}) {
     final manifestCandidates = _manifestEntry(profile)?.opsCandidates ?? const <String>[];
     final base = <String>[...manifestCandidates, ...profile.candidates];
+    // EXTERNAL(DDNS) 프로파일은 동일 DDNS를 쓰므로, 사용자가 선택한 환경 포트 힌트를 우선한다.
+    if (profile == ConnectionProfile.external) {
+      final c = _current;
+      final looksTest = c.opsBaseUrl.contains(':18091') || c.wsServer.contains(':18088') || c.sipPort == 15060;
+      final looksPrd = c.sipDomain == '192.168.11.3' || c.opsBaseUrl.contains('192.168.11.3');
+      if (looksTest) {
+        base.insertAll(0, const ['http://appletreeda.synology.me:18091', 'http://appletreeda.synology.me:8091']);
+      } else if (looksPrd) {
+        base.insertAll(0, const ['http://appletreeda.synology.me:8091']);
+      }
+    }
     return _normalizeCandidates(base, skipInternal: skipInternal);
   }
 

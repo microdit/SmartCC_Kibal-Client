@@ -165,6 +165,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       includeStats: s.includeStats,
       urlOverridden: true,
       autoSend: s.autoSend,
+      autoSendMinutes: s.autoSendMinutes,
     ));
   }
 

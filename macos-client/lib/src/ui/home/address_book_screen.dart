@@ -330,7 +330,7 @@ class _AddressBookScreenState extends State<AddressBookScreen>
     AppLogger.instance.w('AddressBook sync failed reason=$reason err=${fetch.error} keepCache=$hasCache');
   }
 
-  bool get _canCall => _auth.isVerified;
+  bool get _canCall => _auth.isVerified || _auth.isOfflineVerified;
 
   /// 앱 시작/재개 시 인증 내선으로 SIP 자동 등록을 유지한다.
   /// 실패하면 상태바와 스낵바로 알린다.
@@ -422,6 +422,31 @@ class _AddressBookScreenState extends State<AddressBookScreen>
       return;
     }
     final sip = Provider.of<SipProvider>(context, listen: false);
+    // 연락처 "연결"은 선택한 연락처 내선으로 로그인/리스닝하는 동작이다.
+    // 발신은 연결 후 다이얼러에서 수행한다.
+    if (sip.isInCall || sip.hasIncomingCall) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('통화 중에는 다른 내선으로 연결할 수 없습니다.')),
+      );
+      return;
+    }
+    final targetExt = c.extension.trim();
+    final boundExt = _auth.authExtension.trim();
+    if (boundExt.isNotEmpty && targetExt != boundExt) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            '현재 인증 내선($boundExt)과 다른 연락처($targetExt)로는 연결할 수 없습니다. 설정에서 인증 내선을 확인하세요.',
+          ),
+        ),
+      );
+      AppLogger.instance.w(
+        'ADDRESSBOOK quickConnect blocked: authExt=$boundExt targetExt=$targetExt',
+      );
+      return;
+    }
     final cfgBase = ServerConfigService.instance.current;
     final sipConfig = SipConfig.webrtc(
       username: c.extension,
