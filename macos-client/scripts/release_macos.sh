@@ -53,6 +53,28 @@ CUR_BUILD=$(sed -E -n 's/^version: [0-9]+\.[0-9]+\.[0-9]+\+([0-9]+)$/\1/p' pubsp
 CUR_BUILD=${CUR_BUILD:-0}
 [ -n "$CUR" ] || fail "pubspec.yaml version 파싱 실패"
 
+# ── 영속 규약 가드: 검수 전 빌드는 TEST 브랜치에서만, 버전은 원격 최신 +1만 ──
+BRANCH="$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo unknown)"
+case "$BRANCH" in
+  test/*|test-pending-verification) ;;
+  *) echo "WARN: 현재 브랜치 '$BRANCH' — 검수 전 산출물은 TEST 브랜치(test/*)여야 합니다. 빌드 계속(로컬 검증용), DEV/PRD 승격 금지." ;;
+esac
+
+# 원격 최신 버전 확인(force-free). fetch 실패 시 경고만.
+REMOTE_BRANCH="origin/$BRANCH"
+git fetch origin "$BRANCH" >/dev/null 2>&1 || true
+REMOTE_VER=$(git show "$REMOTE_BRANCH:macos-client/pubspec.yaml" 2>/dev/null \
+  | sed -E -n 's/^version: ([0-9]+\.[0-9]+\.[0-9]+)(\+([0-9]+))?$/\1/p' | head -1)
+if [ -n "$REMOTE_VER" ]; then
+  HIGHER=$(printf '%s\n%s\n' "$CUR" "$REMOTE_VER" | sort -V | tail -1)
+  if [ "$HIGHER" != "$CUR" ]; then
+    fail "버전 역행 방지: 로컬 $CUR < 원격 $REMOTE_VER. 먼저 원격 최신을 반영하고 +1 하세요."
+  fi
+  if [ "$CUR" = "$REMOTE_VER" ] && [ "$BUMP" != "none" ]; then
+    echo ">>> 원격과 동일 버전 $CUR — +1 상향 진행 (검수 PASS 증거 확인 필수)"
+  fi
+fi
+
 # ── 2. 버전 결정 ──
 step 2 "버전 결정"
 IFS=. read -r MA MI PA <<<"$CUR"
