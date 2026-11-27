@@ -102,3 +102,15 @@
 - **정책 반영**: 양쪽 `docs/작업지시서.md` 4.6에 클라이언트 발행 보고 필수 블록 강제.
 - **Client 실기 차단**: TEST 검수 DMG(`--no-bump`) 미빌드, 1101/1102 TEST 18088/15060 재등록 및 1:1/6000/6100/6700 실기 미수행.
 - **상대 문서**: `SmartCC_Kibal/wiki/07_Logs/20261127_Server-Client_교차진행로그.md`
+
+### 2026-11-27 21:20 KST - TEST 실기 이슈 교차기록(7100/cleanup/회의실 혼선)
+
+- **Server 커밋**: `d72a3b9`(7100 고정 연락처), `c0dba32`(client contacts `system_fixed` 노출)
+- **Client 기준 브랜치**: `test/client-v0.0.64-recovery` (기존 TEST 검수 빌드 `0.0.66+67 --no-bump`, SHA256 `d7affd993b77d3019cf87e49e7b986fee9cf69c36ffc94d4cf963c0b4d45ea1d`)
+- **실기 이슈(사용자 보고/로그)**:
+  - 1104가 DEV `8091/ws:8088`로 갱신, DEV Asterisk 6100에 1104만 등록 / TEST Asterisk 6100에 1102만 등록 → 6000/6100 참가자 서로 안 보임.
+  - 1102 로그 컨텍스트에 1104 `bound_extension/authExt` 혼입, 1102가 1104 호출 시 자기 자신 호출/1:1 엉킴 의심. TEST Asterisk 1102 contact 2개.
+  - 6700: 1102 408 RTP Timeout/ICE Connection Failed, inbound videoBytes=0. DEV Asterisk에 7001 6700 상주.
+- **NAS 발행 미완료**: `/Volumes/NetBackup/.../macOS_Client_v0.0.66.dmg` 점유(`perl PID 3350`)로 교체 실패, `.new`만 업로드, `.sha256/LATEST` 미갱신.
+- **다음 조치**: Client 단말 프로파일/env+extension 로컬 상태 분리/강제, SIP reinit/등록 대상 검증 로그 강화, TEST 실기 재검증.
+- **상대 문서**: `SmartCC_Kibal/wiki/07_Logs/20261127_Server-Client_교차진행로그.md`
