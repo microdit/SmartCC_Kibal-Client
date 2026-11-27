@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 
 import '../../providers/media_provider.dart';
 import '../../providers/sip_provider.dart';
+import '../../sip/sip_config.dart';
 import '../../utils/app_logger.dart';
 import '../../utils/client_auth_state.dart';
 import '../../utils/connection_test.dart';
@@ -167,6 +168,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Future<void> _switchProfile(ConnectionProfile profile) async {
+    final sip = Provider.of<SipProvider>(context, listen: false);
     final base = ServerConfigService.instance.current;
     final current = base.copyWith(
       sipDomain: _domain.text.trim(),
@@ -178,12 +180,64 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final store = ConnectionProfileStore.instance;
     store.save(_profile, current);
     store.setSelected(profile);
-    setState(() { _profile = profile; _autoMsg = '${profile.label} 프로필 전환 중 서버 정보 동기화...'; });
+    setState(() {
+      _profile = profile;
+      _autoMsg = '${profile.label} 프로필 전환 중 서버 정보 동기화...';
+    });
     // 프로파일 전환 시 서버 manifest를 먼저 갱신해 최신 DEV/PRD/TEST/외부망 값을 반영
     await ServerConfigService.instance.refreshProfileManifest(
-      clientKey: _authKey.text.trim(), extension: _authExt.text.trim());
+        clientKey: _authKey.text.trim(), extension: _authExt.text.trim());
     final cfg = ServerConfigService.instance.resolvedProfileConfig(profile);
     _applyResolvedConfig(cfg, sourceMsg: '${profile.label} 프로필로 전환됨');
+    final oldCfg = sip.config;
+    var sipReinit = 'skipped';
+    String? sipError;
+    if (sip.isInCall || sip.hasIncomingCall) {
+      sipReinit = 'blocked_in_call';
+      sipError = '통화 중에는 SIP 재연결을 건너뜁니다. 통화 종료 후 다시 전환하세요.';
+    } else if (oldCfg != null) {
+      final ext = oldCfg.username.trim();
+      final pw = oldCfg.password;
+      if (ext.isNotEmpty && pw.isNotEmpty) {
+        final nextSip = SipConfig.webrtc(
+          username: ext,
+          password: pw,
+          domain: cfg.sipDomain,
+          port: cfg.sipPort,
+          displayName: oldCfg.displayName ?? ext,
+          wsServer: cfg.wsServer,
+          iceServers: AppConstants.iceServersFor(
+            cfg.wsServer.isEmpty ? cfg.sipDomain : cfg.wsServer,
+          ),
+          turn: cfg.turn ?? oldCfg.turn,
+        );
+        try {
+          await sip.disconnect();
+          sip.updateConfig(nextSip);
+          final ok = await sip.connect();
+          sipReinit = ok ? 'reconnected' : 'connect_failed';
+          sipError = ok ? null : (sip.error ?? 'SIP 재연결 실패');
+        } catch (e) {
+          sipReinit = 'error';
+          sipError = '$e';
+        }
+      } else {
+        sipReinit = 'no_credentials';
+      }
+    }
+
+    if (mounted) {
+      setState(() {
+        if (sipReinit == 'reconnected') {
+          _autoMsg = '${profile.label} 프로필 전환 및 SIP 재연결 완료';
+        } else if (sipReinit == 'blocked_in_call') {
+          _autoMsg = '${profile.label} 프로필 전환됨. $sipError';
+        } else if (sipReinit == 'connect_failed' || sipReinit == 'error') {
+          _autoMsg = '${profile.label} 프로필 전환됨, SIP 재연결 실패: $sipError';
+        }
+      });
+    }
+
     AppLogger.instance.ui('SETTINGS', 'profileSwitched', params: {
       'from': current.source,
       'to': profile.name,
@@ -192,6 +246,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
       'wsServer': cfg.wsServer,
       'opsBaseUrl': cfg.opsBaseUrl,
       'source': cfg.source,
+      'sipReinit': sipReinit,
+      'sipError': sipError,
     });
   }
 
