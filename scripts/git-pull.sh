@@ -300,7 +300,7 @@ fi
 echo "  빌드 결과: $BUILD_RESULT"
 echo "  승격 상태: $PROMOTE"
 echo "  NAS dev/prd: $NAS"
-echo "  pull 안내: git checkout -b $TARGET $PULL_REMOTE/$TARGET"
+echo "  pull 안내: git fetch $PULL_REMOTE && git checkout -b $TARGET $PULL_REMOTE/$TARGET"
 echo
 show_remote_logs "$PULL_REMOTE/$TARGET"
 echo "==================================================="
