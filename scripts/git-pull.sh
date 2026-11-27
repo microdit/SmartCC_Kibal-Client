@@ -243,10 +243,14 @@ REMOTE_COMMIT=$(git rev-parse "$PULL_REMOTE/$TARGET" 2>/dev/null || echo N/A)
 DMG_DIR="$ROOT_DIR/macos-client/build/macos/Build/Products/Release"
 VERSION_NO_BUILD="${VERSION%%+*}"
 DMG="$DMG_DIR/macos_client_v${VERSION_NO_BUILD}.dmg"
+SHARE_DIR="${KIBAL_DMG_SHARE_DIR:-/Volumes/NetBackup/보관함/개발/Live_Log}"
+SHARED_DMG="$SHARE_DIR/macOS_Client_v${VERSION_NO_BUILD}.dmg"
 SHA="-"
+SHARED_SHA="-"
 [ -f "$DMG" ] && SHA=$(shasum -a 256 "$DMG" | awk '{print $1}')
+[ -f "$SHARED_DMG" ] && SHARED_SHA=$(shasum -a 256 "$SHARED_DMG" | awk '{print $1}')
 case "$TARGET" in
-  test/*|test-pending-verification) PROMOTE="TEST 검수 중(DEV 승격 금지)" ;;
+  test/*|test-pending-*) PROMOTE="TEST 검수 중(DEV 승격 금지)" ;;
   *) PROMOTE="기능/DEV 라인(승격 상태 확인 필요)" ;;
 esac
 NAS=$(nc -z -G 2 192.168.11.2 4949 2>/dev/null && echo "연결 가능" || echo "SKIP(SSH 4949 timeout)")
@@ -276,8 +280,11 @@ if [ "$DO_BUILD" = true ]; then
         VERSION=$(sed -n 's/^version: //p' macos-client/pubspec.yaml 2>/dev/null | head -1)
         VERSION_NO_BUILD="${VERSION%%+*}"
         DMG="$DMG_DIR/macos_client_v${VERSION_NO_BUILD}.dmg"
+        SHARED_DMG="$SHARE_DIR/macOS_Client_v${VERSION_NO_BUILD}.dmg"
         SHA="-"
+        SHARED_SHA="-"
         [ -f "$DMG" ] && SHA=$(shasum -a 256 "$DMG" | awk '{print $1}')
+        [ -f "$SHARED_DMG" ] && SHARED_SHA=$(shasum -a 256 "$SHARED_DMG" | awk '{print $1}')
     fi
 fi
 
@@ -296,6 +303,11 @@ if [ -f "$DMG" ]; then
     echo "  7. DMG/SHA256: $DMG | ${SHA:-N/A}"
 else
     echo "  7. DMG/SHA256: 없음(빌드 전)"
+fi
+if [ -f "$SHARED_DMG" ]; then
+    echo "  공통 DMG/SHA256: $SHARED_DMG | ${SHARED_SHA:-N/A}"
+else
+    echo "  공통 DMG/SHA256: 없음(공유 발행 전)"
 fi
 echo "  빌드 결과: $BUILD_RESULT"
 echo "  승격 상태: $PROMOTE"

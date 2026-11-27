@@ -9,9 +9,11 @@
 #   ./scripts/release_macos.sh --no-bump        # 현재 버전 그대로 재빌드(다른 Mac에서 빌드할 때)
 # 옵션:
 #   --skip-tests   flutter analyze/test 생략
+#   --no-publish   NAS 공유폴더 자동 발행 생략(로컬 빌드만)
 #   --commit       pubspec 버전 변경 커밋 + 태그 macos-vX.Y.Z 생성(푸시는 git-sync.sh)
 #   --install      빌드한 앱을 /Applications 에 설치(기존 앱 교체)
 #
+# 기본 공유 발행: /Volumes/NetBackup/보관함/개발/Live_Log/macOS_Client_vX.Y.Z.dmg
 # 산출물: build/macos/Build/Products/Release/
 #   macos_client_vX.Y.Z.dmg, macos_client_vX.Y.Z.dmg.sha256
 set -euo pipefail
@@ -24,15 +26,18 @@ BUMP=patch
 SKIP_TESTS=0
 DO_COMMIT=0
 DO_INSTALL=0
+DO_PUBLISH=1
+SHARE_DIR="${KIBAL_DMG_SHARE_DIR:-/Volumes/NetBackup/보관함/개발/Live_Log}"
 for arg in "$@"; do
   case "$arg" in
     patch|minor|major) BUMP="$arg" ;;
     --no-bump) BUMP=none ;;
     --skip-tests) SKIP_TESTS=1 ;;
+    --no-publish) DO_PUBLISH=0 ;;
     --commit) DO_COMMIT=1 ;;
     --install) DO_INSTALL=1 ;;
     [0-9]*.[0-9]*.[0-9]*) BUMP="$arg" ;;
-    -h|--help) sed -n '2,18p' "$0"; exit 0 ;;
+    -h|--help) sed -n '2,18p' "$APP_DIR/scripts/release_macos.sh"; exit 0 ;;
     *) echo "알 수 없는 인자: $arg (--help 참고)" >&2; exit 2 ;;
   esac
 done
@@ -56,7 +61,7 @@ CUR_BUILD=${CUR_BUILD:-0}
 
 BRANCH="$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo unknown)"
 case "$BRANCH" in
-  test/*|test-pending-verification) ;;
+  test/*|test-pending-*) ;;
   *) echo "WARN: 현재 브랜치 '$BRANCH' — 검수 전 산출물은 TEST 브랜치(test/*)여야 합니다. 빌드 계속(로컬 검증용), DEV/PRD 승격 금지." ;;
 esac
 
@@ -149,9 +154,29 @@ echo "$SHA  macos_client_${TAG}.dmg" >"$DMG.sha256"
 SIZE=$(du -h "$DMG" | awk '{print $1}')
 echo "sha256: $SHA ($SIZE)"
 
-# ── 8. 설치(선택) ──
-if [ "$DO_INSTALL" = "1" ]; then
-  step 8 "/Applications 설치"
+PUBLISH_RESULT="실행 안 함"
+PUBLISHED_DMG=""
+if [ "$DO_PUBLISH" = 1 ]; then
+  step 8 "NAS 공유폴더 자동 발행"
+  if ./scripts/publish_macos_dmg.sh "$APP_DIR/$DMG"; then
+    PUBLISH_RESULT="성공"
+    PUBLISHED_DMG="$SHARE_DIR/macOS_Client_v${NEW}.dmg"
+  else
+    PUBLISH_RC=$?
+    if [ "$PUBLISH_RC" -eq 3 ] || [ "$PUBLISH_RC" -eq 4 ]; then
+      PUBLISH_RESULT="SKIP(NAS 미마운트/쓰기 불가)"
+      echo "WARN: 공유폴더 발행 생략 — DMG는 로컬에만 생성되었습니다."
+    else
+      fail "공유폴더 발행 실패"
+    fi
+  fi
+else
+  PUBLISH_RESULT="LOCAL_ONLY(--no-publish)"
+fi
+
+# ── 9. 설치(선택) ──
+if [ "$DO_INSTALL" = 1 ]; then
+  step 9 "/Applications 설치"
   pkill -x macos_client 2>/dev/null && sleep 1 || true
   rm -rf /Applications/macos_client.app
   cp -R "$APP" /Applications/
@@ -159,9 +184,9 @@ if [ "$DO_INSTALL" = "1" ]; then
   echo "설치 완료: /Applications/macos_client.app"
 fi
 
-# ── 9. 커밋·태그(선택) ──
-if [ "$DO_COMMIT" = "1" ] && [ "$BUMP" != "none" ]; then
-  step 9 "커밋·태그"
+# ── 10. 커밋·태그(선택) ──
+if [ "$DO_COMMIT" = 1 ] && [ "$BUMP" != "none" ]; then
+  step 10 "커밋·태그"
   git add pubspec.yaml macos/Runner/Info.plist
   git commit -m "release(macos): $TAG+$NEW_BUILD" >/dev/null
   git tag -f "macos-$TAG"
@@ -171,9 +196,11 @@ fi
 cat <<EOF
 
 ================================================
-  발행 완료: $TAG (build $NEW_BUILD)
+  빌드 완료: $TAG (build $NEW_BUILD)
   DMG   : $APP_DIR/$DMG
   SHA256: $SHA
+  공유 발행: $PUBLISH_RESULT
+  공통 DMG: ${PUBLISHED_DMG:-해당 없음}
 ------------------------------------------------
   다른 Mac 설치:
     xattr -d com.apple.quarantine ~/Downloads/macos_client_${TAG}.dmg
