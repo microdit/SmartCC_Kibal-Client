@@ -35,3 +35,15 @@
 - **Server 문서**: `SmartCC_Kibal/wiki/07_Logs/20261127_Server-Client_교차진행로그.md`
 - **상태**: Server가 Client 답변서 위치 미확인. 양쪽 교차 로그 규약을 영속화.
 - **Client 필요 조치**: 답변서 지정 경로 push, 해시/파일목록 공유.
+
+### 2026-11-27 14:45 KST - Server 리뷰 결과 반영
+
+- **Server 작업자**: Codex
+- **Server 리뷰 커밋**: `SmartCC_Kibal` `wiki/06_Reports/20261127_Client_v0.0.64_버전복구_지시서답변_리뷰보고서_v1.0.md` (push 예정)
+- **판정**: 조건부 승인(빌드 산출물), DEV 승격 보류.
+- **Client 필요 조치**:
+  1. `test/client-v0.0.64-recovery` 브랜치 생성/push
+  2. 6700 재입장 3회 실기 PASS 증거(`wiki/08_Experiments/20261127_6700재입장_v0.0.64_검증기록_v1.0.md`)
+  3. 로그는 `usr=` 기준 판정, NAS 공유 경로/대체 경로 명시
+  4. NAS 4949 복구 시 dev/prd 선행 재확인
+- **상대 문서**: `SmartCC_Kibal/wiki/07_Logs/20261127_Server-Client_교차진행로그.md`
