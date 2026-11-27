@@ -60,7 +60,8 @@
 - **Client 문서**: `wiki/03_Guides/20261127_로그동기화_확인절차서_v1.0.md`
 - **Client 커밋**: `562420b5` (`test/client-v0.0.64-recovery`)
 - **Server 문서**: `SmartCC_Kibal/wiki/03_Guides/20261127_로그동기화_확인절차서_v1.0.md`
-- **Server 커밋**: `80444bf` (`test/log-sync-verification-procedure`)
+- **Server 커밋**: `80444bf` (`test-pending-log-sync`)
 - **확인 결과**: Client 커밋 로그 `5c3f74f9` 로컬/원격 일치. 1102(v0.0.66)/1104(v0.0.64) OPS `mirror_ok=true` 및 NAS 일자별 파일 최신 로그 일치.
 - **주의**: AI봇 7001의 OPS/NAS 클라이언트 로그 파일은 없음. AI 작업 커밋 로그와 AI봇 런타임 로그는 별도 축으로 확인.
 - **다음 액션**: 양쪽 TEST 브랜치에 명시 커밋/푸시. DEV 승격 없음.
+- **브랜치명 보완**: Server 원격에 `test` 기준 브랜치가 있어 `test/...` ref 생성이 거절됨. `test-pending-log-sync`로 변경해 force 없이 push.
