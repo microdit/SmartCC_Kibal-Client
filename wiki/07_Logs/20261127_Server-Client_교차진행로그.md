@@ -89,3 +89,16 @@
 - **P0**: v0.0.66 승격 보류, 1102 408/ICE 분석, 6700 실기 PASS
 - **P1**: MacBook/MacBookAir SMB 마운트·빌드·공통 발행 재현
 - **P2**: AI봇 7001 런타임 로그 경로 확인
+
+### 2026-11-27 20:15 KST - TEST OPS manifest 오염 수정/검증/문서 규칙 강화
+
+- **Server 작업자**: opencode
+- **Server 브랜치**: `feature/external-network-wss`
+- **Server 커밋**: `2cde3f5`(발행 보고 규칙 강화), `38b3447`(profile manifest canonical 엔드포인트 오염 방지)
+- **Client 브랜치/커밋**: `test/client-v0.0.64-recovery` / `2dac7863`(발행 보고 규칙 강화)
+- **검증**:
+  - Server `py_compile server/ops/api/app/routes.py` PASS
+  - TEST OPS `/api/client/config` 실응답: `dev=8091/5060/8088`, `prd=192.168.11.3:8091/5060/8088`, `external=appletreeda.synology.me:18091/5060/wss:8089`, `test=18091/15060/18088`, `default_profile=test`
+- **정책 반영**: 양쪽 `docs/작업지시서.md` 4.6에 클라이언트 발행 보고 필수 블록 강제.
+- **Client 실기 차단**: TEST 검수 DMG(`--no-bump`) 미빌드, 1101/1102 TEST 18088/15060 재등록 및 1:1/6000/6100/6700 실기 미수행.
+- **상대 문서**: `SmartCC_Kibal/wiki/07_Logs/20261127_Server-Client_교차진행로그.md`
